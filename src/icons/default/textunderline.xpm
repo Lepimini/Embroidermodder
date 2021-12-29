@@ -1,5 +1,5 @@
 /* XPM */
-static char *textunderline[] = {
+char *icon_textunderline[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 108 2 ",
 "   c black",

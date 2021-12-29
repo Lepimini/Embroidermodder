@@ -1,5 +1,5 @@
 /* XPM */
-static char *pointmeasure[] = {
+char *icon_pointmeasure[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 122 2 ",
 "   c black",

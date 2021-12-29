@@ -1,5 +1,5 @@
 /* XPM */
-static char *arcstartenddirection[] = {
+char *icon_arcstartenddirection[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 223 2 ",
 "   c black",

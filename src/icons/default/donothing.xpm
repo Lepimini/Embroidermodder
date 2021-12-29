@@ -1,5 +1,5 @@
 /* XPM */
-static char *donothing[] = {
+char *icon_donothing[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 1 1 ",
 "  c None",

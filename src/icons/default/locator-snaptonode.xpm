@@ -1,5 +1,5 @@
 /* XPM */
-static char *locator_snaptonode[] = {
+char *icon_locator_snaptonode[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 54 1 ",
 "  c #4E4E00",

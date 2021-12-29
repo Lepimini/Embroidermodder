@@ -1,5 +1,5 @@
 /* XPM */
-static char *solidsection[] = {
+char *icon_solidsection[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 1 1 ",
 "  c #968725",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *fillet[] = {
+char *icon_fillet[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 90 1 ",
 "  c black",

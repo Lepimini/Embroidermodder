@@ -1,5 +1,5 @@
 /* XPM */
-static char *offset[] = {
+char *icon_offset[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 253 2 ",
 "   c black",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *dimensiontextedit[] = {
+char *icon_dimensiontextedit[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 176 2 ",
 "   c #000000",

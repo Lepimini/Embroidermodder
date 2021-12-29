@@ -1,5 +1,5 @@
 /* XPM */
-static char *arccenterstartangle[] = {
+char *icon_arccenterstartangle[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 62 1 ",
 "  c #000000",

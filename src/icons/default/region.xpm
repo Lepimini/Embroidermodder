@@ -1,5 +1,5 @@
 /* XPM */
-static char *region[] = {
+char *icon_region[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 217 2 ",
 "   c black",

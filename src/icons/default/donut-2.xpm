@@ -1,5 +1,5 @@
 /* XPM */
-static char *donut_2[] = {
+char *icon_donut_2[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 243 2 ",
 "   c #040303",

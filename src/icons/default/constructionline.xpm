@@ -1,5 +1,5 @@
 /* XPM */
-static char *constructionline[] = {
+char *icon_constructionline[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 216 2 ",
 "   c black",

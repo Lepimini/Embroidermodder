@@ -1,5 +1,5 @@
 /* XPM */
-static char *pickadd[] = {
+char *icon_pickadd[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 210 2 ",
 "   c black",

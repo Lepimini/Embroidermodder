@@ -1,5 +1,5 @@
 /* XPM */
-static char *arccontinue[] = {
+char *icon_arccontinue[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 54 1 ",
 "  c #000000",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *whatsthis[] = {
+char *icon_whatsthis[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 210 2 ",
 "   c #060606",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *open[] = {
+char *icon_open[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 77 1 ",
 "  c #000000",

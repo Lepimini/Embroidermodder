@@ -1,5 +1,5 @@
 /* XPM */
-static char *aligneddimension[] = {
+char *icon_aligneddimension[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 91 1 ",
 "  c black",

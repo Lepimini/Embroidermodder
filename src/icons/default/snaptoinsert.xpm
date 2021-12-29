@@ -1,5 +1,5 @@
 /* XPM */
-static char *snaptoinsert[] = {
+char *icon_snaptoinsert[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 131 2 ",
 "   c #000000",

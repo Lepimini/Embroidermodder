@@ -1,5 +1,5 @@
 /* XPM */
-static char *changelog[] = {
+char *icon_changelog[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 238 2 ",
 "   c black",

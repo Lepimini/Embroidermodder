@@ -1,5 +1,5 @@
 /* XPM */
-static char *redo[] = {
+char *icon_redo[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 233 2 ",
 "   c #0E1829",

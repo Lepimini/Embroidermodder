@@ -1,5 +1,5 @@
 /* XPM */
-static char *save[] = {
+char *icon_save[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 117 2 ",
 "   c #000000",

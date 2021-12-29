@@ -1,5 +1,5 @@
 /* XPM */
-static char *lineardimension[] = {
+char *icon_lineardimension[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 74 1 ",
 "  c black",

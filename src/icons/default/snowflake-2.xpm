@@ -1,5 +1,5 @@
 /* XPM */
-static char *snowflake_2[] = {
+char *icon_snowflake_2[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 76 1 ",
 "  c #000000",

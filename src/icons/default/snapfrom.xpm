@@ -1,5 +1,5 @@
 /* XPM */
-static char *snapfrom[] = {
+char *icon_snapfrom[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 181 2 ",
 "   c black",

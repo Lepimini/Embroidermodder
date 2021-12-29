@@ -1,5 +1,5 @@
 /* XPM */
-static char *snaptoextension[] = {
+char *icon_snaptoextension[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 16 1 ",
 "  c black",

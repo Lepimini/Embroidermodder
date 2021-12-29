@@ -1,5 +1,5 @@
 /* XPM */
-static char *orthosettings[] = {
+char *icon_orthosettings[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 129 2 ",
 "   c black",

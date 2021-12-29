@@ -1,5 +1,5 @@
 /* XPM */
-static char *circletantanradius[] = {
+char *icon_circletantanradius[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 182 2 ",
 "   c #000000",

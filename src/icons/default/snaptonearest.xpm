@@ -1,5 +1,5 @@
 /* XPM */
-static char *snaptonearest[] = {
+char *icon_snaptonearest[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 161 2 ",
 "   c black",

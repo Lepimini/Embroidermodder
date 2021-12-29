@@ -1,5 +1,5 @@
 /* XPM */
-static char *mass[] = {
+char *icon_mass[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 168 2 ",
 "   c #000000",

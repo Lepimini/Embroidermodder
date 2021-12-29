@@ -1,5 +1,5 @@
 /* XPM */
-static char *diameterdimension[] = {
+char *icon_diameterdimension[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 120 2 ",
 "   c black",

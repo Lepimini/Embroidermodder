@@ -1,5 +1,5 @@
 /* XPM */
-static char *satin[] = {
+char *icon_satin[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 70 1 ",
 "  c #000000",

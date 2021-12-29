@@ -1,5 +1,5 @@
 /* XPM */
-static char *stretch[] = {
+char *icon_stretch[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 106 2 ",
 "   c #000000",

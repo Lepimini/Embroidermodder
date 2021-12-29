@@ -1,5 +1,5 @@
 /* XPM */
-static char *solidsetupdrawing[] = {
+char *icon_solidsetupdrawing[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 1 1 ",
 "  c #968725",

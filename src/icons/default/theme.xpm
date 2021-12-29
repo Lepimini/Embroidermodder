@@ -1,5 +1,5 @@
 /* XPM */
-static char *theme[] = {
+char *icon_theme[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 231 2 ",
 "   c black",

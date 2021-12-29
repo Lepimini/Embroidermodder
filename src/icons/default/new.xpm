@@ -1,5 +1,5 @@
 /* XPM */
-static char *new[] = {
+char *icon__new[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 207 2 ",
 "   c black",

@@ -10,6 +10,56 @@
 
 #include "embroidermodder.h"
 
+char *details_label_text[] = {
+    "Total Stitches:",
+    "Real Stitches:",
+    "Jump Stitches:",
+    "Trim Stitches:",
+    "Total Colors:",
+    "Color Changes:",
+    "Left:",
+    "Top:",
+    "Right:",
+    "Bottom:",
+    "Width:",
+    "Height:"
+};
+
+char *obj_names[] = {
+    "Unknown",
+    "Base",
+    "Arc",
+    "Block",
+    "Circle",
+    "Aligned Dimension",
+    "Angular Dimension",
+    "Arc Length Dimension",
+    "Diameter Dimension",
+    "Leader Dimension",
+    "Linear Dimension",
+    "Ordinate Dimension",
+    "Radius Dimension",
+    "Ellipse",
+    "Elliptical Arc",
+    "Rubber",
+    "Grid",
+    "Hatch",
+    "Image",
+    "Infinite Line",
+    "Line",
+    "Path",
+    "Point",
+    "Polygon",
+    "Polyline",
+    "Ray",
+    "Rectangle",
+    "Slot",
+    "Spline",
+    "Multi Line Text",
+    "Single Line Text",
+    "Unknown"
+};
+
 int file_toolbar[] = {
     ACTION_new,
     ACTION_open,
@@ -377,145 +427,482 @@ path_symbol *symbol_list[] = {
 
 int n_actions = 68;
 
-int actions_indices[] = {
-    ACTION_donothing,
-    ACTION_windowcascade,
-    ACTION_windowtile,
-    ACTION_windowclose,
-    ACTION_windowcloseall,
-    ACTION_windownext,
-    ACTION_windowprevious,
-    ACTION_new,
-    ACTION_open,
-    ACTION_save,
-    ACTION_saveas,
-    ACTION_print,
-    ACTION_designdetails,
-    ACTION_exit,
-    ACTION_cut,
-    ACTION_copy,
-    ACTION_paste,
-    ACTION_help,
-    ACTION_changelog,
-    ACTION_tipoftheday,
-    ACTION_about,
-    ACTION_whatsthis,
-    ACTION_undo,
-    ACTION_redo,
-    ACTION_icon16,
-    ACTION_icon24,
-    ACTION_icon32,
-    ACTION_icon48,
-    ACTION_icon64,
-    ACTION_icon128,
-    ACTION_settingsdialog,
-    ACTION_makelayercurrent,
-    ACTION_layers,
-    ACTION_layerselector,
-    ACTION_layerprevious,
-    ACTION_colorselector,
-    ACTION_linetypeselector,
-    ACTION_lineweightselector,
-    ACTION_hidealllayers,
-    ACTION_showalllayers,
-    ACTION_freezealllayers,
-    ACTION_thawalllayers,
-    ACTION_lockalllayers,
-    ACTION_unlockalllayers,
-    ACTION_textbold,
-    ACTION_textitalic,
-    ACTION_textunderline,
-    ACTION_textstrikeout,
-    ACTION_textoverline,
-    ACTION_zoomrealtime,
-    ACTION_zoomprevious,
-    ACTION_zoomwindow,
-    ACTION_zoomdynamic,
-    ACTION_zoomscale,
-    ACTION_zoomcenter,
-    ACTION_zoomin,
-    ACTION_zoomout,
-    ACTION_zoomselected,
-    ACTION_zoomall,
-    ACTION_zoomextents,
-    ACTION_panrealtime,
-    ACTION_panpoint,
-    ACTION_panleft,
-    ACTION_panright,
-    ACTION_panup,
-    ACTION_pandown,
-    ACTION_day,
-    ACTION_night
-};
-
-const char *actions_strings[] = {
-    "donothing", "&Do Nothing", "Does nothing.",
-    "windowcascade", "&Cascade", "Cascade the windows.",
-    "windowtile", "&Tile", "Tile the windows.",
-    "windowclose", "Cl&ose", "Close the active window.",
-    "windowcloseall", "Close &All", "Close all the windows.",
-    "windownext", "Ne&xt", "Move the focus to the next window.",
-    "windowprevious", "Pre&vious", "Move the focus to the previous window.",
-    "new", "&New", "Create a new file.",
-    "open", "&Open", "Open an existing file.",
-    "save", "&Save", "Save the design to disk.",
-    "saveas", "Save &As", "Save the design under a new name.",
-    "print", "&Print", "Print the design.",
-    "designdetails", "&Details", "Details of the current design.",
-    "exit", "E&xit", "Exit the application.",
-    "cut", "Cu&t", "Cut the current selection's contents to the clipboard.",
-    "copy", "&Copy", "Copy the current selection's contents to the clipboard.",
-    "paste", "&Paste", "Paste the clipboard's contents into the current selection.",
-    "help", "&Help", "Displays help.",
-    "changelog", "&Changelog", "Describes new features in this product.",
-    "tipoftheday", "&Tip Of The Day", "Displays a dialog with useful tips",
-    "about", "&About Embroidermodder 2", "Displays information about this product.",
-    "whatsthis", "&What's This?", "What's This? Context Help!",
-    "undo", "&Undo", "Reverses the most recent action.",
-    "redo", "&Redo", "Reverses the effects of the previous undo action.",
-    "icon16", "Icon&16", "Sets the toolbar icon size to 16x16.",
-    "icon24", "Icon&24", "Sets the toolbar icon size to 24x24.",
-    "icon32", "Icon&32", "Sets the toolbar icon size to 32x32.",
-    "icon48", "Icon&48", "Sets the toolbar icon size to 48x48.",
-    "icon64", "Icon&64", "Sets the toolbar icon size to 64x64.",
-    "icon128", "Icon12&8", "Sets the toolbar icon size to 128x128.",
-    "settingsdialog", "&Settings", "Configure settings specific to this product.",
-    "makelayercurrent", "&Make Layer Active", "Makes the layer of a selected object the active layer",
-    "layers", "&Layers", "Manages layers and layer properties:  LAYER",
-    "layerselector", "&Layer Selector", "Dropdown selector for changing the current layer",
-    "layerprevious", "&Layer Previous", "Restores the previous layer settings:  LAYERP",
-    "colorselector", "&Color Selector", "Dropdown selector for changing the current thread color",
-    "linetypeselector", "&Stitchtype Selector", "Dropdown selector for changing the current stitch type",
-    "lineweightselector", "&Threadweight Selector", "Dropdown selector for changing the current thread weight",
-    "hidealllayers", "&Hide All Layers", "Turns the visibility off for all layers in the current drawing:  HIDEALL",
-    "showalllayers", "&Show All Layers", "Turns the visibility on for all layers in the current drawing:  SHOWALL",
-    "freezealllayers", "&Freeze All Layers", "Freezes all layers in the current drawing:  FREEZEALL",
-    "thawalllayers", "&Thaw All Layers", "Thaws all layers in the current drawing:  THAWALL",
-    "lockalllayers", "&Lock All Layers", "Locks all layers in the current drawing:  LOCKALL",
-    "unlockalllayers", "&Unlock All Layers", "Unlocks all layers in the current drawing:  UNLOCKALL",
-    "textbold", "&Bold Text", "Sets text to be bold.",
-    "textitalic", "&Italic Text", "Sets text to be italic.",
-    "textunderline", "&Underline Text", "Sets text to be underlined.",
-    "textstrikeout", "&StrikeOut Text", "Sets text to be striked out.",
-    "textoverline", "&Overline Text", "Sets text to be overlined.",
-    "zoomrealtime", "Zoom &Realtime", "Zooms to increase or decrease the apparent size of objects in the current viewport.",
-    "zoomprevious", "Zoom &Previous", "Zooms to display the previous view.",
-    "zoomwindow", "Zoom &Window", "Zooms to display an area specified by a rectangular window.",
-    "zoomdynamic", "Zoom &Dynamic", "Zooms to display the generated portion of the drawing.",
-    "zoomscale", "Zoom &Scale", "Zooms the display using a specified scale factor.",
-    "zoomcenter", "Zoom &Center", "Zooms to display a view specified by a center point and magnification or height.",
-    "zoomin", "Zoom &In", "Zooms to increase the apparent size of objects.",
-    "zoomout", "Zoom &Out", "Zooms to decrease the apparent size of objects.",
-    "zoomselected", "Zoom Selec&ted", "Zooms to display the selected objects.",
-    "zoomall", "Zoom &All", "Zooms to display the drawing extents or the grid limits.",
-    "zoomextents", "Zoom &Extents", "Zooms to display the drawing extents.",
-    "panrealtime", "&Pan Realtime", "Moves the view in the current viewport.",
-    "panpoint", "&Pan Point", "Moves the view by the specified distance.",
-    "panleft", "&Pan Left", "Moves the view to the left.",
-    "panright", "&Pan Right", "Moves the view to the right.",
-    "panup", "&Pan Up", "Moves the view up.",
-    "pandown", "&Pan Down", "Moves the view down.",
-    "day", "&Day", "Updates the current view using day vision settings.",
-    "night", "&Night", "Updates the current view using night vision settings."
+action_hash_data action_list[] = {
+    {
+        ACTION_donothing,
+        icon_donothing,
+        "donothing",
+        "&Do Nothing",
+        "Does nothing."
+    },
+    {
+        ACTION_windowcascade,
+        icon_windowcascade,
+        "windowcascade",
+        "&Cascade",
+        "Cascade the windows."
+    },
+    {
+         ACTION_windowtile,
+         icon_windowtile,
+         "windowtile",
+         "&Tile",
+         "Tile the windows."
+    },
+    {
+        ACTION_windowclose,
+        icon_windowclose,
+        "windowclose",
+        "Cl&ose",
+        "Close the active window."
+    },
+    {
+        ACTION_windowcloseall,
+        icon_windowcloseall,
+        "windowcloseall",
+        "Close &All",
+        "Close all the windows."
+    },
+    {
+        ACTION_windownext,
+        icon_windownext,
+        "windownext",
+        "Ne&xt",
+        "Move the focus to the next window."
+    },
+    {
+        ACTION_windowprevious,
+        icon_windowprevious,
+        "windowprevious",
+        "Pre&vious",
+        "Move the focus to the previous window."
+    },
+    {
+        ACTION_new,
+        icon__new,
+        "new",
+        "&New",
+        "Create a new file."
+    },
+    {
+        ACTION_open,
+        icon_open,
+        "open",
+        "&Open",
+        "Open an existing file."
+    },
+    {
+        ACTION_save,
+        icon_save,
+        "save",
+        "&Save",
+        "Save the design to disk."
+    },
+    {
+        ACTION_saveas,
+        icon_saveas,
+        "saveas",
+        "Save &As",
+        "Save the design under a new name."
+    },
+    {
+        ACTION_print,
+        icon_print,
+        "print",
+        "&Print",
+        "Print the design."
+    },
+    {
+        ACTION_designdetails,
+        icon_designdetails,
+        "designdetails",
+        "&Details",
+        "Details of the current design."
+    },
+    {
+        ACTION_exit,
+        icon_exit,
+        "exit",
+        "E&xit",
+        "Exit the application."
+    },
+    {
+        ACTION_cut,
+        icon_cut,
+        "cut",
+        "Cu&t",
+        "Cut the current selection's contents to the clipboard."
+    },
+    {
+        ACTION_copy,
+        icon_copy,
+        "copy",
+        "&Copy",
+        "Copy the current selection's contents to the clipboard."
+    },
+    {
+        ACTION_paste,
+        icon_paste,
+        "paste",
+        "&Paste",
+        "Paste the clipboard's contents into the current selection."
+    },
+    {
+        ACTION_help,
+        icon_help,
+        "help",
+        "&Help",
+        "Displays help."
+    },
+    {
+        ACTION_changelog,
+        icon_changelog,
+        "changelog",
+        "&Changelog",
+        "Describes new features in this product."
+    },
+    {
+        ACTION_tipoftheday,
+        icon_tipoftheday,
+        "tipoftheday",
+        "&Tip Of The Day",
+        "Displays a dialog with useful tips"
+    },
+    {
+        ACTION_about,
+        icon_about,
+        "about",
+        "&About Embroidermodder 2",
+        "Displays information about this product."
+    },
+    {
+        ACTION_whatsthis,
+        icon_whatsthis,
+        "whatsthis",
+        "&What's This?",
+        "What's This? Context Help!"
+    },
+    {
+        ACTION_undo,
+        icon_undo,
+        "undo",
+        "&Undo",
+        "Reverses the most recent action."
+    },
+    {
+        ACTION_redo,
+        icon_redo,
+        "redo",
+        "&Redo",
+        "Reverses the effects of the previous undo action."
+    },
+    {
+        ACTION_icon16,
+        icon_icon16,
+        "icon16",
+        "Icon&16",
+        "Sets the toolbar icon size to 16x16."
+    },
+    {
+        ACTION_icon24,
+        icon_icon24,
+        "icon24",
+        "Icon&24",
+        "Sets the toolbar icon size to 24x24."
+    },
+    {
+        ACTION_icon32,
+        icon_icon32,
+        "icon32",
+        "Icon&32",
+        "Sets the toolbar icon size to 32x32."
+    },
+    {
+        ACTION_icon48,
+        icon_icon48,
+        "icon48",
+        "Icon&48",
+        "Sets the toolbar icon size to 48x48."
+    },
+    {
+        ACTION_icon64,
+        icon_icon64,
+        "icon64",
+        "Icon&64",
+        "Sets the toolbar icon size to 64x64."
+    },
+    {
+        ACTION_icon128,
+        icon_icon128,
+        "icon128",
+        "Icon12&8",
+        "Sets the toolbar icon size to 128x128."
+    },
+    {
+        ACTION_settingsdialog,
+        icon_settingsdialog,
+        "settingsdialog",
+        "&Settings",
+        "Configure settings specific to this product."
+    },
+    {
+       ACTION_makelayercurrent,
+       icon_makelayercurrent,
+       "makelayercurrent",
+       "&Make Layer Active",
+       "Makes the layer of a selected object the active layer"
+    },
+    {
+        ACTION_layers,
+        icon_layers,
+        "layers",
+        "&Layers",
+        "Manages layers and layer properties:  LAYER"
+    },
+    {
+        ACTION_layerselector,
+        icon_layerselector,
+        "layerselector",
+        "&Layer Selector",
+        "Dropdown selector for changing the current layer"
+    },
+    {
+        ACTION_layerprevious,
+        icon_layerprevious,
+        "layerprevious",
+        "&Layer Previous",
+        "Restores the previous layer settings:  LAYERP"
+    },
+    {
+        ACTION_colorselector,
+        icon_colorselector,
+        "colorselector",
+        "&Color Selector",
+        "Dropdown selector for changing the current thread color"
+    },
+    {
+        ACTION_linetypeselector,
+        icon_linetypeselector,
+        "linetypeselector",
+        "&Stitchtype Selector",
+        "Dropdown selector for changing the current stitch type"
+    },
+    {
+        ACTION_lineweightselector,
+        icon_lineweightselector,
+        "lineweightselector",
+        "&Threadweight Selector",
+        "Dropdown selector for changing the current thread weight"
+    },
+    {
+        ACTION_hidealllayers,
+        icon_hidealllayers,
+        "hidealllayers",
+        "&Hide All Layers",
+        "Turns the visibility off for all layers in the current drawing:  HIDEALL"
+    },
+    {
+        ACTION_showalllayers,
+        icon_showalllayers,
+        "showalllayers",
+        "&Show All Layers",
+        "Turns the visibility on for all layers in the current drawing:  SHOWALL"
+    },
+    {
+        ACTION_freezealllayers,
+        icon_freezealllayers,
+        "freezealllayers",
+        "&Freeze All Layers",
+        "Freezes all layers in the current drawing:  FREEZEALL"
+    },
+    {
+        ACTION_thawalllayers,
+        icon_thawalllayers,
+        "thawalllayers",
+        "&Thaw All Layers",
+        "Thaws all layers in the current drawing:  THAWALL"
+    },
+    {
+        ACTION_lockalllayers,
+        icon_lockalllayers,
+        "lockalllayers",
+        "&Lock All Layers",
+        "Locks all layers in the current drawing:  LOCKALL"
+    },
+    {
+        ACTION_unlockalllayers,
+        icon_unlockalllayers,
+        "unlockalllayers",
+        "&Unlock All Layers",
+        "Unlocks all layers in the current drawing:  UNLOCKALL"
+    },
+    {
+        ACTION_textbold,
+        icon_textbold,
+        "textbold",
+        "&Bold Text",
+        "Sets text to be bold."
+    },
+    {
+        ACTION_textitalic,
+        icon_textitalic,
+        "textitalic",
+        "&Italic Text",
+        "Sets text to be italic."
+    },
+    {
+        ACTION_textoverline,
+        icon_textoverline,
+        "textunderline",
+        "&Underline Text",
+        "Sets text to be underlined."
+    },
+    {
+        ACTION_textstrikeout,
+        icon_textstrikeout,
+        "textstrikeout",
+        "&StrikeOut Text",
+        "Sets text to be striked out."
+    },
+    {
+        ACTION_textoverline,
+        icon_textoverline,
+        "textoverline",
+        "&Overline Text",
+        "Sets text to be overlined."
+    },
+    {
+        ACTION_zoomrealtime,
+        icon_zoomrealtime,
+        "zoomrealtime",
+        "Zoom &Realtime",
+        "Zooms to increase or decrease the apparent size of objects in the current viewport."
+    },
+    {
+        ACTION_zoomprevious,
+        icon_zoomprevious,
+        "zoomprevious",
+        "Zoom &Previous",
+        "Zooms to display the previous view."
+    },
+    {
+        ACTION_zoomwindow,
+        icon_zoomwindow,
+        "zoomwindow",
+        "Zoom &Window",
+        "Zooms to display an area specified by a rectangular window."
+    },
+    {
+        ACTION_zoomdynamic,
+        icon_zoomdynamic,
+        "zoomdynamic",
+        "Zoom &Dynamic",
+        "Zooms to display the generated portion of the drawing."
+    },
+    {
+        ACTION_zoomscale,
+        icon_zoomscale,
+        "zoomscale",
+        "Zoom &Scale",
+        "Zooms the display using a specified scale factor."
+    },
+    {
+        ACTION_zoomcenter,
+        icon_zoomcenter,
+        "zoomcenter",
+        "Zoom &Center",
+        "Zooms to display a view specified by a center point and magnification or height."
+    },
+    {
+        ACTION_zoomin,
+        icon_zoomin,
+        "zoomin",
+        "Zoom &In",
+        "Zooms to increase the apparent size of objects."
+    },
+    {
+        ACTION_zoomout,
+        icon_zoomout,
+        "zoomout",
+        "Zoom &Out",
+        "Zooms to decrease the apparent size of objects."
+    },
+    {
+        ACTION_zoomselected,
+        icon_zoomselected,
+        "zoomselected",
+        "Zoom Selec&ted",
+        "Zooms to display the selected objects."
+    },
+    {
+        ACTION_zoomall,
+        icon_zoomall,
+        "zoomall",
+        "Zoom &All",
+        "Zooms to display the drawing extents or the grid limits."
+    },
+    {
+        ACTION_zoomextents,
+        icon_zoomextents,
+        "zoomextents",
+        "Zoom &Extents",
+        "Zooms to display the drawing extents."
+    },
+    {
+        ACTION_panrealtime,
+        icon_panrealtime,
+        "panrealtime",
+        "&Pan Realtime",
+        "Moves the view in the current viewport."
+    },
+    {
+        ACTION_panpoint,
+        icon_panpoint,
+        "panpoint",
+        "&Pan Point",
+        "Moves the view by the specified distance."
+    },
+    {
+        ACTION_panleft,
+        icon_panleft,
+        "panleft",
+        "&Pan Left",
+        "Moves the view to the left."
+    },
+    {
+        ACTION_panright,
+        icon_panright,
+        "panright",
+        "&Pan Right",
+        "Moves the view to the right."
+    },
+    {
+        ACTION_panup,
+        icon_panup,
+        "panup",
+        "&Pan Up",
+        "Moves the view up."
+    },
+    {
+        ACTION_pandown,
+        icon_pandown,
+        "pandown",
+        "&Pan Down",
+        "Moves the view down."
+    },
+    {
+        ACTION_day,
+        icon_day,
+        "day",
+        "&Day",
+        "Updates the current view using day vision settings."
+    },
+    {
+        ACTION_night,
+        icon_night,
+        "night",
+        "&Night",
+        "Updates the current view using night vision settings."
+    }
 };
 

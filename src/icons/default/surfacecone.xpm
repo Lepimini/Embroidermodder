@@ -1,5 +1,5 @@
 /* XPM */
-static char *surfacecone[] = {
+char *icon_surfacecone[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 1 1 ",
 "  c #880002",

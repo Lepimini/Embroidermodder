@@ -1,5 +1,5 @@
 /* XPM */
-static char *picknew[] = {
+char *icon_picknew[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 147 2 ",
 "   c black",

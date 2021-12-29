@@ -1,5 +1,5 @@
 /* XPM */
-static char *heart_2[] = {
+char *icon_heart_2[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 124 2 ",
 "   c #000000",

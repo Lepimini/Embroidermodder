@@ -1,5 +1,5 @@
 /* XPM */
-static char *browser[] = {
+char *icon_browser[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 229 2 ",
 "   c #000000",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *linetypecontinuous[] = {
+char *icon_linetypecontinuous[] = {
 /* columns rows colors chars-per-pixel */
 "512 128 2 1 ",
 "  c black",

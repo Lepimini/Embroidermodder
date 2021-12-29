@@ -1,5 +1,5 @@
 /* XPM */
-static char *locator_snaptoperpendicular[] = {
+char *icon_locator_snaptoperpendicular[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 108 2 ",
 "   c #8A8B00",

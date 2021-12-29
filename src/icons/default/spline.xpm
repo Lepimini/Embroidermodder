@@ -1,5 +1,5 @@
 /* XPM */
-static char *spline[] = {
+char *icon_spline[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 94 2 ",
 "   c black",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *circle3points[] = {
+char *icon_circle3points[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 146 2 ",
 "   c #000000",

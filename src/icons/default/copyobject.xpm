@@ -1,5 +1,5 @@
 /* XPM */
-static char *copyobject[] = {
+char *icon_copyobject[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 235 2 ",
 "   c black",

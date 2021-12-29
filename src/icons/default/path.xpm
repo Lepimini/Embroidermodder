@@ -1,5 +1,5 @@
 /* XPM */
-static char *___path[] = {
+char *icon____path[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 188 2 ",
 "   c black",

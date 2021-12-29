@@ -1,5 +1,5 @@
 /* XPM */
-static char *cloud_2[] = {
+char *icon_cloud_2[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 189 2 ",
 "   c #275284",

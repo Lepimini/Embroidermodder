@@ -1,5 +1,5 @@
 /* XPM */
-static char *polygon[] = {
+char *icon_polygon[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 218 2 ",
 "   c black",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *pointdivide[] = {
+char *icon_pointdivide[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 118 2 ",
 "   c black",

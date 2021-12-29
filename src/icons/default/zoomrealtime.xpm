@@ -1,5 +1,5 @@
 /* XPM */
-static char *zoomrealtime[] = {
+char *icon_zoomrealtime[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 115 2 ",
 "   c #000000",

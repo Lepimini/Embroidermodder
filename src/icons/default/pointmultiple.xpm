@@ -1,5 +1,5 @@
 /* XPM */
-static char *pointmultiple[] = {
+char *icon_pointmultiple[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 124 2 ",
 "   c #370000",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *help_2[] = {
+char *icon_help_2[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 199 2 ",
 "   c #340000",

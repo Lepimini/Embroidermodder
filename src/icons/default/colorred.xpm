@@ -1,5 +1,5 @@
 /* XPM */
-static char *colorred[] = {
+char *icon_colorred[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 68 1 ",
 "  c black",

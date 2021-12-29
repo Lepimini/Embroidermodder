@@ -1,5 +1,5 @@
 /* XPM */
-static char *chamfer[] = {
+char *icon_chamfer[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 44 1 ",
 "  c black",

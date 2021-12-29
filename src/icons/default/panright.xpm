@@ -1,5 +1,5 @@
 /* XPM */
-static char *panright[] = {
+char *icon_panright[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 152 2 ",
 "   c black",

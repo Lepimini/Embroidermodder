@@ -1,5 +1,5 @@
 /* XPM */
-static char *sandbox[] = {
+char *icon_sandbox[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 237 2 ",
 "   c #000000",

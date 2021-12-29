@@ -1,5 +1,5 @@
 /* XPM */
-static char *zoomdynamic[] = {
+char *icon_zoomdynamic[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 184 2 ",
 "   c #000000",

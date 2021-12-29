@@ -1,5 +1,5 @@
 /* XPM */
-static char *shade3dwireframe[] = {
+char *icon_shade3dwireframe[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 246 2 ",
 "   c black",

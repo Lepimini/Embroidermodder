@@ -1,5 +1,5 @@
 /* XPM */
-static char *circlecenterdiameter[] = {
+char *icon_circlecenterdiameter[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 125 2 ",
 "   c #000000",

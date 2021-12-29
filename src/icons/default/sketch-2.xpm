@@ -1,5 +1,5 @@
 /* XPM */
-static char *sketch_2[] = {
+char *icon_sketch_2[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 206 2 ",
 "   c #000000",

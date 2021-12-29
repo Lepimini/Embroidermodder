@@ -1,5 +1,5 @@
 /* XPM */
-static char *textitalic[] = {
+char *icon_textitalic[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 107 2 ",
 "   c black",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *tipoftheday_2[] = {
+char *icon_tipoftheday_2[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 205 2 ",
 "   c #000000",

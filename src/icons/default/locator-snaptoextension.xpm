@@ -1,5 +1,5 @@
 /* XPM */
-static char *locator_snaptoextension[] = {
+char *icon_locator_snaptoextension[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 63 1 ",
 "  c #8A8B00",

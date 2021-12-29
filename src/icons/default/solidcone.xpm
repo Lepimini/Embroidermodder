@@ -1,5 +1,5 @@
 /* XPM */
-static char *solidcone[] = {
+char *icon_solidcone[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 255 2 ",
 "   c black",

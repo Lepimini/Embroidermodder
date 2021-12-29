@@ -1,5 +1,5 @@
 /* XPM */
-static char *drawing[] = {
+char *icon_drawing[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 136 2 ",
 "   c #000000",

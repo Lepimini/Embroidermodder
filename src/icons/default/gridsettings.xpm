@@ -1,5 +1,5 @@
 /* XPM */
-static char *gridsettings[] = {
+char *icon_gridsettings[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 86 1 ",
 "  c black",

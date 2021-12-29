@@ -1,5 +1,5 @@
 /* XPM */
-static char *___exit[] = {
+char *icon_exit[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 249 2 ",
 "   c #320000",

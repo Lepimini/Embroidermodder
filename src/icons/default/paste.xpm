@@ -1,5 +1,5 @@
 /* XPM */
-static char *paste[] = {
+char *icon_paste[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 87 1 ",
 "  c #000000",

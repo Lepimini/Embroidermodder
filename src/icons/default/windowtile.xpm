@@ -1,5 +1,5 @@
 /* XPM */
-static char *windowtile[] = {
+char *icon_windowtile[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 172 2 ",
 "   c black",

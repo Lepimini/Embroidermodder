@@ -1,5 +1,5 @@
 /* XPM */
-static char *histogram[] = {
+char *icon_histogram[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 115 2 ",
 "   c black",

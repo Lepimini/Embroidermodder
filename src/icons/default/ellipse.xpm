@@ -1,5 +1,5 @@
 /* XPM */
-static char *ellipse[] = {
+char *icon_ellipse[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 158 2 ",
 "   c #000000",

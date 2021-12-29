@@ -1,5 +1,5 @@
 /* XPM */
-static char *breakatpoint[] = {
+char *icon_breakatpoint[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 97 2 ",
 "   c #000000",

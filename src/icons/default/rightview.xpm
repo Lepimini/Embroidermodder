@@ -1,5 +1,5 @@
 /* XPM */
-static char *rightview[] = {
+char *icon_rightview[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 73 1 ",
 "  c #000000",

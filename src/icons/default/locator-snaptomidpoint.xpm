@@ -1,5 +1,5 @@
 /* XPM */
-static char *locator_snaptomidpoint[] = {
+char *icon_locator_snaptomidpoint[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 54 1 ",
 "  c #4D4E00",

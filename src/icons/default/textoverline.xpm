@@ -1,5 +1,5 @@
 /* XPM */
-static char *textoverline[] = {
+char *icon_textoverline[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 124 2 ",
 "   c black",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *lineweight18[] = {
+char *icon_lineweight18[] = {
 /* columns rows colors chars-per-pixel */
 "256 64 2 1 ",
 "  c black",

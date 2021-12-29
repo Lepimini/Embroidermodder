@@ -1,5 +1,5 @@
 /* XPM */
-static char *snaptonone[] = {
+char *icon_snaptonone[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 58 1 ",
 "  c #010101",

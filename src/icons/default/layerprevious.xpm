@@ -1,5 +1,5 @@
 /* XPM */
-static char *layerprevious[] = {
+char *icon_layerprevious[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 256 2 ",
 "   c black",

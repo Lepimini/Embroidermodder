@@ -1,5 +1,5 @@
 /* XPM */
-static char *solidextrudefaces[] = {
+char *icon_solidextrudefaces[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 1 1 ",
 "  c #800080",

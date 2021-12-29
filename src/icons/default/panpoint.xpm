@@ -1,5 +1,5 @@
 /* XPM */
-static char *panpoint[] = {
+char *icon_panpoint[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 131 2 ",
 "   c #000000",

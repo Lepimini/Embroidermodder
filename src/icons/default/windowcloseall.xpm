@@ -1,5 +1,5 @@
 /* XPM */
-static char *windowcloseall[] = {
+char *icon_windowcloseall[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 80 1 ",
 "  c #0E0000",

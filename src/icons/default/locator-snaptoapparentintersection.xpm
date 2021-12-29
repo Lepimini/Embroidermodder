@@ -1,5 +1,5 @@
 /* XPM */
-static char *locator_snaptoapparentintersection[] = {
+char *icon_locator_snaptoapparentintersection[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 211 2 ",
 "   c #747500",

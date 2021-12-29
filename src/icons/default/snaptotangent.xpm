@@ -1,5 +1,5 @@
 /* XPM */
-static char *snaptotangent[] = {
+char *icon_snaptotangent[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 202 2 ",
 "   c black",

@@ -1,5 +1,5 @@
 /* XPM */
-static char *textbold[] = {
+char *icon_textbold[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 123 2 ",
 "   c black",

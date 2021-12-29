@@ -50,10 +50,6 @@ void render_quadlist(quad *qlist);
 void menu(int key);
 void display(void);
 
-action_hash_data menu_actions[] = {
-    { ACTION_delete, ICON_erase, "D&elete", "Delete", "Removes objects from a drawing." }
-};
-
 /* FUNCTIONS SECTION */
 
 int main_tex_example(int argc, char *argv[])

@@ -1,5 +1,5 @@
 /* XPM */
-static char *solidsubtract[] = {
+char *icon_solidsubtract[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 248 2 ",
 "   c black",

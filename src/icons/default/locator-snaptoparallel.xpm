@@ -1,5 +1,5 @@
 /* XPM */
-static char *locator_snaptoparallel[] = {
+char *icon_locator_snaptoparallel[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 124 2 ",
 "   c #7D7E00",

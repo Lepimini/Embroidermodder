@@ -1,5 +1,5 @@
 /* XPM */
-static char *insertblock[] = {
+char *icon_insertblock[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 178 2 ",
 "   c #000000",

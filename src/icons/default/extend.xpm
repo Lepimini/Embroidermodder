@@ -1,5 +1,5 @@
 /* XPM */
-static char *extend[] = {
+char *icon_extend[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 214 2 ",
 "   c black",

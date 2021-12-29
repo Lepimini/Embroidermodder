@@ -1,5 +1,5 @@
 /* XPM */
-static char *windownext[] = {
+char *icon_windownext[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 176 2 ",
 "   c #000000",

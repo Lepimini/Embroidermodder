@@ -1,5 +1,5 @@
 /* XPM */
-static char *arc3points[] = {
+char *icon_arc3points[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 216 2 ",
 "   c black",

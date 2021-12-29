@@ -1,5 +1,5 @@
 /* XPM */
-static char *cut[] = {
+char *icon_cut[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 95 2 ",
 "   c #010101",

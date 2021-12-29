@@ -109,14 +109,11 @@ dialog_wrapper dialog;
 settings_wrapper settings;
 
 void actuator(int action);
+
+extern "C" {
 void settings_actuator(int action);
-
-float radians(float degree) {
-    return (degree*embConstantPi/180.0);
-}
-
-float degrees(float radian) {
-    return (radian*180.0/embConstantPi);
+double radians(double);
+double degrees(double);
 }
 
 QIcon getIcon(QString theme, QString icon)
@@ -1644,10 +1641,10 @@ void View::createGridRect()
 
     QRectF gr(0, 0, settings.grid_size_x, -settings.grid_size_y);
     //Ensure the loop will work correctly with negative numbers
-    float x1 = qMin(gr.left(), gr.right());
-    float y1 = qMin(gr.top(), gr.bottom());
-    float x2 = qMax(gr.left(), gr.right());
-    float y2 = qMax(gr.top(), gr.bottom());
+    float x1 = embMinDouble(gr.left(), gr.right());
+    float y1 = embMinDouble(gr.top(), gr.bottom());
+    float x2 = embMaxDouble(gr.left(), gr.right());
+    float y2 = embMaxDouble(gr.top(), gr.bottom());
 
     gridPath = QPainterPath();
     gridPath.addRect(gr);
@@ -5963,63 +5960,25 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
 
     QSet<int> typeSet;
 
-    int numAll = itemList.size();
-    int numArc = 0;
-    int numBlock = 0;
-    int numCircle = 0;
-    int numDimAlign = 0;
-    int numDimAngular = 0;
-    int numDimArcLen = 0;
-    int numDimDiam = 0;
-    int numDimLeader = 0;
-    int numDimLinear = 0;
-    int numDimOrd = 0;
-    int numDimRadius = 0;
-    int numEllipse = 0;
-    int numImage = 0;
-    int numInfLine = 0;
-    int numLine = 0;
-    int numPath = 0;
-    int numPoint = 0;
-    int numPolygon = 0;
-    int numPolyline = 0;
-    int numRay = 0;
-    int numRect = 0;
-    int numTextMulti = 0;
-    int numTextSingle = 0;
-    int numUnknown = 0;
+    int numObjects[31], i;
 
-    foreach(QGraphicsItem* item, itemList)
-    {
+    int numAll = itemList.size();
+    for (i=0; i<31; i++) {
+        numObjects[i] = 0;
+    }
+
+    foreach (QGraphicsItem* item, itemList) {
         if(!item) continue;
 
         int objType = item->type();
         typeSet.insert(objType);
 
-        if     (objType == OBJ_TYPE_ARC)          numArc++;
-        else if(objType == OBJ_TYPE_BLOCK)        numBlock++;
-        else if(objType == OBJ_TYPE_CIRCLE)       numCircle++;
-        else if(objType == OBJ_TYPE_DIMALIGNED)   numDimAlign++;
-        else if(objType == OBJ_TYPE_DIMANGULAR)   numDimAngular++;
-        else if(objType == OBJ_TYPE_DIMARCLENGTH) numDimArcLen++;
-        else if(objType == OBJ_TYPE_DIMDIAMETER)  numDimDiam++;
-        else if(objType == OBJ_TYPE_DIMLEADER)    numDimLeader++;
-        else if(objType == OBJ_TYPE_DIMLINEAR)    numDimLinear++;
-        else if(objType == OBJ_TYPE_DIMORDINATE)  numDimOrd++;
-        else if(objType == OBJ_TYPE_DIMRADIUS)    numDimRadius++;
-        else if(objType == OBJ_TYPE_ELLIPSE)      numEllipse++;
-        else if(objType == OBJ_TYPE_IMAGE)        numImage++;
-        else if(objType == OBJ_TYPE_INFINITELINE) numInfLine++;
-        else if(objType == OBJ_TYPE_LINE)         numLine++;
-        else if(objType == OBJ_TYPE_PATH)         numPath++;
-        else if(objType == OBJ_TYPE_POINT)        numPoint++;
-        else if(objType == OBJ_TYPE_POLYGON)      numPolygon++;
-        else if(objType == OBJ_TYPE_POLYLINE)     numPolyline++;
-        else if(objType == OBJ_TYPE_RAY)          numRay++;
-        else if(objType == OBJ_TYPE_RECTANGLE)    numRect++;
-        else if(objType == OBJ_TYPE_TEXTMULTI)    numTextMulti++;
-        else if(objType == OBJ_TYPE_TEXTSINGLE)   numTextSingle++;
-        else                                      numUnknown++;
+        if (objType > OBJ_TYPE_BASE && objType < OBJ_TYPE_UNKNOWN) {
+            numObjects[objType-OBJ_TYPE_BASE]++;
+        }
+        else {
+            numObjects[OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE]++;
+        }
     }
 
     int numTypes = typeSet.size();
@@ -6032,35 +5991,12 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
         connect(comboBoxSelected, SIGNAL(currentIndexChanged(int)), this, SLOT(showOneType(int)));
     }
 
-    QString comboBoxStr;
-    foreach(int objType, typeSet)
-    {
-        if     (objType == OBJ_TYPE_ARC)          comboBoxStr = tr("Arc") + " (" + QString().setNum(numArc) + ")";
-        else if(objType == OBJ_TYPE_BLOCK)        comboBoxStr = tr("Block") + " (" + QString().setNum(numBlock) + ")";
-        else if(objType == OBJ_TYPE_CIRCLE)       comboBoxStr = tr("Circle") + " (" + QString().setNum(numCircle) + ")";
-        else if(objType == OBJ_TYPE_DIMALIGNED)   comboBoxStr = tr("Aligned Dimension") + " (" + QString().setNum(numDimAlign) + ")";
-        else if(objType == OBJ_TYPE_DIMANGULAR)   comboBoxStr = tr("Angular Dimension") + " (" + QString().setNum(numDimAngular) + ")";
-        else if(objType == OBJ_TYPE_DIMARCLENGTH) comboBoxStr = tr("Arclength Dimension") + " (" + QString().setNum(numDimArcLen) + ")";
-        else if(objType == OBJ_TYPE_DIMDIAMETER)  comboBoxStr = tr("Diameter Dimension") + " (" + QString().setNum(numDimDiam) + ")";
-        else if(objType == OBJ_TYPE_DIMLEADER)    comboBoxStr = tr("Leader Dimension") + " (" + QString().setNum(numDimLeader) + ")";
-        else if(objType == OBJ_TYPE_DIMLINEAR)    comboBoxStr = tr("Linear Dimension") + " (" + QString().setNum(numDimLinear) + ")";
-        else if(objType == OBJ_TYPE_DIMORDINATE)  comboBoxStr = tr("Ordinate Dimension") + " (" + QString().setNum(numDimOrd) + ")";
-        else if(objType == OBJ_TYPE_DIMRADIUS)    comboBoxStr = tr("Radius Dimension") + " (" + QString().setNum(numDimRadius) + ")";
-        else if(objType == OBJ_TYPE_ELLIPSE)      comboBoxStr = tr("Ellipse") + " (" + QString().setNum(numEllipse) + ")";
-        else if(objType == OBJ_TYPE_IMAGE)        comboBoxStr = tr("Image") + " (" + QString().setNum(numImage) + ")";
-        else if(objType == OBJ_TYPE_INFINITELINE) comboBoxStr = tr("Infinite Line") + " (" + QString().setNum(numInfLine) + ")";
-        else if(objType == OBJ_TYPE_LINE)         comboBoxStr = tr("Line") + " (" + QString().setNum(numLine) + ")";
-        else if(objType == OBJ_TYPE_PATH)         comboBoxStr = tr("Path") + " (" + QString().setNum(numPath) + ")";
-        else if(objType == OBJ_TYPE_POINT)        comboBoxStr = tr("Point") + " (" + QString().setNum(numPoint) + ")";
-        else if(objType == OBJ_TYPE_POLYGON)      comboBoxStr = tr("Polygon") + " (" + QString().setNum(numPolygon) + ")";
-        else if(objType == OBJ_TYPE_POLYLINE)     comboBoxStr = tr("Polyline") + " (" + QString().setNum(numPolyline) + ")";
-        else if(objType == OBJ_TYPE_RAY)          comboBoxStr = tr("Ray") + " (" + QString().setNum(numRay) + ")";
-        else if(objType == OBJ_TYPE_RECTANGLE)    comboBoxStr = tr("Rectangle") + " (" + QString().setNum(numRect) + ")";
-        else if(objType == OBJ_TYPE_TEXTMULTI)    comboBoxStr = tr("Multiline Text") + " (" + QString().setNum(numTextMulti) + ")";
-        else if(objType == OBJ_TYPE_TEXTSINGLE)   comboBoxStr = tr("Text") + " (" + QString().setNum(numTextSingle) + ")";
-        else                                      comboBoxStr = tr("Unknown") + " (" + QString().setNum(numUnknown) + ")";
-
-        comboBoxSelected->addItem(comboBoxStr, objType);
+    for (i=0; i<31; i++) {
+        if (numObjects[i] > 0) {
+            QString comboBoxStr = tr(obj_names[i])
+                + " (" + QString().setNum(numObjects[i]) + ")";
+            comboBoxSelected->addItem(comboBoxStr, OBJ_TYPE_BASE+i);
+        }
     }
 
     /* ==================================================
@@ -6258,10 +6194,8 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
     //==================================================
     // Only show fields if all objects are the same type
     //==================================================
-    if(numTypes == 1)
-    {
-        foreach(int objType, typeSet)
-        {
+    if (numTypes == 1) {
+        foreach (int objType, typeSet) {
             showGroups(objType);
         }
     }
@@ -7611,7 +7545,7 @@ ArcObject::~ArcObject()
 void ArcObject::init(float startX, float startY, float midX, float midY, float endX, float endY, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_ARC);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_ARC]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -8100,7 +8034,7 @@ CircleObject::~CircleObject()
 void CircleObject::init(float centerX, float centerY, float radius, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_CIRCLE);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_CIRCLE]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -8339,7 +8273,7 @@ DimLeaderObject::~DimLeaderObject()
 void DimLeaderObject::init(float x1, float y1, float x2, float y2, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_DIMLEADER);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_DIMLEADER]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -8628,7 +8562,7 @@ EllipseObject::~EllipseObject()
 void EllipseObject::init(float centerX, float centerY, float width, float height, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_ELLIPSE);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_ELLIPSE]);
 
     /*
      * WARNING:
@@ -8927,7 +8861,7 @@ ImageObject::~ImageObject()
 void ImageObject::init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_IMAGE);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_IMAGE]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -9098,7 +9032,7 @@ LineObject::~LineObject()
 void LineObject::init(float x1, float y1, float x2, float y2, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_LINE);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_LINE]);
 
     /* WARNING:
      * DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
@@ -9296,7 +9230,7 @@ PathObject::~PathObject()
 void PathObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_PATH);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_PATH]);
 
     /* WARNING:
      * DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
@@ -9414,7 +9348,7 @@ PointObject::~PointObject()
 void PointObject::init(float x, float y, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_POINT);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_POINT]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -9520,7 +9454,7 @@ PolygonObject::~PolygonObject()
 void PolygonObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_POLYGON);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYGON]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -9789,7 +9723,7 @@ PolylineObject::~PolylineObject()
 void PolylineObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, PolylineObject::Type);
-    setData(OBJ_NAME, OBJ_NAME_POLYLINE);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYLINE]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -10004,7 +9938,7 @@ RectObject::~RectObject()
 void RectObject::init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_RECTANGLE);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_RECTANGLE]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -10614,7 +10548,7 @@ TextSingleObject::~TextSingleObject()
 void TextSingleObject::init(const QString& str, float x, float y, QRgb rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
-    setData(OBJ_NAME, OBJ_NAME_TEXTSINGLE);
+    setData(OBJ_NAME, obj_names[OBJ_TYPE_TEXTSINGLE]);
 
     //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
     //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
@@ -10925,9 +10859,9 @@ QList<QPainterPath> TextSingleObject::subPathList() const
     return pathList;
 }
 
-QIcon loadIcon(int index)
+QIcon loadIcon(char **s)
 {
-    return QIcon(QPixmap(icon_table[index]));
+    return QIcon(QPixmap(s));
 }
 
 QAction *MainWindow::createAction(const QString icon, const QString toolTip, const QString statusTip, bool scripted)
@@ -11017,8 +10951,7 @@ QAction *MainWindow::createAction(const QString icon, const QString toolTip, con
 
     else if(icon == "day")                        connect(ACTION, SIGNAL(triggered()), this, SLOT(dayVision()));
     else if(icon == "night")                      connect(ACTION, SIGNAL(triggered()), this, SLOT(nightVision()));
-    else
-    {
+    else {
         ACTION->setEnabled(false);
         connect(ACTION, SIGNAL(triggered()), this, SLOT(stub_implement()));
     }
@@ -12699,8 +12632,10 @@ MainWindow::MainWindow() : QMainWindow(0)
     QString appName = QApplication::applicationName();
 
     for (i=0; i<n_actions; i++) {
-        actionHash.insert(actions_indices[i],
-            createAction(tr(actions_strings[3*i+0]), tr(actions_strings[3*i+1]), tr(actions_strings[3*i+2])));
+        actionHash.insert(action_list[i].id,
+            createAction(tr(action_list[i].abbreviation),
+                tr(action_list[i].menu_name),
+                tr(action_list[i].description)));
     }
 
     actionHash.value(ACTION_windowclose)->setEnabled(numOfDocs > 0);
@@ -13450,16 +13385,16 @@ void MainWindow::createLayerToolbar()
 
     //NOTE: Qt4.7 wont load icons without an extension...
     //TODO: Create layer pixmaps by concatenating several icons
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "0");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "1");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "2");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "3");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "4");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "5");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "6");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "7");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "8");
-    layerSelector->addItem(loadIcon(ICON_linetypebylayer), "9");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "0");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "1");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "2");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "3");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "4");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "5");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "6");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "7");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "8");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "9");
     toolbar[TOOLBAR_LAYER]->addWidget(layerSelector);
     connect(layerSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(layerSelectorIndexChanged(int)));
 
@@ -13479,62 +13414,62 @@ void MainWindow::createPropertiesToolbar()
 
     colorSelector->setFocusProxy(fileMenu);
     //NOTE: Qt4.7 wont load icons without an extension...
-    colorSelector->addItem(loadIcon(ICON_colorbylayer), "ByLayer");
-    colorSelector->addItem(loadIcon(ICON_colorbyblock), "ByBlock");
-    colorSelector->addItem(loadIcon(ICON_colorred), tr("Red"), qRgb(255, 0, 0));
-    colorSelector->addItem(loadIcon(ICON_coloryellow), tr("Yellow"), qRgb(255,255, 0));
-    colorSelector->addItem(loadIcon(ICON_colorgreen), tr("Green"), qRgb(0, 255, 0));
-    colorSelector->addItem(loadIcon(ICON_colorcyan), tr("Cyan"), qRgb(  0,255,255));
-    colorSelector->addItem(loadIcon(ICON_colorblue), tr("Blue"), qRgb(  0, 0,255));
-    colorSelector->addItem(loadIcon(ICON_colormagenta), tr("Magenta"), qRgb(255, 0,255));
-    colorSelector->addItem(loadIcon(ICON_colorwhite), tr("White"), qRgb(255,255,255));
-    colorSelector->addItem(loadIcon(ICON_colorother), tr("Other..."));
+    colorSelector->addItem(loadIcon(icon_colorbylayer), "ByLayer");
+    colorSelector->addItem(loadIcon(icon_colorbyblock), "ByBlock");
+    colorSelector->addItem(loadIcon(icon_colorred), tr("Red"), qRgb(255, 0, 0));
+    colorSelector->addItem(loadIcon(icon_coloryellow), tr("Yellow"), qRgb(255,255, 0));
+    colorSelector->addItem(loadIcon(icon_colorgreen), tr("Green"), qRgb(0, 255, 0));
+    colorSelector->addItem(loadIcon(icon_colorcyan), tr("Cyan"), qRgb(  0,255,255));
+    colorSelector->addItem(loadIcon(icon_colorblue), tr("Blue"), qRgb(  0, 0,255));
+    colorSelector->addItem(loadIcon(icon_colormagenta), tr("Magenta"), qRgb(255, 0,255));
+    colorSelector->addItem(loadIcon(icon_colorwhite), tr("White"), qRgb(255,255,255));
+    colorSelector->addItem(loadIcon(icon_colorother), tr("Other..."));
     toolbar[TOOLBAR_PROPERTIES]->addWidget(colorSelector);
     connect(colorSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(colorSelectorIndexChanged(int)));
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator();
     linetypeSelector->setFocusProxy(fileMenu);
     //NOTE: Qt4.7 wont load icons without an extension...
-    linetypeSelector->addItem(loadIcon(ICON_linetypebylayer), "ByLayer");
-    linetypeSelector->addItem(loadIcon(ICON_linetypebyblock), "ByBlock");
-    linetypeSelector->addItem(loadIcon(ICON_linetypecontinuous), "Continuous");
-    linetypeSelector->addItem(loadIcon(ICON_linetypehidden), "Hidden");
-    linetypeSelector->addItem(loadIcon(ICON_linetypecenter), "Center");
-    linetypeSelector->addItem(loadIcon(ICON_linetypeother), "Other...");
+    linetypeSelector->addItem(loadIcon(icon_linetypebylayer), "ByLayer");
+    linetypeSelector->addItem(loadIcon(icon_linetypebyblock), "ByBlock");
+    linetypeSelector->addItem(loadIcon(icon_linetypecontinuous), "Continuous");
+    linetypeSelector->addItem(loadIcon(icon_linetypehidden), "Hidden");
+    linetypeSelector->addItem(loadIcon(icon_linetypecenter), "Center");
+    linetypeSelector->addItem(loadIcon(icon_linetypeother), "Other...");
     toolbar[TOOLBAR_PROPERTIES]->addWidget(linetypeSelector);
     connect(linetypeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(linetypeSelectorIndexChanged(int)));
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator();
     lineweightSelector->setFocusProxy(fileMenu);
     //NOTE: Qt4.7 wont load icons without an extension...
-    lineweightSelector->addItem(loadIcon(ICON_lineweightbylayer), "ByLayer", -2.00);
-    lineweightSelector->addItem(loadIcon(ICON_lineweightbyblock), "ByBlock", -1.00);
-    lineweightSelector->addItem(loadIcon(ICON_lineweightdefault), "Default", 0.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweightbylayer), "ByLayer", -2.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweightbyblock), "ByBlock", -1.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweightdefault), "Default", 0.00);
     /* TODO: Thread weight is weird. See http://en.wikipedia.org/wiki/Thread_(yarn)#Weight */
-    lineweightSelector->addItem(loadIcon(ICON_lineweight01), "0.00 mm", 0.00);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight02), "0.05 mm", 0.05);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight03), "0.15 mm", 0.15);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight04), "0.20 mm", 0.20);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight05), "0.25 mm", 0.25);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight06), "0.30 mm", 0.30);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight07), "0.35 mm", 0.35);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight08), "0.40 mm", 0.40);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight09), "0.45 mm", 0.45);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight10), "0.50 mm", 0.50);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight11), "0.55 mm", 0.55);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight12), "0.60 mm", 0.60);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight13), "0.65 mm", 0.65);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight14), "0.70 mm", 0.70);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight15), "0.75 mm", 0.75);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight16), "0.80 mm", 0.80);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight17), "0.85 mm", 0.85);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight18), "0.90 mm", 0.90);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight19), "0.95 mm", 0.95);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight20), "1.00 mm", 1.00);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight21), "1.05 mm", 1.05);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight22), "1.10 mm", 1.10);
-    lineweightSelector->addItem(loadIcon(ICON_lineweight23), "1.15 mm", 1.15);
-    lineweightSelector->addItem(QIcon(QPixmap(icon_table[ICON_lineweight24])), "1.20 mm", 1.20);
+    lineweightSelector->addItem(loadIcon(icon_lineweight01), "0.00 mm", 0.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweight02), "0.05 mm", 0.05);
+    lineweightSelector->addItem(loadIcon(icon_lineweight03), "0.15 mm", 0.15);
+    lineweightSelector->addItem(loadIcon(icon_lineweight04), "0.20 mm", 0.20);
+    lineweightSelector->addItem(loadIcon(icon_lineweight05), "0.25 mm", 0.25);
+    lineweightSelector->addItem(loadIcon(icon_lineweight06), "0.30 mm", 0.30);
+    lineweightSelector->addItem(loadIcon(icon_lineweight07), "0.35 mm", 0.35);
+    lineweightSelector->addItem(loadIcon(icon_lineweight08), "0.40 mm", 0.40);
+    lineweightSelector->addItem(loadIcon(icon_lineweight09), "0.45 mm", 0.45);
+    lineweightSelector->addItem(loadIcon(icon_lineweight10), "0.50 mm", 0.50);
+    lineweightSelector->addItem(loadIcon(icon_lineweight11), "0.55 mm", 0.55);
+    lineweightSelector->addItem(loadIcon(icon_lineweight12), "0.60 mm", 0.60);
+    lineweightSelector->addItem(loadIcon(icon_lineweight13), "0.65 mm", 0.65);
+    lineweightSelector->addItem(loadIcon(icon_lineweight14), "0.70 mm", 0.70);
+    lineweightSelector->addItem(loadIcon(icon_lineweight15), "0.75 mm", 0.75);
+    lineweightSelector->addItem(loadIcon(icon_lineweight16), "0.80 mm", 0.80);
+    lineweightSelector->addItem(loadIcon(icon_lineweight17), "0.85 mm", 0.85);
+    lineweightSelector->addItem(loadIcon(icon_lineweight18), "0.90 mm", 0.90);
+    lineweightSelector->addItem(loadIcon(icon_lineweight19), "0.95 mm", 0.95);
+    lineweightSelector->addItem(loadIcon(icon_lineweight20), "1.00 mm", 1.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweight21), "1.05 mm", 1.05);
+    lineweightSelector->addItem(loadIcon(icon_lineweight22), "1.10 mm", 1.10);
+    lineweightSelector->addItem(loadIcon(icon_lineweight23), "1.15 mm", 1.15);
+    lineweightSelector->addItem(QIcon(QPixmap(icon_lineweight24)), "1.20 mm", 1.20);
     lineweightSelector->setMinimumContentsLength(8); // Prevent dropdown text readability being squish...d.
     toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector);
     connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(lineweightSelectorIndexChanged(int)));
@@ -13552,6 +13487,7 @@ void MainWindow::createTextToolbar()
     textFontSelector->setCurrentFont(QFont(settings.text_font));
     connect(textFontSelector, SIGNAL(currentFontChanged(const QFont&)), this, SLOT(textFontSelectorCurrentFontChanged(const QFont&)));
 
+/* TODO: SEGFAULTING FOR SOME REASON 
     toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textbold));
     actionHash.value(ACTION_textbold)->setChecked(settings.text_style_bold);
     toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textitalic));
@@ -13581,6 +13517,7 @@ void MainWindow::createTextToolbar()
     setTextSize(settings.text_size);
     toolbar[TOOLBAR_TEXT]->addWidget(textSizeSelector);
     connect(textSizeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(textSizeSelectorIndexChanged(int)));
+    */
 
     connect(toolbar[TOOLBAR_TEXT], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
 }
@@ -13680,6 +13617,8 @@ void EmbDetailsDialog::getInfo()
     boundingRect.setRect(0, 0, 50, 100); //TODO: embPattern_calcBoundingBox(pattern);
 }
 
+extern char *details_label_text[];
+
 QWidget* EmbDetailsDialog::createMainWidget()
 {
     QWidget* widget = new QWidget(this);
@@ -13690,24 +13629,9 @@ QWidget* EmbDetailsDialog::createMainWidget()
     QLabel* labels[12];
     QLabel* fields[12];
 
-    char *label_text[] = {
-        "Total Stitches:",
-        "Real Stitches:",
-        "Jump Stitches:",
-        "Trim Stitches:",
-        "Total Colors:",
-        "Color Changes:",
-        "Left:",
-        "Top:",
-        "Right:",
-        "Bottom:",
-        "Width:",
-        "Height:"
-    };
-
     int i;
     for (i=0; i<12; i++) {
-        labels[i] = new QLabel(tr(label_text[i]), this);
+        labels[i] = new QLabel(tr(details_label_text[i]), this);
     }
 
     fields[0] = new QLabel(QString::number(stitchesTotal), this);
@@ -13750,224 +13674,6 @@ QWidget* EmbDetailsDialog::createMainWidget()
     scrollArea->setWidget(widget);
     return scrollArea;
 }
-
-//TODO: Move majority of this code into libembroidery
-/*
-void MainWindow::designDetails()
-{
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
-    debug_message("designDetails()");
-    QString appName = QApplication::applicationName();
-    QString title = "Design Details";
-
-    EmbPattern* pattern = 0;
-
-    //TODO: This is temporary. Generate actual pattern data from the scene.
-    //======================================================
-    //embPattern_read(pattern, "/mydata/embroidery-designs/KDE.EXP"); //TODO: This convenience function is messed up.
-
-    EmbReaderWriter* reader = 0;
-    int readSuccessful;
-    QString tmpFileName = "/mydata/embroidery-designs/KDE.EXP";
-
-    pattern = embPattern_create();
-    if(!pattern) { printf("Could not allocate memory for embroidery pattern\n"); }
-
-    readSuccessful = 0;
-    reader = embReaderWriter_getByFileName(qPrintable(tmpFileName));
-    if(!reader)
-    {
-        readSuccessful = 0;
-        printf("Unsupported read file type\n");
-    }
-    else
-    {
-        readSuccessful = reader->reader(pattern, qPrintable(tmpFileName));
-        if(!readSuccessful) printf("Reading file was unsuccessful\n");
-    }
-    free(reader);
-    if(!readSuccessful)
-    {
-        embPattern_free(pattern);
-    }
-    //======================================================
-
-
-    EmbRect bounds = embPattern_calcBoundingBox(pattern);
-
-    int colors = 1;
-    int num_stitches = 0;
-    int real_stitches = 0;
-    int jump_stitches = 0;
-    int trim_stitches = 0;
-    int unknown_stitches = 0;
-    int num_colors = 0;
-    double minx = 0.0, maxx = 0.0, miny = 0.0, maxy = 0.0;
-    double min_stitchlength = 999.0;
-    double max_stitchlength = 0.0;
-    double total_stitchlength = 0.0;
-    int number_of_minlength_stitches = 0;
-    int number_of_maxlength_stitches = 0;
-
-    double xx = 0.0, yy = 0.0;
-    double dx = 0.0, dy = 0.0;
-    double length = 0.0;
-
-    num_colors = embThreadList_count(pattern->threadList);
-    num_stitches = embStitchList_count(pattern->stitchList);
-    if(num_stitches == 0)
-    {
-        QMessageBox::warning(this, tr("No Design Loaded"), tr("<b>A design needs to be loaded or created before details can be determined.</b>"));
-        return;
-    }
-    QVector<double> stitchLengths;
-
-    double totalColorLength = 0.0;
-    for(int i = 0; i < num_stitches; i++)
-    {
-        dx = embStitchList_getAt(pattern->stitchList, i).xx - xx;
-        dy = embStitchList_getAt(pattern->stitchList, i).yy - yy;
-        xx = embStitchList_getAt(pattern->stitchList, i).xx;
-        yy = embStitchList_getAt(pattern->stitchList, i).yy;
-        length=sqrt(dx * dx + dy * dy);
-        totalColorLength += length;
-        if(i > 0 && embStitchList_getAt(pattern->stitchList, i-1).flags != NORMAL)
-            length = 0.0; //can't count first normal stitch;
-        if(!(embStitchList_getAt(pattern->stitchList, i).flags & (JUMP | TRIM)))
-        {
-            real_stitches++;
-            if(length > max_stitchlength) { max_stitchlength = length; number_of_maxlength_stitches = 0; }
-            if(length == max_stitchlength) number_of_maxlength_stitches++;
-            if(length > 0 && length < min_stitchlength)
-            {
-                min_stitchlength = length;
-                number_of_minlength_stitches = 0;
-            }
-            if(length == min_stitchlength) number_of_minlength_stitches++;
-            total_stitchlength += length;
-            if(xx < minx) minx = xx;
-            if(xx > maxx) maxx = xx;
-            if(yy < miny) miny = yy;
-            if(yy > maxy) maxy = yy;
-        }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & JUMP)
-        {
-            jump_stitches++;
-        }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & TRIM)
-        {
-            trim_stitches++;
-        }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & STOP)
-        {
-            stitchLengths.push_back(totalColorLength);
-            totalColorLength = 0;
-            colors++;
-        }
-        if(embStitchList_getAt(pattern->stitchList, i).flags & END)
-        {
-            stitchLengths.push_back(totalColorLength);
-        }
-    }
-
-    //second pass to fill bins now that we know max stitch length
-#define NUMBINS 10
-    int bin[NUMBINS+1];
-    for(int i = 0; i <= NUMBINS; i++)
-    {
-        bin[i]=0;
-    }
-
-    for(int i = 0; i < num_stitches; i++)
-    {
-        dx = embStitchList_getAt(pattern->stitchList, i).xx - xx;
-        dy = embStitchList_getAt(pattern->stitchList, i).yy - yy;
-        xx = embStitchList_getAt(pattern->stitchList, i).xx;
-        yy = embStitchList_getAt(pattern->stitchList, i).yy;
-        if(i > 0 && embStitchList_getAt(pattern->stitchList, i-1).flags == NORMAL && embStitchList_getAt(pattern->stitchList, i).flags == NORMAL)
-        {
-            length=sqrt(dx * dx + dy * dy);
-            bin[int(floor(NUMBINS*length/max_stitchlength))]++;
-        }
-    }
-
-    double binSize = max_stitchlength / NUMBINS;
-
-    QString str;
-    for(int i = 0; i < NUMBINS; i++)
-    {
-        str += QString::number(binSize * (i), 'f', 1) + " - " + QString::number(binSize * (i+1), 'f', 1) + " mm: " +  QString::number(bin[i]) + "\n\n";
-    }
-
-    QDialog dialog(this);
-
-    QGridLayout* grid = new QGridLayout(this);
-    grid->setSpacing(2);
-
-    grid->addWidget(new QLabel(tr("Stitches:")),0,0,1,1);
-    grid->addWidget(new QLabel(QString::number(num_stitches)), 0, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Colors:")),1,0,1,1);
-    grid->addWidget(new QLabel(QString::number(num_colors)), 1, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Jumps:")),2,0,1,1);
-    grid->addWidget(new QLabel(QString::number(jump_stitches)), 2, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Top:")),3,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.top) + " mm"), 3, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Left:")),4,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.left) + " mm"), 4, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Bottom:")),5,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.bottom) + " mm"), 5, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Right:")),6,0,1,1);
-    grid->addWidget(new QLabel(QString::number(bounds.right) + " mm"), 6, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Width:")),7,0,1,1);
-    grid->addWidget(new QLabel(QString::number((bounds.right - bounds.left)) + " mm"), 7, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("Height:")),8,0,1,1);
-    grid->addWidget(new QLabel(QString::number((bounds.bottom - bounds.top)) + " mm"), 8, 1, 1, 1);
-    grid->addWidget(new QLabel(tr("\nStitch Distribution: \n")),9,0,1,2);
-    grid->addWidget(new QLabel(str), 10, 0, 1, 1);
-    grid->addWidget(new QLabel(tr("\nThread Length By Color: \n")),11,0,1,2);
-    int currentRow = 12;
-*/
-/*
-    for(int i = 0; i < num_colors; i++)
-    {
-        QFrame *frame = new QFrame();
-        frame->setGeometry(0,0,30,30);
-        QPalette palette = frame->palette();
-        EmbColor t = embThreadList_getAt(pattern->threadList, i).color;
-        palette.setColor(backgroundRole(), QColor( t.r, t.g, t.b ) );
-        frame->setPalette( palette );
-        frame->setAutoFillBackground(true);
-        grid->addWidget(frame, currentRow,0,1,1);
-        debug_message("size: %d i: %d", stitchLengths.size(), i);
-        grid->addWidget(new QLabel(QString::number(stitchLengths.at(i)) + " mm"), currentRow,1,1,1);
-        currentRow++;
-    }
-*/
-/*
-    QDialogButtonBox buttonbox(Qt::Horizontal, &dialog);
-    QPushButton button(&dialog);
-    button.setText("Ok");
-    buttonbox.addButton(&button, QDialogButtonBox::AcceptRole);
-    buttonbox.setCenterButtons(true);
-    connect(&buttonbox, SIGNAL(accepted()), &dialog, SLOT(accept()));
-
-    grid->addWidget(&buttonbox, currentRow, 0, 1, 2);
-
-    dialog.setWindowTitle(title);
-    dialog.setMinimumWidth(100);
-    dialog.setMinimumHeight(50);
-    dialog.setLayout(grid);
-    dialog.exec();
-    QApplication::restoreOverrideCursor();
-
-}
-*/
-
-/*
-Application::Application(int argc, char **argv) : QApplication(argc, argv), _mainWin(NULL)
-{
-}
-*/
 
 bool Application::event(QEvent *event)
 {

@@ -1,5 +1,5 @@
 /* XPM */
-static char *qtracksettings[] = {
+char *icon_qtracksettings[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 80 1 ",
 "  c #000000",

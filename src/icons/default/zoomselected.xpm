@@ -1,5 +1,5 @@
 /* XPM */
-static char *zoomselected[] = {
+char *icon_zoomselected[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 119 2 ",
 "   c #000000",

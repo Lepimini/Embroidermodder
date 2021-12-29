@@ -1,5 +1,5 @@
 /* XPM */
-static char *trim[] = {
+char *icon_trim[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 209 2 ",
 "   c black",
