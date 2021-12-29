@@ -21,7 +21,7 @@ To see what we're focussing on at the moment check this table.
 | Dec 2021 - Jan 2022 | libembroidery 1.0 work and bugfixing |
 | 31st of Jan 2022 | libembroidery 1.0 will be released, then updates will slow down and the Embroidermodder 2 development version will be fixed to the API of this version. |
 | Feb 2022 | An overview of what has changed will be written up for the website as a news update, along with better documentation of libembroidery. |
-| Feb-April | Finish the SDL2 conversion |
+| Feb-April | Finish the FreeGLUT 3 conversion |
 | April-May 2022 | Finish all the targets in the Design, or assign them to 2.1. |
 | May-June 2022 | Bugfixing, Testing, QA |
 | Summer Solstice (21st of June) 2022 | Embroidermodder 2 is officially released. |
@@ -45,9 +45,9 @@ On Windows:
 
     .\build.bat --build-dependencies
 
-### SDL2
+### FreeGLUT 3
 
-We're working on an SDL2 version of the library that will require no
+We're working on an FreeGLUT 3 version of the library that will require no
 non-standard dependencies not included in the source.
 
 On systems where you use `--build-dependencies` the system will
@@ -55,7 +55,7 @@ build and install the libraries if they are not already present
 from the versions in `extern/`. This way a copy of
 the Embroidermodder 2 source code
 on a machine with a build environment can be built without a connection
-to the internet access and insures against SDL2 going out of support.
+to the internet access and insures against FreeGLUT 3 going out of support.
 
 ### Building
 
@@ -217,7 +217,7 @@ I want to re-instate it.
 Downloading and installing Qt has been a pain for some users
 (46Gb on possibly slow connections).
 
-I'm switching to SDL2 (which is a whole other conversation) which means we
+I'm switching to FreeGLUT 3 (which is a whole other conversation) which means we
 can ship it with the source code package meaning only a basic build
 environment is necessary to build it.
 
@@ -246,24 +246,15 @@ per project.
 
 OpenGL rendering within the application. This will allow for  Realistic Visualization - Bump Mapping/OpenGL/Gradients?
 
-### JSON data Ideas
+### Configuration Data Ideas
 
-JSON configuration (Started, see `head -n 50 src/mainwindow.cpp.`)
+Ok this is changing slightly. embroidermodder should boot from the command line
+regardless of whether it is or is not installed (this helps with testing and
+running on machines without root). Therefore, it can create an initiation file
+but it won't rely on its existence to boot: this is what we currently do with `settings.ini`.
 
-Ok this is changing slightly. embroidermodder should boot from the command line regardless of whether it is or is not installed (this helps with testing and running on machines without root). Therefore, it can create an initiation file but it won't rely on its existence to boot: this is what we currently do with settings.ini.
-
-So:
-
-  1. Port `settings.ini` to `settings.json`.
-  2. Place `settings.json` in `$HOME/.embroidermodder` (or equivalent, see the homedir function in `gui.c`).
-  3. Parse JSON using cJSON (we have the new parseJSON function).
-  4. Better structure for settings data so parse and load JSON is easier and there's less junk in global variables. A structure similar to a Python dict that uses constants like the sketch below.
-
-### Why JSON over ini?
-
-1. We need to hand-write _a_ system because the current system is Qt dependent anyway.
-2. This way we can store more complex data structures in the same system including the layout of the widgets which may be user configured (see Blender and GIMP).
-3. Also it's easier to share information formatted this way between systems because most systems us JSON or XML data: there's better support for converting complex data this way.
+1. Switch colors to be stored as 6 digit hexcodes with a #.
+2. We've got close to a hand implemented ini read/write setup in `settings.c`.
 
 ### Distribution
 
