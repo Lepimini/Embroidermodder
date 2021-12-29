@@ -906,3 +906,168 @@ action_hash_data action_list[] = {
     }
 };
 
+#if 0
+New for toolbars: modify and draw. Inquiry toolbar?
+
+#define ACTION_circle      70
+#define ACTION_line        71
+#define ACTION_distance    72
+#define ACTION_dolphin     73
+
+    {
+        ACTION_circle,
+        icon_circle,
+        "circle",
+        "&Circle",
+        "Creates a circle:  CIRCLE"
+    },
+    {
+        ACTION_line,
+        icon_line,
+        "line",
+        "&Line",
+        "Creates straight line segments:  LINE"
+    },
+    {
+        ACTION_distance,
+        icon_distance,
+        "distance",
+        "&Distance",
+        "Measures the distance and angle between two points:  DIST"
+    },
+    {
+        ACTION_dolphin,
+        icon_dolphin,
+        "dolphin",
+        "&Dolphin",
+        "Creates a dolphin:  DOLPHIN"
+    },
+    {
+        ACTION_ellipse,
+        icon_ellipse,
+        "ellipse",
+        "&Ellipse",
+        "Creates a ellipse:  ELLIPSE"
+    },
+    {
+        ACTION_delete,
+        icon_erase,
+        "delete",
+        "D&elete",
+        "Removes objects from a drawing:  DELETE"
+    },
+    {
+        ACTION_heart,
+        icon_heart,
+        "&Heart",
+        "Creates a heart:  HEART"
+    },
+    {
+        ACTION_locatepoint,
+        icon_locatepoint,
+        "&Locate Point",
+        "Displays the coordinate values of a location:  ID"
+    },
+    {
+        ACTION_trebleclef,
+        icon_trebleclef,
+        "TrebleClef",
+        "Creates a treble clef:  TREBLECLEF"
+    },
+    {
+        ACTION_path,
+        icon_path,
+        "&Path",
+        "Creates a 2D path:  PATH"
+    },
+    {
+        ACTION_platform,
+        icon_platform,
+        "&Platform",
+        "List which platform is in use:  PLATFORM"
+    },
+    {
+        ACTION_point,
+        icon_point,
+        "&Point",
+        "Creates multiple points:  POINT"
+    },
+    {
+        ACTION_polygon,
+        icon_polygon,
+        "Pol&ygon",
+        "Creates a regular polygon:  POLYGON"
+    },
+    {
+        ACTION_polyline,
+        icon_polyline,
+        "&Polyline",
+        "Creates a 2D polyline:  PLINE"
+    },
+    {
+        ACTION_quickleader,
+        icon_quickleader,
+        "&QuickLeader",
+        "Creates a leader and annotation:  QUICKLEADER"
+    },
+    {
+        ACTION_rectangle,
+        icon_rectangle,
+        "&Rectangle",
+        "Creates a rectangular polyline: RECTANGLE"
+    },
+    {
+        ACTION_rgb,
+        icon_rgb,
+        "&RGB",
+        "Updates the current view colors:  RGB"
+    },
+    {
+        ACTION_move,
+        icon_move,
+        "&Move",
+        "Displaces objects a specified distance in a specified direction: MOVE"
+    },
+    {
+        ACTION_rotate,
+        icon_rotate,
+        "&Rotate",
+        "Rotates objects about a base point:  ROTATE"
+    },
+    {
+        ACTION_sandbox,
+        icon_sandbox,
+        "Sandbox",
+        "A sandbox to play in:  SANDBOX"
+    },
+    {
+        ACTION_scale,
+        icon_scale,
+        "Sca&le",
+        "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE"
+    {
+        ACTION_selectall,
+        icon_selectall,
+        "&Select All",
+        "Selects all objects:  SELECTALL"
+    },
+    {
+        ACTION_singlelinetext,
+        icon_singlelinetext,
+        "&Single Line Text",
+        "Creates single-line text objects:  TEXT"
+    },
+    {
+        ACTION_snowflake,
+        icon_snowflake,
+        "&Snowflake",
+        "Creates a snowflake:  SNOWFLAKE"
+    },
+    {
+        ACTION_star,
+        icon_star,
+        "&Star",
+        "Creates a star:  STAR"
+    },
+#endif
+

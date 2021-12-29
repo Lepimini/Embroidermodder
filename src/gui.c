@@ -45,11 +45,6 @@ float mouse[2];
 int mouse_x = 0;
 int mouse_y = 0;
 
-void key_handler(int c, int x, int y);
-void render_quadlist(quad *qlist);
-void menu(int key);
-void display(void);
-
 /* FUNCTIONS SECTION */
 
 int main_tex_example(int argc, char *argv[])
@@ -105,6 +100,51 @@ int main_tex_example(int argc, char *argv[])
     glutMainLoop();
     return 0;
 }
+
+double sgn(double x)
+{
+    if (x > 0.0) return 1.0;
+    else if(x < 0.0) return -1.0;
+    else return 0.0;
+}
+
+double theta(double x)
+{
+    if (x < 0.0) return 0.0;
+    else return 1.0;
+}
+
+EmbVector unit_vector(float angle)
+{
+    EmbVector u;
+    u.x = cos(angle);
+    u.y = sin(angle);
+    return u;
+}
+
+EmbVector rotate(EmbVector a, float angle)
+{
+    EmbVector rot;
+    EmbVector u = unit_vector(angle);
+    rot.x = a.x*u.x - a.y*u.y;
+    rot.y = a.x*u.y + a.y*u.x;
+    return rot;
+}
+
+EmbVector scale_vector(EmbVector a, float scale)
+{
+    a.x *= scale;
+    a.y *= scale;
+    return a;
+}
+
+EmbVector scale_and_rotate(EmbVector a, float scale, float angle)
+{
+    a = scale_vector(a, scale);
+    a = rotate(a, angle);
+    return a;
+}
+
 
 void app_dir(char *output, int folder)
 {

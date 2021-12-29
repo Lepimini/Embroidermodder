@@ -109,11 +109,13 @@ dialog_wrapper dialog;
 settings_wrapper settings;
 
 void actuator(int action);
+void settings_actuator(int action);
 
 extern "C" {
-void settings_actuator(int action);
-double radians(double);
-double degrees(double);
+EmbVector unit_vector(float angle);
+EmbVector rotate(EmbVector a, float angle);
+EmbVector scale_vector(EmbVector a, float scale);
+EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
 }
 
 QIcon getIcon(QString theme, QString icon)
@@ -307,14 +309,8 @@ public:
     float   objectAngle() const;
     float   objectLength()    const { return line().length(); }
 
-    void setObjectEndPoint1(const QPointF& endPt1);
-    void setObjectEndPoint1(float x1, float y1);
-    void setObjectEndPoint2(const QPointF& endPt2);
-    void setObjectEndPoint2(float x2, float y2);
-    void setObjectX1(float x) { setObjectEndPoint1(x, objectY1()); }
-    void setObjectY1(float y) { setObjectEndPoint1(objectEndPoint1().x(), y); }
-    void setObjectX2(float x) { setObjectEndPoint2(x, objectY2()); }
-    void setObjectY2(float y) { setObjectEndPoint2(objectX2(), y); }
+    void setObjectEndPoint1(EmbVector v);
+    void setObjectEndPoint2(EmbVector v);
 
     void updateRubber(QPainter* painter = 0);
     virtual void vulcanize();
@@ -7656,37 +7652,6 @@ float ArcObject::objectEndAngle() const
     return fmod(angle, 360.0);
 }
 
-EmbVector unit_vector(float angle)
-{
-    EmbVector u;
-    u.x = cos(angle);
-    u.y = sin(angle);
-    return u;
-}
-
-EmbVector rotate(EmbVector a, float angle)
-{
-    EmbVector rot;
-    EmbVector u = unit_vector(angle);
-    rot.x = a.x*u.x - a.y*u.y;
-    rot.y = a.x*u.y + a.y*u.x;
-    return rot;
-}
-
-EmbVector scale_vector(EmbVector a, float scale)
-{
-    a.x *= scale;
-    a.y *= scale;
-    return a;
-}
-
-EmbVector scale_and_rotate(EmbVector a, float scale, float angle)
-{
-    a = scale_vector(a, scale);
-    a = rotate(a, angle);
-    return a;
-}
-
 QPointF ArcObject::objectStartPoint() const
 {
     EmbVector v = to_emb_vector(arcStartPoint);
@@ -8282,42 +8247,33 @@ void DimLeaderObject::init(float x1, float y1, float x2, float y2, QRgb rgb, Qt:
 
     curved = false;
     filled = true;
-    setObjectEndPoint1(x1, y1);
-    setObjectEndPoint2(x2, y2);
+    setObjectEndPoint1(to_emb_vector(QPointF(x1, y1)));
+    setObjectEndPoint2(to_emb_vector(QPointF(x2, y2)));
     setObjectColor(rgb);
     setObjectLineType(lineType);
     setObjectLineWeight(0.35); //TODO: pass in proper lineweight
     setPen(objectPen());
 }
 
-void DimLeaderObject::setObjectEndPoint1(const QPointF& endPt1)
+void DimLeaderObject::setObjectEndPoint1(EmbVector p1)
 {
-    setObjectEndPoint1(endPt1.x(), endPt1.y());
-}
-
-void DimLeaderObject::setObjectEndPoint1(float x1, float y1)
-{
+    EmbVector diff;
     QPointF endPt2 = objectEndPoint2();
     float x2 = endPt2.x();
     float y2 = endPt2.y();
-    float dx = x2 - x1;
-    float dy = y2 - y1;
+    diff.x = x2 - p1.x;
+    diff.y = y2 - p1.y;
     setRotation(0);
-    setLine(0, 0, dx, dy);
-    setPos(x1, y1);
+    setLine(0, 0, diff.x, diff.y);
+    setPos(p1.x, p1.y);
     updateLeader();
 }
 
-void DimLeaderObject::setObjectEndPoint2(const QPointF& endPt2)
-{
-    setObjectEndPoint2(endPt2.x(), endPt2.y());
-}
-
-void DimLeaderObject::setObjectEndPoint2(float x2, float y2)
+void DimLeaderObject::setObjectEndPoint2(EmbVector p2)
 {
     EmbVector endPt1 = to_emb_vector(scenePos());
     setRotation(0);
-    setLine(0, 0, x2 - endPt1.x, y2 - endPt1.y);
+    setLine(0, 0, p2.x - endPt1.x, p2.y - endPt1.y);
     setPos(endPt1.x, endPt1.y);
     updateLeader();
 }
@@ -8473,8 +8429,8 @@ void DimLeaderObject::updateRubber(QPainter* painter)
         QPointF sceneStartPoint = objectRubberPoint("DIMLEADER_LINE_START");
         QPointF sceneQSnapPoint = objectRubberPoint("DIMLEADER_LINE_END");
 
-        setObjectEndPoint1(sceneStartPoint);
-        setObjectEndPoint2(sceneQSnapPoint);
+        setObjectEndPoint1(to_emb_vector(sceneStartPoint));
+        setObjectEndPoint2(to_emb_vector(sceneQSnapPoint));
     }
     else if(rubberMode == OBJ_RUBBER_GRIP)
     {
@@ -8530,8 +8486,8 @@ QList<QPointF> DimLeaderObject::allGripPoints()
 
 void DimLeaderObject::gripEdit(const QPointF& before, const QPointF& after)
 {
-    if     (before == objectEndPoint1()) { setObjectEndPoint1(after); }
-    else if(before == objectEndPoint2()) { setObjectEndPoint2(after); }
+    if     (before == objectEndPoint1()) { setObjectEndPoint1(to_emb_vector(after)); }
+    else if(before == objectEndPoint2()) { setObjectEndPoint2(to_emb_vector(after)); }
     else if(before == objectMidPoint())  { QPointF delta = after-before; moveBy(delta.x(), delta.y()); }
 }
 
@@ -12671,7 +12627,16 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     /* ---------------------------------------------------------------------- */
 
-    createEditMenu();
+    debug_message("MainWindow createEditMenu()");
+    menuBar()->addMenu(editMenu);
+    editMenu->addAction(actionHash.value(ACTION_undo));
+    editMenu->addAction(actionHash.value(ACTION_redo));
+    editMenu->addSeparator();
+    editMenu->addAction(actionHash.value(ACTION_cut));
+    editMenu->addAction(actionHash.value(ACTION_copy));
+    editMenu->addAction(actionHash.value(ACTION_paste));
+    editMenu->addSeparator();
+    editMenu->setTearOffEnabled(true);
 
     /* ---------------------------------------------------------------------- */
 
@@ -13277,20 +13242,6 @@ void MainWindow::floatingChangedToolBar(bool isFloating)
             }
         }
     }
-}
-
-void MainWindow::createEditMenu()
-{
-    debug_message("MainWindow createEditMenu()");
-    menuBar()->addMenu(editMenu);
-    editMenu->addAction(actionHash.value(ACTION_undo));
-    editMenu->addAction(actionHash.value(ACTION_redo));
-    editMenu->addSeparator();
-    editMenu->addAction(actionHash.value(ACTION_cut));
-    editMenu->addAction(actionHash.value(ACTION_copy));
-    editMenu->addAction(actionHash.value(ACTION_paste));
-    editMenu->addSeparator();
-    editMenu->setTearOffEnabled(true);
 }
 
 void MainWindow::createViewMenu()

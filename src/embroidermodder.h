@@ -301,6 +301,12 @@ TODO: ACTION_spellcheck
 TODO: ACTION_quickselect 
 */
 
+#define circle_mode_1P_RAD   0
+#define circle_mode_1P_DIA   1
+#define circle_mode_2P       2
+#define circle_mode_3P       3
+#define circle_mode_TTR      4
+
 #define app_folder  0
 #define commands_folder 1
 #define help_folder 2
@@ -336,8 +342,7 @@ typedef struct Action_hash_data {
     char menu_name[30];
     char description[100];
 } action_hash_data;
-
-typedef struct Command {
+/*
     char menu_name[15];
     int menu_position;
     char toolbar_name[15];
@@ -346,7 +351,21 @@ typedef struct Command {
     char statustip[100];
     char alias[40];
     int function;
-} command;
+*/
+
+typedef struct circle_args_ {
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    float x3;
+    float y3;
+    float rad;
+    float dia;
+    float cx;
+    float cy;
+    int mode;
+} circle_args;
 
 typedef struct Quad {
     int flag;
@@ -754,6 +773,14 @@ void app_dir(char *string, int folder);
 int file_exists(char *fname);
 int parseJSON(char *fname);
 int main_tex_example(int, char*argv[]);
+double radians(double);
+double degrees(double);
+double sgn(double x);
+double theta(double x);
+void key_handler(int c, int x, int y);
+void render_quadlist(quad *qlist);
+void menu(int key);
+void display(void);
 
 /*
  * C++ Specific code
@@ -1045,7 +1072,6 @@ typedef struct Settings_wrapper {
     int help_toolbar[20];
     int zoom_toolbar[20];
     char *folders[20];
-    command command_list[20];
     quad quad_list1[20];
     quad quad_list2[20];
 
@@ -1344,7 +1370,6 @@ public:
     QComboBox* lineweightSelector;
     QFontComboBox* textFontSelector;
     QComboBox* textSizeSelector;
-    void createEditMenu();
     void createViewMenu();
     void createSettingsMenu();
     void createWindowMenu();

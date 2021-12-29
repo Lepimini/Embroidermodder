@@ -10,448 +10,12 @@
 
 #include "embroidermodder.h"
 
-typedef struct circle_args_ {
-    float x1;
-    float y1;
-    float x2;
-    float y2;
-    float x3;
-    float y3;
-    float rad;
-    float dia;
-    float cx;
-    float cy;
-    int mode;
-} circle_args;
-
-#define circle_mode_1P_RAD   0
-#define circle_mode_1P_DIA   1
-#define circle_mode_2P       2
-#define circle_mode_3P       3
-#define circle_mode_TTR      4
-
-command command_list[] = {
-    {
-        "None", 0,
-        "None", 0,
-        "&About", "Displays information about this product:  ABOUT",
-        "ABOUT",
-        ACTION_about
-    },
-    {
-        "Draw", 8,
-        "Draw", 8,
-        "Circle", "Creates a circle:  CIRCLE",
-        "C, CIRCLE",
-        0 /* circle */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Zoom &In", "Zooms to increase the apparent size of objects:  ZOOMIN",
-        "ZOOMIN",
-        ACTION_zoomin
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Zoom &Out", "Zooms to decrease the apparent size of objects:  ZOOMOUT",
-        "ZOOMOUT",
-        ACTION_zoomout
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Icon&16", "Sets the toolbar icon size to 16x16:  ICON16",
-        "ICON16",
-        0 /* icon16 */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Icon&24", "Sets the toolbar icon size to 24x24:  ICON24",
-        "ICON24",
-        0 /* icon24 */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Icon&32", "Sets the toolbar icon size to 32x32:  ICON32",
-        "ICON32",
-        0 /* icon32 */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Icon&48", "Sets the toolbar icon size to 48x48:  ICON48",
-        "ICON48",
-        0 /* icon48 */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Icon&64", "Sets the toolbar icon size to 64x64:  ICON64",
-        "ICON64",
-        0 /* icon64 */
-    },
-    {
-        "Draw", 0,
-        "Draw", 0,
-        "&Line", "Creates straight line segments:  LINE",
-        "L, LINE",
-        0 /* line */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Ne&xt", "Move the focus to the next window:  NEXT",
-        "NEXT, WINDOWNEXT",
-        0 /* windowNext */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Pre&vious", "Move the focus to the previous window:  PREVIOUS",
-        "PREV, PREVIOUS, WINDOWPREVIOUS",
-        0 /* windowPrevious */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Tile", "Tile the windows:  TILE",
-        "TILE, WINDOWTILE",
-        0 /* windowTile */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Zoom &Extents", "Zooms to display the drawing extents:  ZOOMEXTENTS",
-        "ZOOMEXTENTS",
-        0 /* zoomExtents */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Day", "Updates the current view using day vision settings:  DAY",
-        "DAY",
-        ACTION_day
-    },
-    {
-        "Tools", 7,
-        "Inquiry", 0,
-        "&Distance", "Measures the distance and angle between two points:  DIST",
-        "DI, DIST, DISTANCE",
-        0 /* ACTION_distance */
-    },
-    {
-        "Draw", 100,
-        "Draw", 100,
-        "&Dolphin", "Creates a dolphin:  DOLPHIN",
-        "DOLPHIN",
-        0 /* ACTION_dolphin */
-    },
-    {
-        "Draw", 8,
-        "Draw", 8,
-        "Ellipse", "Creates a ellipse:  ELLIPSE",
-        "EL, ELLIPSE",
-        0 /* ACTION_ellipse */
-    },
-    {
-        "Modify", 5,
-        "Modify", 0,
-        "D&elete", "Removes objects from a drawing:  DELETE",
-        "E, ERASE, DEL, DELETE",
-        ACTION_delete
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "E&xit", "Exit the application:  EXIT",
-        "EXIT, QUIT",
-        ACTION_exit
-    },
-    {
-        "Draw", 100,
-        "Draw", 100,
-        "&Heart", "Creates a heart:  HEART",
-        "HEART",
-        0 /* ACTION_heart */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Help", "Displays the help file:  HELP",
-        "?, HELP",
-        ACTION_help
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Icon12&8", "Sets the toolbar icon size to 128x128:  ICON128",
-        "ICON128",
-        ACTION_icon128
-    },
-    {
-        "Tools", 11,
-        "Inquiry", 0,
-        "&Locate Point", "Displays the coordinate values of a location:  ID",
-        "ID, LOCATEPOINT",
-        0 /* ACTION_locatepoint */
-    },
-    {
-        "Draw", 100,
-        "Draw", 100,
-        "TrebleClef", "Creates a treble clef:  TREBLECLEF",
-        "TREBLECLEF",
-        0 /* ACTION_trebleclef */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Undo", "Reverses the most recent action:  UNDO",
-        "U, UNDO",
-        ACTION_undo
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Cascade", "Cascade the windows:  CASCADE",
-        "CASCADE, WINDOWCASCADE",
-        0 /* ACTION_windowCascade */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Close &All", "Close all the windows:  CLOSEALL",
-        "CLOSEALL, WINDOWCLOSEALL",
-        0 /* ACTION_windowCloseAll */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "Cl&ose", "Close the active window:  CLOSE",
-        "CLOSE, WINDOWCLOSE",
-        0 /* ACTION_windowClose */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Night", "Updates the current view using night vision settings:  NIGHT",
-        "NIGHT",
-        ACTION_night
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Open", "Open an existing file:  OPEN",
-        "OPEN",
-        ACTION_open
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Pan Down", "Moves the view down:  PANDOWN",
-        "PANDOWN",
-        ACTION_pandown
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Pan Left", "Moves the view to the left:  PANLEFT",
-        "PANLEFT",
-        ACTION_panleft
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Pan Right", "Moves the view to the right:  PANRIGHT",
-        "PANRIGHT",
-        ACTION_panright
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Pan Up", "Moves the view up:  PANUP",
-        "PANUP",
-        ACTION_panup
-    },
-    {
-        "Draw", 4,
-        "Draw", 4,
-        "&Path", "Creates a 2D path:  PATH",
-        "PA, PATH",
-        0 /* ACTION_path */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Platform", "List which platform is in use:  PLATFORM",
-        "PLATFORM",
-        0 /* ACTION_platform */
-    },
-    {
-        "Draw", 10,
-        "Draw", 10,
-        "&Point", "Creates multiple points:  POINT",
-        "PO, POINT",
-        0 /* ACTION_point */
-    },
-    {
-        "Draw", 4,
-        "Draw", 4,
-        "Pol&ygon", "Creates a regular polygon:  POLYGON",
-        "POL, POLYGON",
-        0 /* ACTION_polygon */
-    },
-    {
-        "Draw", 4,
-        "Draw", 4,
-        "&Polyline", "Creates a 2D polyline:  PLINE",
-        "PL, PLINE, POLYLINE",
-        0 /* ACTION_polyline */
-    },
-    {
-        "Dimension", 12,
-        "Dimension", 12,
-        "&QuickLeader", "Creates a leader and annotation:  QUICKLEADER",
-        "LE, LEADER, QLEADER, QUICKLEADER",
-        0 /* ACTION_quickleader */
-    },
-    {
-        "Draw", 6,
-        "Draw", 6,
-        "&Rectangle", "Creates a rectangular polyline: RECTANGLE",
-        "REC, RECT, RECTANG, RECTANGLE",
-        0 /* ACTION_rectangle */
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Redo", "Reverses the effects of the previous undo action:  REDO"
-        "REDO",
-        ACTION_redo
-    },
-    {
-        "Sandbox", 4,
-        "Sandbox", 3,
-        "&RGB", "Updates the current view colors:  RGB",
-        "RGB",
-        0 /* ACTION_rgb */
-    }
-};
-
-/* Javascript and ini files that need translation */
-#if 0
-/*
-    {
-        "Modify", 10,
-        "Modify", 5,
-        "&Move", "Displaces objects a specified distance in a specified direction: MOVE",
-        "M, MOVE",
-        ACTION_move
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&New", "Create a new file:  NEW",
-        "NEW",
-        ACTION_new
-    },
-    {
-        "Modify", 11,
-        "Modify", 6,
-        "&Rotate", "Rotates objects about a base point:  ROTATE",
-        "RO, ROTATE",
-        ACTION_rotate
-    },
-    {
-            "menu-name": =Sandbox
-Position=100
-
-        "toolbar-name": =Sandbox
-Position=100
-
-        "tooltip": "Sandbox
-        "statustip": "A sandbox to play in:  SANDBOX
-
-        "alias": "SAND, SANDBOX
-//Command: Sandbox
-
-            "menu-name": =Modify
-Position=12
-
-        "toolbar-name": =Modify
-Position=7
-
-        "tooltip": "Sca&le
-        "statustip": "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE
-
-        "alias": "SC, SCALE
-//Command: Scale
-            "menu-name": "None",
-Position=0
-
-        "toolbar-name": "None",
-Position=0
-
-        "tooltip": "&Select All
-        "statustip": "Selects all objects:  SELECTALL
-
-        "alias": "AI_SELALL, SELALL, SELECTALL
-//Command: SelectAll
-
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
-function main()
-{
-    initCommand();
-    selectAll
-    },
-            "menu-name": =Draw
-Position=18
-
-        "toolbar-name": =Draw
-Position=16
-
-        "tooltip": "&Single Line Text
-        "statustip": "Creates single-line text objects:  TEXT
-
-        "alias": "DT, DTEXT, TEXT, SINGLELINETEXT
-//Command: Single Line Text
-    {
-        "Draw", 100,
-        "Draw", 100,
-        "&Snowflake", "Creates a snowflake:  SNOWFLAKE"
-        "SNOWFLAKE",
-        ACTION_snowflake
-    },
-    {
-        "Draw", 100,
-        "Draw", 100,
-        "&Star", "Creates a star:  STAR
-        "*, STAR",
-        ACTION_star
-    },
-    {
-        "None", 0,
-        "None", 0,
-        "&Tip Of The Day", "Displays a dialog with useful tips:  TIPS",
-        "TIPS, TIPOFTHEDAY",
-        ACTION_tipoftheday
-    },
-
---------------------------------------------------------------------------------
-    */
-#endif
+#include <math.h>
 
 /* Command: Circle */
-
-
 int command_circle_init(circle_args *args)
 {
     /*
-    initCommand();
     clearSelection();
     */
     args->mode = circle_mode_1P_RAD;
@@ -493,7 +57,7 @@ int command_circle_click(circle_args *args, float x, float y)
             setRubberPoint("CIRCLE_RADIUS", args->x2, args->y2);
             vulcanize();
             appendPromptHistory();
-            endCommand();
+            return;
         }
     }
     else if(args->mode == circle_mode_1P_DIA)
@@ -509,7 +73,7 @@ int command_circle_click(circle_args *args, float x, float y)
             setRubberPoint("CIRCLE_DIAMETER", args->x2, args->y2);
             vulcanize();
             appendPromptHistory();
-            endCommand();
+            return;
         }
     }
     else if(args->mode == args->mode_2P)
@@ -531,7 +95,7 @@ int command_circle_click(circle_args *args, float x, float y)
             setRubberPoint("CIRCLE_TAN2", args->x2, args->y2);
             vulcanize();
             appendPromptHistory();
-            endCommand();
+            return;
         }
         else
         {
@@ -565,7 +129,7 @@ int command_circle_click(circle_args *args, float x, float y)
             setRubberPoint("CIRCLE_TAN3", args->x3, args->y3);
             vulcanize();
             appendPromptHistory();
-            endCommand();
+            return;
         }
         else
         {
@@ -671,7 +235,7 @@ int prompt(circle_args *args, char *str)
                     args->y2 = args->y1;
                     setRubberPoint("CIRCLE_RADIUS", args->x2, args->y2);
                     vulcanize();
-                    endCommand();
+                    return;
                 }
             }
         }
@@ -695,7 +259,7 @@ int prompt(circle_args *args, char *str)
                 args->y2 = args->y1;
                 setRubberPoint("CIRCLE_DIAMETER", args->x2, args->y2);
                 vulcanize();
-                endCommand();
+                return;
             }
         }
         else
@@ -737,7 +301,7 @@ int prompt(circle_args *args, char *str)
                 args->y2 = Number(strList[1]);
                 setRubberPoint("CIRCLE_TAN2", args->x2, args->y2);
                 vulcanize();
-                endCommand();
+                return;
             }
         }
         else
@@ -792,7 +356,7 @@ int prompt(circle_args *args, char *str)
                 args->y3 = Number(strList[1]);
                 setRubberPoint("CIRCLE_TAN3", args->x3, args->y3);
                 vulcanize();
-                endCommand();
+                return;
             }
         }
         else
@@ -809,20 +373,14 @@ int prompt(circle_args *args, char *str)
 
 /* -------------------------------------------------------------------------------- */
 
-#if 0
 var global = {}; //Required
 args->x1;
 args->y1;
 args->x2;
 args->y2;
 
-/*
- * NOTE: main() is run every time the command is started.
- *      Use it to reset variables so they are ready to go.
- */
 function main()
 {
-    initCommand();
     clearSelection();
     args->x1 = NaN;
     args->y1 = NaN;
@@ -831,10 +389,6 @@ function main()
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-/* NOTE: click() is run only for left clicks.
- *      Middle clicks are used for panning.
- *      Right clicks bring up the context menu.
- */
 function click(x, y)
 {
     if(isNaN(args->x1))
@@ -853,21 +407,10 @@ function click(x, y)
         args->x2 = x;
         args->y2 = y;
         reportDistance();
-        endCommand();
+        return;
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("DISTANCE", "context()");
-}
-
-/* NOTE: prompt() is run when Enter is pressed.
- *      appendPromptHistory is automatically called before prompt()
- *      is called so calling it is only needed for erroneous input.
- *      Any text in the command prompt is sent as an uppercase string.
- */
 function prompt(str)
 {
     var strList = str.split(",");
@@ -900,7 +443,7 @@ function prompt(str)
             args->x2 = Number(strList[0]);
             args->y2 = Number(strList[1]);
             reportDistance();
-            endCommand();
+            return;
         }
     }
 }
@@ -945,11 +488,8 @@ args->mode_NUM_POINTS = 0;
 args->mode_XSCALE     = 1;
 args->mode_YSCALE     = 2;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.cx = NaN;
     global.cy = NaN;
@@ -959,36 +499,7 @@ function main()
     setRubberMode("POLYGON");
     updateDolphin(global.numPoints, global.sx, global.sy);
     spareRubber("POLYGON");
-    endCommand();
-}
-
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
-function click(x, y)
-{
-}
-
-//NOTE: move() is optional. It is run only after
-//      enableMoveRapidFire() is called. It
-//      will be called every time the mouse moves until
-//      disableMoveRapidFire() is called.
-function move(x, y)
-{
-}
-
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("DOLPHIN", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
-function prompt(str)
-{
+    return;
 }
 
 function updateDolphin(numPts, xScale, yScale)
@@ -997,7 +508,7 @@ function updateDolphin(numPts, xScale, yScale)
     var t;
     var xx = NaN;
     var yy = NaN;
-    var two_pi = 2*Math.PI;
+    var two_pi = 2*embConstantPi;
 
     for(i = 0; i <= numPts; i++)
     {
@@ -1150,11 +661,8 @@ args->mode_MAJORDIAMETER_MINORRADIUS = 0;
 args->mode_MAJORRADIUS_MINORRADIUS   = 1;
 args->mode_ELLIPSE_ROTATION          = 2;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     args->mode = args->mode_MAJORDIAMETER_MINORRADIUS;
     args->x1      = NaN;
@@ -1166,9 +674,6 @@ function main()
     setPromptPrefix(qsTr("Specify first axis start point or [Center]: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(args->mode == args->mode_MAJORDIAMETER_MINORRADIUS)
@@ -1208,7 +713,7 @@ function click(x, y)
             setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
             vulcanize();
             appendPromptHistory();
-            endCommand();
+            return;
         }
         else
         {
@@ -1251,7 +756,7 @@ function click(x, y)
             setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
             vulcanize();
             appendPromptHistory();
-            endCommand();
+            return;
         }
         else
         {
@@ -1271,24 +776,14 @@ function click(x, y)
         else if(isNaN(args->x3))
         {
             var angle = calculateAngle(global.cx, global.cy, x, y);
-            global.height = cos(angle*Math.PI/180.0)*global.width;
+            global.height = cos(angle*embConstantPi/180.0)*global.width;
             addEllipse(global.cx, global.cy, global.width, global.height, global.rot, false);
             appendPromptHistory();
-            endCommand();
+            return;
         }
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("ELLIPSE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(args->mode == args->mode_MAJORDIAMETER_MINORRADIUS)
@@ -1366,7 +861,7 @@ function prompt(str)
                     global.height = perpendicularDistance(args->x3, args->y3, args->x1, args->y1, args->x2, args->y2)*2.0;
                     setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
                     vulcanize();
-                    endCommand();
+                    return;
                 }
             }
         }
@@ -1437,7 +932,7 @@ function prompt(str)
                     global.height = perpendicularDistance(args->x3, args->y3, args->x1, args->y1, args->x2, args->y2)*2.0;
                     setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
                     vulcanize();
-                    endCommand();
+                    return;
                 }
             }
         }
@@ -1462,9 +957,9 @@ function prompt(str)
             else
             {
                 var angle = Number(str);
-                global.height = cos(angle*Math.PI/180.0)*global.width;
+                global.height = cos(angle*embConstantPi/180.0)*global.width;
                 addEllipse(global.cx, global.cy, global.width, global.height, global.rot, false);
-                endCommand();
+                return;
             }
         }
     }
@@ -1487,11 +982,8 @@ args->mode_STYLE      = 1;
 args->mode_XSCALE     = 2;
 args->mode_YSCALE     = 3;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.cx = NaN;
     global.cy = NaN;
@@ -1504,7 +996,7 @@ function main()
     setRubberMode("POLYGON");
     updateHeart("HEART5", global.numPoints, global.sx, global.sy);
     spareRubber("POLYGON");
-    endCommand();
+    return;
 }
 
 function updateHeart(style, numPts, xScale, yScale)
@@ -1513,7 +1005,7 @@ function updateHeart(style, numPts, xScale, yScale)
     var t;
     var xx = NaN;
     var yy = NaN;
-    var two_pi = 2*Math.PI;
+    var two_pi = 2*embConstantPi;
 
     for(i = 0; i <= numPts; i++)
     {
@@ -1548,11 +1040,8 @@ global.firstY;
 global.prevX;
 global.prevY;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.firstRun = true;
     global.firstX = NaN;
@@ -1562,9 +1051,6 @@ function main()
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(global.firstRun)
@@ -1593,16 +1079,6 @@ function click(x, y)
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("LINE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(global.firstRun)
@@ -1656,38 +1132,23 @@ function prompt(str)
         }
     }
 }
+
 --------------------------------------------------------------------------------
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     setPromptPrefix(qsTr("Specify point: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     appendPromptHistory();
     setPromptPrefix("X = " + x.toString() + ", Y = " + y.toString());
     appendPromptHistory();
-    endCommand();
+    return;
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("LOCATEPOINT", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     var strList = str.split(",");
@@ -1701,9 +1162,10 @@ function prompt(str)
         appendPromptHistory();
         setPromptPrefix("X = " + strList[0].toString() + ", Y = " + strList[1].toString());
         appendPromptHistory();
-        endCommand();
+        return;
     }
 }
+
 --------------------------------------------------------------------------------
 
 var global = {}; //Required
@@ -1715,11 +1177,8 @@ global.destY;
 global.deltaX;
 global.deltaY;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     global.firstRun = true;
     global.baseX  = NaN;
     global.baseY  = NaN;
@@ -1732,7 +1191,7 @@ function main()
     {
         //TODO: Prompt to select objects if nothing is preselected
         alert(qsTr("Preselect objects before invoking the move command."));
-        endCommand();
+        return;
         messageBox("information", qsTr("Move Preselect"), qsTr("Preselect objects before invoking the move command."));
     }
     else
@@ -1741,9 +1200,6 @@ function main()
     }
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(global.firstRun)
@@ -1766,20 +1222,10 @@ function click(x, y)
         global.deltaY = global.destY - global.baseY;
         moveSelected(global.deltaX, global.deltaY);
         previewOff();
-        endCommand();
+        return;
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("MOVE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(global.firstRun)
@@ -1818,10 +1264,11 @@ function prompt(str)
             global.deltaY = global.destY - global.baseY;
             moveSelected(global.deltaX, global.deltaY);
             previewOff();
-            endCommand();
+            return;
         }
     }
 }
+
 --------------------------------------------------------------------------------
 
 //TODO: The path command is currently broken
@@ -1833,11 +1280,8 @@ global.firstY;
 global.prevX;
 global.prevY;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.firstRun = true;
     global.firstX = NaN;
@@ -1847,9 +1291,6 @@ function main()
     setPromptPrefix(qsTr("Specify start point: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(global.firstRun)
@@ -1872,16 +1313,6 @@ function click(x, y)
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("PATH", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(str == "A" || str == "ARC")//TODO: Probably should add additional qsTr calls here.
@@ -1924,14 +1355,11 @@ function prompt(str)
     }
 }
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     reportPlatform();
-    endCommand();
+    return;
 }
 
 function reportPlatform()
@@ -1946,11 +1374,8 @@ function reportPlatform()
 var global = {}; //Required
 global.firstRun;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.firstRun = true;
     setPromptPrefix("TODO: Current point settings: PDMODE=?  PDSIZE=?"); //TODO: qsTr needed here when complete
@@ -1958,9 +1383,6 @@ function main()
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(global.firstRun)
@@ -1977,16 +1399,6 @@ function click(x, y)
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("POINT", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(global.firstRun)
@@ -2031,6 +1443,7 @@ function prompt(str)
         }
     }
 }
+
 --------------------------------------------------------------------------------
 
 var global = {}; //Required
@@ -2057,11 +1470,8 @@ args->mode_CIRCUMSCRIBE = 4;
 args->mode_DISTANCE     = 5;
 args->mode_SIDE_LEN     = 6;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.centerX = NaN;
     global.centerY = NaN;
@@ -2077,9 +1487,6 @@ function main()
     setPromptPrefix(qsTr("Enter number of sides") + " {" + global.numSides.toString() + "}: ");
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(args->mode == args->mode_NUM_SIDES)
@@ -2105,7 +1512,7 @@ function click(x, y)
         setRubberPoint("POLYGON_INSCRIBE_POINT", global.pointIX, global.pointIY);
         vulcanize();
         appendPromptHistory();
-        endCommand();
+        return;
     }
     else if(args->mode == args->mode_CIRCUMSCRIBE)
     {
@@ -2114,7 +1521,7 @@ function click(x, y)
         setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", global.pointCX, global.pointCY);
         vulcanize();
         appendPromptHistory();
-        endCommand();
+        return;
     }
     else if(args->mode == args->mode_DISTANCE)
     {
@@ -2126,16 +1533,6 @@ function click(x, y)
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("POLYGON", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(args->mode == args->mode_NUM_SIDES)
@@ -2279,7 +1676,7 @@ function prompt(str)
                 global.pointIY = Number(strList[1]);
                 setRubberPoint("POLYGON_INSCRIBE_POINT", global.pointIX, global.pointIY);
                 vulcanize();
-                endCommand();
+                return;
             }
         }
     }
@@ -2304,7 +1701,7 @@ function prompt(str)
                 global.pointCY = Number(strList[1]);
                 setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", global.pointCX, global.pointCY);
                 vulcanize();
-                endCommand();
+                return;
             }
         }
     }
@@ -2323,7 +1720,7 @@ function prompt(str)
                 global.pointIY = global.centerY + Number(str);
                 setRubberPoint("POLYGON_INSCRIBE_POINT", global.pointIX, global.pointIY);
                 vulcanize();
-                endCommand();
+                return;
             }
             else if(global.polyType == "Circumscribed")
             {
@@ -2331,7 +1728,7 @@ function prompt(str)
                 global.pointCY = global.centerY + Number(str);
                 setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", global.pointCX, global.pointCY);
                 vulcanize();
-                endCommand();
+                return;
             }
             else
             {
@@ -2344,6 +1741,7 @@ function prompt(str)
         todo("POLYGON", "Sidelength mode");
     }
 }
+
 --------------------------------------------------------------------------------
 
 var global = {}; //Required
@@ -2354,11 +1752,8 @@ global.prevX;
 global.prevY;
 global.num;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.firstRun = true;
     global.firstX = NaN;
@@ -2369,9 +1764,6 @@ function main()
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(global.firstRun)
@@ -2399,16 +1791,6 @@ function click(x, y)
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("POLYLINE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(global.firstRun)
@@ -2461,6 +1843,7 @@ function prompt(str)
         }
     }
 }
+
 --------------------------------------------------------------------------------
 
 var global = {}; //Required
@@ -2471,11 +1854,8 @@ args->y2;
 
 //TODO: Adding the text is not complete yet.
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     args->x1 = NaN;
     args->y1 = NaN;
@@ -2484,9 +1864,6 @@ function main()
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(isNaN(args->x1))
@@ -2506,20 +1883,10 @@ function click(x, y)
         setRubberPoint("DIMLEADER_LINE_END", args->x2, args->y2);
         vulcanize();
         appendPromptHistory();
-        endCommand();
+        return;
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("QUICKLEADER", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     var strList = str.split(",");
@@ -2553,7 +1920,7 @@ function prompt(str)
             args->y2 = Number(strList[1]);
             setRubberPoint("DIMLEADER_LINE_END", args->x2, args->y2);
             vulcanize();
-            endCommand();
+            return;
         }
     }
 }
@@ -2566,11 +1933,8 @@ args->y1;
 args->x2;
 args->y2;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.newRect = true;
     args->x1 = NaN;
@@ -2580,9 +1944,6 @@ function main()
     setPromptPrefix(qsTr("Specify first corner point or [Chamfer/Fillet]: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(global.newRect)
@@ -2602,20 +1963,10 @@ function click(x, y)
         args->y2 = y;
         setRubberPoint("RECTANGLE_END", x, y);
         vulcanize();
-        endCommand();
+        return;
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("RECTANGLE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(str == "C" || str == "CHAMFER") //TODO: Probably should add additional qsTr calls here.
@@ -2659,7 +2010,7 @@ function prompt(str)
                 args->y2 = y;
                 setRubberPoint("RECTANGLE_END", x, y);
                 vulcanize();
-                endCommand();
+                return;
             }
         }
     }
@@ -2675,34 +2026,13 @@ args->mode_BACKGROUND = 0;
 args->mode_CROSSHAIR  = 1;
 args->mode_GRID       = 2;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     args->mode = args->mode_BACKGROUND;
     setPromptPrefix(qsTr("Enter RED,GREEN,BLUE values for background or [Crosshair/Grid]: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
-function click(x, y)
-{
-    //Do Nothing, prompt only command.
-}
-
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("RGB", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text is in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(args->mode == args->mode_BACKGROUND)
@@ -2731,7 +2061,7 @@ function prompt(str)
             else
             {
                 setBackgroundColor(r,g,b);
-                endCommand();
+                return;
             }
         }
     }
@@ -2749,7 +2079,7 @@ function prompt(str)
         else
         {
             setCrossHairColor(r,g,b);
-            endCommand();
+            return;
         }
     }
     else if(args->mode == args->mode_GRID)
@@ -2766,7 +2096,7 @@ function prompt(str)
         else
         {
             setGridColor(r,g,b);
-            endCommand();
+            return;
         }
     }
 }
@@ -2805,11 +2135,8 @@ args->mode;
 args->mode_NORMAL    = 0;
 args->mode_REFERENCE = 1;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     args->mode = args->mode_NORMAL;
     global.firstRun = true;
     global.baseX = NaN;
@@ -2829,7 +2156,7 @@ function main()
     {
         //TODO: Prompt to select objects if nothing is preselected
         alert(qsTr("Preselect objects before invoking the rotate command."));
-        endCommand();
+        return;
         messageBox("information", qsTr("Rotate Preselect"), qsTr("Preselect objects before invoking the rotate command."));
     }
     else
@@ -2838,9 +2165,6 @@ function main()
     }
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(args->mode == args->mode_NORMAL)
@@ -2865,7 +2189,7 @@ function click(x, y)
             appendPromptHistory();
             rotateSelected(global.baseX, global.baseY, global.angle);
             previewOff();
-            endCommand();
+            return;
         }
     }
     else if(args->mode == args->mode_REFERENCE)
@@ -2895,21 +2219,11 @@ function click(x, y)
             global.angleNew = calculateAngle(global.baseX, global.baseY, x, y);
             rotateSelected(global.baseX, global.baseY, global.angleNew - global.angleRef);
             previewOff();
-            endCommand();
+            return;
         }
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("ROTATE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(args->mode == args->mode_NORMAL)
@@ -2955,7 +2269,7 @@ function prompt(str)
                     global.angle = Number(str);
                     rotateSelected(global.baseX, global.baseY, global.angle);
                     previewOff();
-                    endCommand();
+                    return;
                 }
             }
         }
@@ -3048,7 +2362,7 @@ function prompt(str)
                     global.angleNew = calculateAngle(global.baseX, global.baseY, x, y);
                     rotateSelected(global.baseX, global.baseY, global.angleNew - global.angleRef);
                     previewOff();
-                    endCommand();
+                    return;
                 }
             }
             else
@@ -3056,22 +2370,20 @@ function prompt(str)
                 global.angleNew = Number(str);
                 rotateSelected(global.baseX, global.baseY, global.angleNew - global.angleRef);
                 previewOff();
-                endCommand();
+                return;
             }
         }
     }
 }
+
 --------------------------------------------------------------------------------
+
 var global = {}; //Required
 global.test1;
 global.test2;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
-    
     //Report number of pre-selected objects
     setPromptPrefix("Number of Objects Selected: " + numSelected().toString());
     appendPromptHistory();
@@ -3128,7 +2440,7 @@ function main()
     addPolygon(polygonArray);
     
 
-    endCommand();
+    return;
 }
 
 --------------------------------------------------------------------------------
@@ -3154,11 +2466,8 @@ args->mode;
 args->mode_NORMAL    = 0;
 args->mode_REFERENCE = 1;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     args->mode = args->mode_NORMAL;
     global.firstRun = true;
     global.baseX  = NaN;
@@ -3178,7 +2487,7 @@ function main()
     {
         //TODO: Prompt to select objects if nothing is preselected
         alert(qsTr("Preselect objects before invoking the scale command."));
-        endCommand();
+        return;
         messageBox("information", qsTr("Scale Preselect"), qsTr("Preselect objects before invoking the scale command."));
     }
     else
@@ -3187,9 +2496,6 @@ function main()
     }
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(args->mode == args->mode_NORMAL)
@@ -3214,7 +2520,7 @@ function click(x, y)
             appendPromptHistory();
             scaleSelected(global.baseX, global.baseY, global.factor);
             previewOff();
-            endCommand();
+            return;
         }
     }
     else if(args->mode == args->mode_REFERENCE)
@@ -3264,22 +2570,12 @@ function click(x, y)
                 appendPromptHistory();
                 scaleSelected(global.baseX, global.baseY, global.factorNew/global.factorRef);
                 previewOff();
-                endCommand();
+                return;
             }
         }
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("SCALE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(args->mode == args->mode_NORMAL)
@@ -3325,7 +2621,7 @@ function prompt(str)
                     global.factor = Number(str);
                     scaleSelected(global.baseX, global.baseY, global.factor);
                     previewOff();
-                    endCommand();
+                    return;
                 }
             }
         }
@@ -3462,7 +2758,7 @@ function prompt(str)
                     {
                         scaleSelected(global.baseX, global.baseY, global.factorNew/global.factorRef);
                         previewOff();
-                        endCommand();
+                        return;
                     }
                 }
             }
@@ -3479,7 +2775,7 @@ function prompt(str)
                 {
                     scaleSelected(global.baseX, global.baseY, global.factorNew/global.factorRef);
                     previewOff();
-                    endCommand();
+                    return;
                 }
             }
         }
@@ -3504,11 +2800,8 @@ args->mode_SETFONT = 1;
 args->mode_SETGEOM = 2;
 args->mode_RAPID   = 3;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.text = "";
     global.textX = NaN;
@@ -3523,9 +2816,6 @@ function main()
     setPromptPrefix(qsTr("Specify start point of text or [Justify/Setfont]: "));
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(args->mode == args->mode_SETGEOM)
@@ -3571,16 +2861,6 @@ function click(x, y)
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("SINGLELINETEXT", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(args->mode == args->mode_JUSTIFY)
@@ -3799,12 +3079,12 @@ function prompt(str)
         {
             if(global.text == "")
             {
-                endCommand();
+                return;
             }
             else
             {
                 vulcanize();
-                endCommand(); //TODO: Rather than ending the command, calculate where the next line would be and modify the x/y to the new point
+                return; //TODO: Rather than ending the command, calculate where the next line would be and modify the x/y to the new point
             }
         }
         else
@@ -3814,6 +3094,7 @@ function prompt(str)
         }
     }
 }
+
 --------------------------------------------------------------------------------
 
 var global = {}; //Required
@@ -3830,11 +3111,8 @@ args->mode_NUM_POINTS = 0;
 args->mode_XSCALE     = 1;
 args->mode_YSCALE     = 2;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.cx = NaN;
     global.cy = NaN;
@@ -3844,36 +3122,7 @@ function main()
     setRubberMode("POLYGON");
     updateSnowflake(global.numPoints, global.sx, global.sy);
     spareRubber("POLYGON");
-    endCommand();
-}
-
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
-function click(x, y)
-{
-}
-
-//NOTE: move() is optional. It is run only after
-//      enableMoveRapidFire() is called. It
-//      will be called every time the mouse moves until
-//      disableMoveRapidFire() is called.
-function move(x, y)
-{
-}
-
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("SNOWFLAKE", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
-function prompt(str)
-{
+    return;
 }
 
 function updateSnowflake(numPts, xScale, yScale)
@@ -3882,7 +3131,7 @@ function updateSnowflake(numPts, xScale, yScale)
     var t;
     var xx = NaN;
     var yy = NaN;
-    var two_pi = 2*Math.PI;
+    var two_pi = 2*embConstantPi;
 
     for(i = 0; i <= numPts; i++)
     {
@@ -4533,7 +3782,9 @@ sin(263*t+2/7)-
 
     setRubberText("POLYGON_NUM_POINTS", numPts.toString());
 }
+
 --------------------------------------------------------------------------------
+
 var global = {}; //Required
 global.numPoints = 5; //Default
 global.cx;
@@ -4550,11 +3801,8 @@ args->mode_CENTER_PT  = 1;
 args->mode_RAD_OUTER  = 2;
 args->mode_RAD_INNER  = 3;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
 function main()
 {
-    initCommand();
     clearSelection();
     global.cx       = NaN;
     global.cy       = NaN;
@@ -4566,9 +3814,6 @@ function main()
     setPromptPrefix(qsTr("Enter number of star points") + " {" + global.numPoints.toString() + "}: ");
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
 function click(x, y)
 {
     if(args->mode == args->mode_NUM_POINTS)
@@ -4601,14 +3846,10 @@ function click(x, y)
         disableMoveRapidFire();
         updateStar(args->x2, args->y2);
         spareRubber("POLYGON");
-        endCommand();
+        return;
     }
 }
 
-//NOTE: move() is optional. It is run only after
-//      enableMoveRapidFire() is called. It
-//      will be called every time the mouse moves until
-//      disableMoveRapidFire() is called.
 function move(x, y)
 {
     if(args->mode == args->mode_NUM_POINTS)
@@ -4629,16 +3870,6 @@ function move(x, y)
     }
 }
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("STAR", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
 function prompt(str)
 {
     if(args->mode == args->mode_NUM_POINTS)
@@ -4716,7 +3947,7 @@ function prompt(str)
             disableMoveRapidFire();
             updateStar(args->x2, args->y2);
             spareRubber("POLYGON");
-            endCommand();
+            return;
         }
     }
 }
@@ -4749,13 +3980,13 @@ function updateStar(x, y)
         var yy;
         if(odd)
         {
-            xx = distOuter*cos((angOuter+(angInc*i))*Math.PI/180.0);
-            yy = distOuter*sin((angOuter+(angInc*i))*Math.PI/180.0);
+            xx = distOuter*cos((angOuter+(angInc*i))*embConstantPi/180.0);
+            yy = distOuter*sin((angOuter+(angInc*i))*embConstantPi/180.0);
         }
         else
         {
-            xx = distInner*cos((angOuter+(angInc*i))*Math.PI/180.0);
-            yy = distInner*sin((angOuter+(angInc*i))*Math.PI/180.0);
+            xx = distInner*cos((angOuter+(angInc*i))*embConstantPi/180.0);
+            yy = distInner*sin((angOuter+(angInc*i))*embConstantPi/180.0);
         }
         odd = !odd;
         setRubberPoint("POLYGON_POINT_" + i.toString(), global.cx + xx, global.cy + yy);
@@ -4775,19 +4006,8 @@ function updateStar(x, y)
 
 function main()
 {
-    initCommand();
     clearSelection();
     setPromptPrefix(qsTr("Enter an option [Cascade/Tile]: "));
-}
-
-function click(x, y)
-{
-    //Do Nothing
-}
-
-function context(str)
-{
-    //Do Nothing
 }
 
 function prompt(str)
@@ -4795,12 +4015,12 @@ function prompt(str)
     if(str == "C" || str == "CASCADE") //TODO: Probably should add additional qsTr calls here.
     {
         windowCascade();
-        endCommand();
+        return;
     }
     else if(str == "T" || str == "TILE") //TODO: Probably should add additional qsTr calls here.
     {
         windowTile();
-        endCommand();
+        return;
     }
     else
     {
@@ -4808,71 +4028,50 @@ function prompt(str)
         setPromptPrefix(qsTr("Enter an option [Cascade/Tile]: "));
     }
 }
---------------------------------------------------------------------------------
---------------------------------------------------------------------------------
 
-var global = {}; //Required
-global.numPoints = 1024; //Default //TODO: min:64 max:8192
-global.cx;
-global.cy;
-global.sx = 0.04; //Default
-global.sy = 0.04; //Default
-global.numPoints;
-args->mode;
+/* ----------------------------------------------------------------------- */
 
-//enums
-args->mode_NUM_POINTS = 0;
-args->mode_XSCALE     = 1;
-args->mode_YSCALE     = 2;
+typedef struct TREBLECLEF_DATA {
+    int num_points;
+    double cx;
+    double cy;
+    double sx;
+    double sy;
+    int mode;
+} treble_clef;
 
-//NOTE: main() is run every time the command is started.
-//      Use it to reset variables so they are ready to go.
-function main()
+
+#define TREBLE_CLEF_MODE_NUM_POINTS    0
+#define TREBLE_CLEF_MODE_XSCALE        1
+#define TREBLE_CLEF_MODE_YSCALE        2
+
+void treble_clef_main()
 {
-    initCommand();
+    treble_clef global;
     clearSelection();
     global.cx = NaN;
     global.cy = NaN;
-    args->mode = args->mode_NUM_POINTS;
+    global.numPoints = 1024; //Default //TODO: min:64 max:8192
+    global.sx = 0.04; //Default
+    global.sy = 0.04; //Default
+    args->mode = TREBLE_CLEF_MODE_NUM_POINTS;
 
     addRubber("POLYGON");
     setRubberMode("POLYGON");
     updateClef(global.numPoints, global.sx, global.sy);
     spareRubber("POLYGON");
-    endCommand();
+    return;
 }
 
-//NOTE: click() is run only for left clicks.
-//      Middle clicks are used for panning.
-//      Right clicks bring up the context menu.
-function click(x, y)
+void treble_clef_updateClef(int numPts, double xScale, double yScale)
 {
-}
+    int i;
+    int t;
+    double xx = NaN;
+    double yy = NaN;
+    double sixteen_pi = 16*embConstantPi;
 
-//NOTE: context() is run when a context menu entry is chosen.
-function context(str)
-{
-    todo("TREBLECLEF", "context()");
-}
-
-//NOTE: prompt() is run when Enter is pressed.
-//      appendPromptHistory is automatically called before prompt()
-//      is called so calling it is only needed for erroneous input.
-//      Any text in the command prompt is sent as an uppercase string.
-function prompt(str)
-{
-}
-
-function updateClef(numPts, xScale, yScale)
-{
-    var i;
-    var t;
-    var xx = NaN;
-    var yy = NaN;
-    var sixteen_pi = 16*Math.PI;
-
-    for(i = 0; i <= numPts; i++)
-    {
+    for (i = 0; i <= numPts; i++) {
         t = sixteen_pi/numPts*i;
 
         xx = ((-1/12*sin(215/214-18*t)-
@@ -4893,8 +4092,8 @@ function updateClef(numPts, xScale, yScale)
         7/23*sin(15*t+44/21)+
         2/19*sin(16*t+132/29)+
         5/16*sin(17*t+58/27)+2121/22)*
-        theta(15*Math.PI-t)*
-        theta(t-11*Math.PI)+
+        theta(15*embConstantPi-t)*
+        theta(t-11*embConstantPi)+
         (-21/23*sin(3/19-18*t)-
         18/55*sin(34/25-15*t)-
         47/16*sin(19/33-13*t)-
@@ -4919,8 +4118,8 @@ function updateClef(numPts, xScale, yScale)
         11/45*sin(22*t+104/25)+
         42/85*sin(23*t+3/16)+
         1/2*sin(24*t+29/28)-2503/17)*
-        theta(11*Math.PI-t)*
-        theta(t-7*Math.PI)+
+        theta(11*embConstantPi-t)*
+        theta(t-7*embConstantPi)+
         (-3/4*sin(13/14-6*t)-
         29/14*sin(23/40-4*t)-
         693/65*sin(7/17-2*t)+
@@ -4929,8 +4128,8 @@ function updateClef(numPts, xScale, yScale)
         38/15*sin(5*t+28/9)+
         79/63*sin(7*t+41/14)+
         16/63*sin(8*t+275/61)-1053/43)*
-        theta(7*Math.PI-t)*
-        theta(t-3*Math.PI)+
+        theta(7*embConstantPi-t)*
+        theta(t-3*embConstantPi)+
         (-7/11*sin(34/31-38*t)-
         199/99*sin(3/13-32*t)-
         26/23*sin(2/25-26*t)-
@@ -4978,8 +4177,8 @@ function updateClef(numPts, xScale, yScale)
         3/16*sin(45*t+137/68)+
         2/23*sin(46*t+237/59)+
         2/7*sin(47*t+43/21)-727/14)*
-        theta(3*Math.PI-t)*
-        theta(t+Math.PI))*
+        theta(3*embConstantPi-t)*
+        theta(t+embConstantPi))*
         theta(Math.sqrt(sgn(sin(t/2))));
 
         yy = ((-1/43*sin(21/17-14*t)-
@@ -5000,8 +4199,8 @@ function updateClef(numPts, xScale, yScale)
         5/21*sin(16*t+25/12)+
         8/25*sin(17*t+37/11)+
         10/29*sin(18*t+18/11)-2967/17)*
-        theta(15*Math.PI-t)*
-        theta(t-11*Math.PI)+
+        theta(15*embConstantPi-t)*
+        theta(t-11*embConstantPi)+
         (-14/17*sin(3/11-15*t)-
         123/44*sin(9/7-11*t)-
         97/34*sin(4/13-10*t)-
@@ -5026,8 +4225,8 @@ function updateClef(numPts, xScale, yScale)
         24/29*sin(22*t+36/19)+
         61/51*sin(23*t+80/21)+
         1/5*sin(24*t+37/11)-1831/17)*
-        theta(11*Math.PI-t)*
-        theta(t-7*Math.PI)+
+        theta(11*embConstantPi-t)*
+        theta(t-7*embConstantPi)+
         (2588/15*sin(t+14/3)+
         101/26*sin(2*t+65/23)+
         6273/392*sin(3*t+101/24)+
@@ -5036,8 +4235,8 @@ function updateClef(numPts, xScale, yScale)
         31/26*sin(6*t+31/10)+
         17/7*sin(7*t+97/28)+
         17/19*sin(8*t+161/54)+6478/9)*
-        theta(7*Math.PI-t)*
-        theta(t-3*Math.PI)+
+        theta(7*embConstantPi-t)*
+        theta(t-3*embConstantPi)+
         (-21/52*sin(13/14-45*t)-
         11/20*sin(20/19-44*t)-
         9/35*sin(5/18-41*t)-
@@ -5085,8 +4284,8 @@ function updateClef(numPts, xScale, yScale)
         1/12*sin(43*t+59/58)+
         2/9*sin(46*t+50/21)+
         8/39*sin(47*t+56/17)-1223/15)*
-        theta(3*Math.PI-t)*
-        theta(t+Math.PI))*
+        theta(3*embConstantPi-t)*
+        theta(t+embConstantPi))*
         theta(Math.sqrt(sgn(sin(t/2))));
 
         setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale);
@@ -5095,17 +4294,3 @@ function updateClef(numPts, xScale, yScale)
     setRubberText("POLYGON_NUM_POINTS", numPts.toString());
 }
 
-function sgn(x)
-{
-    if(x > 0) return 1;
-    else if(x < 0) return -1;
-    else return 0;
-}
-
-function theta(x)
-{
-    if(x < 0) return 0;
-    else return 1;
-}
-
-#endif
