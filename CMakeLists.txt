@@ -12,8 +12,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
 
@@ -195,7 +193,6 @@ add_executable(embroidermodder
 	src/icons.c
 	src/config.c
 	src/embroidermodder.h
-	src/images.qrc
 	extern/cJSON/cJSON.c
 	${FREEGLUT_SRCS}
 )
