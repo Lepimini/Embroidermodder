@@ -113,14 +113,9 @@ void settings_actuator(int action);
 
 extern "C" {
 EmbVector unit_vector(float angle);
-EmbVector rotate(EmbVector a, float angle);
+EmbVector rotate_vector(EmbVector a, float angle);
 EmbVector scale_vector(EmbVector a, float scale);
 EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
-}
-
-QIcon getIcon(QString theme, QString icon)
-{
-    return QIcon("icons/" + theme + "/" + icon  + ".png");
 }
 
 class BaseObject : public QGraphicsPathItem
@@ -1214,8 +1209,17 @@ QComboBox*   comboBoxTextSingleUpsideDown;
 
 MainWindow* _mainWin = 0;
 
-/* Temporary interface fix */
-/* conversion between native (Emb) types and Qt types */
+/*
+ * WARNING
+ * -------
+ * DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
+ * and the item is double clicked, the scene will erratically move the item while zooming.
+ * All movement has to be handled explicitly by us, not by the scene.
+ */
+
+/* Temporary interface fix
+ * conversion between native (Emb) types and Qt types
+ */
 
 QPointF to_qpointf(EmbVector v)
 {
@@ -1245,6 +1249,11 @@ EmbColor to_emb_color(QColor c)
 }
 
 /* --------------------------------------------------------------- */
+
+QIcon loadIcon(char **s)
+{
+    return QIcon(QPixmap(s));
+}
 
 void add_to_path(
     QPainterPath *path, path_symbol icon[],
@@ -1300,10 +1309,9 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
 
     setFrameShape(QFrame::NoFrame);
 
-    //NOTE: This has to be done before setting mouse tracking.
+    /* NOTE: This has to be done before setting mouse tracking. */
     //TODO: Review OpenGL for Qt5 later
-    //if(mainWin->settings.display_use_opengl)
-    //{
+    //if (mainWin->settings.display_use_opengl) {
     //    debug_message("Using OpenGL...");
     //    setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));
     //}
@@ -1315,8 +1323,11 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
     //setRenderHint(QPainter::HighQualityAntialiasing, mainWin->settings.display_render_hintHighAA());
     //setRenderHint(QPainter::NonCosmeticDefaultPen, mainWin->settings.display_render_hint_noncosmetic);
 
-    //NOTE: FullViewportUpdate MUST be used for both the GL and Qt renderers.
-    //NOTE: Qt renderer will not draw the foreground properly if it isnt set.
+    /* NOTE
+     * ----
+     * FullViewportUpdate MUST be used for both the GL and Qt renderers.
+     * Qt renderer will not draw the foreground properly if it isnt set.
+     */
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
     panDistance = 10; //TODO: should there be a setting for this???
@@ -1381,7 +1392,7 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
 
     setMouseTracking(true);
     setBackgroundColor(settings.display_bg_color);
-    //TODO: wrap this with a setBackgroundPixmap() function: setBackgroundBrush(QPixmap("images/canvas.png"));
+    //TODO: wrap this with a setBackgroundPixmap() function: setBackgroundBrush(QPixmap("images/canvas));
 
     connect(gscene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()));
 }
@@ -1507,7 +1518,10 @@ void View::vulcanizeRubberRoom()
 void View::vulcanizeObject(BaseObject* obj)
 {
     if(!obj) return;
-    gscene->removeItem(obj); //Prevent Qt Runtime Warning, QGraphicsScene::addItem: item has already been added to this scene
+    gscene->removeItem(obj);
+    /* Prevent Qt Runtime Warning, QGraphicsScene::addItem:
+     * item has already been added to this scene.
+     */
     obj->vulcanize();
 
     UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, this, 0);
@@ -1618,7 +1632,7 @@ void View::createOrigin() /* TODO: Make Origin Customizable */
 
     if (settings.grid_show_origin) {
         // originPath.addEllipse(QPointF(0,0), 0.5, 0.5);
-        // TODO: Make Origin Customizable
+        /* TODO: Make Origin Customizable */
         originPath.moveTo(0.0, 0.5);
         originPath.arcTo(-0.5, -0.5, 1.0, 1.0, 90.0, 360.0);
         originPath.arcTo(-0.5, -0.5, 1.0, 1.0, 90.0, -360.0);
@@ -1872,9 +1886,9 @@ float tic_imperial_lengths[] = {
 
 void View::drawForeground(QPainter* painter, const QRectF& rect)
 {
-    //==================================================
-    //Draw grip points for all selected objects
-    //==================================================
+    /* ==================================================
+     * Draw grip points for all selected objects
+     * ================================================== */
 
     QPen gripPen(QColor::fromRgb(gripColorCool));
     gripPen.setWidth(2);
@@ -1885,17 +1899,13 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
 
     QList<QPointF> selectedGripPoints;
     QList<QGraphicsItem*> selectedItemList = gscene->selectedItems();
-    if(selectedItemList.size() <= 100)
-    {
-        foreach(QGraphicsItem* item, selectedItemList)
-        {
-            if(item->type() >= OBJ_TYPE_BASE)
-            {
+    if (selectedItemList.size() <= 100) {
+        foreach(QGraphicsItem* item, selectedItemList) {
+            if(item->type() >= OBJ_TYPE_BASE) {
                 tempBaseObj = static_cast<BaseObject*>(item);
                 if(tempBaseObj) { selectedGripPoints = tempBaseObj->allGripPoints(); }
 
-                foreach(QPointF ssp, selectedGripPoints)
-                {
+                foreach(QPointF ssp, selectedGripPoints) {
                     QPoint p1 = mapFromScene(ssp) - gripOffset;
                     QPoint q1 = mapFromScene(ssp) + gripOffset;
 
@@ -1926,10 +1936,8 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
                                                         viewMousePoint.y()-settings.qsnap_aperture_size,
                                                         settings.qsnap_aperture_size*2,
                                                         settings.qsnap_aperture_size*2);
-        foreach(QGraphicsItem* item, apertureItemList)
-        {
-            if(item->type() >= OBJ_TYPE_BASE)
-            {
+        foreach (QGraphicsItem* item, apertureItemList) {
+            if (item->type() >= OBJ_TYPE_BASE) {
                 tempBaseObj = static_cast<BaseObject*>(item);
                 if(tempBaseObj) { apertureSnapPoints << tempBaseObj->mouseSnapPoint(to_qpointf(sceneMousePoint)); }
             }
@@ -1943,13 +1951,11 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
         }
     }
 
-    //==================================================
-    //Draw horizontal and vertical rulers
-    //==================================================
+    /* ==================================================
+     * Draw horizontal and vertical rulers
+     * ================================================== */
 
-
-    if(gscene->property("ENABLE_RULER").toBool())
-    {
+    if (gscene->property("ENABLE_RULER").toBool()) {
         bool proceed = true;
 
         int vw = width();  //View Width
@@ -1972,15 +1978,15 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
         float rvh = rvy - oy;
 
         /*
-        NOTE: Drawing ruler if zoomed out too far will cause an assertion failure.
-              We will limit the maximum size the ruler can be shown at.
-        */
+         * NOTE:
+         * Drawing ruler if zoomed out too far will cause an assertion failure.
+         * We will limit the maximum size the ruler can be shown at.
+         */
 
         unsigned short maxSize = -1; //Intentional underflow
         if(rhw >= maxSize || rvh >= maxSize) proceed = 0;
 
-        if(proceed)
-        {
+        if (proceed) {
             int distance = mapToScene(settings.rulerPixelSize*3, 0).x() - ox;
             QString distStr = QString().setNum(distance);
             int distStrSize = distStr.size();
@@ -2611,21 +2617,17 @@ void View::mousePressEvent(QMouseEvent* event)
                             item->setSelected(true);
                     }
                 }
-                else
-                {
-                    if(mainWin->isShiftPressed())
-                    {
+                else {
+                    if (mainWin->isShiftPressed()) {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::ContainsItemShape);
                         if(!itemList.size())
                             clearSelection();
-                        else
-                        {
+                        else {
                             foreach(QGraphicsItem* item, itemList)
                                 item->setSelected(!item->isSelected()); //Toggle selected
                         }
                     }
-                    else
-                    {
+                    else {
                         clearSelection();
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::ContainsItemShape);
                         foreach(QGraphicsItem* item, itemList)
@@ -2635,28 +2637,24 @@ void View::mousePressEvent(QMouseEvent* event)
             }
             else {
                 if (settings.selection_mode_pickadd) {
-                    if(mainWin->isShiftPressed())
-                    {
+                    if(mainWin->isShiftPressed()) {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::IntersectsItemShape);
                         foreach(QGraphicsItem* item, itemList)
                             item->setSelected(false);
                     }
-                    else
-                    {
+                    else {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::IntersectsItemShape);
                         foreach(QGraphicsItem* item, itemList)
                             item->setSelected(true);
                     }
                 }
-                else
-                {
-                    if(mainWin->isShiftPressed())
-                    {
+                else {
+                    if (mainWin->isShiftPressed()) {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::IntersectsItemShape);
-                        if(!itemList.size())
+                        if (!itemList.size()) {
                             clearSelection();
-                        else
-                        {
+                        }
+                        else {
                             foreach(QGraphicsItem* item, itemList)
                                 item->setSelected(!item->isSelected()); //Toggle selected
                         }
@@ -2764,37 +2762,27 @@ void View::mouseMoveEvent(QMouseEvent* event)
     movePoint = event->pos();
     sceneMovePoint = mapToScene(movePoint);
 
-    if(settings.previewActive)
-    {
-        if(previewMode == PREVIEW_MODE_MOVE)
-        {
+    if (settings.previewActive) {
+        if (previewMode == PREVIEW_MODE_MOVE) {
             previewObjectItemGroup->setPos(to_qpointf(sceneMousePoint) - previewPoint);
         }
-        else if(previewMode == PREVIEW_MODE_ROTATE)
-        {
+        else if (previewMode == PREVIEW_MODE_ROTATE) {
+            EmbVector rot, p;
             float x = previewPoint.x();
             float y = previewPoint.y();
-            float rot = previewData;
-
             float mouseAngle = QLineF(x, y, sceneMousePoint.x, sceneMousePoint.y).angle();
 
-            float rad = radians(rot-mouseAngle);
-            float cosRot = cos(rad);
-            float sinRot = sin(rad);
-            float px = 0;
-            float py = 0;
-            px -= x;
-            py -= y;
-            float rotX = px*cosRot - py*sinRot;
-            float rotY = px*sinRot + py*cosRot;
-            rotX += x;
-            rotY += y;
+            float rad = radians(previewData-mouseAngle);
+            p.x = -x;
+            p.y = -y;
+            rot = rotate_vector(p, rad);
+            rot.x += x;
+            rot.y += y;
 
-            previewObjectItemGroup->setPos(rotX, rotY);
-            previewObjectItemGroup->setRotation(rot-mouseAngle);
+            previewObjectItemGroup->setPos(rot.x, rot.y);
+            previewObjectItemGroup->setRotation(previewData-mouseAngle);
         }
-        else if(previewMode == PREVIEW_MODE_SCALE)
-        {
+        else if (previewMode == PREVIEW_MODE_SCALE) {
             float x = previewPoint.x();
             float y = previewPoint.y();
             float scaleFactor = previewData;
@@ -2804,14 +2792,12 @@ void View::mouseMoveEvent(QMouseEvent* event)
             previewObjectItemGroup->setScale(1);
             previewObjectItemGroup->setPos(0,0);
 
-            if(scaleFactor <= 0.0)
-            {
+            if(scaleFactor <= 0.0) {
                 QMessageBox::critical(this, QObject::tr("ScaleFactor Error"),
                                     QObject::tr("Hi there. If you are not a developer, report this as a bug. "
   "If you are a developer, your code needs examined, and possibly your head too."));
             }
-            else
-            {
+            else {
                 //Calculate the offset
                 float oldX = 0;
                 float oldY = 0;
@@ -2915,8 +2901,7 @@ bool View::allowZoomOut()
     float maxHeight = corner.y() - origin.y();
 
     float zoomOutLimit = 10000000000000.0;
-    if(qMax(maxWidth, maxHeight) > zoomOutLimit)
-    {
+    if (embMaxDouble(maxWidth, maxHeight) > zoomOutLimit) {
         debug_message("ZoomOut limit reached. (limit=%.1f)", zoomOutLimit);
         return false;
     }
@@ -3002,22 +2987,22 @@ void View::contextMenuEvent(QContextMenuEvent* event)
     menu.addSeparator();
 
     if (!selectionEmpty) {
-        QAction* deleteAction = new QAction(getIcon(iconTheme, "erase"), "D&elete", this);
+        QAction* deleteAction = new QAction(loadIcon(icon_erase), "D&elete", this);
         deleteAction->setStatusTip("Removes objects from a drawing.");
         connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteSelected()));
         menu.addAction(deleteAction);
 
-        QAction* moveAction = new QAction(getIcon(iconTheme, "move"), "&Move", this);
+        QAction* moveAction = new QAction(loadIcon(icon_move), "&Move", this);
         moveAction->setStatusTip("Displaces objects a specified distance in a specified direction.");
         connect(moveAction, SIGNAL(triggered()), this, SLOT(moveAction()));
         menu.addAction(moveAction);
 
-        QAction* scaleAction = new QAction(getIcon(iconTheme, "scale"), "Sca&le", this);
+        QAction* scaleAction = new QAction(loadIcon(icon_scale), "Sca&le", this);
         scaleAction->setStatusTip("Enlarges or reduces objects proportionally in the X, Y, and Z directions.");
         connect(scaleAction, SIGNAL(triggered()), this, SLOT(scaleAction()));
         menu.addAction(scaleAction);
 
-        QAction* rotateAction = new QAction(getIcon(iconTheme, "rotate"), "R&otate", this);
+        QAction* rotateAction = new QAction(loadIcon(icon_rotate), "R&otate", this);
         rotateAction->setStatusTip("Rotates objects about a base point.");
         connect(rotateAction, SIGNAL(triggered()), this, SLOT(rotateAction()));
         menu.addAction(rotateAction);
@@ -3575,19 +3560,19 @@ QWidget* Settings_Dialog::createTabGeneral()
     dialog.general_icon_theme = settings.general_icon_theme;
     foreach(QString dirName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
     {
-        comboBoxIconTheme->addItem(getIcon(dirName, "theme"), dirName);
+        comboBoxIconTheme->addItem(loadIcon(icon_theme), dirName);
     }
     comboBoxIconTheme->setCurrentIndex(comboBoxIconTheme->findText(dialog.general_icon_theme));
     connect(comboBoxIconTheme, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(comboBoxIconThemeCurrentIndexChanged(const QString&)));
 
     QLabel* labelIconSize = new QLabel(tr("Icon Size"), groupBoxIcon);
     QComboBox* comboBoxIconSize = new QComboBox(groupBoxIcon);
-    comboBoxIconSize->addItem(getIcon(dialog.general_icon_theme, "icon16"), "Very Small", 16);
-    comboBoxIconSize->addItem(getIcon(dialog.general_icon_theme, "icon24"), "Small", 24);
-    comboBoxIconSize->addItem(getIcon(dialog.general_icon_theme, "icon32"), "Medium", 32);
-    comboBoxIconSize->addItem(getIcon(dialog.general_icon_theme, "icon48"), "Large", 48);
-    comboBoxIconSize->addItem(getIcon(dialog.general_icon_theme, "icon64"), "Very Large", 64);
-    comboBoxIconSize->addItem(getIcon(dialog.general_icon_theme, "icon128"), "I'm Blind", 128);
+    comboBoxIconSize->addItem(loadIcon(icon_icon16), "Very Small", 16);
+    comboBoxIconSize->addItem(loadIcon(icon_icon24), "Small", 24);
+    comboBoxIconSize->addItem(loadIcon(icon_icon32), "Medium", 32);
+    comboBoxIconSize->addItem(loadIcon(icon_icon48), "Large", 48);
+    comboBoxIconSize->addItem(loadIcon(icon_icon64), "Very Large", 64);
+    comboBoxIconSize->addItem(loadIcon(icon_icon128), "I'm Blind", 128);
     dialog.general_icon_size = settings.general_icon_size;
     comboBoxIconSize->setCurrentIndex(comboBoxIconSize->findData(dialog.general_icon_size));
     connect(comboBoxIconSize, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxIconSizeCurrentIndexChanged(int)));
@@ -4044,7 +4029,7 @@ QWidget* Settings_Dialog::createTabPrinting()
     QList<QPrinterInfo> listAvailPrinters = QPrinterInfo::availablePrinters();
     foreach(QPrinterInfo info, listAvailPrinters)
     {
-        comboBoxDefaultDevice->addItem(getIcon(settings.general_icon_theme, "print"), info.printerName());
+        comboBoxDefaultDevice->addItem(loadIcon(icon_print), info.printerName());
     }
 
     QVBoxLayout* vboxLayoutDefaultPrinter = new QVBoxLayout(groupBoxDefaultPrinter);
@@ -4415,7 +4400,7 @@ QWidget* Settings_Dialog::createTabOrthoPolar()
     { \
         QCheckBox* c = new QCheckBox(tr(label), groupBoxQSnapLoc); \
         c->setChecked(settings.checked); \
-        c->setIcon(getIcon(settings.general_icon_theme, icon)); \
+        c->setIcon(loadIcon(icon)); \
         connect(c, SIGNAL(stateChanged(int)), this, SLOT(f(int))); \
         connect(this, SIGNAL(buttonQSnapSelectAll(bool)), c, SLOT(setChecked(bool))); \
         connect(this, SIGNAL(buttonQSnapClearAll(bool)), c, SLOT(setChecked(bool))); \
@@ -4436,19 +4421,19 @@ QWidget* Settings_Dialog::createTabQuickSnap()
     connect(buttonQSnapSelectAll, SIGNAL(clicked()), this, SLOT(buttonQSnapSelectAllClicked()));
     connect(buttonQSnapClearAll, SIGNAL(clicked()), this, SLOT(buttonQSnapClearAllClicked()));
 
-    make_check_box("Endpoint", qsnap_endpoint, "locator-snaptoendpoint", checkBoxQSnapEndPointStateChanged, 0, 0);
-    make_check_box("Midpoint", qsnap_midpoint, "locator-snaptomidpoint", checkBoxQSnapMidPointStateChanged, 1, 0);
-    make_check_box("Center", qsnap_center, "locator-snaptocenter", checkBoxQSnapCenterStateChanged, 2, 0);
-    make_check_box("Node", qsnap_node, "locator-snaptonode", checkBoxQSnapNodeStateChanged, 3, 0);
-    make_check_box("Quadrant", qsnap_quadrant, "locator-snaptoquadrant", checkBoxQSnapQuadrantStateChanged, 4, 0);
-    make_check_box("Intersection", qsnap_intersection, "locator-snaptointersection", checkBoxQSnapIntersectionStateChanged, 5, 0);
-    make_check_box("Extension", qsnap_extension, "locator-snaptoextension", checkBoxQSnapExtensionStateChanged, 6, 0);
-    make_check_box("Insertion", qsnap_insertion, "locator-snaptoinsert", checkBoxQSnapInsertionStateChanged, 0, 1);
-    make_check_box("Perpendicular", qsnap_perpendicular, "locator-snaptoperpendicular", checkBoxQSnapPerpendicularStateChanged, 1, 1);
-    make_check_box("Tangent", qsnap_tangent, "locator-snaptotangent", checkBoxQSnapTangentStateChanged, 2, 1);
-    make_check_box("Nearest", qsnap_nearest, "locator-snaptonearest", checkBoxQSnapNearestStateChanged, 3, 1);
-    make_check_box("Apparent Intersection", qsnap_apparent, "locator-snaptoapparentintersection", checkBoxQSnapApparentIntersectionStateChanged, 4, 1);
-    make_check_box("Parallel", qsnap_parallel, "locator-snaptoparallel", checkBoxQSnapParallelStateChanged, 5, 1);
+    make_check_box("Endpoint", qsnap_endpoint, icon_locator_snaptoendpoint, checkBoxQSnapEndPointStateChanged, 0, 0);
+    make_check_box("Midpoint", qsnap_midpoint, icon_locator_snaptomidpoint, checkBoxQSnapMidPointStateChanged, 1, 0);
+    make_check_box("Center", qsnap_center, icon_locator_snaptocenter, checkBoxQSnapCenterStateChanged, 2, 0);
+    make_check_box("Node", qsnap_node, icon_locator_snaptonode, checkBoxQSnapNodeStateChanged, 3, 0);
+    make_check_box("Quadrant", qsnap_quadrant, icon_locator_snaptoquadrant, checkBoxQSnapQuadrantStateChanged, 4, 0);
+    make_check_box("Intersection", qsnap_intersection, icon_locator_snaptointersection, checkBoxQSnapIntersectionStateChanged, 5, 0);
+    make_check_box("Extension", qsnap_extension, icon_locator_snaptoextension, checkBoxQSnapExtensionStateChanged, 6, 0);
+    make_check_box("Insertion", qsnap_insertion, icon_locator_snaptoinsert, checkBoxQSnapInsertionStateChanged, 0, 1);
+    make_check_box("Perpendicular", qsnap_perpendicular, icon_locator_snaptoperpendicular, checkBoxQSnapPerpendicularStateChanged, 1, 1);
+    make_check_box("Tangent", qsnap_tangent, icon_locator_snaptotangent, checkBoxQSnapTangentStateChanged, 2, 1);
+    make_check_box("Nearest", qsnap_nearest, icon_locator_snaptonearest, checkBoxQSnapNearestStateChanged, 3, 1);
+    make_check_box("Apparent Intersection", qsnap_apparent, icon_locator_snaptoapparentintersection, checkBoxQSnapApparentIntersectionStateChanged, 4, 1);
+    make_check_box("Parallel", qsnap_parallel, icon_locator_snaptoparallel, checkBoxQSnapParallelStateChanged, 5, 1);
 
     gridLayoutQSnap->addWidget(buttonQSnapSelectAll, 0, 2, Qt::AlignLeft);
     gridLayoutQSnap->addWidget(buttonQSnapClearAll, 1, 2, Qt::AlignLeft);
@@ -4678,13 +4663,13 @@ QWidget* Settings_Dialog::createTabSelection()
 
 void Settings_Dialog::addColorsToComboBox(QComboBox* comboBox)
 {
-    comboBox->addItem(QIcon("icons/" + settings.general_icon_theme + "/colorred.png"), tr("Red"), qRgb(255, 0, 0));
-    comboBox->addItem(QIcon("icons/" + settings.general_icon_theme + "/coloryellow.png"), tr("Yellow"), qRgb(255,255, 0));
-    comboBox->addItem(QIcon("icons/" + settings.general_icon_theme + "/colorgreen.png"), tr("Green"), qRgb(  0,255, 0));
-    comboBox->addItem(QIcon("icons/" + settings.general_icon_theme + "/colorcyan.png"), tr("Cyan"), qRgb(  0,255,255));
-    comboBox->addItem(QIcon("icons/" + settings.general_icon_theme + "/colorblue" + ".png"), tr("Blue"), qRgb(  0, 0,255));
-    comboBox->addItem(QIcon("icons/" + settings.general_icon_theme + "/colormagenta" + ".png"), tr("Magenta"), qRgb(255, 0,255));
-    comboBox->addItem(QIcon("icons/" + settings.general_icon_theme + "/colorwhite" + ".png"), tr("White"), qRgb(255,255,255));
+    comboBox->addItem(loadIcon(icon_colorred), tr("Red"), qRgb(255, 0, 0));
+    comboBox->addItem(loadIcon(icon_coloryellow), tr("Yellow"), qRgb(255,255, 0));
+    comboBox->addItem(loadIcon(icon_colorgreen), tr("Green"), qRgb(  0,255, 0));
+    comboBox->addItem(loadIcon(icon_colorcyan), tr("Cyan"), qRgb(  0,255,255));
+    comboBox->addItem(loadIcon(icon_colorblue), tr("Blue"), qRgb(  0, 0,255));
+    comboBox->addItem(loadIcon(icon_colormagenta), tr("Magenta"), qRgb(255, 0,255));
+    comboBox->addItem(loadIcon(icon_colorwhite), tr("White"), qRgb(255,255,255));
     /* TODO: Add Other... so the user can select custom colors */
 }
 
@@ -5895,7 +5880,7 @@ QComboBox* PropertyEditor::createComboBoxSelected()
 QToolButton* PropertyEditor::createToolButtonQSelect()
 {
     toolButtonQSelect = new QToolButton(this);
-    toolButtonQSelect->setIcon(QIcon(iconDir + "/" + "quickselect" + ".png"));
+    toolButtonQSelect->setIcon(loadIcon(icon_quickselect));
     toolButtonQSelect->setIconSize(QSize(iconSize, iconSize));
     toolButtonQSelect->setText("QSelect");
     toolButtonQSelect->setToolTip("QSelect"); //TODO: Better Description
@@ -5916,14 +5901,14 @@ void PropertyEditor::updatePickAddModeButton(bool pickAddMode)
 {
     pickAdd = pickAddMode;
     if (pickAdd) {
-        toolButtonPickAdd->setIcon(QIcon(iconDir + "/pickadd.png"));
+        toolButtonPickAdd->setIcon(loadIcon(icon_pickadd));
         toolButtonPickAdd->setIconSize(QSize(iconSize, iconSize));
         toolButtonPickAdd->setText("PickAdd");
         toolButtonPickAdd->setToolTip("PickAdd Mode - Add to current selection.\nClick to switch to PickNew Mode.");
         toolButtonPickAdd->setToolButtonStyle(Qt::ToolButtonIconOnly);
     }
     else {
-        toolButtonPickAdd->setIcon(QIcon(iconDir + "/picknew.png"));
+        toolButtonPickAdd->setIcon(loadIcon(icon_picknew));
         toolButtonPickAdd->setIconSize(QSize(iconSize, iconSize));
         toolButtonPickAdd->setText("PickNew");
         toolButtonPickAdd->setToolTip("PickNew Mode - Replace current selection.\nClick to switch to PickAdd Mode.");
@@ -7227,7 +7212,7 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
 QToolButton* PropertyEditor::createToolButton(const QString& iconName, const QString& txt)
 {
     QToolButton* tb = new QToolButton(this);
-    tb->setIcon(QIcon(iconDir + "/" + iconName + ".png"));
+    tb->setIcon(loadIcon(icon_blank));
     tb->setIconSize(QSize(iconSize, iconSize));
     tb->setText(txt);
     tb->setToolButtonStyle(propertyEditorButtonStyle);
@@ -7543,9 +7528,6 @@ void ArcObject::init(float startX, float startY, float midX, float midY, float e
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_ARC]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     calculateArcData(startX, startY, midX, midY, endX, endY);
@@ -8001,9 +7983,6 @@ void CircleObject::init(float centerX, float centerY, float radius, QRgb rgb, Qt
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_CIRCLE]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     setObjectRadius(radius);
@@ -8240,9 +8219,6 @@ void DimLeaderObject::init(float x1, float y1, float x2, float y2, QRgb rgb, Qt:
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_DIMLEADER]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     curved = false;
@@ -8520,12 +8496,6 @@ void EllipseObject::init(float centerX, float centerY, float width, float height
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_ELLIPSE]);
 
-    /*
-     * WARNING:
-     *   DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-     *   and the item is double clicked, the scene will erratically move the item while zooming.
-     *   All movement has to be handled explicitly by us, not by the scene.
-     */
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     setObjectSize(width, height);
@@ -8585,7 +8555,7 @@ QPointF EllipseObject::objectQuadrant0() const
     EmbVector v;
     v.x = objectWidth()/2.0;
     v.y = 0.0;
-    v = rotate(v, radians(rotation()));
+    v = rotate_vector(v, radians(rotation()));
     return objectCenter() + to_qpointf(v);
 }
 
@@ -8594,7 +8564,7 @@ QPointF EllipseObject::objectQuadrant90() const
     EmbVector v;
     v.x = objectHeight()/2.0;
     v.y = 0.0;
-    v = rotate(v, radians(rotation()+90.0));
+    v = rotate_vector(v, radians(rotation()+90.0));
     return objectCenter() + to_qpointf(v);
 }
 
@@ -8603,7 +8573,7 @@ QPointF EllipseObject::objectQuadrant180() const
     EmbVector v;
     v.x = objectWidth()/2.0;
     v.y = 0.0;
-    v = rotate(v, radians(rotation()+180.0));
+    v = rotate_vector(v, radians(rotation()+180.0));
     return objectCenter() + to_qpointf(v);
 }
 
@@ -8612,7 +8582,7 @@ QPointF EllipseObject::objectQuadrant270() const
     EmbVector v;
     v.x = objectHeight()/2.0;
     v.y = 0.0;
-    v = rotate(v, radians(rotation()+270.0));
+    v = rotate_vector(v, radians(rotation()+270.0));
     return objectCenter() + to_qpointf(v);
 }
 
@@ -8819,9 +8789,6 @@ void ImageObject::init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyl
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_IMAGE]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     setObjectRect(x, y, w, h);
@@ -8990,12 +8957,6 @@ void LineObject::init(float x1, float y1, float x2, float y2, QRgb rgb, Qt::PenS
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_LINE]);
 
-    /* WARNING:
-     * DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-     * and the item is double clicked, the scene will erratically move
-     * the item while zooming.
-     * All movement has to be handled explicitly by us, not by the scene.
-     */
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     setObjectEndPoint1(x1, y1);
@@ -9148,8 +9109,8 @@ QList<QPointF> LineObject::allGripPoints()
 
 void LineObject::gripEdit(const QPointF& before, const QPointF& after)
 {
-    if     (before == objectEndPoint1()) { setObjectEndPoint1(after); }
-    else if(before == objectEndPoint2()) { setObjectEndPoint2(after); }
+    if     (before == objectEndPoint1()) { setObjectEndPoint1(after.x(), after.y()); }
+    else if(before == objectEndPoint2()) { setObjectEndPoint2(after.x(), after.y()); }
     else if(before == objectMidPoint())  { QPointF delta = after-before; moveBy(delta.x(), delta.y()); }
 }
 
@@ -9170,9 +9131,8 @@ PathObject::PathObject(float x, float y, const QPainterPath p, QRgb rgb, QGraphi
 PathObject::PathObject(PathObject* obj, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("PathObject Constructor()");
-    if(obj)
-    {
-        init(obj->objectX(), obj->objectY(), obj->objectCopyPath(), obj->objectColorRGB(), Qt::SolidLine); //TODO: getCurrentLineType
+    if (obj) {
+        init(obj->objectX(), obj->objectY(), obj->objectCopyPath(), obj->objPen.color().rgb(), Qt::SolidLine); //TODO: getCurrentLineType
         setRotation(obj->rotation());
         setScale(obj->scale());
     }
@@ -9188,12 +9148,6 @@ void PathObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::Pen
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_PATH]);
 
-    /* WARNING:
-     * DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-     * and the item is double clicked, the scene will erratically
-     * move the item while zooming.
-     * All movement has to be handled explicitly by us, not by the scene.
-     */
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     updatePath(p);
@@ -9306,9 +9260,6 @@ void PointObject::init(float x, float y, QRgb rgb, Qt::PenStyle lineType)
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POINT]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     setRect(-0.00000001, -0.00000001, 0.00000002, 0.00000002);
@@ -9412,9 +9363,6 @@ void PolygonObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYGON]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     gripIndex = -1;
@@ -9681,9 +9629,6 @@ void PolylineObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt:
     setData(OBJ_TYPE, PolylineObject::Type);
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYLINE]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     gripIndex = -1;
@@ -9896,9 +9841,6 @@ void RectObject::init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyle
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_RECTANGLE]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     setObjectRect(x, y, w, h);
@@ -10506,9 +10448,6 @@ void TextSingleObject::init(const QString& str, float x, float y, QRgb rgb, Qt::
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_TEXTSINGLE]);
 
-    //WARNING: DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
-    //WARNING: and the item is double clicked, the scene will erratically move the item while zooming.
-    //WARNING: All movement has to be handled explicitly by us, not by the scene.
     setFlag(QGraphicsItem::ItemIsSelectable, true);
 
     objTextJustify = "Left"; //TODO: set the justification properly
@@ -10815,108 +10754,71 @@ QList<QPainterPath> TextSingleObject::subPathList() const
     return pathList;
 }
 
-QIcon loadIcon(char **s)
-{
-    return QIcon(QPixmap(s));
-}
-
 QAction *MainWindow::createAction(const QString icon, const QString toolTip, const QString statusTip, bool scripted)
 {
+    int i, id = 0;
     QString appDir = qApp->applicationDirPath();
 
-    QAction *ACTION = new QAction(QIcon(":/icons/" + settings.general_icon_theme + "/" + icon + ".png"), toolTip, this);
-    ACTION->setStatusTip(statusTip);
-    ACTION->setObjectName(icon);
+    for (i=0; i<n_actions; i++) {
+        if (icon == action_list[i].abbreviation) {
+            id = i;
+            break;
+        }
+    }
+
+    QAction *ACTION = new QAction(loadIcon(action_list[id].icon), toolTip, this);
     // TODO: Set What's This Context Help to statusTip for now so there is some infos there.
     // Make custom What's This Context Help popup with more descriptive help than just
     // the status bar/tip one liner(short but not real long) with a hyperlink in the custom popup
     // at the bottom to open full help file description. Ex: like wxPython AGW's SuperToolTip.
-    ACTION->setWhatsThis(statusTip);
     // TODO: Finish All Commands ... <.<
 
-    if (icon == "donothing") {
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(doNothing()));
-    }
-    else if (icon == "new") {
+    if (icon == "new") {
         ACTION->setShortcut(QKeySequence::New);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(newFile()));
     }
     else if (icon == "open") {
         ACTION->setShortcut(QKeySequence::Open);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(openFile()));
     }
     else if (icon == "save") {
         ACTION->setShortcut(QKeySequence::Save);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(savefile()));
     }
     else if(icon == "saveas") {
         ACTION->setShortcut(QKeySequence::SaveAs);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(saveasfile()));
     }
-    else if(icon == "print")                    { ACTION->setShortcut(QKeySequence::Print);    connect(ACTION, SIGNAL(triggered()), this, SLOT(print()));           }
-    else if(icon == "designdetails")            { ACTION->setShortcut(QKeySequence("Ctrl+D")); connect(ACTION, SIGNAL(triggered()), this, SLOT(designDetails()));   }
-    else if(icon == "exit")                     { ACTION->setShortcut(QKeySequence("Ctrl+Q")); connect(ACTION, SIGNAL(triggered()), this, SLOT(exit()));            }
-
-    else if(icon == "cut")                      { ACTION->setShortcut(QKeySequence::Cut);   connect(ACTION, SIGNAL(triggered()), this, SLOT(cut()));   }
-    else if(icon == "copy")                     { ACTION->setShortcut(QKeySequence::Copy);  connect(ACTION, SIGNAL(triggered()), this, SLOT(copy()));  }
+    else if(icon == "print") {
+        ACTION->setShortcut(QKeySequence::Print);
+    }
+    else if(icon == "designdetails") {
+        ACTION->setShortcut(QKeySequence("Ctrl+D"));
+    }
+    else if(icon == "exit") {
+        ACTION->setShortcut(QKeySequence("Ctrl+Q"));
+    }
+    else if(icon == "cut") {
+        ACTION->setShortcut(QKeySequence::Cut);
+    }
+    else if(icon == "copy") { ACTION->setShortcut(QKeySequence::Copy);  connect(ACTION, SIGNAL(triggered()), this, SLOT(copy()));  }
     else if(icon == "paste")                    { ACTION->setShortcut(QKeySequence::Paste); connect(ACTION, SIGNAL(triggered()), this, SLOT(paste())); }
-
     else if(icon == "windowcascade")              connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(cascade()));
     else if(icon == "windowtile")                 connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(tile()));
     else if(icon == "windowclose")              { ACTION->setShortcut(QKeySequence::Close);    connect(ACTION, SIGNAL(triggered()), this, SLOT(onCloseWindow()));   }
     else if(icon == "windowcloseall")             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(closeAllSubWindows()));
     else if(icon == "windownext")               { ACTION->setShortcut(QKeySequence::NextChild);     connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));     }
     else if(icon == "windowprevious")           { ACTION->setShortcut(QKeySequence::PreviousChild); connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow())); }
-
-    else if (
-        icon == "help" || icon == "changelog" || icon == "tipoftheday"
-        || icon == "about" || icon == "whatsthis"
-        || icon == "icon16" || icon == "icon24" || icon == "icon32"
-        || icon == "icon48" || icon == "icon64" || icon == "icon128"
-        || icon == "settingsdialog" || icon == "undo" || icon == "redo"
-        || icon == "makelayercurrent" || icon == "layers" || icon == "layerprevious"
-    ) {
-        /* STANDARD ACTION */
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(actions()));
-    }
-
     else if(icon == "textbold")                 { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextBold(bool)));   }
     else if(icon == "textitalic")               { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextItalic(bool))); }
     else if(icon == "textunderline")            { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextUnderline(bool))); }
     else if(icon == "textstrikeout")            { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextStrikeOut(bool))); }
-    else if(icon == "textoverline")             { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextOverline(bool))); }
-
-    else if(icon == "zoomrealtime")               connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomRealtime()));
-    else if(icon == "zoomprevious")               connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomPrevious()));
-    else if(icon == "zoomwindow")                 connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomWindow()));
-    else if(icon == "zoomdynamic")                connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomDynamic()));
-    else if(icon == "zoomscale")                  connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomScale()));
-    else if(icon == "zoomcenter")                 connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomCenter()));
-    else if(icon == "zoomin")                     connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomIn()));
-    else if(icon == "zoomout")                    connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomOut()));
-    else if(icon == "zoomselected")               connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomSelected()));
-    else if(icon == "zoomall")                    connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomAll()));
-    else if(icon == "zoomextents")                connect(ACTION, SIGNAL(triggered()), this, SLOT(zoomExtents()));
-
-    else if(icon == "panrealtime")                connect(ACTION, SIGNAL(triggered()), this, SLOT(panrealtime()));
-    else if(icon == "panpoint")                   connect(ACTION, SIGNAL(triggered()), this, SLOT(panpoint()));
-    else if(icon == "panleft")                    connect(ACTION, SIGNAL(triggered()), this, SLOT(panLeft()));
-    else if(icon == "panright")                   connect(ACTION, SIGNAL(triggered()), this, SLOT(panRight()));
-    else if(icon == "panup")                      connect(ACTION, SIGNAL(triggered()), this, SLOT(panUp()));
-    else if(icon == "pandown")                    connect(ACTION, SIGNAL(triggered()), this, SLOT(panDown()));
-
-    else if(icon == "day")                        connect(ACTION, SIGNAL(triggered()), this, SLOT(dayVision()));
-    else if(icon == "night")                      connect(ACTION, SIGNAL(triggered()), this, SLOT(nightVision()));
-    else {
-        ACTION->setEnabled(false);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(stub_implement()));
+    else if(icon == "textoverline") {
+        ACTION->setCheckable(true);
+        connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextOverline(bool)));
     }
-    return ACTION;
-}
 
-void MainWindow::stub_implement(QString txt)
-{
-    debug_message("TODO: %s", qPrintable(txt));
+    ACTION->setStatusTip(action_list[id].description);
+    ACTION->setObjectName(icon);
+    ACTION->setWhatsThis(action_list[id].description);
+    connect(ACTION, SIGNAL(triggered()), this, SLOT(actions()));
+    return ACTION;
 }
 
 void MainWindow::stub_testing()
@@ -11171,61 +11073,15 @@ void MainWindow::changelog()
 /* this wrapper connects the signal to the C-style actuator */
 void MainWindow::actions()
 {
-    int action;
+    int i;
     QObject *obj = sender();
     QString caller = obj->objectName();
-    if (caller == "icon16") {
-        action = ACTION_icon16;
+    for (i=0; i<n_actions; i++) {
+        if (caller == action_list[i].abbreviation) {
+            actuator(action_list[i].id);
+            return;
+        }
     }
-    else if (caller == "icon24") {
-        action = ACTION_icon24;
-    }
-    else if (caller == "icon32") {
-        action = ACTION_icon32;
-    }
-    else if (caller == "icon48") {
-        action = ACTION_icon48;
-    }
-    else if (caller == "icon64") {
-        action = ACTION_icon64;
-    }
-    else if (caller == "icon128") {
-        action = ACTION_icon128;
-    }
-    else if (caller == "settingsdialog") {
-        action = ACTION_settingsdialog;
-    }
-    else if (caller == "undo") {
-        action = ACTION_undo;
-    }
-    else if (caller == "redo") {
-        action = ACTION_redo;
-    }
-    else if (caller == "makelayercurrent") {
-        action = ACTION_makelayercurrent;
-    }
-    else if (caller == "layers") {
-        action = ACTION_layers;
-    }
-    else if (caller == "layerprevious") {
-        action = ACTION_layerprevious;
-    }
-    else if (caller == "help") {
-        action = ACTION_help;
-    }
-    else if (caller == "changelog") {
-        action = ACTION_changelog;
-    }
-    else if (caller == "tipoftheday") {
-        action = ACTION_tipoftheday;
-    }
-    else if (caller == "about") {
-        action = ACTION_about;
-    }
-    else if (caller == "whatsthis") {
-        action = ACTION_whatsthis;
-    }
-    actuator(action);
 }
 
 void MainWindow::undo()
@@ -11396,13 +11252,13 @@ void MainWindow::pickAddModeToggled()
 void MainWindow::makeLayerActive()
 {
     debug_message("makeLayerActive()");
-    stub_implement("Implement makeLayerActive.");
+    debug_message("Implement makeLayerActive.");
 }
 
 void MainWindow::layerManager()
 {
     debug_message("layerManager()");
-    stub_implement("Implement layerManager.");
+    debug_message("Implement layerManager.");
     LayerManager layman(this, this);
     layman.exec();
 }
@@ -11410,20 +11266,20 @@ void MainWindow::layerManager()
 void MainWindow::layerPrevious()
 {
     debug_message("layerPrevious()");
-    stub_implement("Implement layerPrevious.");
+    debug_message("Implement layerPrevious.");
 }
 
 // Zoom ToolBar
 void MainWindow::zoomRealtime()
 {
     debug_message("zoomRealtime()");
-    stub_implement("Implement zoomRealtime.");
+    debug_message("Implement zoomRealtime.");
 }
 
 void MainWindow::zoomPrevious()
 {
     debug_message("zoomPrevious()");
-    stub_implement("Implement zoomPrevious.");
+    debug_message("Implement zoomPrevious.");
 }
 
 void MainWindow::zoomWindow()
@@ -11436,19 +11292,19 @@ void MainWindow::zoomWindow()
 void MainWindow::zoomDynamic()
 {
     debug_message("zoomDynamic()");
-    stub_implement("Implement zoomDynamic.");
+    debug_message("Implement zoomDynamic.");
 }
 
 void MainWindow::zoomScale()
 {
     debug_message("zoomScale()");
-    stub_implement("Implement zoomScale.");
+    debug_message("Implement zoomScale.");
 }
 
 void MainWindow::zoomCenter()
 {
     debug_message("zoomCenter()");
-    stub_implement("Implement zoomCenter.");
+    debug_message("Implement zoomCenter.");
 }
 
 void MainWindow::zoomIn()
@@ -11480,7 +11336,7 @@ void MainWindow::zoomSelected()
 void MainWindow::zoomAll()
 {
     debug_message("zoomAll()");
-    stub_implement("Implement zoomAll.");
+    debug_message("Implement zoomAll.");
 }
 
 void MainWindow::zoomExtents()
@@ -12553,7 +12409,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     settings.shiftKeyPressedState = false;
 
     app_dir(current_path, icons_folder);
-    setWindowIcon(QIcon(QString(current_path) + settings.general_icon_theme + "/app.png"));
+    setWindowIcon(loadIcon(icon_app));
     setMinimumSize(800, 480); //Require Minimum WVGA
 
     loadFormats();
@@ -13254,7 +13110,7 @@ void MainWindow::createViewMenu()
     menuBar()->addMenu(viewMenu);
     viewMenu->addSeparator();
     viewMenu->addMenu(zoomMenu);
-    zoomMenu->setIcon(QIcon(appDir + "/icons/" + icontheme + "/zoom.png"));
+    zoomMenu->setIcon(loadIcon(icon_zoom));
     zoomMenu->addAction(actionHash.value(ACTION_zoomrealtime));
     zoomMenu->addAction(actionHash.value(ACTION_zoomprevious));
     zoomMenu->addSeparator();
@@ -13270,7 +13126,7 @@ void MainWindow::createViewMenu()
     zoomMenu->addAction(actionHash.value(ACTION_zoomall));
     zoomMenu->addAction(actionHash.value(ACTION_zoomextents));
     viewMenu->addMenu(panMenu);
-    panMenu->setIcon(QIcon(appDir + "/icons/" + icontheme + "/pan.png"));
+    panMenu->setIcon(loadIcon(icon_pan));
     panMenu->addAction(actionHash.value(ACTION_panrealtime));
     panMenu->addAction(actionHash.value(ACTION_panpoint));
     panMenu->addSeparator();

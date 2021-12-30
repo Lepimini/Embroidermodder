@@ -1,5 +1,5 @@
 /* XPM */
-char *icon_icon_zoom[] = {
+char *icon_zoom[] = {
 /* columns rows colors chars-per-pixel */
 "128 128 62 1 ",
 "  c #000000",

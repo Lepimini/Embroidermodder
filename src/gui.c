@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <math.h>
 
 #if defined(__unix__) || defined(__linux__)
 #include <pwd.h>
@@ -122,7 +123,7 @@ EmbVector unit_vector(float angle)
     return u;
 }
 
-EmbVector rotate(EmbVector a, float angle)
+EmbVector rotate_vector(EmbVector a, float angle)
 {
     EmbVector rot;
     EmbVector u = unit_vector(angle);
@@ -141,7 +142,7 @@ EmbVector scale_vector(EmbVector a, float scale)
 EmbVector scale_and_rotate(EmbVector a, float scale, float angle)
 {
     a = scale_vector(a, scale);
-    a = rotate(a, angle);
+    a = rotate_vector(a, angle);
     return a;
 }
 

@@ -762,7 +762,7 @@ extern char *icon_zoomrealtime[];
 extern char *icon_zoomscale[];
 extern char *icon_zoomselected[];
 extern char *icon_zoomwindow[];
-extern char *icon_zoom;
+extern char *icon_zoom[];
 
 /* C functions for embroidermodder
  * -------------------------------
@@ -1424,7 +1424,6 @@ private slots:
 
 public slots:
 
-    void stub_implement(QString txt);
     void stub_testing();
 
     void newFile();

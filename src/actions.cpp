@@ -10,6 +10,8 @@
 
 #include "embroidermodder.h"
 
+#include <stdlib.h>
+
 void settings_actuator(int action)
 {
     
@@ -18,7 +20,29 @@ void settings_actuator(int action)
 void actuator(int action)
 {
     switch (action) {
+    case ACTION_donothing:
+        _mainWin->doNothing();
+        break;
     case ACTION_new:
+        _mainWin->newFile();
+        break;
+    case ACTION_open:
+        _mainWin->openFile();
+        break;
+    case ACTION_save:
+        _mainWin->savefile();
+        break;
+    case ACTION_print:
+        _mainWin->print();
+        break;
+    case ACTION_designdetails:
+        _mainWin->designDetails();
+        break;
+    case ACTION_exit:
+        exit(0);
+        break;
+    case ACTION_cut:
+        _mainWin->cut();
         break;
     case ACTION_icon16:
         debug_message("icon16()");
@@ -77,8 +101,66 @@ void actuator(int action)
     case ACTION_whatsthis:
         _mainWin->whatsThisContextHelp();
         break;
+    case ACTION_zoomrealtime:
+        _mainWin->zoomRealtime();
+        break;
+    case ACTION_zoomprevious:
+        _mainWin->zoomPrevious();
+        break;
+    case ACTION_zoomwindow:
+        _mainWin->zoomWindow();
+        break;
+    case ACTION_zoomdynamic:
+        _mainWin->zoomDynamic();
+        break;
+    case ACTION_zoomscale:
+        _mainWin->zoomScale();
+        break;
+    case ACTION_zoomcenter:
+        _mainWin->zoomCenter();
+        break;
+    case ACTION_zoomin:
+        _mainWin->zoomIn();
+        break;
+    case ACTION_zoomout:
+        _mainWin->zoomOut();
+        break;
+    case ACTION_zoomselected:
+        _mainWin->zoomSelected();
+        break;
+    case ACTION_zoomall:
+        _mainWin->zoomAll();
+        break;
+    case ACTION_zoomextents:
+        _mainWin->zoomExtents();
+        break;
+    case ACTION_panrealtime:
+        _mainWin->panrealtime();
+        break;
+    case ACTION_panpoint:
+        _mainWin->panpoint();
+        break;
+    case ACTION_panleft:
+        _mainWin->panLeft();
+        break;
+    case ACTION_panright:
+        _mainWin->panRight();
+        break;
+    case ACTION_panup:
+        _mainWin->panUp();
+        break;
+    case ACTION_pandown:
+        _mainWin->panDown();
+        break;
+    case ACTION_day:
+        _mainWin->dayVision();
+        break;
+    case ACTION_night:
+        _mainWin->nightVision();
+        break;
     default:
         debug_message("Unrecognised action index.");
+        debug_message("Action has not been implimented.");
         break;
     }
 }
