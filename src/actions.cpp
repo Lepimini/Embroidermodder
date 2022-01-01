@@ -12,6 +12,8 @@
 
 #include <stdlib.h>
 
+extern settings_wrapper settings;
+
 void settings_actuator(int action)
 {
     
@@ -153,10 +155,25 @@ void actuator(int action)
         _mainWin->panDown();
         break;
     case ACTION_day:
-        _mainWin->dayVision();
+        dayVision();
         break;
     case ACTION_night:
         _mainWin->nightVision();
+        break;
+    case ACTION_textbold:
+        settings.text_style_bold = !settings.text_style_bold;
+        break;
+    case ACTION_textstrikeout:
+        settings.text_style_strikeout = !settings.text_style_strikeout;
+        break;
+    case ACTION_textunderline:
+        settings.text_style_underline = !settings.text_style_underline;
+        break;
+    case ACTION_textitalic:
+        settings.text_style_italic = !settings.text_style_italic;
+        break;
+    case ACTION_textoverline:
+        settings.text_style_overline = !settings.text_style_overline;
         break;
     default:
         debug_message("Unrecognised action index.");

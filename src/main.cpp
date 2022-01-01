@@ -10797,21 +10797,39 @@ QAction *MainWindow::createAction(const QString icon, const QString toolTip, con
     else if(icon == "cut") {
         ACTION->setShortcut(QKeySequence::Cut);
     }
-    else if(icon == "copy") { ACTION->setShortcut(QKeySequence::Copy);  connect(ACTION, SIGNAL(triggered()), this, SLOT(copy()));  }
-    else if(icon == "paste")                    { ACTION->setShortcut(QKeySequence::Paste); connect(ACTION, SIGNAL(triggered()), this, SLOT(paste())); }
-    else if(icon == "windowcascade")              connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(cascade()));
-    else if(icon == "windowtile")                 connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(tile()));
-    else if(icon == "windowclose")              { ACTION->setShortcut(QKeySequence::Close);    connect(ACTION, SIGNAL(triggered()), this, SLOT(onCloseWindow()));   }
-    else if(icon == "windowcloseall")             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(closeAllSubWindows()));
-    else if(icon == "windownext")               { ACTION->setShortcut(QKeySequence::NextChild);     connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));     }
-    else if(icon == "windowprevious")           { ACTION->setShortcut(QKeySequence::PreviousChild); connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow())); }
-    else if(icon == "textbold")                 { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextBold(bool)));   }
-    else if(icon == "textitalic")               { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextItalic(bool))); }
-    else if(icon == "textunderline")            { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextUnderline(bool))); }
-    else if(icon == "textstrikeout")            { ACTION->setCheckable(true); connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextStrikeOut(bool))); }
-    else if(icon == "textoverline") {
+    else if(icon == "copy") {
+        ACTION->setShortcut(QKeySequence::Copy);
+        connect(ACTION, SIGNAL(triggered()), this, SLOT(copy()));
+    }
+    else if(icon == "paste") {
+        ACTION->setShortcut(QKeySequence::Paste);
+        connect(ACTION, SIGNAL(triggered()), this, SLOT(paste()));
+    }
+    else if(icon == "windowcascade") {
+        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(cascade()));
+    }
+    else if(icon == "windowtile") {
+        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(tile()));
+    }
+    else if(icon == "windowclose") {
+        ACTION->setShortcut(QKeySequence::Close);
+        connect(ACTION, SIGNAL(triggered()), this, SLOT(onCloseWindow()));
+    }
+    else if(icon == "windowcloseall") {
+        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(closeAllSubWindows()));
+    }
+    else if(icon == "windownext") {
+        ACTION->setShortcut(QKeySequence::NextChild);
+        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));
+    }
+    else if(icon == "windowprevious") {
+        ACTION->setShortcut(QKeySequence::PreviousChild);
+        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()));
+    }
+    else if(icon == "textbold" || icon == "textitalic"
+        || icon == "textunderline" || icon == "textstrikeout"
+       || icon == "textoverline") {
         ACTION->setCheckable(true);
-        connect(ACTION, SIGNAL(toggled(bool)), this, SLOT(setTextOverline(bool)));
     }
 
     ACTION->setStatusTip(action_list[id].description);
@@ -10848,8 +10866,8 @@ void MainWindow::checkForUpdates()
 void MainWindow::cut()
 {
     debug_message("cut()");
-    View* gview = activeView();
-    if(gview) { gview->cut(); }
+    View* gview = _mainWin->activeView();
+    if (gview) { gview->cut(); }
 }
 
 void MainWindow::copy()
@@ -11413,11 +11431,10 @@ void MainWindow::panDown()
     }
 }
 
-void MainWindow::dayVision()
+void dayVision(void)
 {
-    View* gview = activeView();
-    if(gview)
-    {
+    View* gview = _mainWin->activeView();
+    if (gview) {
         gview->setBackgroundColor(qRgb(255,255,255)); //TODO: Make day vision color settings.
         gview->setCrossHairColor(qRgb(0,0,0));        //TODO: Make day vision color settings.
         gview->setGridColor(qRgb(0,0,0));             //TODO: Make day vision color settings.
@@ -11480,7 +11497,8 @@ void MainWindow::lineweightSelectorIndexChanged(int index)
 void MainWindow::textFontSelectorCurrentFontChanged(const QFont& font)
 {
     debug_message("textFontSelectorCurrentFontChanged()");
-    setTextFont(font.family());
+    textFontSelector->setCurrentFont(QFont(font.family()));
+    settings.text_font = font.family();
 }
 
 void MainWindow::textSizeSelectorIndexChanged(int index)
@@ -11529,12 +11547,6 @@ bool MainWindow::textOverline()
     return settings.text_style_overline;
 }
 
-void MainWindow::setTextFont(const QString& str)
-{
-    textFontSelector->setCurrentFont(QFont(str));
-    settings.text_font = str;
-}
-
 void MainWindow::setTextSize(float num)
 {
     settings.text_size = fabs(num);
@@ -11545,36 +11557,6 @@ void MainWindow::setTextSize(float num)
     index = textSizeSelector->findText("Custom", Qt::MatchContains);
     if(index != -1)
         textSizeSelector->setCurrentIndex(index);
-}
-
-void MainWindow::setTextAngle(float num)
-{
-    settings.text_angle = num;
-}
-
-void MainWindow::setTextBold(bool val)
-{
-    settings.text_style_bold = val;
-}
-
-void MainWindow::setTextItalic(bool val)
-{
-    settings.text_style_italic = val;
-}
-
-void MainWindow::setTextUnderline(bool val)
-{
-    settings.text_style_underline = val;
-}
-
-void MainWindow::setTextStrikeOut(bool val)
-{
-    settings.text_style_strikeout = val;
-}
-
-void MainWindow::setTextOverline(bool val)
-{
-    settings.text_style_overline = val;
 }
 
 QString MainWindow::getCurrentLayer()
@@ -11622,7 +11604,13 @@ void MainWindow::escapePressed()
     if(mdiWin) { mdiWin->escapePressed(); }
     QApplication::restoreOverrideCursor();
 
-    nativeEndCommand();
+    View* gview = activeView();
+    if(gview)
+    {
+        gview->clearRubberRoom();
+        gview->previewOff();
+        gview->disableMoveRapidFire();
+    }
 }
 
 void MainWindow::toggleGrid()
@@ -11653,247 +11641,6 @@ void MainWindow::disableMoveRapidFire()
 {
     View* gview = activeView();
     if(gview) gview->disableMoveRapidFire();
-}
-
-void MainWindow::nativeAlert(const QString& txt)
-{
-}
-
-void MainWindow::nativeEnableMoveRapidFire()
-{
-    enableMoveRapidFire();
-}
-
-void MainWindow::nativeDisableMoveRapidFire()
-{
-    disableMoveRapidFire();
-}
-
-void MainWindow::nativeInitCommand()
-{
-    View* gview = activeView();
-    if(gview) gview->clearRubberRoom();
-}
-
-void MainWindow::nativeEndCommand()
-{
-    View* gview = activeView();
-    if(gview)
-    {
-        gview->clearRubberRoom();
-        gview->previewOff();
-        gview->disableMoveRapidFire();
-    }
-}
-
-void MainWindow::nativeWindowCascade()
-{
-    mdiArea->cascade();
-}
-
-void MainWindow::nativeWindowTile()
-{
-    mdiArea->tile();
-}
-
-void MainWindow::nativeWindowClose()
-{
-    onCloseWindow();
-}
-
-void MainWindow::nativeWindowCloseAll()
-{
-    mdiArea->closeAllSubWindows();
-}
-
-void MainWindow::nativeWindowNext()
-{
-    mdiArea->activateNextSubWindow();
-}
-
-void MainWindow::nativeWindowPrevious()
-{
-    mdiArea->activatePreviousSubWindow();
-}
-
-QString MainWindow::nativePlatformString()
-{
-    return platformString();
-}
-
-void MainWindow::nativeMessageBox(const QString& type, const QString& title, const QString& text)
-{
-    QString msgType = type.toLower();
-    if     (msgType == "critical")    { QMessageBox::critical   (this, tr(qPrintable(title)), tr(qPrintable(text))); }
-    else if(msgType == "information") { QMessageBox::information(this, tr(qPrintable(title)), tr(qPrintable(text))); }
-    else if(msgType == "question")    { QMessageBox::question   (this, tr(qPrintable(title)), tr(qPrintable(text))); }
-    else if(msgType == "warning")     { QMessageBox::warning    (this, tr(qPrintable(title)), tr(qPrintable(text))); }
-    else                              { QMessageBox::critical   (this, tr("Native MessageBox Error"), tr("Incorrect use of the native messageBox function.")); }
-}
-
-
-void MainWindow::nativePrintArea(float x, float y, float w, float h)
-{
-    debug_message("nativePrintArea(%.2f, %.2f, %.2f, %.2f)", x, y, w, h);
-    //TODO: Print Setup Stuff
-    print();
-}
-
-void MainWindow::nativeSetBackgroundColor(unsigned char r, unsigned char g, unsigned char b)
-{
-    settings.display_bg_color = qRgb(r,g,b);
-    updateAllViewBackgroundColors(qRgb(r,g,b));
-}
-
-void MainWindow::nativeSetCrossHairColor(unsigned char r, unsigned char g, unsigned char b)
-{
-    settings.display_crosshair_color = qRgb(r,g,b);
-    updateAllViewCrossHairColors(qRgb(r,g,b));
-}
-
-void MainWindow::nativeSetGridColor(unsigned char r, unsigned char g, unsigned char b)
-{
-    settings.grid_color = qRgb(r,g,b);
-    updateAllViewGridColors(qRgb(r,g,b));
-}
-
-QString MainWindow::nativeTextFont()
-{
-    return textFont();
-}
-
-float MainWindow::nativeTextSize()
-{
-    return textSize();
-}
-
-float MainWindow::nativeTextAngle()
-{
-    return textAngle();
-}
-
-bool MainWindow::nativeTextBold()
-{
-    return textBold();
-}
-
-bool MainWindow::nativeTextItalic()
-{
-    return textItalic();
-}
-
-bool MainWindow::nativeTextUnderline()
-{
-    return textUnderline();
-}
-
-bool MainWindow::nativeTextStrikeOut()
-{
-    return textStrikeOut();
-}
-
-bool MainWindow::nativeTextOverline()
-{
-    return textOverline();
-}
-
-void MainWindow::nativeSetTextFont(const QString& str)
-{
-    setTextFont(str);
-}
-
-void MainWindow::nativeSetTextSize(float num)
-{
-    setTextSize(num);
-}
-
-void MainWindow::nativeSetTextAngle(float num)
-{
-    setTextAngle(num);
-}
-
-void MainWindow::nativeSetTextBold(bool val)
-{
-    setTextBold(val);
-}
-
-void MainWindow::nativeSetTextItalic(bool val)
-{
-    setTextItalic(val);
-}
-
-void MainWindow::nativeSetTextUnderline(bool val)
-{
-    setTextUnderline(val);
-}
-
-void MainWindow::nativeSetTextStrikeOut(bool val)
-{
-    setTextStrikeOut(val);
-}
-
-void MainWindow::nativeSetTextOverline(bool val)
-{
-    setTextOverline(val);
-}
-
-void MainWindow::nativePreviewOn(int clone, int mode, float x, float y, float data)
-{
-    View* gview = activeView();
-    if(gview) gview->previewOn(clone, mode, x, -y, data);
-}
-
-void MainWindow::nativePreviewOff()
-{
-    View* gview = activeView();
-    if(gview) gview->previewOff();
-}
-
-void MainWindow::nativeVulcanize()
-{
-    View* gview = activeView();
-    if(gview) gview->vulcanizeRubberRoom();
-}
-
-void MainWindow::nativeClearRubber()
-{
-    View* gview = activeView();
-    if(gview) gview->clearRubberRoom();
-}
-
-bool MainWindow::nativeAllowRubber()
-{
-    View* gview = activeView();
-    if(gview) return gview->allowRubber();
-    return false;
-}
-
-void MainWindow::nativeSpareRubber(int id)
-{
-    View* gview = activeView();
-    if(gview) gview->spareRubber(id);
-}
-
-void MainWindow::nativeSetRubberMode(int mode)
-{
-    View* gview = activeView();
-    if(gview) gview->setRubberMode(mode);
-}
-
-void MainWindow::nativeSetRubberPoint(const QString& key, float x, float y)
-{
-    View* gview = activeView();
-    if(gview) gview->setRubberPoint(key, QPointF(x, -y));
-}
-
-void MainWindow::nativeSetRubberText(const QString& key, const QString& txt)
-{
-    View* gview = activeView();
-    if(gview) gview->setRubberText(key, txt);
-}
-
-void MainWindow::nativeAddTextMulti(const QString& str, float x, float y, float rot, bool fill, int rubberMode)
-{
 }
 
 void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float rot, bool fill, int rubberMode)
@@ -11930,14 +11677,6 @@ void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float
     }
 }
 
-void MainWindow::nativeAddInfiniteLine(float x1, float y1, float x2, float y2, float rot)
-{
-}
-
-void MainWindow::nativeAddRay(float x1, float y1, float x2, float y2, float rot)
-{
-}
-
 void MainWindow::nativeAddLine(float x1, float y1, float x2, float y2, float rot, int rubberMode)
 {
     View* gview = activeView();
@@ -11960,10 +11699,6 @@ void MainWindow::nativeAddLine(float x1, float y1, float x2, float y2, float rot
             stack->push(cmd);
         }
     }
-}
-
-void MainWindow::nativeAddTriangle(float x1, float y1, float x2, float y2, float x3, float y3, float rot, bool fill)
-{
 }
 
 void MainWindow::nativeAddRectangle(float x, float y, float w, float h, float rot, bool fill, int rubberMode)
@@ -11989,10 +11724,6 @@ void MainWindow::nativeAddRectangle(float x, float y, float w, float h, float ro
             stack->push(cmd);
         }
     }
-}
-
-void MainWindow::nativeAddRoundedRectangle(float x, float y, float w, float h, float rad, float rot, bool fill)
-{
 }
 
 void MainWindow::nativeAddArc(float startX, float startY, float midX, float midY, float endX, float endY, int rubberMode)
@@ -12033,20 +11764,6 @@ void MainWindow::nativeAddCircle(float centerX, float centerY, float radius, boo
     }
 }
 
-void MainWindow::nativeAddSlot(float centerX, float centerY, float diameter, float length, float rot, bool fill, int rubberMode)
-{
-    //TODO: Use UndoableAddCommand for slots
-    /*
-    SlotObject* slotObj = new SlotObject(centerX, -centerY, diameter, length, getCurrentColor());
-    slotObj->setRotation(-rot);
-    slotObj->setObjectRubberMode(rubberMode);
-    if(rubberMode) gview->addToRubberRoom(slotObj);
-    scene->addItem(slotObj);
-    //TODO: slot fill
-    scene->update();
-    */
-}
-
 void MainWindow::nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, bool fill, int rubberMode)
 {
     View* gview = activeView();
@@ -12082,10 +11799,6 @@ void MainWindow::nativeAddPoint(float x, float y)
         UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
         stack->push(cmd);
     }
-}
-
-void MainWindow::nativeAddRegularPolygon(float centerX, float centerY, unsigned short sides, unsigned char mode, float rad, float rot, bool fill)
-{
 }
 
 //NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)
@@ -12136,23 +11849,6 @@ void MainWindow::nativeAddPolyline(float startX, float startY, const QPainterPat
     }
 }
 
-//NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)
-void MainWindow::nativeAddPath(EmbVector pos, const QPainterPath& p, int rubberMode)
-{
-}
-
-void MainWindow::nativeAddHorizontalDimension(EmbVector start, EmbVector end, float legHeight)
-{
-}
-
-void MainWindow::nativeAddVerticalDimension(EmbVector start, EmbVector end, float legHeight)
-{
-}
-
-void MainWindow::nativeAddImage(const QString& img, EmbRect r, float rot)
-{
-}
-
 void MainWindow::nativeAddDimLeader(float x1, float y1, float x2, float y2, float rot, int rubberMode)
 {
     View* gview = activeView();
@@ -12177,38 +11873,6 @@ void MainWindow::nativeAddDimLeader(float x1, float y1, float x2, float y2, floa
     }
 }
 
-void MainWindow::nativeSetCursorShape(const QString& str)
-{
-    View* gview = activeView();
-    if(gview)
-    {
-        QString shape = str.toLower();
-        if     (shape == "arrow")           gview->setCursor(QCursor(Qt::ArrowCursor));
-        else if(shape == "uparrow")         gview->setCursor(QCursor(Qt::UpArrowCursor));
-        else if(shape == "cross")           gview->setCursor(QCursor(Qt::CrossCursor));
-        else if(shape == "wait")            gview->setCursor(QCursor(Qt::WaitCursor));
-        else if(shape == "ibeam")           gview->setCursor(QCursor(Qt::IBeamCursor));
-        else if(shape == "resizevert")      gview->setCursor(QCursor(Qt::SizeVerCursor));
-        else if(shape == "resizehoriz")     gview->setCursor(QCursor(Qt::SizeHorCursor));
-        else if(shape == "resizediagleft")  gview->setCursor(QCursor(Qt::SizeBDiagCursor));
-        else if(shape == "resizediagright") gview->setCursor(QCursor(Qt::SizeFDiagCursor));
-        else if(shape == "move")            gview->setCursor(QCursor(Qt::SizeAllCursor));
-        else if(shape == "blank")           gview->setCursor(QCursor(Qt::BlankCursor));
-        else if(shape == "splitvert")       gview->setCursor(QCursor(Qt::SplitVCursor));
-        else if(shape == "splithoriz")      gview->setCursor(QCursor(Qt::SplitHCursor));
-        else if(shape == "handpointing")    gview->setCursor(QCursor(Qt::PointingHandCursor));
-        else if(shape == "forbidden")       gview->setCursor(QCursor(Qt::ForbiddenCursor));
-        else if(shape == "handopen")        gview->setCursor(QCursor(Qt::OpenHandCursor));
-        else if(shape == "handclosed")      gview->setCursor(QCursor(Qt::ClosedHandCursor));
-        else if(shape == "whatsthis")       gview->setCursor(QCursor(Qt::WhatsThisCursor));
-        else if(shape == "busy")            gview->setCursor(QCursor(Qt::BusyCursor));
-        else if(shape == "dragmove")        gview->setCursor(QCursor(Qt::DragMoveCursor));
-        else if(shape == "dragcopy")        gview->setCursor(QCursor(Qt::DragCopyCursor));
-        else if(shape == "draglink")        gview->setCursor(QCursor(Qt::DragLinkCursor));
-
-    }
-}
-
 float MainWindow::nativeCalculateAngle(float x1, float y1, float x2, float y2)
 {
     return QLineF(x1, -y1, x2, -y2).angle();
@@ -12219,9 +11883,7 @@ float MainWindow::nativeCalculateDistance(float x1, float y1, float x2, float y2
     return QLineF(x1, y1, x2, y2).length();
 }
 
-float MainWindow::nativePerpendicularDistance(float px, float py, float x1, float y1, float x2, float y2)
-{
-/*
+/* nativePerpendicularDistance
     This is currently causing a bug and is going to be replaced with a libembroidery function.
     QLineF line(x1, y1, x2, y2);
     QLineF norm = line.normalVector();
@@ -12232,110 +11894,6 @@ float MainWindow::nativePerpendicularDistance(float px, float py, float x1, floa
     norm.intersects(line, &iPoint);
     return QLineF(px, py, iPoint.x(), iPoint.y()).length();
 */
-    return 0.0;
-}
-
-int MainWindow::nativeNumSelected()
-{
-    View* gview = activeView();
-    if(gview) { return gview->numSelected(); }
-    return 0;
-}
-
-void MainWindow::nativeSelectAll()
-{
-    View* gview = activeView();
-    if(gview) { gview->selectAll(); }
-}
-
-void MainWindow::nativeAddToSelection(const QPainterPath path, Qt::ItemSelectionMode mode)
-{
-}
-
-void MainWindow::nativeClearSelection()
-{
-    View* gview = activeView();
-    if(gview) { gview->clearSelection(); }
-}
-
-void MainWindow::nativeDeleteSelected()
-{
-    View* gview = activeView();
-    if(gview) { gview->deleteSelected(); }
-}
-
-void MainWindow::nativeCutSelected(float x, float y)
-{
-}
-
-void MainWindow::nativeCopySelected(float x, float y)
-{
-}
-
-void MainWindow::nativePasteSelected(float x, float y)
-{
-}
-
-void MainWindow::nativeMoveSelected(float dx, float dy)
-{
-    View* gview = activeView();
-    if(gview) { gview->moveSelected(dx, -dy); }
-}
-
-void MainWindow::nativeScaleSelected(float x, float y, float factor)
-{
-    if(factor <= 0.0)
-    {
-        QMessageBox::critical(this, tr("ScaleFactor Error"),
-                                tr("Hi there. If you are not a developer, report this as a bug. "
-  "If you are a developer, your code needs examined, and possibly your head too."));
-    }
-
-    View* gview = activeView();
-    if(gview) { gview->scaleSelected(x, -y, factor); }
-}
-
-void MainWindow::nativeRotateSelected(float x, float y, float rot)
-{
-    View* gview = activeView();
-    if(gview) { gview->rotateSelected(x, -y, -rot); }
-}
-
-void MainWindow::nativeMirrorSelected(float x1, float y1, float x2, float y2)
-{
-    View* gview = activeView();
-    if(gview) { gview->mirrorSelected(x1, -y1, x2, -y2); }
-}
-
-float MainWindow::nativeQSnapX()
-{
-    QGraphicsScene* scene = activeScene();
-    if(scene) return scene->property("SCENE_QSNAP_POINT").toPointF().x();
-    return 0.0;
-}
-
-float MainWindow::nativeQSnapY()
-{
-    QGraphicsScene* scene = activeScene();
-    if(scene) return -scene->property("SCENE_QSNAP_POINT").toPointF().y();
-    return 0.0;
-}
-
-float MainWindow::nativeMouseX()
-{
-    QGraphicsScene* scene = activeScene();
-    if(scene) debug_message("mouseX: %.50f", scene->property("SCENE_MOUSE_POINT").toPointF().x());
-    if(scene) return scene->property("SCENE_MOUSE_POINT").toPointF().x();
-    return 0.0;
-}
-
-float MainWindow::nativeMouseY()
-{
-    QGraphicsScene* scene = activeScene();
-    if(scene) debug_message("mouseY: %.50f", -scene->property("SCENE_MOUSE_POINT").toPointF().y());
-    if(scene) return -scene->property("SCENE_MOUSE_POINT").toPointF().y();
-    return 0.0;
-}
 
 MainWindow::MainWindow() : QMainWindow(0)
 {
@@ -12555,11 +12113,6 @@ MainWindow::~MainWindow()
     cutCopyObjectList.clear();
 }
 
-QAction* MainWindow::getAction(int actionEnum)
-{
-    return actionHash.value(actionEnum);
-}
-
 void MainWindow::recentMenuAboutToShow()
 {
     debug_message("MainWindow::recentMenuAboutToShow()");
@@ -12762,8 +12315,7 @@ void MainWindow::openrecentfile()
 
     //Check to see if this from the recent files list
     QAction* recentSender = qobject_cast<QAction*>(sender());
-    if(recentSender)
-    {
+    if (recentSender) {
         openFile(true, recentSender->data().toString());
     }
 }
@@ -12961,12 +12513,6 @@ void MainWindow::updateMenuToolbarStatusbar()
         statusBarQTrackButton->hide();
         statusBarLwtButton->hide();
     }
-    hideUnimplemented();
-}
-
-void MainWindow::hideUnimplemented()
-{
-    debug_message("MainWindow::hideUnimplemented()");
 }
 
 bool MainWindow::validFileFormat(const QString& fileName)
@@ -14354,13 +13900,13 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
     QMenu menu(this);
     if(objectName() == "StatusBarButtonSNAP")
     {
-        QAction* settingsSnapAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/gridsnapsettings.png"), "&Settings...", &menu);
+        QAction* settingsSnapAction = new QAction(loadIcon(icon_gridsnapsettings), "&Settings...", &menu);
         connect(settingsSnapAction, SIGNAL(triggered()), this, SLOT(settingsSnap()));
         menu.addAction(settingsSnapAction);
     }
     else if(objectName() == "StatusBarButtonGRID")
     {
-        QAction* settingsGridAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/gridsettings.png"), "&Settings...", &menu);
+        QAction* settingsGridAction = new QAction(loadIcon(icon_gridsettings), "&Settings...", &menu);
         connect(settingsGridAction, SIGNAL(triggered()), this, SLOT(settingsGrid()));
         menu.addAction(settingsGridAction);
     }
@@ -14410,7 +13956,7 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
             menu.addAction(disableRealAction);
         }
 
-        QAction* settingsLwtAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/lineweightsettings.png"), "&Settings...", &menu);
+        QAction* settingsLwtAction = new QAction(loadIcon(icon_lineweightsettings), "&Settings...", &menu);
         connect(settingsLwtAction, SIGNAL(triggered()), this, SLOT(settingsLwt()));
         menu.addAction(settingsLwtAction);
     }

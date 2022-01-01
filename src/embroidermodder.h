@@ -1127,6 +1127,8 @@ typedef struct Settings_wrapper {
 
 extern MainWindow* _mainWin;
 
+void dayVision(void);
+
 /* Class based code */
 class LayerManager : public QDialog
 {
@@ -1375,20 +1377,17 @@ public:
     void createWindowMenu();
     void createHelpMenu();
 
-public slots:
-
     void enableMoveRapidFire();
     void disableMoveRapidFire();
 
-    void    onCloseWindow();
+    void onCloseWindow();
     virtual void    onCloseMdiWin(MdiWindow*);
 
-    void    recentMenuAboutToShow();
+    void recentMenuAboutToShow();
 
-    void    onWindowActivated (QMdiSubWindow* w);
-    void    windowMenuAboutToShow();
-    void    windowMenuActivated(bool checked/*int id*/ );
-    QAction*    getAction(int actionEnum);
+    void onWindowActivated (QMdiSubWindow* w);
+    void windowMenuAboutToShow();
+    void windowMenuActivated(bool checked/*int id*/ );
 
     void    updateAllViewScrollBars(bool val);
     void    updateAllViewCrossHairColors(QRgb color);
@@ -1413,17 +1412,6 @@ public slots:
     void createPropertiesToolbar();
     void createTextToolbar();
 
-protected:
-    virtual void    resizeEvent(QResizeEvent*);
-    void    closeEvent(QCloseEvent *event);
-    QAction*    getFileSeparator();
-    void    loadFormats();
-
-private slots:
-    void hideUnimplemented();
-
-public slots:
-
     void stub_testing();
 
     void newFile();
@@ -1445,8 +1433,6 @@ public slots:
     void changelog();
     void about();
     void whatsThisContextHelp();
-
-    void actions();
 
     void cut();
     void copy();
@@ -1479,15 +1465,6 @@ public slots:
     bool    textUnderline();
     bool    textStrikeOut();
     bool    textOverline();
-
-    void setTextFont(const QString& str);
-    void setTextSize(float num);
-    void setTextAngle(float num);
-    void setTextBold(bool val);
-    void setTextItalic(bool val);
-    void setTextUnderline(bool val);
-    void setTextStrikeOut(bool val);
-    void setTextOverline(bool val);
 
     QString getCurrentLayer();
     QRgb    getCurrentColor();
@@ -1529,113 +1506,34 @@ public slots:
     void panUp();
     void panDown();
 
-    void dayVision();
     void nightVision();
 
     void doNothing();
 
-public:
-    //Natives
-    void nativeAlert  (const QString& txt);
-    void nativeInitCommand    ();
-    void nativeEndCommand ();
+    void setTextSize(float num);
 
-    void nativeEnableMoveRapidFire    ();
-    void nativeDisableMoveRapidFire   ();
-
-    void nativeWindowCascade  ();
-    void nativeWindowTile ();
-    void nativeWindowClose    ();
-    void nativeWindowCloseAll ();
-    void nativeWindowNext ();
-    void nativeWindowPrevious ();
-
-    QString nativePlatformString  ();
-
-    void nativeMessageBox (const QString& type, const QString& title, const QString& text);
-
-    void nativePrintArea  (float x, float y, float w, float h);
-
-    void nativeSetBackgroundColor (unsigned char r, unsigned char g, unsigned char b);
-    void nativeSetCrossHairColor  (unsigned char r, unsigned char g, unsigned char b);
-    void nativeSetGridColor   (unsigned char r, unsigned char g, unsigned char b);
-
-    QString nativeTextFont    ();
-    float   nativeTextSize    ();
-    float   nativeTextAngle   ();
-    bool    nativeTextBold    ();
-    bool    nativeTextItalic  ();
-    bool    nativeTextUnderline   ();
-    bool    nativeTextStrikeOut   ();
-    bool    nativeTextOverline    ();
-
-    void nativeSetTextFont(const QString& str);
-    void nativeSetTextSize(float num);
-    void nativeSetTextAngle(float num);
-    void nativeSetTextBold(bool val);
-    void nativeSetTextItalic(bool val);
-    void nativeSetTextUnderline   (bool val);
-    void nativeSetTextStrikeOut   (bool val);
-    void nativeSetTextOverline    (bool val);
-
-    void nativePreviewOn  (int clone, int mode, float x, float y, float data);
-    void nativePreviewOff ();
-
-    void nativeVulcanize  ();
-    void nativeClearRubber    ();
-    bool nativeAllowRubber    ();
-    void nativeSpareRubber    (int id);
-    //TODO: void nativeSetRubberFilter(int id); //TODO: This is so more than 1 rubber object can exist at one time without updating all rubber objects at once
-    void nativeSetRubberMode  (int mode);
-    void nativeSetRubberPoint (const QString& key, float x, float y);
-    void nativeSetRubberText  (const QString& key, const QString& txt);
-
-    void nativeAddTextMulti(const QString& str, float x, float y, float rot, bool fill, int rubberMode);
+    void nativeAddArc(float, float, float, float, float, float, int rubberMode);
+    void nativeAddCircle(float centerX, float centerY, float radius, bool fill, int rubberMode);
+    void nativeAddLine(float, float, float, float, float, int rubberMode);
+    void nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, bool fill, int rubberMode);
+    void nativeAddPoint(float x, float y);
+    void nativeAddPolygon(float startX, float startY, const QPainterPath& p, int rubberMode);
     void nativeAddTextSingle(const QString& str, float x, float y, float rot, bool fill, int rubberMode);
-
-    void nativeAddInfiniteLine(float x1, float y1, float x2, float y2, float rot);
-    void nativeAddRay(float x1, float y1, float x2, float y2, float rot);
-    void nativeAddLine    (float x1, float y1, float x2, float y2, float rot, int rubberMode);
-    void nativeAddTriangle    (float x1, float y1, float x2, float y2, float x3, float y3, float rot, bool fill);
-    void nativeAddRectangle   (float x, float y, float w, float h, float rot, bool fill, int rubberMode);
-    void nativeAddRoundedRectangle    (float x, float y, float w, float h, float rad, float rot, bool fill);
-    void nativeAddArc (float startX, float startY, float midX, float midY, float endX, float endY, int rubberMode);
-    void nativeAddCircle  (float centerX, float centerY, float radius, bool fill, int rubberMode);
-    void nativeAddSlot    (float centerX, float centerY, float diameter, float length, float rot, bool fill, int rubberMode);
-    void nativeAddEllipse (float centerX, float centerY, float width, float height, float rot, bool fill, int rubberMode);
-    void nativeAddPoint   (float x, float y);
-    void nativeAddRegularPolygon  (float centerX, float centerY, unsigned short sides, unsigned char mode, float rad, float rot, bool fill);
-    void nativeAddPolygon (float startX, float startY, const QPainterPath& p, int rubberMode);
     void nativeAddPolyline(float startX, float startY, const QPainterPath& p, int rubberMode);
-    void nativeAddPath(EmbVector start, const QPainterPath& p, int rubberMode);
-    void nativeAddHorizontalDimension(EmbVector start, EmbVector end, float legHeight);
-    void nativeAddVerticalDimension(EmbVector start, EmbVector end, float legHeight);
-    void nativeAddImage(const QString& img, EmbRect r, float rot);
-
+    void nativeAddRectangle(float x, float y, float w, float h, float rot, bool fill, int rubberMode);
     void nativeAddDimLeader(float x1, float y1, float x2, float y2, float rot, int rubberMode);
-
-    void  nativeSetCursorShape(const QString& str);
+    
     float nativeCalculateAngle(float x1, float y1, float x2, float y2);
     float nativeCalculateDistance(float x1, float y1, float x2, float y2);
-    float nativePerpendicularDistance (float px, float py, float x1, float y1, float x2, float y2);
+    float nativePerpendicularDistance(float px, float py, float x1, float y1, float x2, float y2);
 
-    int  nativeNumSelected    ();
-    void nativeSelectAll  ();
-    void nativeAddToSelection (const QPainterPath path, Qt::ItemSelectionMode mode);
-    void nativeClearSelection ();
-    void nativeDeleteSelected ();
-    void nativeCutSelected    (float x, float y);
-    void nativeCopySelected   (float x, float y);
-    void nativePasteSelected  (float x, float y);
-    void nativeMoveSelected   (float dx, float dy);
-    void nativeScaleSelected  (float x, float y, float factor);
-    void nativeRotateSelected (float x, float y, float rot);
-    void nativeMirrorSelected (float x1, float y1, float x2, float y2);
+    virtual void    resizeEvent(QResizeEvent*);
+    void    closeEvent(QCloseEvent *event);
+    QAction*    getFileSeparator();
+    void    loadFormats();
 
-    float nativeQSnapX();
-    float nativeQSnapY();
-    float nativeMouseX();
-    float nativeMouseY();
+public slots:
+    void actions();
 };
 
 class PreviewDialog : public QFileDialog
