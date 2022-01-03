@@ -124,8 +124,8 @@ load_settings(void)
     settings.window_x = embClamp(0, settings.window_x, 1000);
     settings.window_y = embClamp(0, settings.window_y, 1000);
 
-    settings.general_language = QString(get_ini_str("[General]", "Language", "default"));
-    settings.general_icon_theme = QString(get_ini_str("[General]", "IconTheme", "default"));
+    strcpy(settings.general_language, get_ini_str("[General]", "Language", "default"));
+    strcpy(settings.general_icon_theme, get_ini_str("[General]", "IconTheme", "default"));
     settings.general_icon_size = get_ini_int("[General]", "IconSize", 16);
     settings.general_mdi_bg_use_logo = get_ini_int("[General]", "MdiBGUseLogo", 1);
     settings.general_mdi_bg_use_texture = get_ini_int("[General]", "MdiBGUseTexture", 1);
@@ -186,8 +186,8 @@ void MainWindow::readSettings()
     }
 
     //General
-    settings.general_mdi_bg_logo = load_setting_str("MdiBGLogo", QString(assets_dir) + "/images/logo-spirals.png");
-    settings.general_mdi_bg_texture = load_setting_str("MdiBGTexture", QString(assets_dir) + "/images/texture-spirals.png");
+    strcpy(settings.general_mdi_bg_logo, load_setting_str("MdiBGLogo", QString(assets_dir) + "/images/logo-spirals.png").toLocal8Bit().constData());
+    strcpy(settings.general_mdi_bg_texture, load_setting_str("MdiBGTexture", QString(assets_dir) + "/images/texture-spirals.png").toLocal8Bit().constData());
     settings.general_mdi_bg_color = settings_file.value("MdiBGColor", qRgb(192,192,192)).toInt();
     settings.general_tip_of_the_day = settings_file.value("TipOfTheDay", true).toBool();
     settings.general_current_tip = settings_file.value("CurrentTip", 0).toInt();
@@ -211,25 +211,25 @@ void MainWindow::readSettings()
     settings.display_zoomscale_in = settings_file.value("Display/ZoomScaleIn", 2.0).toFloat();
     settings.display_zoomscale_out = settings_file.value("Display/ZoomScaleOut", 0.5).toFloat();
     settings.display_crosshair_percent = settings_file.value("Display/CrossHairPercent", 5).toInt();
-    settings.display_units = settings_file.value("Display/Units", "mm").toString();
+    strcpy(settings.display_units, settings_file.value("Display/Units", "mm").toString().toLocal8Bit().constData());
     //Prompt
     //OpenSave
-    settings.opensave_custom_filter = settings_file.value("OpenSave/CustomFilter", "supported").toString();
-    settings.opensave_open_format = settings_file.value("OpenSave/OpenFormat", "*.*").toString();
+    opensave_custom_filter = settings_file.value("OpenSave/CustomFilter", "supported").toString();
+    strcpy(settings.opensave_open_format, settings_file.value("OpenSave/OpenFormat", "*.*").toString().toLocal8Bit().constData());
     settings.opensave_open_thumbnail = settings_file.value("OpenSave/OpenThumbnail", false).toBool();
-    settings.opensave_save_format = settings_file.value("OpenSave/SaveFormat", "*.*").toString();
+    strcpy(settings.opensave_save_format, settings_file.value("OpenSave/SaveFormat", "*.*").toString().toLocal8Bit().constData());
     settings.opensave_save_thumbnail = settings_file.value("OpenSave/SaveThumbnail", false).toBool();
     //Recent
     settings.opensave_recent_max_files = settings_file.value("OpenSave/RecentMax", 10).toInt();
-    settings.opensave_recent_list_of_files = settings_file.value("OpenSave/RecentFiles")                                .toStringList();
-    settings.opensave_recent_directory = settings_file.value("OpenSave/RecentDirectory", QString(assets_dir) + "/samples").toString();
+    opensave_recent_list_of_files = settings_file.value("OpenSave/RecentFiles")                                .toStringList();
+    strcpy(settings.opensave_recent_directory, settings_file.value("OpenSave/RecentDirectory", QString(assets_dir) + "/samples").toString().toLocal8Bit().constData());
     //Trimming
     settings.opensave_trim_dst_num_jumps = settings_file.value("OpenSave/TrimDstNumJumps", 5).toInt();
-    //Printing
+    /* Printing
     settings.printing_default_device = settings_file.value("Printing/DefaultDevice", "").toString();
     settings.printing_use_last_device = settings_file.value("Printing/UseLastDevice", false).toBool();
     settings.printing_disable_bg = settings_file.value("Printing/DisableBG", true).toBool();
-    //Grid
+    //Grid */
     settings.grid_show_on_load = settings_file.value("Grid/ShowOnLoad", true).toBool();
     settings.grid_show_origin = settings_file.value("Grid/ShowOrigin", true).toBool();
     settings.grid_color_match_crosshair = settings_file.value("Grid/ColorMatchCrossHair", true).toBool();
@@ -238,7 +238,7 @@ void MainWindow::readSettings()
     int blue = settings_file.value("Grid/ColorB", 0).toInt();
     settings.grid_color = QColor(red, green, blue).rgb();
     settings.grid_load_from_file = settings_file.value("Grid/LoadFromFile", true).toBool();
-    settings.grid_type = settings_file.value("Grid/Type", "Rectangular").toString();
+    strcpy(settings.grid_type, settings_file.value("Grid/Type", "Rectangular").toString().toLocal8Bit().constData());
     settings.grid_center_on_origin = settings_file.value("Grid/CenterOnOrigin", true).toBool();
     settings.grid_center_x = settings_file.value("Grid/CenterX", 0.0).toFloat();
     settings.grid_center_y = settings_file.value("Grid/CenterY", 0.0).toFloat();
@@ -285,7 +285,7 @@ void MainWindow::readSettings()
     settings.selection_grip_size = settings_file.value("Selection/GripSize", 4).toInt();
     settings.selection_pickbox_size = settings_file.value("Selection/PickBoxSize", 4).toInt();
     //Text
-    settings.text_font = settings_file.value("Text/Font", "Arial").toString();
+    strcpy(settings.text_font, settings_file.value("Text/Font", "Arial").toString().toLocal8Bit().constData());
     settings.text_size = settings_file.value("Text/Size", 12).toReal();
     settings.text_angle = settings_file.value("Text/Angle", 0).toReal();
     settings.text_style_bold = settings_file.value("Text/StyleBold", false).toBool();
@@ -347,14 +347,14 @@ void MainWindow::writeSettings()
     settings_file.setValue("Display/Units", settings.display_units);
     //Prompt
     //OpenSave
-    settings_file.setValue("OpenSave/CustomFilter", settings.opensave_custom_filter);
+    settings_file.setValue("OpenSave/CustomFilter", opensave_custom_filter);
     settings_file.setValue("OpenSave/OpenFormat", settings.opensave_open_format);
     settings_file.setValue("OpenSave/OpenThumbnail", settings.opensave_open_thumbnail);
     settings_file.setValue("OpenSave/SaveFormat", settings.opensave_save_format);
     settings_file.setValue("OpenSave/SaveThumbnail", settings.opensave_save_thumbnail);
     //Recent
     settings_file.setValue("OpenSave/RecentMax", tmp.setNum(settings.opensave_recent_max_files));
-    settings_file.setValue("OpenSave/RecentFiles", settings.opensave_recent_list_of_files);
+    settings_file.setValue("OpenSave/RecentFiles", opensave_recent_list_of_files);
     settings_file.setValue("OpenSave/RecentDirectory", settings.opensave_recent_directory);
     //Trimming
     settings_file.setValue("OpenSave/TrimDstNumJumps", tmp.setNum(settings.opensave_trim_dst_num_jumps));

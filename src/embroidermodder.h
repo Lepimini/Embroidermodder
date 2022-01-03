@@ -12,18 +12,19 @@ extern "C" {
  * -------
  */
 
-#define DEBUG 1
+#define DEBUG                1
+#define MAX_STRING_LENGTH  500
 
-#define TOOLBAR_FILE       0
-#define TOOLBAR_EDIT       1
-#define TOOLBAR_VIEW       2
-#define TOOLBAR_ZOOM       3
-#define TOOLBAR_PAN        4
-#define TOOLBAR_ICON       5
-#define TOOLBAR_HELP       6
-#define TOOLBAR_LAYER      7
-#define TOOLBAR_TEXT       8
-#define TOOLBAR_PROPERTIES 9
+#define TOOLBAR_FILE         0
+#define TOOLBAR_EDIT         1
+#define TOOLBAR_VIEW         2
+#define TOOLBAR_ZOOM         3
+#define TOOLBAR_PAN          4
+#define TOOLBAR_ICON         5
+#define TOOLBAR_HELP         6
+#define TOOLBAR_LAYER        7
+#define TOOLBAR_TEXT         8
+#define TOOLBAR_PROPERTIES   9
 
 #define SYMBOL_zero          0
 #define SYMBOL_one           1
@@ -384,6 +385,144 @@ typedef struct Texture_t {
     int width;
     int height;
 } texture_t;
+
+typedef struct Settings_wrapper {
+    int window_width;
+    int window_height;
+    int window_x;
+    int window_y;
+    int general_icon_size;
+    int general_mdi_bg_use_logo;
+    int general_mdi_bg_use_texture;
+    int general_mdi_bg_use_color;
+    int qsnap_endpoint;
+    int qsnap_midpoint;
+    int qsnap_center;
+    int qsnap_node;
+    int qsnap_quadrant;
+    int qsnap_intersection;
+    int qsnap_extension;
+    int qsnap_insertion;
+    int qsnap_perpendicular;
+    int qsnap_tangent;
+    int qsnap_nearest;
+    int qsnap_apparent;
+    int qsnap_parallel;
+    int grid_center_on_origin;
+    float grid_center_x;
+    float grid_center_y;
+    float grid_size_x;
+    float grid_size_y;
+    float grid_spacing_x;
+    float grid_spacing_y;
+    float grid_size_radius;
+    float grid_spacing_radius;
+    float grid_spacing_angle;
+    int ruler_show_on_load;
+    int ruler_metric;
+    int general_tip_of_the_day;
+    int general_system_help_browser;
+    int general_check_for_updates;
+    int display_use_opengl;
+    int display_renderhint_aa;
+    int display_renderhint_text_aa;
+    int display_renderhint_smooth_pix;
+    int display_renderhint_high_aa;
+    int display_renderhint_noncosmetic;
+    int display_show_scrollbars;
+    int display_scrollbar_widget_num;
+    float display_zoomscale_in;
+    float display_zoomscale_out;
+    unsigned char display_selectbox_alpha;
+    unsigned char display_crosshair_percent;
+    int opensave_open_thumbnail;
+    int opensave_save_thumbnail;
+    unsigned char opensave_recent_max_files;
+    unsigned char opensave_trim_dst_num_jumps;
+    int printing_use_last_device;
+    int printing_disable_bg;
+    int grid_show_on_load;
+    int grid_show_origin;
+    int grid_color_match_crosshair;
+    int grid_load_from_file;
+    unsigned char ruler_pixel_size;
+    int qsnap_enabled;
+    unsigned char qsnap_locator_size;
+    unsigned char qsnap_aperture_size;
+    int lwt_show_lwt;
+    int lwt_real_render;
+    float lwt_default_lwt;
+    int selection_mode_pickfirst;
+    int selection_mode_pickadd;
+    int selection_mode_pickdrag;
+    unsigned char selection_grip_size;
+    unsigned char selection_pickbox_size;
+    float text_size;
+    float text_angle;
+    int text_style_bold;
+    int text_style_italic;
+    int text_style_underline;
+    int text_style_overline;
+    int text_style_strikeout;
+
+    int file_toolbar[20];
+    int edit_toolbar[20];
+    int view_toolbar[20];
+    int pan_toolbar[20];
+    int icon_toolbar[20];
+    int help_toolbar[20];
+    int zoom_toolbar[20];
+    char *folders[20];
+    quad quad_list1[20];
+    quad quad_list2[20];
+
+    int rulerPixelSize;
+    int gripSize;
+    int pickBoxSize;
+    int crosshairSize;
+
+    int shiftKeyPressedState;
+
+    int grippingActive;
+    int rapidMoveActive;
+    int previewActive;
+    int pastingActive;
+    int movingActive;
+    int selectingActive;
+    int zoomWindowActive;
+    int panningRealTimeActive;
+    int panningPointActive;
+    int panningActive;
+    int qSnapActive;
+    int qSnapToggle;
+
+    int rulerMetric;
+
+    char general_language[MAX_STRING_LENGTH];
+    char general_icon_theme[MAX_STRING_LENGTH];
+    char general_mdi_bg_logo[MAX_STRING_LENGTH];
+    char general_mdi_bg_texture[MAX_STRING_LENGTH];
+    unsigned int general_mdi_bg_color;
+    unsigned short general_current_tip;
+    unsigned int display_crosshair_color;
+    unsigned int display_bg_color;
+    unsigned int display_selectbox_left_color;
+    unsigned int display_selectbox_left_fill;
+    unsigned int display_selectbox_right_color;
+    unsigned int display_selectbox_right_fill;
+    char display_units[MAX_STRING_LENGTH];
+    char opensave_open_format[MAX_STRING_LENGTH];
+    char opensave_save_format[MAX_STRING_LENGTH];
+    char opensave_recent_directory[MAX_STRING_LENGTH];
+    char printing_default_device[MAX_STRING_LENGTH];
+    unsigned int grid_color;
+    unsigned int ruler_color;
+    unsigned int qsnap_locator_color;
+    char grid_type[MAX_STRING_LENGTH];
+    unsigned int selection_coolgrip_color;
+    unsigned int selection_hotgrip_color;
+    char text_font[MAX_STRING_LENGTH];
+} settings_wrapper;
 
 /* C Data for embroidermodder
  * --------------------------
@@ -782,6 +921,42 @@ void render_quadlist(quad *qlist);
 void menu(int key);
 void display(void);
 
+/* Layer Toolbar */
+void makeLayerActive(void);
+void layerManager(void);
+void layerPrevious(void);
+
+/* Zoom Toolbar */
+void zoomRealtime(void);
+void zoomPrevious(void);
+void zoomWindow(void);
+void zoomDynamic(void);
+void zoomScale(void);
+void zoomCenter(void);
+void zoomIn(void);
+void zoomOut(void);
+void zoomSelected(void);
+void zoomAll();
+void zoomExtents();
+
+/* Pan SubMenu */
+void panrealtime();
+void panpoint();
+void panLeft();
+void panRight();
+void panUp();
+void panDown();
+
+void dayVision(void);
+void nightVision(void);
+
+void doNothing(void);
+
+EmbVector unit_vector(float angle);
+EmbVector rotate_vector(EmbVector a, float angle);
+EmbVector scale_vector(EmbVector a, float scale);
+EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
+
 /*
  * C++ Specific code
  * -----------------
@@ -826,308 +1001,16 @@ class StatusBarButton;
 class View;
 class PropertyEditor;
 class UndoEditor;
-class ArcObject;
-class BlockObject;
-class CircleObject;
-class DimAlignedObject;
-class DimAngularObject;
-class DimArcLengthObject;
-class DimDiameterObject;
-class DimLeaderObject;
-class DimLinearObject;
-class DimOrdinateObject;
-class DimRadiusObject;
-class EllipseObject;
-class EllipseArcObject;
-class HatchObject;
-class ImageObject;
-class InfiniteLineObject;
-class LineObject;
-class PathObject;
-class PointObject;
-class PolygonObject;
-class PolylineObject;
-class RayObject;
-class RectObject;
-class SplineObject;
-class TextMultiObject;
-class TextSingleObject;
 class ImageWidget;
 class StatusBarButton;
 
-/* Closer to C code */
-typedef struct Preview_wrapper {
-    int general_mdi_bg_use_logo;
-    int general_mdi_bg_use_texture;
-    int general_mdi_bg_use_color;
-
-    int display_show_scrollbars;
-
-    int lwt_show_lwt;
-    int lwt_real_render;
-
-    unsigned char display_selectbox_alpha;
-
-    QString accept_general_mdi_bg_logo;
-    QString accept_general_mdi_bg_texture;
-    QRgb    general_mdi_bg_color;
-    QRgb    accept_general_mdi_bg_color;
-
-    QRgb    display_crosshair_color;
-    QRgb    accept_display_crosshair_color;
-    QRgb    display_bg_color;
-    QRgb    accept_display_bg_color;
-
-    QRgb    display_selectbox_left_color;
-    QRgb    accept_display_selectbox_left_color;
-    QRgb    display_selectbox_left_fill;
-    QRgb accept_display_selectbox_left_fill;
-    QRgb display_selectbox_right_color;
-    QRgb accept_display_selectbox_right_color;
-    QRgb display_selectbox_right_fill;
-    QRgb accept_display_selectbox_right_fill;
-
-    QRgb grid_color;
-    QRgb accept_grid_color;
-
-    QRgb ruler_color;
-    QRgb accept_ruler_color;
-} preview_wrapper;
-
-typedef struct Dialog_wrapper {
-    int opensave_open_thumbnail;
-    int opensave_save_thumbnail;
-    unsigned char opensave_recent_max_files;
-    unsigned char opensave_trim_dst_num_jumps;
-    int printing_use_last_device;
-    int printing_disable_bg;
-    int grid_show_on_load;
-    int grid_show_origin;
-    int grid_color_match_crosshair;
-    int grid_load_from_file;
-    int grid_center_on_origin;
-    float grid_center_x;
-    float grid_center_y;
-    float grid_size_x;
-    float grid_size_y;
-    float grid_spacing_x;
-    float grid_spacing_y;
-    float grid_size_radius;
-    float grid_spacing_radius;
-    float grid_spacing_angle;
-    int ruler_show_on_load;
-    int ruler_metric;
-    unsigned char ruler_pixel_size;
-    int qsnap_enabled;
-    unsigned char qsnap_locator_size;
-    unsigned char qsnap_aperture_size;
-    float lwt_default_lwt;
-    unsigned char selection_grip_size;
-    unsigned char selection_pickbox_size;
-    unsigned char display_crosshair_percent;
-    int general_tip_of_the_day;
-    int general_system_help_browser;
-    int display_use_opengl;
-    int display_renderhint_aa;
-    int display_renderhint_text_aa;
-    int display_renderhint_smooth_pix;
-    int display_renderhint_high_aa;
-    int display_renderhint_noncosmetic;
-    int display_show_scrollbars;
-    int display_scrollbar_widget_num;
-    int general_icon_size;
-    int general_mdi_bg_use_logo;
-    int general_mdi_bg_use_texture;
-    int general_mdi_bg_use_color;
-    int qsnap_endpoint;
-    int qsnap_midpoint;
-    int qsnap_center;
-    int qsnap_node;
-    int qsnap_quadrant;
-    int qsnap_intersection;
-    int qsnap_extension;
-    int qsnap_insertion;
-    int qsnap_perpendicular;
-    int qsnap_tangent;
-    int qsnap_nearest;
-    int qsnap_apparent;
-    int qsnap_parallel;
-    int lwt_show_lwt;
-    int lwt_real_render;
-    int selection_mode_pickfirst;
-    int selection_mode_pickadd;
-    int selection_mode_pickdrag;
-
-    unsigned char display_selectbox_alpha;
-    float display_zoomscale_in;
-    float display_zoomscale_out;
-    QString general_language;
-    QString general_icon_theme;
-    QString general_mdi_bg_logo;
-    QString general_mdi_bg_texture;
-    QRgb    general_mdi_bg_color;
-    QRgb    display_crosshair_color;
-    QRgb    display_bg_color;
-    QRgb    display_selectbox_left_color;
-    QRgb    display_selectbox_left_fill;
-    QRgb    display_selectbox_right_color;
-    QRgb    display_selectbox_right_fill;
-    QString display_units;
-    QString opensave_custom_filter;
-    QString opensave_open_format;
-    QString opensave_save_format;
-    QString printing_default_device;
-    QRgb    grid_color;
-    QString grid_type;
-    QRgb    ruler_color;
-    QRgb    qsnap_locator_color;
-    QRgb    selection_coolgrip_color;
-    QRgb    selection_hotgrip_color;
-} dialog_wrapper;
-
-typedef struct Settings_wrapper {
-    int window_width;
-    int window_height;
-    int window_x;
-    int window_y;
-    int general_icon_size;
-    int general_mdi_bg_use_logo;
-    int general_mdi_bg_use_texture;
-    int general_mdi_bg_use_color;
-    int qsnap_endpoint;
-    int qsnap_midpoint;
-    int qsnap_center;
-    int qsnap_node;
-    int qsnap_quadrant;
-    int qsnap_intersection;
-    int qsnap_extension;
-    int qsnap_insertion;
-    int qsnap_perpendicular;
-    int qsnap_tangent;
-    int qsnap_nearest;
-    int qsnap_apparent;
-    int qsnap_parallel;
-    int grid_center_on_origin;
-    float grid_center_x;
-    float grid_center_y;
-    float grid_size_x;
-    float grid_size_y;
-    float grid_spacing_x;
-    float grid_spacing_y;
-    float grid_size_radius;
-    float grid_spacing_radius;
-    float grid_spacing_angle;
-    int ruler_show_on_load;
-    int ruler_metric;
-    int general_tip_of_the_day;
-    int general_system_help_browser;
-    int general_check_for_updates;
-    int display_use_opengl;
-    int display_renderhint_aa;
-    int display_renderhint_text_aa;
-    int display_renderhint_smooth_pix;
-    int display_renderhint_high_aa;
-    int display_renderhint_noncosmetic;
-    int display_show_scrollbars;
-    int display_scrollbar_widget_num;
-    float display_zoomscale_in;
-    float display_zoomscale_out;
-    unsigned char display_selectbox_alpha;
-    unsigned char display_crosshair_percent;
-    int opensave_open_thumbnail;
-    int opensave_save_thumbnail;
-    unsigned char opensave_recent_max_files;
-    unsigned char opensave_trim_dst_num_jumps;
-    int printing_use_last_device;
-    int printing_disable_bg;
-    int grid_show_on_load;
-    int grid_show_origin;
-    int grid_color_match_crosshair;
-    int grid_load_from_file;
-    unsigned char ruler_pixel_size;
-    int qsnap_enabled;
-    unsigned char qsnap_locator_size;
-    unsigned char qsnap_aperture_size;
-    int lwt_show_lwt;
-    int lwt_real_render;
-    float lwt_default_lwt;
-    int selection_mode_pickfirst;
-    int selection_mode_pickadd;
-    int selection_mode_pickdrag;
-    unsigned char selection_grip_size;
-    unsigned char selection_pickbox_size;
-    float text_size;
-    float text_angle;
-    int text_style_bold;
-    int text_style_italic;
-    int text_style_underline;
-    int text_style_overline;
-    int text_style_strikeout;
-
-    int file_toolbar[20];
-    int edit_toolbar[20];
-    int view_toolbar[20];
-    int pan_toolbar[20];
-    int icon_toolbar[20];
-    int help_toolbar[20];
-    int zoom_toolbar[20];
-    char *folders[20];
-    quad quad_list1[20];
-    quad quad_list2[20];
-
-    int rulerPixelSize;
-    int gripSize;
-    int pickBoxSize;
-    int crosshairSize;
-
-    int shiftKeyPressedState;
-
-    int grippingActive;
-    int rapidMoveActive;
-    int previewActive;
-    int pastingActive;
-    int movingActive;
-    int selectingActive;
-    int zoomWindowActive;
-    int panningRealTimeActive;
-    int panningPointActive;
-    int panningActive;
-    int qSnapActive;
-    int qSnapToggle;
-
-    int rulerMetric;
-
-    QString general_language;
-    QString general_icon_theme;
-    QString general_mdi_bg_logo;
-    QString general_mdi_bg_texture;
-    QRgb general_mdi_bg_color;
-    unsigned short general_current_tip;
-    QRgb display_crosshair_color;
-    QRgb display_bg_color;
-    QRgb display_selectbox_left_color;
-    QRgb display_selectbox_left_fill;
-    QRgb display_selectbox_right_color;
-    QRgb display_selectbox_right_fill;
-    QString display_units;
-    QString opensave_custom_filter;
-    QString opensave_open_format;
-    QString opensave_save_format;
-    QStringList opensave_recent_list_of_files;
-    QString opensave_recent_directory;
-    QString printing_default_device;
-    QRgb grid_color;
-    QRgb ruler_color;
-    QRgb qsnap_locator_color;
-    QString grid_type;
-    QRgb selection_coolgrip_color;
-    QRgb selection_hotgrip_color;
-    QString text_font;
-} settings_wrapper;
-
+extern settings_wrapper settings, preview, dialog, accept;
+extern QStringList opensave_recent_list_of_files;
 extern MainWindow* _mainWin;
+extern QString opensave_custom_filter;
 
-void dayVision(void);
+void actuator(int action);
+void settings_actuator(int action);
 
 /* Class based code */
 class LayerManager : public QDialog
@@ -1142,7 +1025,7 @@ public:
   const bool visible,
   const bool frozen,
   const float zValue,
-  const QRgb color,
+  const unsigned int color,
   const QString& lineType,
   const QString& lineWeight,
   const bool print);
@@ -1193,11 +1076,11 @@ public:
     View*  getView() { return gview; }
     QGraphicsScene*    getScene() { return gscene; }
     QString    getCurrentLayer() { return curLayer; }
-    QRgb   getCurrentColor() { return curColor; }
+    unsigned int   getCurrentColor() { return curColor; }
     QString    getCurrentLineType() { return curLineType; }
     QString    getCurrentLineWeight() { return curLineWeight; }
     void   setCurrentLayer(const QString& layer) { curLayer = layer; }
-    void   setCurrentColor(const QRgb& color) { curColor = color; }
+    void   setCurrentColor(const unsigned int& color) { curColor = color; }
     void   setCurrentLineType(const QString& lineType) { curLineType = lineType; }
     void   setCurrentLineWeight(const QString& lineWeight) { curLineWeight = lineWeight; }
     void   designDetails();
@@ -1223,7 +1106,7 @@ private:
     int myIndex;
 
     QString curLayer;
-    QRgb curColor;
+    unsigned int curColor;
     QString curLineType;
     QString curLineWeight;
 
@@ -1232,7 +1115,7 @@ public slots:
     void   onWindowActivated();
 
     void   currentLayerChanged(const QString& layer);
-    void   currentColorChanged(const QRgb& color);
+    void   currentColorChanged(const unsigned int& color);
     void   currentLinetypeChanged(const QString& type);
     void   currentLineweightChanged(const QString& weight);
 
@@ -1241,11 +1124,11 @@ public slots:
     void   escapePressed();
 
     void   showViewScrollBars(bool val);
-    void   setViewCrossHairColor(QRgb color);
-    void   setViewBackgroundColor(QRgb color);
-    void   setViewSelectBoxColors(QRgb colorL, QRgb fillL, QRgb colorR, QRgb fillR, int alpha);
-    void   setViewGridColor(QRgb color);
-    void   setViewRulerColor(QRgb color);
+    void   setViewCrossHairColor(unsigned int color);
+    void   setViewBackgroundColor(unsigned int color);
+    void   setViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
+    void   setViewGridColor(unsigned int color);
+    void   setViewRulerColor(unsigned int color);
 
     void   print();
     void   saveBMC();
@@ -1390,11 +1273,11 @@ public:
     void windowMenuActivated(bool checked/*int id*/ );
 
     void    updateAllViewScrollBars(bool val);
-    void    updateAllViewCrossHairColors(QRgb color);
-    void    updateAllViewBackgroundColors(QRgb color);
-    void    updateAllViewSelectBoxColors(QRgb colorL, QRgb fillL, QRgb colorR, QRgb fillR, int alpha);
-    void    updateAllViewGridColors(QRgb color);
-    void    updateAllViewRulerColors(QRgb color);
+    void    updateAllViewCrossHairColors(unsigned int color);
+    void    updateAllViewBackgroundColors(unsigned int color);
+    void    updateAllViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
+    void    updateAllViewGridColors(unsigned int color);
+    void    updateAllViewRulerColors(unsigned int color);
 
     void    updatePickAddMode(bool val);
     void    pickAddModeToggled();
@@ -1467,7 +1350,7 @@ public:
     bool    textOverline();
 
     QString getCurrentLayer();
-    QRgb    getCurrentColor();
+    unsigned int    getCurrentColor();
     QString getCurrentLineType();
     QString getCurrentLineWeight();
 
@@ -1481,34 +1364,6 @@ public:
 
     void deletePressed();
     void escapePressed();
-
-    // Layer Toolbar
-    void makeLayerActive();
-    void layerManager();
-    void layerPrevious();
-    // Zoom Toolbar
-    void zoomRealtime();
-    void zoomPrevious();
-    void zoomWindow();
-    void zoomDynamic();
-    void zoomScale();
-    void zoomCenter();
-    void zoomIn();
-    void zoomOut();
-    void zoomSelected();
-    void zoomAll();
-    void zoomExtents();
-    // Pan SubMenu
-    void panrealtime();
-    void panpoint();
-    void panLeft();
-    void panRight();
-    void panUp();
-    void panDown();
-
-    void nightVision();
-
-    void doNothing();
 
     void setTextSize(float num);
 
@@ -1997,10 +1852,10 @@ public slots:
 
     void showScrollBars(bool val);
     void setCornerButton();
-    void setCrossHairColor(QRgb color);
+    void setCrossHairColor(unsigned int color);
     void setCrossHairSize(unsigned char percent);
-    void setBackgroundColor(QRgb color);
-    void setSelectBoxColors(QRgb colorL, QRgb fillL, QRgb colorR, QRgb fillR, int alpha);
+    void setBackgroundColor(unsigned int color);
+    void setSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
     void toggleSnap(bool on);
     void toggleGrid(bool on);
     void toggleRuler(bool on);
@@ -2013,9 +1868,9 @@ public slots:
     bool isLwtEnabled();
     bool isRealEnabled();
 
-    void setGridColor(QRgb color);
+    void setGridColor(unsigned int color);
     void createGrid(const QString& gridType);
-    void setRulerColor(QRgb color);
+    void setRulerColor(unsigned int color);
 
     void previewOn(int clone, int mode, float x, float y, float data);
     void previewOff();

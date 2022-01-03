@@ -23,7 +23,7 @@ void actuator(int action)
 {
     switch (action) {
     case ACTION_donothing:
-        _mainWin->doNothing();
+        doNothing();
         break;
     case ACTION_new:
         _mainWin->newFile();
@@ -80,13 +80,13 @@ void actuator(int action)
         _mainWin->redo();
         break;
     case ACTION_makelayercurrent:
-        _mainWin->makeLayerActive();
+        makeLayerActive();
         break;
     case ACTION_layers:
-        _mainWin->layerManager();
+        layerManager();
         break;
     case ACTION_layerprevious:
-        _mainWin->layerPrevious();
+        layerPrevious();
         break;
     case ACTION_help:
         _mainWin->help();
@@ -104,61 +104,61 @@ void actuator(int action)
         _mainWin->whatsThisContextHelp();
         break;
     case ACTION_zoomrealtime:
-        _mainWin->zoomRealtime();
+        zoomRealtime();
         break;
     case ACTION_zoomprevious:
-        _mainWin->zoomPrevious();
+        zoomPrevious();
         break;
     case ACTION_zoomwindow:
-        _mainWin->zoomWindow();
+        zoomWindow();
         break;
     case ACTION_zoomdynamic:
-        _mainWin->zoomDynamic();
+        zoomDynamic();
         break;
     case ACTION_zoomscale:
-        _mainWin->zoomScale();
+        zoomScale();
         break;
     case ACTION_zoomcenter:
-        _mainWin->zoomCenter();
+        zoomCenter();
         break;
     case ACTION_zoomin:
-        _mainWin->zoomIn();
+        zoomIn();
         break;
     case ACTION_zoomout:
-        _mainWin->zoomOut();
+        zoomOut();
         break;
     case ACTION_zoomselected:
-        _mainWin->zoomSelected();
+        zoomSelected();
         break;
     case ACTION_zoomall:
-        _mainWin->zoomAll();
+        zoomAll();
         break;
     case ACTION_zoomextents:
-        _mainWin->zoomExtents();
+        zoomExtents();
         break;
     case ACTION_panrealtime:
-        _mainWin->panrealtime();
+        panrealtime();
         break;
     case ACTION_panpoint:
-        _mainWin->panpoint();
+        panpoint();
         break;
     case ACTION_panleft:
-        _mainWin->panLeft();
+        panLeft();
         break;
     case ACTION_panright:
-        _mainWin->panRight();
+        panRight();
         break;
     case ACTION_panup:
-        _mainWin->panUp();
+        panUp();
         break;
     case ACTION_pandown:
-        _mainWin->panDown();
+        panDown();
         break;
     case ACTION_day:
         dayVision();
         break;
     case ACTION_night:
-        _mainWin->nightVision();
+        nightVision();
         break;
     case ACTION_textbold:
         settings.text_style_bold = !settings.text_style_bold;

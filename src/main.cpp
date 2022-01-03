@@ -75,48 +75,12 @@ class StatusBarButton;
 class View;
 class PropertyEditor;
 class UndoEditor;
-class ArcObject;
-class BlockObject;
-class CircleObject;
-class DimAlignedObject;
-class DimAngularObject;
-class DimArcLengthObject;
-class DimDiameterObject;
-class DimLeaderObject;
-class DimLinearObject;
-class DimOrdinateObject;
-class DimRadiusObject;
-class EllipseObject;
-class EllipseArcObject;
-class HatchObject;
-class ImageObject;
-class InfiniteLineObject;
-class LineObject;
-class PathObject;
-class PointObject;
-class PolygonObject;
-class PolylineObject;
-class RayObject;
-class RectObject;
-class SplineObject;
-class TextMultiObject;
-class TextSingleObject;
 class ImageWidget;
 class StatusBarButton;
 
-preview_wrapper preview;
-dialog_wrapper dialog;
-settings_wrapper settings;
-
-void actuator(int action);
-void settings_actuator(int action);
-
-extern "C" {
-EmbVector unit_vector(float angle);
-EmbVector rotate_vector(EmbVector a, float angle);
-EmbVector scale_vector(EmbVector a, float scale);
-EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
-}
+settings_wrapper settings, preview, dialog, accept_;
+QStringList opensave_recent_list_of_files;
+QString opensave_custom_filter;
 
 class BaseObject : public QGraphicsPathItem
 {
@@ -129,7 +93,7 @@ public:
 
     QPen objectPen()   const { return objPen; }
     QColor   objectColor() const { return objPen.color(); }
-    QRgb objectColorRGB()  const { return objPen.color().rgb(); }
+    unsigned int objectColorRGB()  const { return objPen.color().rgb(); }
     Qt::PenStyle objectLineType()  const { return objPen.style(); }
     float    objectLineWeight()    const { return lwtPen.widthF(); }
     QPainterPath objectPath()  const { return path(); }
@@ -145,7 +109,7 @@ public:
     void setLine(float x1, float y1, float x2, float y2) { QPainterPath p; p.moveTo(x1,y1); p.lineTo(x2,y2); setPath(p); objLine.setLine(x1,y1,x2,y2); }
 
     void setObjectColor(const QColor& color);
-    void setObjectColorRGB(QRgb rgb);
+    void setObjectColorRGB(unsigned int rgb);
     void setObjectLineType(Qt::PenStyle lineType);
     void setObjectLineWeight(float lineWeight);
     void setObjectPath(const QPainterPath& p) { setPath(p); }
@@ -178,7 +142,7 @@ protected:
 class ArcObject : public BaseObject
 {
 public:
-    ArcObject(float startX, float startY, float midX, float midY, float endX, float endY, QRgb rgb, QGraphicsItem* parent = 0);
+    ArcObject(float startX, float startY, float midX, float midY, float endX, float endY, unsigned int rgb, QGraphicsItem* parent = 0);
     ArcObject(ArcObject* obj, QGraphicsItem* parent = 0);
     ~ArcObject();
 
@@ -215,7 +179,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float startX, float startY, float midX, float midY, float endX, float endY, QRgb rgb, Qt::PenStyle lineType);
+    void init(float startX, float startY, float midX, float midY, float endX, float endY, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath();
 
     void calculateArcData(float startX, float startY, float midX, float midY, float endX, float endY);
@@ -229,7 +193,7 @@ private:
 class CircleObject : public BaseObject
 {
 public:
-    CircleObject(float centerX, float centerY, float radius, QRgb rgb, QGraphicsItem* parent = 0);
+    CircleObject(float centerX, float centerY, float radius, unsigned int rgb, QGraphicsItem* parent = 0);
     CircleObject(CircleObject* obj, QGraphicsItem* parent = 0);
     ~CircleObject();
 
@@ -261,14 +225,14 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float centerX, float centerY, float radius, QRgb rgb, Qt::PenStyle lineType);
+    void init(float centerX, float centerY, float radius, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath();
 };
 
 class DimLeaderObject : public BaseObject
 {
 public:
-    DimLeaderObject(float x1, float y1, float x2, float y2, QRgb rgb, QGraphicsItem* parent = 0);
+    DimLeaderObject(float x1, float y1, float x2, float y2, unsigned int rgb, QGraphicsItem* parent = 0);
     DimLeaderObject(DimLeaderObject* obj, QGraphicsItem* parent = 0);
     ~DimLeaderObject();
 
@@ -315,7 +279,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x1, float y1, float x2, float y2, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x1, float y1, float x2, float y2, unsigned int rgb, Qt::PenStyle lineType);
 
     int curved;
     int filled;
@@ -331,7 +295,7 @@ private:
 class EllipseObject : public BaseObject
 {
 public:
-    EllipseObject(float centerX, float centerY, float width, float height, QRgb rgb, QGraphicsItem* parent = 0);
+    EllipseObject(float centerX, float centerY, float width, float height, unsigned int rgb, QGraphicsItem* parent = 0);
     EllipseObject(EllipseObject* obj, QGraphicsItem* parent = 0);
     ~EllipseObject();
 
@@ -366,14 +330,14 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float centerX, float centerY, float width, float height, QRgb rgb, Qt::PenStyle lineType);
+    void init(float centerX, float centerY, float width, float height, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath();
 };
 
 class ImageObject : public BaseObject
 {
 public:
-    ImageObject(float x, float y, float w, float h, QRgb rgb, QGraphicsItem* parent = 0);
+    ImageObject(float x, float y, float w, float h, unsigned int rgb, QGraphicsItem* parent = 0);
     ImageObject(ImageObject* obj, QGraphicsItem* parent = 0);
     ~ImageObject();
 
@@ -398,7 +362,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x, float y, float w, float h, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath();
 };
 
@@ -406,7 +370,7 @@ private:
 class LineObject : public BaseObject
 {
 public:
-    LineObject(float x1, float y1, float x2, float y2, QRgb rgb, QGraphicsItem* parent = 0);
+    LineObject(float x1, float y1, float x2, float y2, unsigned int rgb, QGraphicsItem* parent = 0);
     LineObject(LineObject* obj, QGraphicsItem* parent = 0);
     ~LineObject();
 
@@ -444,13 +408,13 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x1, float y1, float x2, float y2, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x1, float y1, float x2, float y2, unsigned int rgb, Qt::PenStyle lineType);
 };
 
 class PathObject : public BaseObject
 {
 public:
-    PathObject(float x, float y, const QPainterPath p, QRgb rgb, QGraphicsItem* parent = 0);
+    PathObject(float x, float y, const QPainterPath p, unsigned int rgb, QGraphicsItem* parent = 0);
     PathObject(PathObject* obj, QGraphicsItem* parent = 0);
     ~PathObject();
 
@@ -477,7 +441,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath(const QPainterPath& p);
     QPainterPath normalPath;
     //TODO: make paths similar to polylines. Review and implement any missing functions/members.
@@ -486,7 +450,7 @@ private:
 class PointObject : public BaseObject
 {
 public:
-    PointObject(float x, float y, QRgb rgb, QGraphicsItem* parent = 0);
+    PointObject(float x, float y, unsigned int rgb, QGraphicsItem* parent = 0);
     PointObject(PointObject* obj, QGraphicsItem* parent = 0);
     ~PointObject();
 
@@ -512,14 +476,14 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x, float y, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x, float y, unsigned int rgb, Qt::PenStyle lineType);
 };
 
 
 class PolygonObject : public BaseObject
 {
 public:
-    PolygonObject(float x, float y, const QPainterPath& p, QRgb rgb, QGraphicsItem* parent = 0);
+    PolygonObject(float x, float y, const QPainterPath& p, unsigned int rgb, QGraphicsItem* parent = 0);
     PolygonObject(PolygonObject* obj, QGraphicsItem* parent = 0);
     ~PolygonObject();
 
@@ -546,7 +510,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath(const QPainterPath& p);
     QPainterPath normalPath;
     int findIndex(const QPointF& point);
@@ -557,7 +521,7 @@ private:
 class PolylineObject : public BaseObject
 {
 public:
-    PolylineObject(float x, float y, const QPainterPath& p, QRgb rgb, QGraphicsItem* parent = 0);
+    PolylineObject(float x, float y, const QPainterPath& p, unsigned int rgb, QGraphicsItem* parent = 0);
     PolylineObject(PolylineObject* obj, QGraphicsItem* parent = 0);
     ~PolylineObject();
 
@@ -584,7 +548,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath(const QPainterPath& p);
     QPainterPath normalPath;
     int findIndex(const QPointF& point);
@@ -595,7 +559,7 @@ private:
 class RectObject : public BaseObject
 {
 public:
-    RectObject(float x, float y, float w, float h, QRgb rgb, QGraphicsItem* parent = 0);
+    RectObject(float x, float y, float w, float h, unsigned int rgb, QGraphicsItem* parent = 0);
     RectObject(RectObject* obj, QGraphicsItem* parent = 0);
     ~RectObject();
 
@@ -624,7 +588,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyle lineType);
+    void init(float x, float y, float w, float h, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath();
 };
 
@@ -632,7 +596,7 @@ private:
 class TextSingleObject : public BaseObject
 {
 public:
-    TextSingleObject(const QString& str, float x, float y, QRgb rgb, QGraphicsItem* parent = 0);
+    TextSingleObject(const QString& str, float x, float y, unsigned int rgb, QGraphicsItem* parent = 0);
     TextSingleObject(TextSingleObject* obj, QGraphicsItem* parent = 0);
     ~TextSingleObject();
 
@@ -686,7 +650,7 @@ public:
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
-    void init(const QString& str, float x, float y, QRgb rgb, Qt::PenStyle lineType);
+    void init(const QString& str, float x, float y, unsigned int rgb, Qt::PenStyle lineType);
 };
 
 
@@ -958,10 +922,10 @@ QColor rulerColor;
 
 QPoint  viewMousePoint;
 EmbVector sceneMousePoint;
-QRgb qsnapLocatorColor;
-QRgb gripColorCool;
-QRgb gripColorHot;
-QRgb crosshairColor;
+unsigned int qsnapLocatorColor;
+unsigned int gripColorCool;
+unsigned int gripColorHot;
+unsigned int crosshairColor;
 
 StatusBarButton* statusBarSnapButton;
 StatusBarButton* statusBarGridButton;
@@ -988,30 +952,15 @@ QLineEdit*   lineEditInfiniteLineVectorX;
 QLineEdit*   lineEditInfiniteLineVectorY;
 
     ArcObject*  tempArcObj;
-    BlockObject*    tempBlockObj;
     CircleObject*   tempCircleObj;
-    DimAlignedObject*   tempDimAlignedObj;
-    DimAngularObject*   tempDimAngularObj;
-    DimArcLengthObject* tempDimArcLenObj;
-    DimDiameterObject*  tempDimDiamObj;
-    DimLeaderObject*    tempDimLeaderObj;
-    DimLinearObject*    tempDimLinearObj;
-    DimOrdinateObject*  tempDimOrdObj;
-    DimRadiusObject*    tempDimRadiusObj;
     EllipseObject*  tempEllipseObj;
-    EllipseArcObject*   tempEllipseArcObj;
-    HatchObject*    tempHatchObj;
     ImageObject*    tempImageObj;
-    InfiniteLineObject* tempInfLineObj;
     LineObject* tempLineObj;
     PathObject* tempPathObj;
     PointObject*    tempPointObj;
     PolygonObject*  tempPolygonObj;
     PolylineObject* tempPolylineObj;
-    RayObject*  tempRayObj;
     RectObject* tempRectObj;
-    SplineObject*   tempSplineObj;
-    TextMultiObject*    tempTextMultiObj;
     TextSingleObject*   tempTextSingleObj;
 
     int precisionAngle;
@@ -1601,14 +1550,14 @@ void View::setRubberText(const QString& key, const QString& txt)
     gscene->update();
 }
 
-void View::setGridColor(QRgb color)
+void View::setGridColor(unsigned int color)
 {
     gridColor = QColor(color);
     gscene->setProperty("VIEW_COLOR_GRID", color);
     if(gscene) gscene->update();
 }
 
-void View::setRulerColor(QRgb color)
+void View::setRulerColor(unsigned int color)
 {
     rulerColor = QColor(color);
     gscene->update();
@@ -3447,21 +3396,21 @@ void View::showScrollBars(bool val)
     }
 }
 
-void View::setCrossHairColor(QRgb color)
+void View::setCrossHairColor(unsigned int color)
 {
     crosshairColor = color;
     gscene->setProperty("VIEW_COLOR_CROSSHAIR", color);
     if(gscene) gscene->update();
 }
 
-void View::setBackgroundColor(QRgb color)
+void View::setBackgroundColor(unsigned int color)
 {
     setBackgroundBrush(QColor(color));
     gscene->setProperty("VIEW_COLOR_BACKGROUND", color);
     if(gscene) gscene->update();
 }
 
-void View::setSelectBoxColors(QRgb colorL, QRgb fillL, QRgb colorR, QRgb fillR, int alpha)
+void View::setSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha)
 {
     selectBox->setColors(QColor(colorL), QColor(fillL), QColor(colorR), QColor(fillR), alpha);
 }
@@ -3520,6 +3469,20 @@ Settings_Dialog::~Settings_Dialog()
     QApplication::restoreOverrideCursor();
 }
 
+void
+to_lower(char *dst, char *src)
+{
+    int i;
+    for (i=0; i<MAX_STRING_LENGTH; i++) {
+        if (src[i] >= 'A' && src[i] <= 'Z') {
+            dst[i] = src[i] - 'A';
+        }
+        else {
+            dst[i] = src[i];
+        }
+    }
+}
+
 QWidget* Settings_Dialog::createTabGeneral()
 {
     QWidget* widget = new QWidget(this);
@@ -3529,7 +3492,7 @@ QWidget* Settings_Dialog::createTabGeneral()
 
     QLabel* labelLanguage = new QLabel(tr("Language (Requires Restart)"), groupBoxLanguage);
     QComboBox* comboBoxLanguage = new QComboBox(groupBoxLanguage);
-    dialog.general_language = settings.general_language.toLower();
+    to_lower(dialog.general_language, settings.general_language);
     comboBoxLanguage->addItem("Default");
     comboBoxLanguage->addItem("System");
     comboBoxLanguage->insertSeparator(2);
@@ -3557,7 +3520,7 @@ QWidget* Settings_Dialog::createTabGeneral()
     QComboBox* comboBoxIconTheme = new QComboBox(groupBoxIcon);
     QDir dir(qApp->applicationDirPath());
     dir.cd("icons");
-    dialog.general_icon_theme = settings.general_icon_theme;
+    strcpy(dialog.general_icon_theme, settings.general_icon_theme);
     foreach(QString dirName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
     {
         comboBoxIconTheme->addItem(loadIcon(icon_theme), dirName);
@@ -3596,8 +3559,8 @@ QWidget* Settings_Dialog::createTabGeneral()
 
     QPushButton* buttonMdiBGLogo = new QPushButton(tr("Choose"), groupBoxMdiBG);
     buttonMdiBGLogo->setEnabled(dialog.general_mdi_bg_use_logo);
-    dialog.general_mdi_bg_logo = settings.general_mdi_bg_logo;
-    preview.accept_general_mdi_bg_logo = dialog.general_mdi_bg_logo;
+    strcpy(dialog.general_mdi_bg_logo, settings.general_mdi_bg_logo);
+    strcpy(accept_.general_mdi_bg_logo, dialog.general_mdi_bg_logo);
     connect(buttonMdiBGLogo, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundLogo()));
     connect(checkBoxMdiBGUseLogo, SIGNAL(toggled(bool)), buttonMdiBGLogo, SLOT(setEnabled(bool)));
 
@@ -3609,8 +3572,8 @@ QWidget* Settings_Dialog::createTabGeneral()
 
     QPushButton* buttonMdiBGTexture = new QPushButton(tr("Choose"), groupBoxMdiBG);
     buttonMdiBGTexture->setEnabled(dialog.general_mdi_bg_use_texture);
-    dialog.general_mdi_bg_texture = settings.general_mdi_bg_texture;
-    preview.accept_general_mdi_bg_texture = dialog.general_mdi_bg_texture;
+    strcpy(dialog.general_mdi_bg_texture, settings.general_mdi_bg_texture);
+    strcpy(accept_.general_mdi_bg_texture, dialog.general_mdi_bg_texture);
     connect(buttonMdiBGTexture, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundTexture()));
     connect(checkBoxMdiBGUseTexture, SIGNAL(toggled(bool)), buttonMdiBGTexture, SLOT(setEnabled(bool)));
 
@@ -3624,7 +3587,7 @@ QWidget* Settings_Dialog::createTabGeneral()
     buttonMdiBGColor->setEnabled(dialog.general_mdi_bg_use_color);
     dialog.general_mdi_bg_color = settings.general_mdi_bg_color;
     preview.general_mdi_bg_color = dialog.general_mdi_bg_color;
-    preview.accept_general_mdi_bg_color = dialog.general_mdi_bg_color;
+    accept_.general_mdi_bg_color = dialog.general_mdi_bg_color;
     QPixmap mdiBGPix(16,16);
     mdiBGPix.fill(QColor(preview.general_mdi_bg_color));
     buttonMdiBGColor->setIcon(QIcon(mdiBGPix));
@@ -3775,7 +3738,7 @@ QWidget* Settings_Dialog::createTabDisplay()
     QPushButton* buttonCrossHairColor = new QPushButton(tr("Choose"), groupBoxColor);
     dialog.display_crosshair_color = settings.display_crosshair_color;
     preview.display_crosshair_color = dialog.display_crosshair_color;
-    preview.accept_display_crosshair_color = dialog.display_crosshair_color;
+    accept_.display_crosshair_color = dialog.display_crosshair_color;
     QPixmap crosshairPix(16,16);
     crosshairPix.fill(QColor(preview.display_crosshair_color));
     buttonCrossHairColor->setIcon(QIcon(crosshairPix));
@@ -3785,7 +3748,7 @@ QWidget* Settings_Dialog::createTabDisplay()
     QPushButton* buttonBGColor = new QPushButton(tr("Choose"), groupBoxColor);
     dialog.display_bg_color = settings.display_bg_color;
     preview.display_bg_color = dialog.display_bg_color;
-    preview.accept_display_bg_color = dialog.display_bg_color;
+    accept_.display_bg_color = dialog.display_bg_color;
     QPixmap bgPix(16,16);
     bgPix.fill(QColor(preview.display_bg_color));
     buttonBGColor->setIcon(QIcon(bgPix));
@@ -3795,7 +3758,7 @@ QWidget* Settings_Dialog::createTabDisplay()
     QPushButton* buttonSelectBoxLeftColor = new QPushButton(tr("Choose"), groupBoxColor);
     dialog.display_selectbox_left_color = settings.display_selectbox_left_color;
     preview.display_selectbox_left_color = dialog.display_selectbox_left_color;
-    preview.accept_display_selectbox_left_color = dialog.display_selectbox_left_color;
+    accept_.display_selectbox_left_color = dialog.display_selectbox_left_color;
     QPixmap sBoxLCPix(16,16);
     sBoxLCPix.fill(QColor(preview.display_selectbox_left_color));
     buttonSelectBoxLeftColor->setIcon(QIcon(sBoxLCPix));
@@ -3805,7 +3768,7 @@ QWidget* Settings_Dialog::createTabDisplay()
     QPushButton* buttonSelectBoxLeftFill = new QPushButton(tr("Choose"), groupBoxColor);
     dialog.display_selectbox_left_fill = settings.display_selectbox_left_fill;
     preview.display_selectbox_left_fill = dialog.display_selectbox_left_fill;
-    preview.accept_display_selectbox_left_fill = dialog.display_selectbox_left_fill;
+    accept_.display_selectbox_left_fill = dialog.display_selectbox_left_fill;
     QPixmap sBoxLFPix(16,16);
     sBoxLFPix.fill(QColor(preview.display_selectbox_left_fill));
     buttonSelectBoxLeftFill->setIcon(QIcon(sBoxLFPix));
@@ -3815,7 +3778,7 @@ QWidget* Settings_Dialog::createTabDisplay()
     QPushButton* buttonSelectBoxRightColor = new QPushButton(tr("Choose"), groupBoxColor);
     dialog.display_selectbox_right_color = settings.display_selectbox_right_color;
     preview.display_selectbox_right_color = dialog.display_selectbox_right_color;
-    preview.accept_display_selectbox_right_color = dialog.display_selectbox_right_color;
+    accept_.display_selectbox_right_color = dialog.display_selectbox_right_color;
     QPixmap sBoxRCPix(16,16);
     sBoxRCPix.fill(QColor(preview.display_selectbox_right_color));
     buttonSelectBoxRightColor->setIcon(QIcon(sBoxRCPix));
@@ -3825,7 +3788,7 @@ QWidget* Settings_Dialog::createTabDisplay()
     QPushButton* buttonSelectBoxRightFill = new QPushButton(tr("Choose"), groupBoxColor);
     dialog.display_selectbox_right_fill = settings.display_selectbox_right_fill;
     preview.display_selectbox_right_fill = dialog.display_selectbox_right_fill;
-    preview.accept_display_selectbox_right_fill = dialog.display_selectbox_right_fill;
+    accept_.display_selectbox_right_fill = dialog.display_selectbox_right_fill;
     QPixmap sBoxRFPix(16,16);
     sBoxRFPix.fill(QColor(preview.display_selectbox_right_fill));
     buttonSelectBoxRightFill->setIcon(QIcon(sBoxRFPix));
@@ -3906,8 +3869,6 @@ QWidget* Settings_Dialog::createTabOpenSave()
     QGroupBox* groupBoxCustomFilter = new QGroupBox(tr("Custom Filter"), widget);
     groupBoxCustomFilter->setEnabled(false); //TODO: Fixup custom filter
 
-    dialog.opensave_custom_filter = settings.opensave_custom_filter;
-
     QPushButton* buttonCustomFilterSelectAll = new QPushButton(tr("Select All"), groupBoxCustomFilter);
     connect(buttonCustomFilterSelectAll, SIGNAL(clicked()), this, SLOT(buttonCustomFilterSelectAllClicked()));
     QPushButton* buttonCustomFilterClearAll = new QPushButton("Clear All", groupBoxCustomFilter);
@@ -3917,7 +3878,7 @@ QWidget* Settings_Dialog::createTabOpenSave()
     int i;
     for (i=0; i<numberOfFormats; i++) {
         QCheckBox* c = new QCheckBox(formatTable[i].extension, groupBoxCustomFilter);
-        c->setChecked(dialog.opensave_custom_filter.contains(QString("*") + formatTable[i].extension, Qt::CaseInsensitive));
+        c->setChecked(opensave_custom_filter.contains(QString("*") + formatTable[i].extension, Qt::CaseInsensitive));
         connect(c, SIGNAL(stateChanged(int)), this, SLOT(checkBoxCustomFilterStateChanged(int)));
         connect(this, SIGNAL(buttonCustomFilterSelectAll(bool)), c, SLOT(setChecked(bool)));
         connect(this, SIGNAL(buttonCustomFilterClearAll(bool)), c, SLOT(setChecked(bool)));
@@ -3929,7 +3890,7 @@ QWidget* Settings_Dialog::createTabOpenSave()
     gridLayoutCustomFilter->setColumnStretch(7,1);
     groupBoxCustomFilter->setLayout(gridLayoutCustomFilter);
 
-    if(dialog.opensave_custom_filter.contains("supported", Qt::CaseInsensitive)) buttonCustomFilterSelectAllClicked();
+    if(opensave_custom_filter.contains("supported", Qt::CaseInsensitive)) buttonCustomFilterSelectAllClicked();
 
     /* Opening */
     QGroupBox* groupBoxOpening = new QGroupBox(tr("File Open"), widget);
@@ -4113,7 +4074,7 @@ QWidget* Settings_Dialog::createTabGridRuler()
     if(dialog.grid_color_match_crosshair) { dialog.grid_color = settings.display_crosshair_color; }
     else                                  { dialog.grid_color = settings.grid_color;             }
     preview.grid_color = dialog.grid_color;
-    preview.accept_grid_color = dialog.grid_color;
+    accept_.grid_color = dialog.grid_color;
     QPixmap gridPix(16,16);
     gridPix.fill(QColor(preview.grid_color));
     buttonGridColor->setIcon(QIcon(gridPix));
@@ -4143,7 +4104,7 @@ QWidget* Settings_Dialog::createTabGridRuler()
     comboBoxGridType->addItem("Rectangular");
     comboBoxGridType->addItem("Circular");
     comboBoxGridType->addItem("Isometric");
-    dialog.grid_type = settings.grid_type;
+    strcpy(dialog.grid_type, settings.grid_type);
     comboBoxGridType->setCurrentIndex(comboBoxGridType->findText(dialog.grid_type));
     connect(comboBoxGridType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(comboBoxGridTypeCurrentIndexChanged(const QString&)));
 
@@ -4338,7 +4299,7 @@ QWidget* Settings_Dialog::createTabGridRuler()
     buttonRulerColor->setObjectName("buttonRulerColor");
     dialog.ruler_color = settings.ruler_color;
     preview.ruler_color = dialog.ruler_color;
-    preview.accept_ruler_color = dialog.ruler_color;
+    accept_.ruler_color = dialog.ruler_color;
     QPixmap rulerPix(16,16);
     rulerPix.fill(QColor(preview.ruler_color));
     buttonRulerColor->setIcon(QIcon(rulerPix));
@@ -4675,12 +4636,12 @@ void Settings_Dialog::addColorsToComboBox(QComboBox* comboBox)
 
 void Settings_Dialog::comboBoxLanguageCurrentIndexChanged(const QString& lang)
 {
-    dialog.general_language = lang.toLower();
+    strcpy(dialog.general_language, lang.toLower().toLocal8Bit().constData());
 }
 
 void Settings_Dialog::comboBoxIconThemeCurrentIndexChanged(const QString& theme)
 {
-    dialog.general_icon_theme = theme;
+    strcpy(dialog.general_icon_theme, theme.toLocal8Bit().constData());
 }
 
 void Settings_Dialog::comboBoxIconSizeCurrentIndexChanged(int index)
@@ -4714,10 +4675,10 @@ void Settings_Dialog::chooseGeneralMdiBackgroundLogo()
                         tr("Images (*.bmp *.png *.jpg)"));
 
         if (!selectedImage.isNull())
-            preview.accept_general_mdi_bg_logo = selectedImage;
+            strcpy(accept_.general_mdi_bg_logo, selectedImage.toLocal8Bit().constData());
 
         //Update immediately so it can be previewed
-        mainWin->mdiArea->setBackgroundLogo(preview.accept_general_mdi_bg_logo);
+        mainWin->mdiArea->setBackgroundLogo(accept_.general_mdi_bg_logo);
     }
 }
 
@@ -4737,11 +4698,11 @@ void Settings_Dialog::chooseGeneralMdiBackgroundTexture()
                         tr("Images (*.bmp *.png *.jpg)"));
 
         if (!selectedImage.isNull()) {
-            preview.accept_general_mdi_bg_texture = selectedImage;
+            strcpy(accept_.general_mdi_bg_texture, selectedImage.toLocal8Bit().constData());
         }
 
         //Update immediately so it can be previewed
-        mainWin->mdiArea->setBackgroundTexture(preview.accept_general_mdi_bg_texture);
+        mainWin->mdiArea->setBackgroundTexture(accept_.general_mdi_bg_texture);
     }
 }
 
@@ -4755,16 +4716,16 @@ void Settings_Dialog::chooseGeneralMdiBackgroundColor()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_general_mdi_bg_color), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.general_mdi_bg_color), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentGeneralMdiBackgroundColorChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_general_mdi_bg_color = colorDialog->selectedColor().rgb();
+            accept_.general_mdi_bg_color = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_general_mdi_bg_color));
+            pix.fill(QColor(accept_.general_mdi_bg_color));
             button->setIcon(QIcon(pix));
-            mainWin->mdiArea->setBackgroundColor(QColor(preview.accept_general_mdi_bg_color));
+            mainWin->mdiArea->setBackgroundColor(QColor(accept_.general_mdi_bg_color));
         }
         else {
             mainWin->mdiArea->setBackgroundColor(QColor(dialog.general_mdi_bg_color));
@@ -4840,16 +4801,16 @@ void Settings_Dialog::chooseDisplayCrossHairColor()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_display_crosshair_color), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_crosshair_color), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplayCrossHairColorChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_display_crosshair_color = colorDialog->selectedColor().rgb();
+            accept_.display_crosshair_color = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_display_crosshair_color));
+            pix.fill(QColor(accept_.display_crosshair_color));
             button->setIcon(QIcon(pix));
-            mainWin->updateAllViewCrossHairColors(preview.accept_display_crosshair_color);
+            mainWin->updateAllViewCrossHairColors(accept_.display_crosshair_color);
         }
         else {
             mainWin->updateAllViewCrossHairColors(dialog.display_crosshair_color);
@@ -4867,16 +4828,16 @@ void Settings_Dialog::chooseDisplayBackgroundColor()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_display_bg_color), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_bg_color), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplayBackgroundColorChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_display_bg_color = colorDialog->selectedColor().rgb();
+            accept_.display_bg_color = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_display_bg_color));
+            pix.fill(QColor(accept_.display_bg_color));
             button->setIcon(QIcon(pix));
-            mainWin->updateAllViewBackgroundColors(preview.accept_display_bg_color);
+            mainWin->updateAllViewBackgroundColors(accept_.display_bg_color);
         }
         else {
             mainWin->updateAllViewBackgroundColors(dialog.display_bg_color);
@@ -4895,19 +4856,19 @@ void Settings_Dialog::chooseDisplaySelectBoxLeftColor()
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if(button)
     {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_display_selectbox_left_color), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_left_color), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxLeftColorChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_display_selectbox_left_color = colorDialog->selectedColor().rgb();
+            accept_.display_selectbox_left_color = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_display_selectbox_left_color));
+            pix.fill(QColor(accept_.display_selectbox_left_color));
             button->setIcon(QIcon(pix));
-            mainWin->updateAllViewSelectBoxColors(preview.accept_display_selectbox_left_color,
-                preview.accept_display_selectbox_left_fill,
-                preview.accept_display_selectbox_right_color,
-                preview.accept_display_selectbox_right_fill,
+            mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+                accept_.display_selectbox_left_fill,
+                accept_.display_selectbox_right_color,
+                accept_.display_selectbox_right_fill,
                 preview.display_selectbox_alpha);
         }
         else
@@ -4935,20 +4896,20 @@ void Settings_Dialog::chooseDisplaySelectBoxLeftFill()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_display_selectbox_left_fill), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_left_fill), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxLeftFillChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_display_selectbox_left_fill = colorDialog->selectedColor().rgb();
+            accept_.display_selectbox_left_fill = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_display_selectbox_left_fill));
+            pix.fill(QColor(accept_.display_selectbox_left_fill));
             button->setIcon(QIcon(pix));
             mainWin->updateAllViewSelectBoxColors(
-                preview.accept_display_selectbox_left_color,
-                preview.accept_display_selectbox_left_fill,
-                preview.accept_display_selectbox_right_color,
-                preview.accept_display_selectbox_right_fill,
+                accept_.display_selectbox_left_color,
+                accept_.display_selectbox_left_fill,
+                accept_.display_selectbox_right_color,
+                accept_.display_selectbox_right_fill,
                 preview.display_selectbox_alpha);
         }
         else {
@@ -4975,19 +4936,19 @@ void Settings_Dialog::chooseDisplaySelectBoxRightColor()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_display_selectbox_right_color), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_right_color), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxRightColorChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_display_selectbox_right_color = colorDialog->selectedColor().rgb();
+            accept_.display_selectbox_right_color = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_display_selectbox_right_color));
+            pix.fill(QColor(accept_.display_selectbox_right_color));
             button->setIcon(QIcon(pix));
-            mainWin->updateAllViewSelectBoxColors(preview.accept_display_selectbox_left_color,
-                                                  preview.accept_display_selectbox_left_fill,
-                                                  preview.accept_display_selectbox_right_color,
-                                                  preview.accept_display_selectbox_right_fill,
+            mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+                                                  accept_.display_selectbox_left_fill,
+                                                  accept_.display_selectbox_right_color,
+                                                  accept_.display_selectbox_right_fill,
                                                   preview.display_selectbox_alpha);
         }
         else {
@@ -5014,19 +4975,19 @@ void Settings_Dialog::chooseDisplaySelectBoxRightFill()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_display_selectbox_right_fill), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_right_fill), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxRightFillChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_display_selectbox_right_fill = colorDialog->selectedColor().rgb();
+            accept_.display_selectbox_right_fill = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_display_selectbox_right_fill));
+            pix.fill(QColor(accept_.display_selectbox_right_fill));
             button->setIcon(QIcon(pix));
-            mainWin->updateAllViewSelectBoxColors(preview.accept_display_selectbox_left_color,
-                 preview.accept_display_selectbox_left_fill,
-                 preview.accept_display_selectbox_right_color,
-                 preview.accept_display_selectbox_right_fill,
+            mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+                 accept_.display_selectbox_left_fill,
+                 accept_.display_selectbox_right_color,
+                 accept_.display_selectbox_right_fill,
                  preview.display_selectbox_alpha);
         }
         else {
@@ -5052,10 +5013,10 @@ void Settings_Dialog::currentDisplaySelectBoxRightFillChanged(const QColor& colo
 void Settings_Dialog::spinBoxDisplaySelectBoxAlphaValueChanged(int value)
 {
     preview.display_selectbox_alpha = value;
-    mainWin->updateAllViewSelectBoxColors(preview.accept_display_selectbox_left_color,
-        preview.accept_display_selectbox_left_fill,
-        preview.accept_display_selectbox_right_color,
-        preview.accept_display_selectbox_right_fill,
+    mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+        accept_.display_selectbox_left_fill,
+        accept_.display_selectbox_right_color,
+        accept_.display_selectbox_right_fill,
         preview.display_selectbox_alpha);
 }
 
@@ -5067,9 +5028,9 @@ void Settings_Dialog::checkBoxCustomFilterStateChanged(int checked)
         QString format = checkBox->text();
         debug_message("CustomFilter: %s %d", qPrintable(format), checked);
         if(checked)
-            dialog.opensave_custom_filter.append(" *." + format.toLower());
+            opensave_custom_filter.append(" *." + format.toLower());
         else
-            dialog.opensave_custom_filter.remove("*." + format, Qt::CaseInsensitive);
+            opensave_custom_filter.remove("*." + format, Qt::CaseInsensitive);
         //dialog.opensave_custom_filter = checked; //TODO
     }
 }
@@ -5077,13 +5038,13 @@ void Settings_Dialog::checkBoxCustomFilterStateChanged(int checked)
 void Settings_Dialog::buttonCustomFilterSelectAllClicked()
 {
     emit buttonCustomFilterSelectAll(true);
-    dialog.opensave_custom_filter = "supported";
+    opensave_custom_filter = "supported";
 }
 
 void Settings_Dialog::buttonCustomFilterClearAllClicked()
 {
     emit buttonCustomFilterClearAll(false);
-    dialog.opensave_custom_filter.clear();
+    opensave_custom_filter.clear();
 }
 
 void Settings_Dialog::spinBoxRecentMaxFilesValueChanged(int value)
@@ -5110,10 +5071,10 @@ void Settings_Dialog::checkBoxGridColorMatchCrossHairStateChanged(int checked)
 {
     dialog.grid_color_match_crosshair = checked;
     if (dialog.grid_color_match_crosshair) {
-        mainWin->updateAllViewGridColors(preview.accept_display_crosshair_color);
+        mainWin->updateAllViewGridColors(accept_.display_crosshair_color);
     }
     else {
-        mainWin->updateAllViewGridColors(preview.accept_grid_color);
+        mainWin->updateAllViewGridColors(accept_.grid_color);
     }
 
     QObject* senderObj = sender();
@@ -5134,16 +5095,16 @@ void Settings_Dialog::chooseGridColor()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_grid_color), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.grid_color), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentGridColorChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_grid_color = colorDialog->selectedColor().rgb();
+            accept_.grid_color = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_grid_color));
+            pix.fill(QColor(accept_.grid_color));
             button->setIcon(QIcon(pix));
-            mainWin->updateAllViewGridColors(preview.accept_grid_color);
+            mainWin->updateAllViewGridColors(accept_.grid_color);
         }
         else {
             mainWin->updateAllViewGridColors(dialog.grid_color);
@@ -5219,7 +5180,7 @@ void Settings_Dialog::checkBoxGridLoadFromFileStateChanged(int checked)
 
 void Settings_Dialog::comboBoxGridTypeCurrentIndexChanged(const QString& type)
 {
-    dialog.grid_type = type;
+    strcpy(dialog.grid_type, type.toLocal8Bit().constData());
 
     QObject* senderObj = sender();
     if (senderObj) {
@@ -5358,16 +5319,16 @@ void Settings_Dialog::chooseRulerColor()
 {
     QPushButton* button = qobject_cast<QPushButton*>(sender());
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(preview.accept_ruler_color), this);
+        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.ruler_color), this);
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentRulerColorChanged(const QColor&)));
         colorDialog->exec();
 
         if (colorDialog->result() == QDialog::Accepted) {
-            preview.accept_ruler_color = colorDialog->selectedColor().rgb();
+            accept_.ruler_color = colorDialog->selectedColor().rgb();
             QPixmap pix(16,16);
-            pix.fill(QColor(preview.accept_ruler_color));
+            pix.fill(QColor(accept_.ruler_color));
             button->setIcon(QIcon(pix));
-            mainWin->updateAllViewRulerColors(preview.accept_ruler_color);
+            mainWin->updateAllViewRulerColors(accept_.ruler_color);
         }
         else {
             mainWin->updateAllViewRulerColors(dialog.ruler_color);
@@ -5476,7 +5437,7 @@ void Settings_Dialog::comboBoxQSnapLocatorColorCurrentIndexChanged(int index)
 {
     /* TODO: Alert user if color matched the display bg color */
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender());
-    QRgb defaultColor = qRgb(255,255,0); /* Yellow */
+    unsigned int defaultColor = qRgb(255,255,0); /* Yellow */
     if (comboBox) {
         bool ok = 0;
         dialog.qsnap_locator_color = comboBox->itemData(index).toUInt(&ok);
@@ -5560,7 +5521,7 @@ void Settings_Dialog::comboBoxSelectionCoolGripColorCurrentIndexChanged(int inde
 {
     /* TODO: Alert user if color matched the display bg color */
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender());
-    QRgb defaultColor = qRgb(0,0,255); //Blue
+    unsigned int defaultColor = qRgb(0,0,255); //Blue
     if (comboBox) {
         bool ok = 0;
         dialog.selection_coolgrip_color = comboBox->itemData(index).toUInt(&ok);
@@ -5576,7 +5537,7 @@ void Settings_Dialog::comboBoxSelectionHotGripColorCurrentIndexChanged(int index
 {
     /* TODO: Alert user if color matched the display bg color */
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender());
-    QRgb defaultColor = qRgb(255,0,0); /* Red */
+    unsigned int defaultColor = qRgb(255,0,0); /* Red */
     if (comboBox) {
         bool ok = 0;
         dialog.selection_hotgrip_color = comboBox->itemData(index).toUInt(&ok);
@@ -5594,33 +5555,35 @@ void Settings_Dialog::acceptChanges()
     dialog.general_mdi_bg_use_logo = preview.general_mdi_bg_use_logo;
     dialog.general_mdi_bg_use_texture = preview.general_mdi_bg_use_texture;
     dialog.general_mdi_bg_use_color = preview.general_mdi_bg_use_color;
-    dialog.general_mdi_bg_logo = preview.accept_general_mdi_bg_logo;
-    dialog.general_mdi_bg_texture = preview.accept_general_mdi_bg_texture;
-    dialog.general_mdi_bg_color = preview.accept_general_mdi_bg_color;
+    strcpy(dialog.general_mdi_bg_logo, accept_.general_mdi_bg_logo);
+    strcpy(dialog.general_mdi_bg_texture, accept_.general_mdi_bg_texture);
+    dialog.general_mdi_bg_color = accept_.general_mdi_bg_color;
     dialog.display_show_scrollbars = preview.display_show_scrollbars;
-    dialog.display_crosshair_color = preview.accept_display_crosshair_color;
-    dialog.display_bg_color = preview.accept_display_bg_color;
-    dialog.display_selectbox_left_color = preview.accept_display_selectbox_left_color;
-    dialog.display_selectbox_left_fill = preview.accept_display_selectbox_left_fill;
-    dialog.display_selectbox_right_color = preview.accept_display_selectbox_right_color;
-    dialog.display_selectbox_right_fill = preview.accept_display_selectbox_right_fill;
+    dialog.display_crosshair_color = accept_.display_crosshair_color;
+    dialog.display_bg_color = accept_.display_bg_color;
+    dialog.display_selectbox_left_color = accept_.display_selectbox_left_color;
+    dialog.display_selectbox_left_fill = accept_.display_selectbox_left_fill;
+    dialog.display_selectbox_right_color = accept_.display_selectbox_right_color;
+    dialog.display_selectbox_right_fill = accept_.display_selectbox_right_fill;
     dialog.display_selectbox_alpha = preview.display_selectbox_alpha;
     if (dialog.grid_color_match_crosshair) {
-        dialog.grid_color = preview.accept_display_crosshair_color;
+        dialog.grid_color = accept_.display_crosshair_color;
     }
-    else                                  dialog.grid_color = preview.accept_grid_color;
-    dialog.ruler_color = preview.accept_ruler_color;
+    else {
+        dialog.grid_color = accept_.grid_color;
+    }
+    dialog.ruler_color = accept_.ruler_color;
     dialog.lwt_show_lwt = preview.lwt_show_lwt;
     dialog.lwt_real_render = preview.lwt_real_render;
 
-    settings.general_language = dialog.general_language;
-    settings.general_icon_theme = dialog.general_icon_theme;
+    strcpy(settings.general_language, dialog.general_language);
+    strcpy(settings.general_icon_theme, dialog.general_icon_theme);
     settings.general_icon_size = dialog.general_icon_size;
     settings.general_mdi_bg_use_logo = dialog.general_mdi_bg_use_logo;
     settings.general_mdi_bg_use_texture = dialog.general_mdi_bg_use_texture;
     settings.general_mdi_bg_use_color = dialog.general_mdi_bg_use_color;
-    settings.general_mdi_bg_logo = dialog.general_mdi_bg_logo;
-    settings.general_mdi_bg_texture = dialog.general_mdi_bg_texture;
+    strcpy(settings.general_mdi_bg_logo, dialog.general_mdi_bg_logo);
+    strcpy(settings.general_mdi_bg_texture, dialog.general_mdi_bg_texture);
     settings.general_mdi_bg_color = dialog.general_mdi_bg_color;
     settings.general_tip_of_the_day = dialog.general_tip_of_the_day;
     //TODO: settings.GeneralSystemHelpBrowser = dialog.general_system_help_browser;
@@ -5644,7 +5607,6 @@ void Settings_Dialog::acceptChanges()
     //TODO: settings.DisplayCrossHairPercent(dialog.display_crosshair_percent);
     //TODO: settings.DisplayUnits(dialog.display_units);
     //TODO: settings.PromptSaveHistoryFilename(dialog.prompt_save_history_filename);
-    settings.opensave_custom_filter = dialog.opensave_custom_filter;
     //TODO: settings.open_format(dialog.opensave_open_format);
     //TODO: settings.open_thumbnail(dialog.opensave_open_thumbnail);
     //TODO: settings.save_format = dialog.opensave_save_format);
@@ -5659,7 +5621,7 @@ void Settings_Dialog::acceptChanges()
     settings.grid_color_match_crosshair = dialog.grid_color_match_crosshair;
     settings.grid_color = dialog.grid_color;
     //TODO: settings.GridLoadFromFile = dialog.grid_load_from_file;
-    settings.grid_type = dialog.grid_type;
+    strcpy(settings.grid_type, dialog.grid_type);
     settings.grid_center_on_origin = dialog.grid_center_on_origin;
     settings.grid_center_x = dialog.grid_center_x;
     settings.grid_center_y = dialog.grid_center_y;
@@ -7502,7 +7464,7 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
     blockSignals = false;
 }
 
-ArcObject::ArcObject(float startX, float startY, float midX, float midY, float endX, float endY, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+ArcObject::ArcObject(float startX, float startY, float midX, float midY, float endX, float endY, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("ArcObject Constructor()");
     init(startX, startY, midX, midY, endX, endY, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -7523,7 +7485,7 @@ ArcObject::~ArcObject()
     debug_message("ArcObject Destructor()");
 }
 
-void ArcObject::init(float startX, float startY, float midX, float midY, float endX, float endY, QRgb rgb, Qt::PenStyle lineType)
+void ArcObject::init(float startX, float startY, float midX, float midY, float endX, float endY, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_ARC]);
@@ -7823,7 +7785,7 @@ void BaseObject::setObjectColor(const QColor& color)
     lwtPen.setColor(color);
 }
 
-void BaseObject::setObjectColorRGB(QRgb rgb)
+void BaseObject::setObjectColorRGB(unsigned int rgb)
 {
     objPen.setColor(QColor(rgb));
     lwtPen.setColor(QColor(rgb));
@@ -7955,7 +7917,7 @@ void BaseObject::realRender(QPainter* painter, const QPainterPath& renderPath)
 }
 
 
-CircleObject::CircleObject(float centerX, float centerY, float radius, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+CircleObject::CircleObject(float centerX, float centerY, float radius, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("CircleObject Constructor()");
     init(centerX, centerY, radius, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -7978,7 +7940,7 @@ CircleObject::~CircleObject()
     debug_message("CircleObject Destructor()");
 }
 
-void CircleObject::init(float centerX, float centerY, float radius, QRgb rgb, Qt::PenStyle lineType)
+void CircleObject::init(float centerX, float centerY, float radius, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_CIRCLE]);
@@ -8191,7 +8153,7 @@ QPainterPath CircleObject::objectSavePath() const
     return trans.map(path);
 }
 
-DimLeaderObject::DimLeaderObject(float x1, float y1, float x2, float y2, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+DimLeaderObject::DimLeaderObject(float x1, float y1, float x2, float y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("DimLeaderObject Constructor()");
     init(x1, y1, x2, y2, rgb, Qt::SolidLine); /* TODO: getCurrentLineType */
@@ -8214,7 +8176,7 @@ DimLeaderObject::~DimLeaderObject()
     debug_message("DimLeaderObject Destructor()");
 }
 
-void DimLeaderObject::init(float x1, float y1, float x2, float y2, QRgb rgb, Qt::PenStyle lineType)
+void DimLeaderObject::init(float x1, float y1, float x2, float y2, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_DIMLEADER]);
@@ -8468,7 +8430,7 @@ void DimLeaderObject::gripEdit(const QPointF& before, const QPointF& after)
 }
 
 
-EllipseObject::EllipseObject(float centerX, float centerY, float width, float height, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+EllipseObject::EllipseObject(float centerX, float centerY, float width, float height, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("EllipseObject Constructor()");
     init(centerX, centerY, width, height, rgb, Qt::SolidLine);
@@ -8491,7 +8453,7 @@ EllipseObject::~EllipseObject()
     debug_message("EllipseObject Destructor()");
 }
 
-void EllipseObject::init(float centerX, float centerY, float width, float height, QRgb rgb, Qt::PenStyle lineType)
+void EllipseObject::init(float centerX, float centerY, float width, float height, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_ELLIPSE]);
@@ -8762,7 +8724,7 @@ QPainterPath EllipseObject::objectSavePath() const
 }
 
 
-ImageObject::ImageObject(float x, float y, float w, float h, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+ImageObject::ImageObject(float x, float y, float w, float h, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("ImageObject Constructor()");
     init(x, y, w, h, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -8784,7 +8746,7 @@ ImageObject::~ImageObject()
     debug_message("ImageObject Destructor()");
 }
 
-void ImageObject::init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyle lineType)
+void ImageObject::init(float x, float y, float w, float h, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_IMAGE]);
@@ -8932,7 +8894,7 @@ void ImageObject::gripEdit(const QPointF& before, const QPointF& after)
     //TODO: gripEdit() for ImageObject
 }
 
-LineObject::LineObject(float x1, float y1, float x2, float y2, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+LineObject::LineObject(float x1, float y1, float x2, float y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("LineObject Constructor()");
     init(x1, y1, x2, y2, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -8952,7 +8914,7 @@ LineObject::~LineObject()
     debug_message("LineObject Destructor()");
 }
 
-void LineObject::init(float x1, float y1, float x2, float y2, QRgb rgb, Qt::PenStyle lineType)
+void LineObject::init(float x1, float y1, float x2, float y2, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_LINE]);
@@ -9122,7 +9084,7 @@ QPainterPath LineObject::objectSavePath() const
 }
 
 
-PathObject::PathObject(float x, float y, const QPainterPath p, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+PathObject::PathObject(float x, float y, const QPainterPath p, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("PathObject Constructor()");
     init(x, y, p, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -9143,7 +9105,7 @@ PathObject::~PathObject()
     debug_message("PathObject Destructor()");
 }
 
-void PathObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType)
+void PathObject::init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_PATH]);
@@ -9234,7 +9196,7 @@ QPainterPath PathObject::objectSavePath() const
 }
 
 
-PointObject::PointObject(float x, float y, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+PointObject::PointObject(float x, float y, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("PointObject Constructor()");
     init(x, y, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -9255,7 +9217,7 @@ PointObject::~PointObject()
     debug_message("PointObject Destructor()");
 }
 
-void PointObject::init(float x, float y, QRgb rgb, Qt::PenStyle lineType)
+void PointObject::init(float x, float y, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POINT]);
@@ -9336,7 +9298,7 @@ QPainterPath PointObject::objectSavePath() const
 }
 
 
-PolygonObject::PolygonObject(float x, float y, const QPainterPath& p, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+PolygonObject::PolygonObject(float x, float y, const QPainterPath& p, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("PolygonObject Constructor()");
     init(x, y, p, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -9358,7 +9320,7 @@ PolygonObject::~PolygonObject()
     debug_message("PolygonObject Destructor()");
 }
 
-void PolygonObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType)
+void PolygonObject::init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYGON]);
@@ -9602,7 +9564,7 @@ QPainterPath PolygonObject::objectSavePath() const
 }
 
 
-PolylineObject::PolylineObject(float x, float y, const QPainterPath& p, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+PolylineObject::PolylineObject(float x, float y, const QPainterPath& p, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("PolylineObject Constructor()");
     init(x, y, p, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -9624,7 +9586,7 @@ PolylineObject::~PolylineObject()
     debug_message("PolylineObject Destructor()");
 }
 
-void PolylineObject::init(float x, float y, const QPainterPath& p, QRgb rgb, Qt::PenStyle lineType)
+void PolylineObject::init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, PolylineObject::Type);
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYLINE]);
@@ -9814,7 +9776,7 @@ QPainterPath PolylineObject::objectSavePath() const
 }
 
 
-RectObject::RectObject(float x, float y, float w, float h, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+RectObject::RectObject(float x, float y, float w, float h, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("RectObject Constructor()");
     init(x, y, w, h, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -9836,7 +9798,7 @@ RectObject::~RectObject()
     debug_message("RectObject Destructor()");
 }
 
-void RectObject::init(float x, float y, float w, float h, QRgb rgb, Qt::PenStyle lineType)
+void RectObject::init(float x, float y, float w, float h, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_RECTANGLE]);
@@ -10417,7 +10379,7 @@ void SaveObject::toPolyline(EmbPattern* pattern, const QPointF& objPos, const QP
 }
 
 
-TextSingleObject::TextSingleObject(const QString& str, float x, float y, QRgb rgb, QGraphicsItem* parent) : BaseObject(parent)
+TextSingleObject::TextSingleObject(const QString& str, float x, float y, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
     debug_message("TextSingleObject Constructor()");
     init(str, x, y, rgb, Qt::SolidLine); //TODO: getCurrentLineType
@@ -10443,7 +10405,7 @@ TextSingleObject::~TextSingleObject()
     debug_message("TextSingleObject Destructor()");
 }
 
-void TextSingleObject::init(const QString& str, float x, float y, QRgb rgb, Qt::PenStyle lineType)
+void TextSingleObject::init(const QString& str, float x, float y, unsigned int rgb, Qt::PenStyle lineType)
 {
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_TEXTSINGLE]);
@@ -11204,7 +11166,7 @@ void MainWindow::updateAllViewScrollBars(bool val)
     }
 }
 
-void MainWindow::updateAllViewCrossHairColors(QRgb color)
+void MainWindow::updateAllViewCrossHairColors(unsigned int color)
 {
     QList<QMdiSubWindow*> windowList = mdiArea->subWindowList();
     for(int i = 0; i < windowList.count(); ++i)
@@ -11214,7 +11176,7 @@ void MainWindow::updateAllViewCrossHairColors(QRgb color)
     }
 }
 
-void MainWindow::updateAllViewBackgroundColors(QRgb color)
+void MainWindow::updateAllViewBackgroundColors(unsigned int color)
 {
     QList<QMdiSubWindow*> windowList = mdiArea->subWindowList();
     for(int i = 0; i < windowList.count(); ++i)
@@ -11224,7 +11186,7 @@ void MainWindow::updateAllViewBackgroundColors(QRgb color)
     }
 }
 
-void MainWindow::updateAllViewSelectBoxColors(QRgb colorL, QRgb fillL, QRgb colorR, QRgb fillR, int alpha)
+void MainWindow::updateAllViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha)
 {
     QList<QMdiSubWindow*> windowList = mdiArea->subWindowList();
     for(int i = 0; i < windowList.count(); ++i)
@@ -11234,7 +11196,7 @@ void MainWindow::updateAllViewSelectBoxColors(QRgb colorL, QRgb fillL, QRgb colo
     }
 }
 
-void MainWindow::updateAllViewGridColors(QRgb color)
+void MainWindow::updateAllViewGridColors(unsigned int color)
 {
     QList<QMdiSubWindow*> windowList = mdiArea->subWindowList();
     for(int i = 0; i < windowList.count(); ++i)
@@ -11244,7 +11206,7 @@ void MainWindow::updateAllViewGridColors(QRgb color)
     }
 }
 
-void MainWindow::updateAllViewRulerColors(QRgb color)
+void MainWindow::updateAllViewRulerColors(unsigned int color)
 {
     QList<QMdiSubWindow*> windowList = mdiArea->subWindowList();
     for(int i = 0; i < windowList.count(); ++i)
@@ -11266,83 +11228,81 @@ void MainWindow::pickAddModeToggled()
     updatePickAddMode(val);
 }
 
-// Layer ToolBar
-void MainWindow::makeLayerActive()
+void makeLayerActive(void)
 {
     debug_message("makeLayerActive()");
     debug_message("Implement makeLayerActive.");
 }
 
-void MainWindow::layerManager()
+void layerManager(void)
 {
     debug_message("layerManager()");
     debug_message("Implement layerManager.");
-    LayerManager layman(this, this);
+    LayerManager layman( _mainWin,  _mainWin);
     layman.exec();
 }
 
-void MainWindow::layerPrevious()
+void layerPrevious(void)
 {
     debug_message("layerPrevious()");
     debug_message("Implement layerPrevious.");
 }
 
-// Zoom ToolBar
-void MainWindow::zoomRealtime()
+void zoomRealtime(void)
 {
     debug_message("zoomRealtime()");
     debug_message("Implement zoomRealtime.");
 }
 
-void MainWindow::zoomPrevious()
+void zoomPrevious(void)
 {
     debug_message("zoomPrevious()");
     debug_message("Implement zoomPrevious.");
 }
 
-void MainWindow::zoomWindow()
+void zoomWindow(void)
 {
     debug_message("zoomWindow()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     if(gview) { gview->zoomWindow(); }
 }
 
-void MainWindow::zoomDynamic()
+void zoomDynamic(void)
 {
     debug_message("zoomDynamic()");
     debug_message("Implement zoomDynamic.");
 }
 
-void MainWindow::zoomScale()
+void zoomScale(void)
 {
     debug_message("zoomScale()");
     debug_message("Implement zoomScale.");
 }
 
-void MainWindow::zoomCenter()
+void zoomCenter(void)
 {
     debug_message("zoomCenter()");
     debug_message("Implement zoomCenter.");
 }
 
-void MainWindow::zoomIn()
+void zoomIn(void)
 {
     debug_message("zoomIn()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     if(gview) { gview->zoomIn(); }
 }
 
-void MainWindow::zoomOut()
+void zoomOut(void)
 {
     debug_message("zoomOut()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     if(gview) { gview->zoomOut(); }
 }
 
-void MainWindow::zoomSelected()
+void zoomSelected(void)
 {
     debug_message("zoomSelected()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     QUndoStack* stack = gview->getUndoStack();
     if(gview && stack)
     {
@@ -11351,42 +11311,41 @@ void MainWindow::zoomSelected()
     }
 }
 
-void MainWindow::zoomAll()
+void zoomAll(void)
 {
     debug_message("zoomAll()");
     debug_message("Implement zoomAll.");
 }
 
-void MainWindow::zoomExtents()
+void zoomExtents(void)
 {
     debug_message("zoomExtents()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     QUndoStack* stack = gview->getUndoStack();
-    if(gview && stack)
-    {
+    if (gview && stack) {
         UndoableNavCommand* cmd = new UndoableNavCommand("ZoomExtents", gview, 0);
         stack->push(cmd);
     }
 }
-// Pan SubMenu
-void MainWindow::panrealtime()
+
+void panrealtime(void)
 {
     debug_message("panrealtime()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     if(gview) { gview->panRealTime(); }
 }
 
-void MainWindow::panpoint()
+void panpoint(void)
 {
     debug_message("panpoint()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     if(gview) { gview->panPoint(); }
 }
 
-void MainWindow::panLeft()
+void panLeft(void)
 {
     debug_message("panLeft()");
-    View* gview = activeView();
+    View* gview =  _mainWin->activeView();
     QUndoStack* stack = gview->getUndoStack();
     if(gview && stack)
     {
@@ -11395,10 +11354,10 @@ void MainWindow::panLeft()
     }
 }
 
-void MainWindow::panRight()
+void panRight(void)
 {
     debug_message("panRight()");
-    View* gview = activeView();
+    View* gview = _mainWin->activeView();
     QUndoStack* stack = gview->getUndoStack();
     if(gview && stack)
     {
@@ -11407,10 +11366,10 @@ void MainWindow::panRight()
     }
 }
 
-void MainWindow::panUp()
+void panUp(void)
 {
     debug_message("panUp()");
-    View* gview = activeView();
+    View* gview = _mainWin->activeView();
     QUndoStack* stack = gview->getUndoStack();
     if(gview && stack)
     {
@@ -11419,10 +11378,10 @@ void MainWindow::panUp()
     }
 }
 
-void MainWindow::panDown()
+void panDown(void)
 {
     debug_message("panDown()");
-    View* gview = activeView();
+    View* gview = _mainWin->activeView();
     QUndoStack* stack = gview->getUndoStack();
     if(gview && stack)
     {
@@ -11441,9 +11400,9 @@ void dayVision(void)
     }
 }
 
-void MainWindow::nightVision()
+void nightVision(void)
 {
-    View* gview = activeView();
+    View* gview = _mainWin->activeView();
     if(gview)
     {
         gview->setBackgroundColor(qRgb(0,0,0));      //TODO: Make night vision color settings.
@@ -11452,7 +11411,7 @@ void MainWindow::nightVision()
     }
 }
 
-void MainWindow::doNothing()
+void doNothing(void)
 {
     //This function intentionally does nothing.
     debug_message("doNothing()");
@@ -11468,7 +11427,7 @@ void MainWindow::colorSelectorIndexChanged(int index)
     debug_message("colorSelectorIndexChanged(%d)", index);
 
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender());
-    QRgb newColor;
+    unsigned int newColor;
     if(comboBox)
     {
         bool ok = 0;
@@ -11498,7 +11457,7 @@ void MainWindow::textFontSelectorCurrentFontChanged(const QFont& font)
 {
     debug_message("textFontSelectorCurrentFontChanged()");
     textFontSelector->setCurrentFont(QFont(font.family()));
-    settings.text_font = font.family();
+    strcpy(settings.text_font, font.family().toLocal8Bit().constData());
 }
 
 void MainWindow::textSizeSelectorIndexChanged(int index)
@@ -11566,7 +11525,7 @@ QString MainWindow::getCurrentLayer()
     return "0";
 }
 
-QRgb MainWindow::getCurrentColor()
+unsigned int MainWindow::getCurrentColor()
 {
     MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow());
     if(mdiWin) { return mdiWin->getCurrentColor(); }
@@ -12120,12 +12079,12 @@ void MainWindow::recentMenuAboutToShow()
 
     QFileInfo recentFileInfo;
     QString recentValue;
-    for(int i = 0; i < settings.opensave_recent_list_of_files.size(); ++i)
+    for(int i = 0; i < opensave_recent_list_of_files.size(); ++i)
     {
         //If less than the max amount of entries add to menu
         if(i < settings.opensave_recent_max_files)
         {
-            recentFileInfo = QFileInfo(settings.opensave_recent_list_of_files.at(i));
+            recentFileInfo = QFileInfo(opensave_recent_list_of_files.at(i));
             if(recentFileInfo.exists() && validFileFormat(recentFileInfo.fileName()))
             {
                 recentValue.setNum(i+1);
@@ -12134,16 +12093,15 @@ void MainWindow::recentMenuAboutToShow()
                 else if(recentValue.toInt() == 10)                            rAction = new QAction("1&0 "                  + recentFileInfo.fileName(), this);
                 else                                                          rAction = new QAction(      recentValue + " " + recentFileInfo.fileName(), this);
                 rAction->setCheckable(false);
-                rAction->setData(settings.opensave_recent_list_of_files.at(i));
+                rAction->setData(opensave_recent_list_of_files.at(i));
                 recentMenu->addAction(rAction);
                 connect(rAction, SIGNAL(triggered()), this, SLOT(openrecentfile()));
             }
         }
     }
     //Ensure the list only has max amount of entries
-    while(settings.opensave_recent_list_of_files.size() > settings.opensave_recent_max_files)
-    {
-        settings.opensave_recent_list_of_files.removeLast();
+    while(opensave_recent_list_of_files.size() > settings.opensave_recent_max_files) {
+        opensave_recent_list_of_files.removeLast();
     }
 }
 
@@ -12284,15 +12242,15 @@ void MainWindow::openFilesSelected(const QStringList& filesToOpen)
                 mdiWin->show();
                 mdiWin->showMaximized();
                 //Prevent duplicate entries in the recent files list
-                if(!settings.opensave_recent_list_of_files.contains(filesToOpen.at(i), Qt::CaseInsensitive)) {
-                    settings.opensave_recent_list_of_files.prepend(filesToOpen.at(i));
+                if(!opensave_recent_list_of_files.contains(filesToOpen.at(i), Qt::CaseInsensitive)) {
+                    opensave_recent_list_of_files.prepend(filesToOpen.at(i));
                 }
                 //Move the recent file to the top of the list
                 else {
-                    settings.opensave_recent_list_of_files.removeAll(filesToOpen.at(i));
-                    settings.opensave_recent_list_of_files.prepend(filesToOpen.at(i));
+                    opensave_recent_list_of_files.removeAll(filesToOpen.at(i));
+                    opensave_recent_list_of_files.prepend(filesToOpen.at(i));
                 }
-                settings.opensave_recent_directory = QFileInfo(filesToOpen.at(i)).absolutePath();
+                strcpy(settings.opensave_recent_directory, QFileInfo(filesToOpen.at(i)).absolutePath().toLocal8Bit().constData());
 
                 View* v = mdiWin->getView();
                 if (v) {
@@ -13139,7 +13097,7 @@ void LayerManager::addLayer(const QString& name,
                             const bool visible,
                             const bool frozen,
                             const float zValue,
-                            const QRgb color,
+                            const unsigned int color,
                             const QString& lineType,
                             const QString& lineWeight,
                             const bool print)
@@ -13387,7 +13345,7 @@ MdiWindow::MdiWindow(const int theIndex, MainWindow* mw, QMdiArea* parent, Qt::W
     curFile = aName.asprintf("Untitled%d.dst", myIndex);
     this->setWindowTitle(curFile);
 
-    this->setWindowIcon(QIcon("icons/" + settings.general_icon_theme + "/app.png"));
+    this->setWindowIcon(QIcon("icons/app.png"));
 
     gscene = new QGraphicsScene(0,0,0,0, this);
     gview = new View(mainWin, gscene, this);
@@ -13433,7 +13391,7 @@ bool MdiWindow::loadFile(const QString &fileName)
 {
     debug_message("MdiWindow loadFile()");
 
-    QRgb tmpColor = getCurrentColor();
+    unsigned int tmpColor = getCurrentColor();
 
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly | QFile::Text))
@@ -13727,7 +13685,7 @@ void MdiWindow::currentLayerChanged(const QString& layer)
     curLayer = layer;
 }
 
-void MdiWindow::currentColorChanged(const QRgb& color)
+void MdiWindow::currentColorChanged(const unsigned int& color)
 {
     curColor = color;
 }
@@ -13761,27 +13719,27 @@ void MdiWindow::showViewScrollBars(bool val)
     gview->showScrollBars(val);
 }
 
-void MdiWindow::setViewCrossHairColor(QRgb color)
+void MdiWindow::setViewCrossHairColor(unsigned int color)
 {
     gview->setCrossHairColor(color);
 }
 
-void MdiWindow::setViewBackgroundColor(QRgb color)
+void MdiWindow::setViewBackgroundColor(unsigned int color)
 {
     gview->setBackgroundColor(color);
 }
 
-void MdiWindow::setViewSelectBoxColors(QRgb colorL, QRgb fillL, QRgb colorR, QRgb fillR, int alpha)
+void MdiWindow::setViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha)
 {
     gview->setSelectBoxColors(colorL, fillL, colorR, fillR, alpha);
 }
 
-void MdiWindow::setViewGridColor(QRgb color)
+void MdiWindow::setViewGridColor(unsigned int color)
 {
     gview->setGridColor(color);
 }
 
-void MdiWindow::setViewRulerColor(QRgb color)
+void MdiWindow::setViewRulerColor(unsigned int color)
 {
     gview->setRulerColor(color);
 }
@@ -13912,31 +13870,31 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
     }
     else if(objectName() == "StatusBarButtonRULER")
     {
-        QAction* settingsRulerAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/rulersettings.png"), "&Settings...", &menu);
+        QAction* settingsRulerAction = new QAction(QIcon("icons/rulersettings.png"), "&Settings...", &menu);
         connect(settingsRulerAction, SIGNAL(triggered()), this, SLOT(settingsRuler()));
         menu.addAction(settingsRulerAction);
     }
     else if(objectName() == "StatusBarButtonORTHO")
     {
-        QAction* settingsOrthoAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/orthosettings.png"), "&Settings...", &menu);
+        QAction* settingsOrthoAction = new QAction(QIcon("icons/orthosettings.png"), "&Settings...", &menu);
         connect(settingsOrthoAction, SIGNAL(triggered()), this, SLOT(settingsOrtho()));
         menu.addAction(settingsOrthoAction);
     }
     else if(objectName() == "StatusBarButtonPOLAR")
     {
-        QAction* settingsPolarAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/polarsettings.png"), "&Settings...", &menu);
+        QAction* settingsPolarAction = new QAction(QIcon("icons/polarsettings.png"), "&Settings...", &menu);
         connect(settingsPolarAction, SIGNAL(triggered()), this, SLOT(settingsPolar()));
         menu.addAction(settingsPolarAction);
     }
     else if(objectName() == "StatusBarButtonQSNAP")
     {
-        QAction* settingsQSnapAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/qsnapsettings.png"), "&Settings...", &menu);
+        QAction* settingsQSnapAction = new QAction(QIcon("icons/qsnapsettings.png"), "&Settings...", &menu);
         connect(settingsQSnapAction, SIGNAL(triggered()), this, SLOT(settingsQSnap()));
         menu.addAction(settingsQSnapAction);
     }
     else if(objectName() == "StatusBarButtonQTRACK")
     {
-        QAction* settingsQTrackAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/qtracksettings.png"), "&Settings...", &menu);
+        QAction* settingsQTrackAction = new QAction(QIcon("icons/qtracksettings.png"), "&Settings...", &menu);
         connect(settingsQTrackAction, SIGNAL(triggered()), this, SLOT(settingsQTrack()));
         menu.addAction(settingsQTrackAction);
     }
@@ -13945,12 +13903,12 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
         View* gview = mainWin->activeView();
         if(gview)
         {
-            QAction* enableRealAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/realrender.png"), "&RealRender On", &menu);
+            QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu);
             enableRealAction->setEnabled(!gview->isRealEnabled());
             connect(enableRealAction, SIGNAL(triggered()), this, SLOT(enableReal()));
             menu.addAction(enableRealAction);
 
-            QAction* disableRealAction = new QAction(QIcon("icons/" + settings.general_icon_theme + "/realrender.png"), "&RealRender Off", &menu);
+            QAction* disableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender Off", &menu);
             disableRealAction->setEnabled(gview->isRealEnabled());
             connect(disableRealAction, SIGNAL(triggered()), this, SLOT(disableReal()));
             menu.addAction(disableRealAction);
@@ -14246,8 +14204,7 @@ UndoableScaleCommand::UndoableScaleCommand(float x, float y, float scaleFactor, 
     setText(text);
 
     //Prevent division by zero and other wacky behavior
-    if(scaleFactor <= 0.0)
-    {
+    if (scaleFactor <= 0.0) {
         dx = 0.0;
         dy = 0.0;
         factor = 1.0;
@@ -14282,10 +14239,6 @@ void UndoableScaleCommand::redo()
     object->setScale(object->scale()*factor);
     object->moveBy(dx, dy);
 }
-
-//==================================================
-// Navigation
-//==================================================
 
 UndoableNavCommand::UndoableNavCommand(const QString& type, View* v, QUndoCommand* parent) : QUndoCommand(parent)
 {
@@ -14347,10 +14300,6 @@ void UndoableNavCommand::redo()
     }
 }
 
-//==================================================
-// Grip Edit
-//==================================================
-
 UndoableGripEditCommand::UndoableGripEditCommand(const QPointF beforePoint, const QPointF afterPoint, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
 {
     gview = v;
@@ -14369,10 +14318,6 @@ void UndoableGripEditCommand::redo()
 {
     object->gripEdit(before, after);
 }
-
-//==================================================
-// Mirror
-//==================================================
 
 UndoableMirrorCommand::UndoableMirrorCommand(float x1, float y1, float x2, float y2, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
 {
@@ -14394,7 +14339,7 @@ void UndoableMirrorCommand::redo()
 
 void UndoableMirrorCommand::mirror()
 {
-    //TODO: finish undoable mirror
+    /* TODO: finish undoable mirror */
 }
 
 UndoEditor::UndoEditor(const QString& iconDirectory, QWidget* widgetToFocus, QWidget* parent, Qt::WindowFlags flags) : QDockWidget(parent, flags)
