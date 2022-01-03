@@ -26,6 +26,16 @@ extern "C" {
 #define TOOLBAR_TEXT         8
 #define TOOLBAR_PROPERTIES   9
 
+#define MENU_FILE            0
+#define MENU_EDIT            1
+#define MENU_VIEW            2
+#define MENU_SETTINGS        3
+#define MENU_WINDOW          4
+#define MENU_HELP            5
+#define MENU_RECENT          6
+#define MENU_ZOOM            7
+#define MENU_PAN             8
+
 #define SYMBOL_zero          0
 #define SYMBOL_one           1
 #define SYMBOL_two           2
@@ -964,34 +974,63 @@ EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
 #ifdef __cplusplus
 }
 
-#include <QtGlobal>
-#include <QGroupBox>
-#include <QToolButton>
-#include <QUndoGroup>
-#include <QMetaObject>
-#include <QGraphicsView>
-#include <QDockWidget>
-#include <QStatusBar>
-#include <QToolBar>
+#include <QApplication>
+#include <QCheckBox>
+#include <QCloseEvent>
+#include <QColorDialog>
+#include <QComboBox>
+#include <QDateTime>
 #include <QDialog>
-#include <QTreeView>
+#include <QDialogButtonBox>
+#include <QDockWidget>
+#include <QFileDialog>
+#include <QFileOpenEvent>
+#include <QFontComboBox>
+#include <QFormLayout>
+#include <QGraphicsItem>
+#include <QGraphicsPathItem>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QLibraryInfo>
+#include <QLineEdit>
+#include <QMainWindow>
 #include <QMdiArea>
 #include <QMdiSubWindow>
-#include <QStandardItemModel>
-#include <QApplication>
-#include <QDialogButtonBox>
-#include <QWizard>
-#include <QCheckBox>
-#include <QLabel>
-#include <QComboBox>
-#include <QFontComboBox>
-#include <QGraphicsPathItem>
-#include <QSortFilterProxyModel>
-#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
+#include <QMetaObject>
+#include <QMouseEvent>
+#include <QPainter>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QRandomGenerator>
+#include <QScreen>
+#include <QScrollBar>
+#include <QSettings>
 #include <QSignalMapper>
-#include <QFileDialog>
+#include <QSortFilterProxyModel>
+#include <QSpinBox>
+#include <QStandardItemModel>
+#include <QStandardPaths>
+#include <QStatusBar>
+#include <QStyleOption>
+#include <QTextStream>
+#include <QtGlobal>
+#include <QToolBar>
+#include <QToolButton>
+#include <QTranslator>
+#include <QTreeView>
 #include <QUndoCommand>
+#include <QUndoGroup>
 #include <QUndoView>
+#include <QVBoxLayout>
+#include <QWhatsThis>
+#include <QWizard>
 
 class MainWindow;
 class BaseObject;
@@ -1002,7 +1041,6 @@ class View;
 class PropertyEditor;
 class UndoEditor;
 class ImageWidget;
-class StatusBarButton;
 
 extern settings_wrapper settings, preview, dialog, accept;
 extern QStringList opensave_recent_list_of_files;
@@ -1952,6 +1990,698 @@ private:
     int panStartY;
 
     void alignScenePointWithViewPoint(const QPointF& scenePoint, const QPoint& viewPoint);
+};
+
+class BaseObject : public QGraphicsPathItem
+{
+public:
+    BaseObject(QGraphicsItem* parent = 0);
+    virtual ~BaseObject();
+
+    enum { Type = OBJ_TYPE_BASE };
+    virtual int type() const { return Type; }
+
+    QPen objectPen()   const { return objPen; }
+    QColor   objectColor() const { return objPen.color(); }
+    unsigned int objectColorRGB()  const { return objPen.color().rgb(); }
+    Qt::PenStyle objectLineType()  const { return objPen.style(); }
+    float    objectLineWeight()    const { return lwtPen.widthF(); }
+    QPainterPath objectPath()  const { return path(); }
+    int  objectRubberMode()    const { return objRubberMode; }
+    QPointF  objectRubberPoint(const QString& key) const;
+    QString  objectRubberText(const QString& key) const;
+
+    QRectF rect() const { return path().boundingRect(); }
+    void setRect(const QRectF& r) { QPainterPath p; p.addRect(r); setPath(p); }
+    void setRect(float x, float y, float w, float h) { QPainterPath p; p.addRect(x,y,w,h); setPath(p); }
+    QLineF line() const { return objLine; }
+    void setLine(const QLineF& li) { QPainterPath p; p.moveTo(li.p1()); p.lineTo(li.p2()); setPath(p); objLine = li; }
+    void setLine(float x1, float y1, float x2, float y2) { QPainterPath p; p.moveTo(x1,y1); p.lineTo(x2,y2); setPath(p); objLine.setLine(x1,y1,x2,y2); }
+
+    void setObjectColor(const QColor& color);
+    void setObjectColorRGB(unsigned int rgb);
+    void setObjectLineType(Qt::PenStyle lineType);
+    void setObjectLineWeight(float lineWeight);
+    void setObjectPath(const QPainterPath& p) { setPath(p); }
+    void setObjectRubberMode(int mode) { objRubberMode = mode; }
+    void setObjectRubberPoint(const QString& key, const QPointF& point) { objRubberPoints.insert(key, point); }
+    void setObjectRubberText(const QString& key, const QString& txt) { objRubberTexts.insert(key, txt); }
+
+    virtual QRectF boundingRect() const;
+    virtual QPainterPath shape() const { return path(); }
+
+    void drawRubberLine(const QLineF& rubLine, QPainter* painter = 0, const char* colorFromScene = 0);
+
+    virtual void vulcanize() = 0;
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint) = 0;
+    virtual QList<QPointF> allGripPoints() = 0;
+    virtual void gripEdit(const QPointF& before, const QPointF& after) = 0;
+    
+    QPen objPen;
+    QPen lwtPen;
+    QLineF objLine;
+    int objRubberMode;
+    QHash<QString, QPointF> objRubberPoints;
+    QHash<QString, QString> objRubberTexts;
+    int objID;
+protected:
+    QPen lineWeightPen() const { return lwtPen; }
+    void realRender(QPainter* painter, const QPainterPath& renderPath);
+};
+
+class ArcObject : public BaseObject
+{
+public:
+    ArcObject(float startX, float startY, float midX, float midY, float endX, float endY, unsigned int rgb, QGraphicsItem* parent = 0);
+    ArcObject(ArcObject* obj, QGraphicsItem* parent = 0);
+    ~ArcObject();
+
+    enum { Type = OBJ_TYPE_ARC };
+    virtual int type() const { return Type; }
+
+    QPointF objectCenter()    const { return scenePos(); }
+    float   objectRadius()    const { return rect().width()/2.0*scale(); }
+    float   objectStartAngle()    const;
+    float   objectEndAngle()  const;
+    QPointF objectStartPoint()    const;
+    QPointF objectMidPoint()  const;
+    QPointF objectEndPoint()  const;
+    float   objectArea()  const;
+    float   objectArcLength() const;
+    float   objectChord() const;
+    float   objectIncludedAngle() const;
+    bool    objectClockwise() const;
+
+    void setObjectRadius(float radius);
+    void setObjectStartAngle(float angle);
+    void setObjectEndAngle(float angle);
+    void setObjectStartPoint(float pointX, float pointY);
+    void setObjectMidPoint(const QPointF& point);
+    void setObjectMidPoint(float pointX, float pointY);
+    void setObjectEndPoint(const QPointF& point);
+    void setObjectEndPoint(float pointX, float pointY);
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float startX, float startY, float midX, float midY, float endX, float endY, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath();
+
+    void calculateArcData(float startX, float startY, float midX, float midY, float endX, float endY);
+    void updateArcRect(float radius);
+
+    QPointF arcStartPoint;
+    QPointF arcMidPoint;
+    QPointF arcEndPoint;
+};
+
+class CircleObject : public BaseObject
+{
+public:
+    CircleObject(float centerX, float centerY, float radius, unsigned int rgb, QGraphicsItem* parent = 0);
+    CircleObject(CircleObject* obj, QGraphicsItem* parent = 0);
+    ~CircleObject();
+
+    enum { Type = OBJ_TYPE_CIRCLE };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectSavePath() const;
+
+    QPointF objectCenter()    const { return scenePos(); }
+    float   objectRadius()    const { return rect().width()/2.0*scale(); }
+    float   objectDiameter()  const { return rect().width()*scale(); }
+    float   objectArea()  const { return embConstantPi*objectRadius()*objectRadius(); }
+    float   objectCircumference() const { return embConstantPi*objectDiameter(); }
+    QPointF objectQuadrant0() const { return objectCenter() + QPointF(objectRadius(), 0); }
+    QPointF objectQuadrant90()    const { return objectCenter() + QPointF(0,-objectRadius()); }
+    QPointF objectQuadrant180()   const { return objectCenter() + QPointF(-objectRadius(),0); }
+    QPointF objectQuadrant270()   const { return objectCenter() + QPointF(0, objectRadius()); }
+
+    void setObjectRadius(float radius);
+    void setObjectDiameter(float diameter);
+    void setObjectArea(float area);
+    void setObjectCircumference(float circumference);
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float centerX, float centerY, float radius, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath();
+};
+
+class DimLeaderObject : public BaseObject
+{
+public:
+    DimLeaderObject(float x1, float y1, float x2, float y2, unsigned int rgb, QGraphicsItem* parent = 0);
+    DimLeaderObject(DimLeaderObject* obj, QGraphicsItem* parent = 0);
+    ~DimLeaderObject();
+
+    enum ArrowStyle
+    {
+    NoArrow, /* NOTE: Allow this enum to evaluate false. */
+    Open,
+    Closed,
+    Dot,
+    Box,
+    Tick
+    };
+
+    enum lineStyle
+    {
+    NoLine, /* NOTE: Allow this enum to evaluate false. */
+    Flared,
+    Fletching
+    };
+
+    enum { Type = OBJ_TYPE_DIMLEADER };
+    virtual int type() const { return Type; }
+
+    QPointF objectEndPoint1() const;
+    QPointF objectEndPoint2() const;
+    QPointF objectMidPoint()  const;
+    float   objectX1()    const { return objectEndPoint1().x(); }
+    float   objectY1()    const { return objectEndPoint1().y(); }
+    float   objectX2()    const { return objectEndPoint2().x(); }
+    float   objectY2()    const { return objectEndPoint2().y(); }
+    float   objectDeltaX()    const { return (objectEndPoint2().x() - objectEndPoint1().x()); }
+    float   objectDeltaY()    const { return (objectEndPoint2().y() - objectEndPoint1().y()); }
+    float   objectAngle() const;
+    float   objectLength()    const { return line().length(); }
+
+    void setObjectEndPoint1(EmbVector v);
+    void setObjectEndPoint2(EmbVector v);
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x1, float y1, float x2, float y2, unsigned int rgb, Qt::PenStyle lineType);
+
+    int curved;
+    int filled;
+    void updateLeader();
+    QPainterPath lineStylePath;
+    QPainterPath arrowStylePath;
+    float arrowStyleAngle;
+    float arrowStyleLength;
+    float lineStyleAngle;
+    float lineStyleLength;
+};
+
+class EllipseObject : public BaseObject
+{
+public:
+    EllipseObject(float centerX, float centerY, float width, float height, unsigned int rgb, QGraphicsItem* parent = 0);
+    EllipseObject(EllipseObject* obj, QGraphicsItem* parent = 0);
+    ~EllipseObject();
+
+    enum { Type = OBJ_TYPE_ELLIPSE };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectSavePath() const;
+
+    QPointF objectCenter() const { return scenePos(); }
+    float   objectRadiusMajor()   const { return qMax(rect().width(), rect().height())/2.0*scale(); }
+    float   objectRadiusMinor()   const { return qMin(rect().width(), rect().height())/2.0*scale(); }
+    float   objectDiameterMajor() const { return qMax(rect().width(), rect().height())*scale(); }
+    float   objectDiameterMinor() const { return qMin(rect().width(), rect().height())*scale(); }
+    float   objectWidth() const { return rect().width()*scale(); }
+    float   objectHeight()    const { return rect().height()*scale(); }
+    QPointF objectQuadrant0() const;
+    QPointF objectQuadrant90()    const;
+    QPointF objectQuadrant180()   const;
+    QPointF objectQuadrant270()   const;
+
+    void setObjectSize(float width, float height);
+    void setObjectRadiusMajor(float radius);
+    void setObjectRadiusMinor(float radius);
+    void setObjectDiameterMajor(float diameter);
+    void setObjectDiameterMinor(float diameter);
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float centerX, float centerY, float width, float height, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath();
+};
+
+class ImageObject : public BaseObject
+{
+public:
+    ImageObject(float x, float y, float w, float h, unsigned int rgb, QGraphicsItem* parent = 0);
+    ImageObject(ImageObject* obj, QGraphicsItem* parent = 0);
+    ~ImageObject();
+
+    enum { Type = OBJ_TYPE_IMAGE };
+    virtual int type() const { return Type; }
+
+    QPointF objectTopLeft() const;
+    QPointF objectTopRight()    const;
+    QPointF objectBottomLeft()  const;
+    QPointF objectBottomRight() const;
+    float   objectWidth()   const { return rect().width()*scale(); }
+    float   objectHeight()  const { return rect().height()*scale(); }
+    float   objectArea()    const { return qAbs(objectWidth()*objectHeight()); }
+
+    void setObjectRect(float x, float y, float w, float h);
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x, float y, float w, float h, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath();
+};
+
+
+class LineObject : public BaseObject
+{
+public:
+    LineObject(float x1, float y1, float x2, float y2, unsigned int rgb, QGraphicsItem* parent = 0);
+    LineObject(LineObject* obj, QGraphicsItem* parent = 0);
+    ~LineObject();
+
+    enum { Type = OBJ_TYPE_LINE };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectSavePath() const;
+
+    QPointF objectEndPoint1() const { return scenePos(); }
+    QPointF objectEndPoint2() const;
+    QPointF objectMidPoint()  const;
+    float   objectX1()    const { return objectEndPoint1().x(); }
+    float   objectY1()    const { return objectEndPoint1().y(); }
+    float   objectX2()    const { return objectEndPoint2().x(); }
+    float   objectY2()    const { return objectEndPoint2().y(); }
+    float   objectDeltaX()    const { return (objectEndPoint2().x() - objectEndPoint1().x()); }
+    float   objectDeltaY()    const { return (objectEndPoint2().y() - objectEndPoint1().y()); }
+    float   objectAngle() const;
+    float   objectLength()    const { return line().length()*scale(); }
+
+    void setObjectEndPoint1(const QPointF& endPt1);
+    void setObjectEndPoint1(float x1, float y1);
+    void setObjectEndPoint2(const QPointF& endPt2);
+    void setObjectEndPoint2(float x2, float y2);
+    void setObjectX1(float x) { setObjectEndPoint1(x, objectEndPoint1().y()); }
+    void setObjectY1(float y) { setObjectEndPoint1(objectEndPoint1().x(), y); }
+    void setObjectX2(float x) { setObjectEndPoint2(x, objectEndPoint2().y()); }
+    void setObjectY2(float y) { setObjectEndPoint2(objectEndPoint2().x(), y); }
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x1, float y1, float x2, float y2, unsigned int rgb, Qt::PenStyle lineType);
+};
+
+class PathObject : public BaseObject
+{
+public:
+    PathObject(float x, float y, const QPainterPath p, unsigned int rgb, QGraphicsItem* parent = 0);
+    PathObject(PathObject* obj, QGraphicsItem* parent = 0);
+    ~PathObject();
+
+    enum { Type = OBJ_TYPE_PATH };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectCopyPath() const;
+    QPainterPath objectSavePath() const;
+
+    QPointF objectPos() const { return scenePos(); }
+    float   objectX()   const { return scenePos().x(); }
+    float   objectY()   const { return scenePos().y(); }
+
+    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    void setObjectPos(float x, float y) { setPos(x, y); }
+    void setObjectX(float x) { setObjectPos(x, objectY()); }
+    void setObjectY(float y) { setObjectPos(objectX(), y); }
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath(const QPainterPath& p);
+    QPainterPath normalPath;
+    //TODO: make paths similar to polylines. Review and implement any missing functions/members.
+};
+
+class PointObject : public BaseObject
+{
+public:
+    PointObject(float x, float y, unsigned int rgb, QGraphicsItem* parent = 0);
+    PointObject(PointObject* obj, QGraphicsItem* parent = 0);
+    ~PointObject();
+
+    enum { Type = OBJ_TYPE_POINT };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectSavePath() const;
+
+    QPointF objectPos() const { return scenePos(); }
+    float   objectX()   const { return scenePos().x(); }
+    float   objectY()   const { return scenePos().y(); }
+
+    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    void setObjectPos(float x, float y) { setPos(x, y); }
+    void setObjectX(float x) { setObjectPos(x, objectY()); }
+    void setObjectY(float y) { setObjectPos(objectX(), y); }
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x, float y, unsigned int rgb, Qt::PenStyle lineType);
+};
+
+
+class PolygonObject : public BaseObject
+{
+public:
+    PolygonObject(float x, float y, const QPainterPath& p, unsigned int rgb, QGraphicsItem* parent = 0);
+    PolygonObject(PolygonObject* obj, QGraphicsItem* parent = 0);
+    ~PolygonObject();
+
+    enum { Type = OBJ_TYPE_POLYGON };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectCopyPath() const;
+    QPainterPath objectSavePath() const;
+
+    QPointF objectPos() const { return scenePos(); }
+    float   objectX()   const { return scenePos().x(); }
+    float   objectY()   const { return scenePos().y(); }
+
+    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    void setObjectPos(float x, float y) { setPos(x, y); }
+    void setObjectX(float x) { setObjectPos(x, objectY()); }
+    void setObjectY(float y) { setObjectPos(objectX(), y); }
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath(const QPainterPath& p);
+    QPainterPath normalPath;
+    int findIndex(const QPointF& point);
+    int gripIndex;
+};
+
+
+class PolylineObject : public BaseObject
+{
+public:
+    PolylineObject(float x, float y, const QPainterPath& p, unsigned int rgb, QGraphicsItem* parent = 0);
+    PolylineObject(PolylineObject* obj, QGraphicsItem* parent = 0);
+    ~PolylineObject();
+
+    enum { Type = OBJ_TYPE_POLYLINE };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectCopyPath() const;
+    QPainterPath objectSavePath() const;
+
+    QPointF objectPos() const { return scenePos(); }
+    float   objectX()   const { return scenePos().x(); }
+    float   objectY()   const { return scenePos().y(); }
+
+    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    void setObjectPos(float x, float y) { setPos(x, y); }
+    void setObjectX(float x) { setObjectPos(x, objectY()); }
+    void setObjectY(float y) { setObjectPos(objectX(), y); }
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath(const QPainterPath& p);
+    QPainterPath normalPath;
+    int findIndex(const QPointF& point);
+    int gripIndex;
+};
+
+
+class RectObject : public BaseObject
+{
+public:
+    RectObject(float x, float y, float w, float h, unsigned int rgb, QGraphicsItem* parent = 0);
+    RectObject(RectObject* obj, QGraphicsItem* parent = 0);
+    ~RectObject();
+
+    enum { Type = OBJ_TYPE_RECTANGLE };
+    virtual int type() const { return Type; }
+
+    QPainterPath objectSavePath() const;
+
+    QPointF objectPos() const { return scenePos(); }
+
+    QPointF objectTopLeft() const;
+    QPointF objectTopRight()    const;
+    QPointF objectBottomLeft()  const;
+    QPointF objectBottomRight() const;
+    float   objectWidth()   const { return rect().width()*scale(); }
+    float   objectHeight()  const { return rect().height()*scale(); }
+    float   objectArea()    const { return qAbs(objectWidth()*objectHeight()); }
+
+    void setObjectRect(float x, float y, float w, float h);
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(float x, float y, float w, float h, unsigned int rgb, Qt::PenStyle lineType);
+    void updatePath();
+};
+
+
+class TextSingleObject : public BaseObject
+{
+public:
+    TextSingleObject(const QString& str, float x, float y, unsigned int rgb, QGraphicsItem* parent = 0);
+    TextSingleObject(TextSingleObject* obj, QGraphicsItem* parent = 0);
+    ~TextSingleObject();
+
+    enum { Type = OBJ_TYPE_TEXTSINGLE };
+    virtual int type() const { return Type; }
+
+    QList<QPainterPath> objectSavePathList() const { return subPathList(); }
+    QList<QPainterPath> subPathList() const;
+
+    QPointF objectPos()    const { return scenePos(); }
+    float   objectX()  const { return scenePos().x(); }
+    float   objectY()  const { return scenePos().y(); }
+
+    QStringList objectTextJustifyList() const;
+
+    void setObjectText(const QString& str);
+    void setObjectTextFont(const QString& font);
+    void setObjectTextJustify(const QString& justify);
+    void setObjectTextSize(float size);
+    void setObjectTextStyle(bool bold, bool italic, bool under, bool strike, bool over);
+    void setObjectTextBold(bool val);
+    void setObjectTextItalic(bool val);
+    void setObjectTextUnderline(bool val);
+    void setObjectTextStrikeOut(bool val);
+    void setObjectTextOverline(bool val);
+    void setObjectTextBackward(bool val);
+    void setObjectTextUpsideDown(bool val);
+    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    void setObjectPos(float x, float y) { setPos(x, y); }
+    void setObjectX(float x) { setObjectPos(x, objectY()); }
+    void setObjectY(float y) { setObjectPos(objectX(), y); }
+
+    void updateRubber(QPainter* painter = 0);
+    virtual void vulcanize();
+    virtual QPointF mouseSnapPoint(const QPointF& mousePoint);
+    virtual QList<QPointF> allGripPoints();
+    virtual void gripEdit(const QPointF& before, const QPointF& after);
+
+    QString objText;
+    QString objTextFont;
+    QString objTextJustify;
+    float   objTextSize;
+    int objTextBold;
+    int    objTextItalic;
+    int    objTextUnderline;
+    int    objTextStrikeOut;
+    int    objTextOverline;
+    int    objTextBackward;
+    int    objTextUpsideDown;
+    QPainterPath objTextPath;
+protected:
+    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
+private:
+    void init(const QString& str, float x, float y, unsigned int rgb, Qt::PenStyle lineType);
+};
+
+
+class UndoableAddCommand : public QUndoCommand
+{
+public:
+    UndoableAddCommand(const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    BaseObject* object;
+    View*   gview;
+};
+
+class UndoableDeleteCommand : public QUndoCommand
+{
+public:
+    UndoableDeleteCommand(const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    BaseObject* object;
+    View*   gview;
+};
+
+class UndoableMoveCommand : public QUndoCommand
+{
+public:
+    UndoableMoveCommand(float deltaX, float deltaY, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    BaseObject* object;
+    View*   gview;
+    float    dx;
+    float    dy;
+};
+
+class UndoableRotateCommand : public QUndoCommand
+{
+public:
+    UndoableRotateCommand(float pivotPointX, float pivotPointY, float rotAngle, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    void rotate(float x, float y, float rot);
+
+    BaseObject* object;
+    View* gview;
+    float pivotX;
+    float pivotY;
+    float angle;
+};
+
+class UndoableScaleCommand : public QUndoCommand
+{
+public:
+    UndoableScaleCommand(float x, float y, float scaleFactor, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    BaseObject* object;
+    View* gview;
+    float dx;
+    float dy;
+    float factor;
+};
+
+class UndoableNavCommand : public QUndoCommand
+{
+public:
+    UndoableNavCommand(const QString& type, View* v, QUndoCommand* parent = 0);
+
+    int id() const { return 1234; }
+    bool mergeWith(const QUndoCommand* command);
+    void undo();
+    void redo();
+
+    QString navType;
+    QTransform fromTransform;
+    QTransform toTransform;
+    QPointF fromCenter;
+    QPointF toCenter;
+    int done;
+    View* gview;
+};
+
+class UndoableGripEditCommand : public QUndoCommand
+{
+public:
+    UndoableGripEditCommand(const QPointF beforePoint, const QPointF afterPoint, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    BaseObject* object;
+    View* gview;
+    QPointF before;
+    QPointF after;
+};
+
+
+class UndoableMirrorCommand : public QUndoCommand
+{
+public:
+    UndoableMirrorCommand(float x1, float y1, float x2, float y2, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
+
+    void undo();
+    void redo();
+
+    void mirror();
+
+    BaseObject* object;
+    View* gview;
+    QLineF mirrorLine;
+
 };
 
 #endif
