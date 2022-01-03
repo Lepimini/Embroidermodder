@@ -12,16 +12,23 @@
 
 #include <stdlib.h>
 
-extern settings_wrapper settings;
+action_call undo_history[1000];
+action_call action;
+int undo_history_length = 0;
+int undo_history_position = 0;
 
-void settings_actuator(int action)
+void settings_actuator(void)
 {
     
 }
 
-void actuator(int action)
+void actuator(void)
 {
-    switch (action) {
+    undo_history_position++;
+    /* an action has been taken, we are at the current head of the stack */
+    undo_history_length = undo_history_position;
+    memcpy(undo_history+undo_history_position, &action, sizeof(action_call));
+    switch (action.id) {
     case ACTION_donothing:
         doNothing();
         break;
@@ -74,10 +81,10 @@ void actuator(int action)
         _mainWin->settingsDialog();
         break;
     case ACTION_undo:
-        _mainWin->undo();
+        main_undo();
         break;
     case ACTION_redo:
-        _mainWin->redo();
+        main_redo();
         break;
     case ACTION_makelayercurrent:
         makeLayerActive();

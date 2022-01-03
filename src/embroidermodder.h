@@ -352,17 +352,17 @@ typedef struct Action_hash_data {
     char abbreviation[20];
     char menu_name[30];
     char description[100];
+    char shortcut[20];
+    void (*function)(void);
 } action_hash_data;
-/*
-    char menu_name[15];
-    int menu_position;
-    char toolbar_name[15];
-    int toolbar_position;
-    char tooltip[15];
-    char statustip[100];
-    char alias[40];
-    int function;
-*/
+
+typedef struct Action_call_ {
+    int id;
+    float float_args[10];
+    int int_args[10];
+    char str_args[4][MAX_STRING_LENGTH];
+    int args_set;
+} action_call;
 
 typedef struct circle_args_ {
     float x1;
@@ -543,6 +543,10 @@ extern int n_toolbars, n_actions, n_menus;
 extern int *toolbars[];
 extern int *menus[];
 extern char *toolbar_label[];
+extern action_call undo_history[1000];
+extern action_call action;
+extern int undo_history_length;
+extern int undo_history_position;
 extern action_hash_data action_list[];
 extern const char *actions_strings[];
 extern char *menu_label[];
@@ -960,6 +964,9 @@ void panDown();
 void dayVision(void);
 void nightVision(void);
 
+void main_undo(void);
+void main_redo(void);
+
 void doNothing(void);
 
 EmbVector unit_vector(float angle);
@@ -1025,9 +1032,6 @@ EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
 #include <QToolButton>
 #include <QTranslator>
 #include <QTreeView>
-#include <QUndoCommand>
-#include <QUndoGroup>
-#include <QUndoView>
 #include <QVBoxLayout>
 #include <QWhatsThis>
 #include <QWizard>
@@ -1039,7 +1043,6 @@ class StatusBar;
 class StatusBarButton;
 class View;
 class PropertyEditor;
-class UndoEditor;
 class ImageWidget;
 
 extern settings_wrapper settings, preview, dialog, accept;
@@ -1047,8 +1050,8 @@ extern QStringList opensave_recent_list_of_files;
 extern MainWindow* _mainWin;
 extern QString opensave_custom_filter;
 
-void actuator(int action);
-void settings_actuator(int action);
+void actuator(void);
+void settings_actuator(void);
 
 /* Class based code */
 class LayerManager : public QDialog
@@ -1127,12 +1130,12 @@ public:
 signals:
     void   sendCloseMdiWin(MdiWindow*);
 
+
 private:
     MainWindow*    mainWin;
-    QMdiArea*  mdiArea;
     QGraphicsScene*    gscene;
+    QMdiArea*  mdiArea;
     View*  gview;
-
     int fileWasLoaded;
 
     /* QPrinter   printer; */
@@ -1248,16 +1251,12 @@ public:
     MdiWindow*  activeMdiWindow();
     View*   activeView();
     QGraphicsScene* activeScene();
-    QUndoStack* activeUndoStack();
-
-    void    setUndoCleanIcon(bool opened);
 
     virtual void    updateMenuToolbarStatusbar();
 
     MainWindow* mainWin;
     MdiArea*    mdiArea;
     PropertyEditor* dockPropEdit;
-    UndoEditor* dockUndoEdit;
     StatusBar*  statusbar;
 
     QList<QGraphicsItem*> cutCopyObjectList;
@@ -1393,9 +1392,6 @@ public:
     QString getCurrentLineWeight();
 
     // Standard Slots
-    void undo();
-    void redo();
-
     bool isShiftPressed();
     void setShiftPressed();
     void setShiftReleased();
@@ -1444,52 +1440,7 @@ private:
     ImageWidget* imgWidget;
 };
 
-
-class SaveObject : public QObject
-{
-    Q_OBJECT
-
-public:
-    SaveObject(QGraphicsScene* theScene, QObject* parent = 0);
-    ~SaveObject();
-
-    bool save(const QString &fileName);
-
-    void addArc  (EmbPattern* pattern, QGraphicsItem* item);
-    void addBlock    (EmbPattern* pattern, QGraphicsItem* item);
-    void addCircle   (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimAligned   (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimAngular   (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimArcLength (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimDiameter  (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimLeader    (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimLinear    (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimOrdinate  (EmbPattern* pattern, QGraphicsItem* item);
-    void addDimRadius    (EmbPattern* pattern, QGraphicsItem* item);
-    void addEllipse  (EmbPattern* pattern, QGraphicsItem* item);
-    void addEllipseArc   (EmbPattern* pattern, QGraphicsItem* item);
-    void addGrid (EmbPattern* pattern, QGraphicsItem* item);
-    void addHatch    (EmbPattern* pattern, QGraphicsItem* item);
-    void addImage    (EmbPattern* pattern, QGraphicsItem* item);
-    void addInfiniteLine (EmbPattern* pattern, QGraphicsItem* item);
-    void addLine (EmbPattern* pattern, QGraphicsItem* item);
-    void addPath (EmbPattern* pattern, QGraphicsItem* item);
-    void addPoint    (EmbPattern* pattern, QGraphicsItem* item);
-    void addPolygon  (EmbPattern* pattern, QGraphicsItem* item);
-    void addPolyline (EmbPattern* pattern, QGraphicsItem* item);
-    void addRay  (EmbPattern* pattern, QGraphicsItem* item);
-    void addRectangle    (EmbPattern* pattern, QGraphicsItem* item);
-    void addSlot (EmbPattern* pattern, QGraphicsItem* item);
-    void addSpline   (EmbPattern* pattern, QGraphicsItem* item);
-    void addTextMulti    (EmbPattern* pattern, QGraphicsItem* item);
-    void addTextSingle   (EmbPattern* pattern, QGraphicsItem* item);
-
-private:
-    QGraphicsScene* gscene;
-    int formatType;
-
-    void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight);
-};
+void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight);
 
 class PropertyEditor : public QDockWidget
 {
@@ -1801,38 +1752,6 @@ public:
 
 };
 
-class UndoEditor : public QDockWidget
-{
-    Q_OBJECT
-
-public:
-    UndoEditor(const QString& iconDirectory = QString(), QWidget* widgetToFocus = 0, QWidget* parent = 0, Qt::WindowFlags flags = Qt::Widget);
-    ~UndoEditor();
-
-    void addStack(QUndoStack* stack);
-
-    bool canUndo() const;
-    bool canRedo() const;
-
-    QString undoText() const;
-    QString redoText() const;
-
-    QWidget*    focusWidget;
-
-    QString iconDir;
-    int iconSize;
-
-    QUndoGroup* undoGroup;
-    QUndoView*  undoView;
-
-public slots:
-    void undo();
-    void redo();
-
-    void updateCleanIcon(bool opened);
-
-};
-
 class View : public QGraphicsView
 {
     Q_OBJECT
@@ -1849,7 +1768,6 @@ public:
     void centerAt(const QPointF& centerPoint);
     QPointF center() { return mapToScene(rect().center()); }
 
-    QUndoStack* getUndoStack() { return undoStack; }
     void addObject(BaseObject* obj);
     void deleteObject(BaseObject* obj);
     void vulcanizeObject(BaseObject* obj);
@@ -1978,7 +1896,6 @@ private:
 
     MainWindow* mainWin;
     QGraphicsScene* gscene;
-    QUndoStack* undoStack;
 
     SelectBox* selectBox;
 
@@ -2548,9 +2465,9 @@ public:
     QString objText;
     QString objTextFont;
     QString objTextJustify;
-    float   objTextSize;
+    float objTextSize;
     int objTextBold;
-    int    objTextItalic;
+    int objTextItalic;
     int    objTextUnderline;
     int    objTextStrikeOut;
     int    objTextOverline;
@@ -2561,127 +2478,6 @@ protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
 private:
     void init(const QString& str, float x, float y, unsigned int rgb, Qt::PenStyle lineType);
-};
-
-
-class UndoableAddCommand : public QUndoCommand
-{
-public:
-    UndoableAddCommand(const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    BaseObject* object;
-    View*   gview;
-};
-
-class UndoableDeleteCommand : public QUndoCommand
-{
-public:
-    UndoableDeleteCommand(const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    BaseObject* object;
-    View*   gview;
-};
-
-class UndoableMoveCommand : public QUndoCommand
-{
-public:
-    UndoableMoveCommand(float deltaX, float deltaY, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    BaseObject* object;
-    View*   gview;
-    float    dx;
-    float    dy;
-};
-
-class UndoableRotateCommand : public QUndoCommand
-{
-public:
-    UndoableRotateCommand(float pivotPointX, float pivotPointY, float rotAngle, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    void rotate(float x, float y, float rot);
-
-    BaseObject* object;
-    View* gview;
-    float pivotX;
-    float pivotY;
-    float angle;
-};
-
-class UndoableScaleCommand : public QUndoCommand
-{
-public:
-    UndoableScaleCommand(float x, float y, float scaleFactor, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    BaseObject* object;
-    View* gview;
-    float dx;
-    float dy;
-    float factor;
-};
-
-class UndoableNavCommand : public QUndoCommand
-{
-public:
-    UndoableNavCommand(const QString& type, View* v, QUndoCommand* parent = 0);
-
-    int id() const { return 1234; }
-    bool mergeWith(const QUndoCommand* command);
-    void undo();
-    void redo();
-
-    QString navType;
-    QTransform fromTransform;
-    QTransform toTransform;
-    QPointF fromCenter;
-    QPointF toCenter;
-    int done;
-    View* gview;
-};
-
-class UndoableGripEditCommand : public QUndoCommand
-{
-public:
-    UndoableGripEditCommand(const QPointF beforePoint, const QPointF afterPoint, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    BaseObject* object;
-    View* gview;
-    QPointF before;
-    QPointF after;
-};
-
-
-class UndoableMirrorCommand : public QUndoCommand
-{
-public:
-    UndoableMirrorCommand(float x1, float y1, float x2, float y2, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent = 0);
-
-    void undo();
-    void redo();
-
-    void mirror();
-
-    BaseObject* object;
-    View* gview;
-    QLineF mirrorLine;
-
 };
 
 #endif

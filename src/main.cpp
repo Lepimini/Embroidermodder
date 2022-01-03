@@ -562,9 +562,6 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
     showScrollBars(settings.display_show_scrollbars);
     setCornerButton();
 
-    undoStack = new QUndoStack(this);
-    /*mainWin->dockUndoEdit->addStack(undoStack);  causing segfaults after removing prompt*/
-
     installEventFilter(this);
 
     setMouseTracking(true);
@@ -700,9 +697,6 @@ void View::vulcanizeObject(BaseObject* obj)
      * item has already been added to this scene.
      */
     obj->vulcanize();
-
-    UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, this, 0);
-    if(cmd) undoStack->push(cmd);
 }
 
 void View::clearRubberRoom()
@@ -1855,15 +1849,11 @@ void View::mousePressEvent(QMouseEvent* event)
                 gscene->removeItem(item); //Prevent Qt Runtime Warning, QGraphicsScene::addItem: item has already been added to this scene
             }
 
-            undoStack->beginMacro("Paste");
             foreach(QGraphicsItem* item, itemList) {
                 BaseObject* base = static_cast<BaseObject*>(item);
                 if (base) {
-                    UndoableAddCommand* cmd = new UndoableAddCommand(base->data(OBJ_NAME).toString(), base, this, 0);
-                    if(cmd) undoStack->push(cmd);
                 }
             }
-            undoStack->endMacro();
 
             settings.pastingActive = 0;
             settings.selectingActive = 0;
@@ -1876,8 +1866,6 @@ void View::mousePressEvent(QMouseEvent* event)
     if (event->button() == Qt::MiddleButton) {
         panStart(event->pos());
         //The Undo command will record the spot where the pan started.
-        UndoableNavCommand* cmd = new UndoableNavCommand("PanStart", this, 0);
-        undoStack->push(cmd);
         event->accept();
     }
     gscene->update();
@@ -2035,19 +2023,16 @@ void View::mouseReleaseEvent(QMouseEvent* event)
     if (event->button() == Qt::MiddleButton) {
         settings.panningActive = 0;
         //The Undo command will record the spot where the pan completed.
-        UndoableNavCommand* cmd = new UndoableNavCommand("PanStop", this, 0);
-        undoStack->push(cmd);
         event->accept();
     }
     if (event->button() == Qt::XButton1) {
         debug_message("XButton1");
-        mainWin->undo(); //TODO: Make this customizable
+        main_undo(); /* TODO: Make this customizable */
         event->accept();
     }
-    if(event->button() == Qt::XButton2)
-    {
+    if (event->button() == Qt::XButton2) {
         debug_message("XButton2");
-        mainWin->redo(); //TODO: Make this customizable
+        main_redo(); /* TODO: Make this customizable */
         event->accept();
     }
     gscene->update();
@@ -2093,12 +2078,8 @@ void View::wheelEvent(QWheelEvent* event)
 
     updateMouseCoords(mousePoint.x(), mousePoint.y());
     if (zoomDir > 0) {
-        UndoableNavCommand* cmd = new UndoableNavCommand("ZoomInToPoint", this, 0);
-        undoStack->push(cmd);
     }
     else {
-        UndoableNavCommand* cmd = new UndoableNavCommand("ZoomOutToPoint", this, 0);
-        undoStack->push(cmd);
     }
 }
 
@@ -2243,8 +2224,6 @@ void View::stopGripping(bool accept)
         gripBaseObj->vulcanize();
         if(accept)
         {
-            UndoableGripEditCommand* cmd = new UndoableGripEditCommand(sceneGripPoint, to_qpointf(sceneMousePoint), tr("Grip Edit ") + gripBaseObj->data(OBJ_NAME).toString(), gripBaseObj, this, 0);
-            if(cmd) undoStack->push(cmd);
             selectionChanged(); //Update the Property Editor
         }
         gripBaseObj = 0;
@@ -2262,8 +2241,7 @@ void View::deleteSelected()
 {
     QList<QGraphicsItem*> itemList = gscene->selectedItems();
     int numSelected = itemList.size();
-    if(numSelected > 1)
-        undoStack->beginMacro("Delete " + QString().setNum(itemList.size()));
+    
     for(int i = 0; i < itemList.size(); i++)
     {
         if(itemList.at(i)->data(OBJ_TYPE) != OBJ_TYPE_NULL)
@@ -2271,14 +2249,9 @@ void View::deleteSelected()
             BaseObject* base = static_cast<BaseObject*>(itemList.at(i));
             if(base)
             {
-                UndoableDeleteCommand* cmd = new UndoableDeleteCommand(tr("Delete 1 ") + base->data(OBJ_NAME).toString(), base, this, 0);
-                if(cmd)
-                undoStack->push(cmd);
             }
         }
     }
-    if(numSelected > 1)
-        undoStack->endMacro();
 }
 
 void View::cut()
@@ -2289,10 +2262,8 @@ void View::cut()
         return; //TODO: Prompt to select objects if nothing is preselected
     }
 
-    undoStack->beginMacro("Cut");
     copySelected();
     deleteSelected();
-    undoStack->endMacro();
 }
 
 void View::copy()
@@ -2513,19 +2484,14 @@ void View::moveSelected(float dx, float dy)
 {
     QList<QGraphicsItem*> itemList = gscene->selectedItems();
     int numSelected = itemList.size();
-    if(numSelected > 1)
-        undoStack->beginMacro("Move " + QString().setNum(itemList.size()));
+    
     foreach(QGraphicsItem* item, itemList)
     {
         BaseObject* base = static_cast<BaseObject*>(item);
         if(base)
         {
-            UndoableMoveCommand* cmd = new UndoableMoveCommand(dx, dy, tr("Move 1 ") + base->data(OBJ_NAME).toString(), base, this, 0);
-            if(cmd) undoStack->push(cmd);
         }
     }
-    if(numSelected > 1)
-        undoStack->endMacro();
 
     //Always clear the selection after a move
     gscene->clearSelection();
@@ -2539,19 +2505,13 @@ void View::rotateSelected(float x, float y, float rot)
 {
     QList<QGraphicsItem*> itemList = gscene->selectedItems();
     int numSelected = itemList.size();
-    if(numSelected > 1)
-        undoStack->beginMacro("Rotate " + QString().setNum(itemList.size()));
     foreach(QGraphicsItem* item, itemList)
     {
         BaseObject* base = static_cast<BaseObject*>(item);
         if(base)
         {
-            UndoableRotateCommand* cmd = new UndoableRotateCommand(x, y, rot, tr("Rotate 1 ") + base->data(OBJ_NAME).toString(), base, this, 0);
-            if(cmd) undoStack->push(cmd);
         }
     }
-    if(numSelected > 1)
-        undoStack->endMacro();
 
     //Always clear the selection after a rotate
     gscene->clearSelection();
@@ -2561,19 +2521,13 @@ void View::mirrorSelected(float x1, float y1, float x2, float y2)
 {
     QList<QGraphicsItem*> itemList = gscene->selectedItems();
     int numSelected = itemList.size();
-    if(numSelected > 1)
-        undoStack->beginMacro("Mirror " + QString().setNum(itemList.size()));
     foreach(QGraphicsItem* item, itemList)
     {
         BaseObject* base = static_cast<BaseObject*>(item);
         if(base)
         {
-            UndoableMirrorCommand* cmd = new UndoableMirrorCommand(x1, y1, x2, y2, tr("Mirror 1 ") + base->data(OBJ_NAME).toString(), base, this, 0);
-            if(cmd) undoStack->push(cmd);
         }
     }
-    if(numSelected > 1)
-        undoStack->endMacro();
 
     //Always clear the selection after a mirror
     gscene->clearSelection();
@@ -2587,19 +2541,13 @@ void View::scaleSelected(float x, float y, float factor)
 {
     QList<QGraphicsItem*> itemList = gscene->selectedItems();
     int numSelected = itemList.size();
-    if(numSelected > 1)
-        undoStack->beginMacro("Scale " + QString().setNum(itemList.size()));
     foreach(QGraphicsItem* item, itemList)
     {
         BaseObject* base = static_cast<BaseObject*>(item);
         if(base)
         {
-            UndoableScaleCommand* cmd = new UndoableScaleCommand(x, y, factor, tr("Scale 1 ") + base->data(OBJ_NAME).toString(), base, this, 0);
-            if(cmd) undoStack->push(cmd);
         }
     }
-    if(numSelected > 1)
-        undoStack->endMacro();
 
     //Always clear the selection after a scale
     gscene->clearSelection();
@@ -9221,370 +9169,8 @@ QPainterPath RectObject::objectSavePath() const
     return trans.map(path);
 }
 
-
-SaveObject::SaveObject(QGraphicsScene* theScene, QObject* parent) : QObject(parent)
-{
-    debug_message("SaveObject Constructor()");
-    gscene = theScene;
-    formatType = EMBFORMAT_UNSUPPORTED;
-}
-
-SaveObject::~SaveObject()
-{
-    debug_message("SaveObject Destructor()");
-}
-
-bool SaveObject::save(const QString &fileName)
-{
-    debug_message("SaveObject save(%s)", qPrintable(fileName));
-
-    /* TODO: Before saving to a stitch only format, Embroidermodder needs
-     *       to calculate the optimal path to minimize jump stitches. Also
-     *       based upon which layer needs to be stitched first,
-     *       the path to the next object needs to be hidden beneath fills
-     *       that will come later. When finding the optimal path, we need
-     *       to take into account the color of the thread, as we do not want
-     *       to try to hide dark colored stitches beneath light colored fills.
-     */
-
-    bool writeSuccessful = false;
-    int i;
-
-    formatType = emb_identify_format((char*)qPrintable(fileName));
-    if(formatType == EMBFORMAT_UNSUPPORTED)
-    {
-        return false;
-    }
-
-    EmbPattern* pattern = 0;
-
-    pattern = embPattern_create();
-    if(!pattern) { debug_message("Could not allocate memory for embroidery pattern"); }
-
-    /* Write */
-    int writer = emb_identify_format((char*)qPrintable(fileName));
-    if (writer<0) {
-        debug_message("Unsupported write file type: %s", qPrintable(fileName));
-    }
-    else {
-        foreach(QGraphicsItem* item, gscene->items(Qt::AscendingOrder))
-        {
-            int objType = item->data(OBJ_TYPE).toInt();
-
-            if (objType == OBJ_TYPE_ARC) {
-                addArc(pattern, item);
-            }
-            else if (objType == OBJ_TYPE_BLOCK) {
-                addBlock(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_CIRCLE) {
-                addCircle(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_DIMALIGNED) {
-                addDimAligned(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_DIMANGULAR) {
-                addDimAngular(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_DIMARCLENGTH) {
-                addDimArcLength(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_DIMDIAMETER) {
-                addDimDiameter(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_DIMLEADER) {
-                addDimLeader(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_DIMLINEAR) {
-                addDimLinear(pattern, item);
-            }
-            else if(objType == OBJ_TYPE_DIMORDINATE)  { addDimOrdinate(pattern, item);  }
-            else if(objType == OBJ_TYPE_DIMRADIUS)    { addDimRadius(pattern, item);    }
-            else if(objType == OBJ_TYPE_ELLIPSE)      { addEllipse(pattern, item);      }
-            else if(objType == OBJ_TYPE_ELLIPSEARC)   { addEllipseArc(pattern, item);   }
-            else if(objType == OBJ_TYPE_GRID)         { addGrid(pattern, item);         }
-            else if(objType == OBJ_TYPE_HATCH)        { addHatch(pattern, item);        }
-            else if(objType == OBJ_TYPE_IMAGE)        { addImage(pattern, item);        }
-            else if(objType == OBJ_TYPE_INFINITELINE) { addInfiniteLine(pattern, item); }
-            else if(objType == OBJ_TYPE_LINE)         { addLine(pattern, item);         }
-            else if(objType == OBJ_TYPE_POINT)        { addPoint(pattern, item);        }
-            else if(objType == OBJ_TYPE_POLYGON)      { addPolygon(pattern, item);      }
-            else if(objType == OBJ_TYPE_POLYLINE)     { addPolyline(pattern, item);     }
-            else if(objType == OBJ_TYPE_RAY)          { addRay(pattern, item);          }
-            else if(objType == OBJ_TYPE_RECTANGLE)    { addRectangle(pattern, item);    }
-            else if(objType == OBJ_TYPE_SPLINE)       { addSpline(pattern, item);       }
-            else if(objType == OBJ_TYPE_TEXTMULTI)    { addTextMulti(pattern, item);    }
-            else if(objType == OBJ_TYPE_TEXTSINGLE)   { addTextSingle(pattern, item);   }
-        }
-
-        //TODO: handle EMBFORMAT_STCHANDOBJ also
-        if(formatType == EMBFORMAT_STITCHONLY)
-            embPattern_movePolylinesToStitchList(pattern); //TODO: handle all objects like this
-
-        writeSuccessful = formatTable[writer].writer(pattern, qPrintable(fileName));
-        if(!writeSuccessful) { debug_message("Writing file %s was unsuccessful", qPrintable(fileName)); }
-    }
-
-    //TODO: check the embLog for errors and if any exist, report them.
-    embPattern_free(pattern);
-
-    return writeSuccessful;
-}
-
-void SaveObject::addArc(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addBlock(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addCircle(EmbPattern* pattern, QGraphicsItem* item)
-{
-    CircleObject* obj = static_cast<CircleObject*>(item);
-    if(obj)
-    {
-        if (formatType == EMBFORMAT_STITCHONLY) {
-            QPainterPath path = obj->objectSavePath();
-            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
-        }
-        else {
-            QPointF p = obj->objectCenter();
-            float r = obj->objectRadius();
-            embPattern_addCircleObjectAbs(pattern, (double)p.x(), (double)p.y(), (double)r);
-        }
-    }
-}
-
-void SaveObject::addDimAligned(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addDimAngular(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addDimArcLength(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addDimDiameter(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addDimLeader(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addDimLinear(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addDimOrdinate(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addDimRadius(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addEllipse(EmbPattern* pattern, QGraphicsItem* item)
-{
-    EllipseObject* obj = static_cast<EllipseObject*>(item);
-    if(obj)
-    {
-        if(formatType == EMBFORMAT_STITCHONLY)
-        {
-            QPainterPath path = obj->objectSavePath();
-            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
-        }
-        else
-        {
-            //TODO: ellipse rotation
-            embPattern_addEllipseObjectAbs(pattern, (double)obj->objectCenter().x(), (double)obj->objectCenter().y(), (double)obj->objectWidth()/2.0, (double)obj->objectHeight()/2.0);
-        }
-    }
-}
-
-void SaveObject::addEllipseArc(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addGrid(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addHatch(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addImage(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addInfiniteLine(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addLine(EmbPattern* pattern, QGraphicsItem* item)
-{
-    LineObject* obj = static_cast<LineObject*>(item);
-    if(obj)
-    {
-        if(formatType == EMBFORMAT_STITCHONLY)
-        {
-            toPolyline(pattern, obj->objectEndPoint1(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
-        }
-        else
-        {
-            embPattern_addLineObjectAbs(pattern, (double)obj->objectX1(), (double)obj->objectY1(), (double)obj->objectX2(), (double)obj->objectY2());
-        }
-    }
-}
-
-void SaveObject::addPath(EmbPattern* pattern, QGraphicsItem* item)
-{
-    //TODO: Reimplement addPolyline() using the libembroidery C API
-    /*
-    debug_message("addPolyline()");
-    QGraphicsPathItem* polylineItem = (QGraphicsPathItem*)item;
-    if(polylineItem)
-    {
-        QPainterPath path = polylineItem->path();
-        QPointF pos = polylineItem->pos();
-        float startX = pos.x();
-        float startY = pos.y();
-
-        QPainterPath::Element element;
-        QPainterPath::Element P1;
-        QPainterPath::Element P2;
-        QPainterPath::Element P3;
-        QPainterPath::Element P4;
-
-        for(int i = 0; i < path.elementCount()-1; ++i)
-        {
-            element = path.elementAt(i);
-            if(element.isMoveTo())
-            {
-                pattern.AddStitchAbs((element.x + startX), -(element.y + startY), TRIM);
-            }
-            else if(element.isLineTo())
-            {
-                pattern.AddStitchAbs((element.x + startX), -(element.y + startY), NORMAL);
-            }
-            else if(element.isCurveTo())
-            {
-                P1 = path.elementAt(i-1); // start point
-                P2 = path.elementAt(i);   // control point
-                P3 = path.elementAt(i+1); // control point
-                P4 = path.elementAt(i+2); // end point
-
-                pattern.AddStitchAbs(P4.x, -P4.y, NORMAL); //TODO: This is temporary
-                //TODO: Curved Polyline segments are always arcs
-            }
-        }
-        pattern.AddStitchRel(0, 0, STOP);
-        QColor c= polylineItem->pen().color();
-        pattern.AddColor(c.red(), c.green(), c.blue(), "", "");
-    }
-    */
-}
-
-void SaveObject::addPoint(EmbPattern* pattern, QGraphicsItem* item)
-{
-    PointObject* obj = static_cast<PointObject*>(item);
-    if(obj)
-    {
-        if(formatType == EMBFORMAT_STITCHONLY)
-        {
-            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
-        }
-        else
-        {
-            embPattern_addPointObjectAbs(pattern, (double)obj->objectX(), (double)obj->objectY());
-        }
-    }
-}
-
-void SaveObject::addPolygon(EmbPattern* pattern, QGraphicsItem* item)
-{
-    PolygonObject* obj = static_cast<PolygonObject*>(item);
-    if(obj)
-    {
-        toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
-    }
-}
-
-void SaveObject::addPolyline(EmbPattern* pattern, QGraphicsItem* item)
-{
-    PolylineObject* obj = static_cast<PolylineObject*>(item);
-    if(obj)
-    {
-        toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
-    }
-}
-
-void SaveObject::addRay(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addRectangle(EmbPattern* pattern, QGraphicsItem* item)
-{
-    RectObject* obj = static_cast<RectObject*>(item);
-    if(obj)
-    {
-        if(formatType == EMBFORMAT_STITCHONLY)
-        {
-            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
-        }
-        else
-        {
-            //TODO: Review this at some point
-            QPointF topLeft = obj->objectTopLeft();
-            embPattern_addRectObjectAbs(pattern, (double)topLeft.x(), (double)topLeft.y(), (double)obj->objectWidth(), (double)obj->objectHeight());
-        }
-    }
-}
-
-void SaveObject::addSlot(EmbPattern* pattern, QGraphicsItem* item)
-{
-}
-
-void SaveObject::addSpline(EmbPattern* pattern, QGraphicsItem* item)
-{
-    //TODO: abstract bezier into geom-bezier... cubicBezierMagic(P1, P2, P3, P4, 0.0, 1.0, tPoints);
-}
-
-void SaveObject::addTextMulti(EmbPattern* pattern, QGraphicsItem* item)
-{
-    //TODO: saving polygons, polylines and paths must be stable before we go here.
-}
-
-void SaveObject::addTextSingle(EmbPattern* pattern, QGraphicsItem* item)
-{
-    //TODO: saving polygons, polylines and paths must be stable before we go here.
-
-    //TODO: This needs to work like a path, not a polyline. Improve this
-    TextSingleObject* obj = static_cast<TextSingleObject*>(item);
-    if(obj)
-    {
-        if(formatType == EMBFORMAT_STITCHONLY)
-        {
-            QList<QPainterPath> pathList = obj->objectSavePathList();
-            foreach(QPainterPath path, pathList)
-            {
-                toPolyline(pattern, obj->objectPos(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
-            }
-        }
-        else
-        {
-
-        }
-    }
-}
-
 //NOTE: This function should be used to interpret various object types and save them as polylines for stitchOnly formats.
-void SaveObject::toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight)
+void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight)
 {
     float startX = objPos.x();
     float startY = objPos.y();
@@ -10281,8 +9867,6 @@ void MainWindow::changelog()
     */
 }
 
-// Standard Slots
-
 /* this wrapper connects the signal to the C-style actuator */
 void MainWindow::actions()
 {
@@ -10291,20 +9875,45 @@ void MainWindow::actions()
     QString caller = obj->objectName();
     for (i=0; i<n_actions; i++) {
         if (caller == action_list[i].abbreviation) {
-            actuator(action_list[i].id);
+            action.id = action_list[i].id;
+            actuator();
             return;
         }
     }
 }
 
-void MainWindow::undo()
+void main_undo(void)
 {
     debug_message("undo()");
+    if (undo_history_position > 0) {
+        action_call last = undo_history[undo_history_position];
+        undo_history_position--;
+        printf("undo_history_position = %d\n", undo_history_position);
+        printf("undo_history_length = %d\n", undo_history_length);
+        
+        /* Create the reverse action from the last action and apply with
+         * the main actuator.
+         */
+        switch (last.id) {
+        case ACTION_donothing:
+        default:
+            debug_message("The last action has no undo candidate.");
+            break;
+        }
+        actuator();
+    }
 }
 
-void MainWindow::redo()
+void main_redo(void)
 {
     debug_message("redo()");
+    if (undo_history_position < undo_history_length) {
+        undo_history_position++;
+        printf("undo_history_position = %d\n", undo_history_position);
+        printf("undo_history_length = %d\n", undo_history_length);
+        memcpy(&action, undo_history+undo_history_position, sizeof(action_call));
+        actuator();
+    }
 }
 
 bool MainWindow::isShiftPressed()
@@ -10370,23 +9979,6 @@ QGraphicsScene* MainWindow::activeScene()
         return s;
     }
     return 0;
-}
-
-QUndoStack* MainWindow::activeUndoStack()
-{
-    debug_message("activeUndoStack()");
-    View* v = activeView();
-    if(v)
-    {
-        QUndoStack* u = v->getUndoStack();
-        return u;
-    }
-    return 0;
-}
-
-void MainWindow::setUndoCleanIcon(bool opened)
-{
-    dockUndoEdit->updateCleanIcon(opened);
 }
 
 void MainWindow::updateAllViewScrollBars(bool val)
@@ -10522,25 +10114,26 @@ void zoomIn(void)
 {
     debug_message("zoomIn()");
     View* gview =  _mainWin->activeView();
-    if(gview) { gview->zoomIn(); }
+    if (gview) {
+        gview->zoomIn();
+    }
 }
 
 void zoomOut(void)
 {
     debug_message("zoomOut()");
     View* gview =  _mainWin->activeView();
-    if(gview) { gview->zoomOut(); }
+    if (gview) {
+        gview->zoomOut();
+    }
 }
 
 void zoomSelected(void)
 {
     debug_message("zoomSelected()");
     View* gview =  _mainWin->activeView();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && stack)
-    {
-        UndoableNavCommand* cmd = new UndoableNavCommand("ZoomSelected", gview, 0);
-        stack->push(cmd);
+    if (gview) {
+        gview->zoomSelected();
     }
 }
 
@@ -10554,10 +10147,8 @@ void zoomExtents(void)
 {
     debug_message("zoomExtents()");
     View* gview =  _mainWin->activeView();
-    QUndoStack* stack = gview->getUndoStack();
-    if (gview && stack) {
-        UndoableNavCommand* cmd = new UndoableNavCommand("ZoomExtents", gview, 0);
-        stack->push(cmd);
+    if (gview) {
+        gview->zoomExtents();
     }
 }
 
@@ -10565,25 +10156,26 @@ void panrealtime(void)
 {
     debug_message("panrealtime()");
     View* gview =  _mainWin->activeView();
-    if(gview) { gview->panRealTime(); }
+    if (gview) {
+        gview->panRealTime();
+    }
 }
 
 void panpoint(void)
 {
     debug_message("panpoint()");
     View* gview =  _mainWin->activeView();
-    if(gview) { gview->panPoint(); }
+    if (gview) {
+        gview->panPoint();
+    }
 }
 
 void panLeft(void)
 {
     debug_message("panLeft()");
     View* gview =  _mainWin->activeView();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && stack)
-    {
-        UndoableNavCommand* cmd = new UndoableNavCommand("PanLeft", gview, 0);
-        stack->push(cmd);
+    if (gview) {
+        gview->panLeft();
     }
 }
 
@@ -10591,11 +10183,8 @@ void panRight(void)
 {
     debug_message("panRight()");
     View* gview = _mainWin->activeView();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && stack)
-    {
-        UndoableNavCommand* cmd = new UndoableNavCommand("PanRight", gview, 0);
-        stack->push(cmd);
+    if (gview) {
+        gview->panRight();
     }
 }
 
@@ -10603,11 +10192,8 @@ void panUp(void)
 {
     debug_message("panUp()");
     View* gview = _mainWin->activeView();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && stack)
-    {
-        UndoableNavCommand* cmd = new UndoableNavCommand("PanUp", gview, 0);
-        stack->push(cmd);
+    if (gview) {
+        gview->panUp();
     }
 }
 
@@ -10615,11 +10201,8 @@ void panDown(void)
 {
     debug_message("panDown()");
     View* gview = _mainWin->activeView();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && stack)
-    {
-        UndoableNavCommand* cmd = new UndoableNavCommand("PanDown", gview, 0);
-        stack->push(cmd);
+    if (gview) {
+        gview->panDown();
     }
 }
 
@@ -10839,8 +10422,7 @@ void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
+    if(gview && gscene)
     {
         TextSingleObject* obj = new TextSingleObject(str, x, -y, getCurrentColor());
         obj->objTextFont = settings.text_font;
@@ -10863,8 +10445,6 @@ void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -10873,8 +10453,7 @@ void MainWindow::nativeAddLine(float x1, float y1, float x2, float y2, float rot
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
+    if(gview && gscene)
     {
         LineObject* obj = new LineObject(x1, -y1, x2, -y2, getCurrentColor());
         obj->setRotation(-rot);
@@ -10887,8 +10466,6 @@ void MainWindow::nativeAddLine(float x1, float y1, float x2, float y2, float rot
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -10897,8 +10474,7 @@ void MainWindow::nativeAddRectangle(float x, float y, float w, float h, float ro
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
+    if(gview && gscene)
     {
         RectObject* obj = new RectObject(x, -y, w, -h, getCurrentColor());
         obj->setRotation(-rot);
@@ -10912,8 +10488,6 @@ void MainWindow::nativeAddRectangle(float x, float y, float w, float h, float ro
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -10936,9 +10510,7 @@ void MainWindow::nativeAddCircle(float centerX, float centerY, float radius, boo
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
-    {
+    if (gview && gscene) {
         CircleObject* obj = new CircleObject(centerX, -centerY, radius, getCurrentColor());
         obj->setObjectRubberMode(rubberMode);
         //TODO: circle fill
@@ -10950,8 +10522,6 @@ void MainWindow::nativeAddCircle(float centerX, float centerY, float radius, boo
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -10960,9 +10530,7 @@ void MainWindow::nativeAddEllipse(float centerX, float centerY, float width, flo
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
-    {
+    if (gview && gscene) {
         EllipseObject* obj = new EllipseObject(centerX, -centerY, width, height, getCurrentColor());
         obj->setRotation(-rot);
         obj->setObjectRubberMode(rubberMode);
@@ -10975,8 +10543,6 @@ void MainWindow::nativeAddEllipse(float centerX, float centerY, float width, flo
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -10984,12 +10550,8 @@ void MainWindow::nativeAddEllipse(float centerX, float centerY, float width, flo
 void MainWindow::nativeAddPoint(float x, float y)
 {
     View* gview = activeView();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && stack)
-    {
+    if (gview) {
         PointObject* obj = new PointObject(x, -y, getCurrentColor());
-        UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-        stack->push(cmd);
     }
 }
 
@@ -10998,9 +10560,7 @@ void MainWindow::nativeAddPolygon(float startX, float startY, const QPainterPath
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
-    {
+    if (gview && gscene) {
         PolygonObject* obj = new PolygonObject(startX, startY, p, getCurrentColor());
         obj->setObjectRubberMode(rubberMode);
         if(rubberMode)
@@ -11011,8 +10571,6 @@ void MainWindow::nativeAddPolygon(float startX, float startY, const QPainterPath
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -11022,8 +10580,7 @@ void MainWindow::nativeAddPolyline(float startX, float startY, const QPainterPat
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
+    if(gview && gscene)
     {
         PolylineObject* obj = new PolylineObject(startX, startY, p, getCurrentColor());
         obj->setObjectRubberMode(rubberMode);
@@ -11035,8 +10592,6 @@ void MainWindow::nativeAddPolyline(float startX, float startY, const QPainterPat
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -11045,9 +10600,7 @@ void MainWindow::nativeAddDimLeader(float x1, float y1, float x2, float y2, floa
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
-    QUndoStack* stack = gview->getUndoStack();
-    if(gview && gscene && stack)
-    {
+    if(gview && gscene) {
         DimLeaderObject* obj = new DimLeaderObject(x1, -y1, x2, -y2, getCurrentColor());
         obj->setRotation(-rot);
         obj->setObjectRubberMode(rubberMode);
@@ -11059,8 +10612,6 @@ void MainWindow::nativeAddDimLeader(float x1, float y1, float x2, float y2, floa
         }
         else
         {
-            UndoableAddCommand* cmd = new UndoableAddCommand(obj->data(OBJ_NAME).toString(), obj, gview, 0);
-            stack->push(cmd);
         }
     }
 }
@@ -11184,8 +10735,10 @@ MainWindow::MainWindow() : QMainWindow(0)
     setCentralWidget(vbox);
 
     app_dir(current_path, icons_folder);
-    //setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::VerticalTabs); //TODO: Load these from settings
-    //tabifyDockWidget(dockPropEdit, dockUndoEdit); //TODO: load this from settings
+    //setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::VerticalTabs);
+    /* TODO: Load these from settings */
+    /* tabifyDockWidget(dockPropEdit, dockUndoEdit); */
+    /* TODO: load this from settings */
 
     statusbar = new StatusBar(this, this);
     this->setStatusBar(statusbar);
@@ -11629,8 +11182,10 @@ void MainWindow::updateMenuToolbarStatusbar()
         }
 
         //DockWidgets
-       /* dockPropEdit->show();
-        dockUndoEdit->show(); */
+        /*
+        dockPropEdit->show();
+        dockUndoEdit->show();
+        */
 
         //Menus
         menuBar()->clear();
@@ -11678,10 +11233,11 @@ void MainWindow::updateMenuToolbarStatusbar()
         }
 
         //DockWidgets
-        /* Causing segfaults after removing the prompt */
-  /*      dockPropEdit->hide();
+        /*
+        dockPropEdit->hide();
         dockUndoEdit->hide();
-*/
+        */
+        
         //Menus
         menuBar()->clear();
         menuBar()->addMenu(fileMenu);
@@ -11790,8 +11346,7 @@ void MainWindow::loadFormats()
 
 void MainWindow::closeToolBar(QAction* action)
 {
-    if(action->objectName() == "toolbarclose")
-    {
+    if (action->objectName() == "toolbarclose") {
         QToolBar* tb = qobject_cast<QToolBar*>(sender());
         if(tb)
         {
@@ -12402,13 +11957,11 @@ int main(int argc, char* argv[])
 
     QStringList filesToOpen;
 
-    for(int i = 1; i < argc; i++)
-    {
-        if     (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")  ) {  }
+    for (int i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")) {  }
         else if(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")   ) { usage(); }
         else if(!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version")) { version(); }
-        else if(QFile::exists(argv[i]) && MainWindow::validFileFormat(argv[i]))
-        {
+        else if(QFile::exists(argv[i]) && MainWindow::validFileFormat(argv[i])) {
             filesToOpen << argv[i];
         }
         else
@@ -12557,7 +12110,7 @@ void MdiArea::zoomExtentsAllSubWindows()
 
 void MdiArea::forceRepaint()
 {
-    //HACK: Take that QMdiArea!
+    /* HACK: Take that QMdiArea! */
     QSize hack = size();
     resize(hack + QSize(1,1));
     resize(hack);
@@ -12585,9 +12138,12 @@ MdiWindow::MdiWindow(const int theIndex, MainWindow* mw, QMdiArea* parent, Qt::W
 
     setWidget(gview);
 
-    //WARNING: DO NOT SET THE QMDISUBWINDOW (this) FOCUSPROXY TO THE PROMPT
-    //WARNING: AS IT WILL CAUSE THE WINDOW MENU TO NOT SWITCH WINDOWS PROPERLY!
-    //WARNING: ALTHOUGH IT SEEMS THAT SETTING INTERNAL WIDGETS FOCUSPROXY IS OK.
+    /*
+     * WARNING:
+     * DO NOT SET THE QMDISUBWINDOW (this) FOCUSPROXY TO THE PROMPT
+     * AS IT WILL CAUSE THE WINDOW MENU TO NOT SWITCH WINDOWS PROPERLY!
+     * ALTHOUGH IT SEEMS THAT SETTING INTERNAL WIDGETS FOCUSPROXY IS OK.
+     */
 //    gview->setFocusProxy(mainWin->prompt);
 
     resize(sizeHint());
@@ -12616,8 +12172,254 @@ MdiWindow::~MdiWindow()
 
 bool MdiWindow::saveFile(const QString &fileName)
 {
-    SaveObject saveObj(gscene, this);
-    return saveObj.save(fileName);
+    debug_message("SaveObject save(%s)", qPrintable(fileName));
+
+    /* TODO: Before saving to a stitch only format, Embroidermodder needs
+     *       to calculate the optimal path to minimize jump stitches. Also
+     *       based upon which layer needs to be stitched first,
+     *       the path to the next object needs to be hidden beneath fills
+     *       that will come later. When finding the optimal path, we need
+     *       to take into account the color of the thread, as we do not want
+     *       to try to hide dark colored stitches beneath light colored fills.
+     */
+    int formatType = EMBFORMAT_UNSUPPORTED;
+    bool writeSuccessful = false;
+    int i;
+
+    formatType = emb_identify_format((char*)qPrintable(fileName));
+    if(formatType == EMBFORMAT_UNSUPPORTED)
+    {
+        return false;
+    }
+
+    EmbPattern* pattern = 0;
+
+    pattern = embPattern_create();
+    if(!pattern) { debug_message("Could not allocate memory for embroidery pattern"); }
+
+    /* Write */
+    int writer = emb_identify_format((char*)qPrintable(fileName));
+    if (writer<0) {
+        debug_message("Unsupported write file type: %s", qPrintable(fileName));
+    }
+    else {
+        foreach(QGraphicsItem* item, _mainWin->activeScene()->items(Qt::AscendingOrder))
+        {
+            int objType = item->data(OBJ_TYPE).toInt();
+
+            if (objType == OBJ_TYPE_ARC) {
+                /* addArc */
+            }
+            else if (objType == OBJ_TYPE_BLOCK) {
+                /* addBlock(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_CIRCLE) {
+                CircleObject* obj = static_cast<CircleObject*>(item);
+                if (obj) {
+                    if (formatType == EMBFORMAT_STITCHONLY) {
+                        QPainterPath path = obj->objectSavePath();
+            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
+        }
+        else {
+            QPointF p = obj->objectCenter();
+            float r = obj->objectRadius();
+            embPattern_addCircleObjectAbs(pattern, (double)p.x(), (double)p.y(), (double)r);
+        }
+    }
+            }
+            else if(objType == OBJ_TYPE_DIMALIGNED) {
+                /* addDimAligned(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_DIMANGULAR) {
+                /* addDimAngular(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_DIMARCLENGTH) {
+                /* addDimArcLength(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_DIMDIAMETER) {
+                /* addDimDiameter(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_DIMLEADER) {
+                /* addDimLeader(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_DIMLINEAR) {
+                /* addDimLinear(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_DIMORDINATE)  {
+                /* addDimOrdinate(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_DIMRADIUS)    {
+                /* addDimRadius(pattern, item); */
+            }
+            else if(objType == OBJ_TYPE_ELLIPSE) {
+    EllipseObject* obj = static_cast<EllipseObject*>(item);
+    if(obj)
+    {
+        if(formatType == EMBFORMAT_STITCHONLY)
+        {
+            QPainterPath path = obj->objectSavePath();
+            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
+        }
+        else
+        {
+            //TODO: ellipse rotation
+            embPattern_addEllipseObjectAbs(pattern, (double)obj->objectCenter().x(), (double)obj->objectCenter().y(), (double)obj->objectWidth()/2.0, (double)obj->objectHeight()/2.0);
+        }
+    }
+            }
+            else if(objType == OBJ_TYPE_ELLIPSEARC)   { /* addEllipseArc(pattern, item);  */ }
+            else if(objType == OBJ_TYPE_GRID)         { /* addGrid(pattern, item);     */    }
+            else if(objType == OBJ_TYPE_HATCH)        { /* addHatch(pattern, item);       */ }
+            else if(objType == OBJ_TYPE_IMAGE)        { /* addImage(pattern, item);       */ }
+            else if(objType == OBJ_TYPE_INFINITELINE) { /* addInfiniteLine(pattern, item); */ }
+            else if(objType == OBJ_TYPE_LINE)         { 
+    LineObject* obj = static_cast<LineObject*>(item);
+    if(obj)
+    {
+        if(formatType == EMBFORMAT_STITCHONLY)
+        {
+            toPolyline(pattern, obj->objectEndPoint1(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
+        }
+        else
+        {
+            embPattern_addLineObjectAbs(pattern, (double)obj->objectX1(), (double)obj->objectY1(), (double)obj->objectX2(), (double)obj->objectY2());
+        }
+    }
+      }
+            else if (objType == OBJ_TYPE_PATH) {
+    //TODO: Reimplement addPolyline() using the libembroidery C API
+    /*
+    debug_message("addPolyline()");
+    QGraphicsPathItem* polylineItem = (QGraphicsPathItem*)item;
+    if(polylineItem)
+    {
+        QPainterPath path = polylineItem->path();
+        QPointF pos = polylineItem->pos();
+        float startX = pos.x();
+        float startY = pos.y();
+
+        QPainterPath::Element element;
+        QPainterPath::Element P1;
+        QPainterPath::Element P2;
+        QPainterPath::Element P3;
+        QPainterPath::Element P4;
+
+        for(int i = 0; i < path.elementCount()-1; ++i)
+        {
+            element = path.elementAt(i);
+            if(element.isMoveTo())
+            {
+                pattern.AddStitchAbs((element.x + startX), -(element.y + startY), TRIM);
+            }
+            else if(element.isLineTo())
+            {
+                pattern.AddStitchAbs((element.x + startX), -(element.y + startY), NORMAL);
+            }
+            else if(element.isCurveTo())
+            {
+                P1 = path.elementAt(i-1); // start point
+                P2 = path.elementAt(i);   // control point
+                P3 = path.elementAt(i+1); // control point
+                P4 = path.elementAt(i+2); // end point
+
+                pattern.AddStitchAbs(P4.x, -P4.y, NORMAL); //TODO: This is temporary
+                //TODO: Curved Polyline segments are always arcs
+            }
+        }
+        pattern.AddStitchRel(0, 0, STOP);
+        QColor c= polylineItem->pen().color();
+        pattern.AddColor(c.red(), c.green(), c.blue(), "", "");
+    }
+    */
+            }
+            else if(objType == OBJ_TYPE_POINT)        { 
+    PointObject* obj = static_cast<PointObject*>(item);
+    if(obj)
+    {
+        if(formatType == EMBFORMAT_STITCHONLY)
+        {
+            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
+        }
+        else
+        {
+            embPattern_addPointObjectAbs(pattern, (double)obj->objectX(), (double)obj->objectY());
+        }
+    }
+             }
+            else if(objType == OBJ_TYPE_POLYGON) {
+    PolygonObject* obj = static_cast<PolygonObject*>(item);
+    if(obj)
+    {
+        toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
+    }
+            }
+            else if(objType == OBJ_TYPE_POLYLINE) { 
+                PolylineObject* obj = static_cast<PolylineObject*>(item);
+                if (obj)  {
+                    toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
+                }
+            }
+            else if(objType == OBJ_TYPE_RAY) {
+                /* addRay(pattern, item);       */
+            }
+            else if(objType == OBJ_TYPE_RECTANGLE) { 
+    RectObject* obj = static_cast<RectObject*>(item);
+    if(obj)
+    {
+        if(formatType == EMBFORMAT_STITCHONLY)
+        {
+            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight
+        }
+        else
+        {
+            //TODO: Review this at some point
+            QPointF topLeft = obj->objectTopLeft();
+            embPattern_addRectObjectAbs(pattern, (double)topLeft.x(), (double)topLeft.y(), (double)obj->objectWidth(), (double)obj->objectHeight());
+        }
+    }
+            }
+            else if(objType == OBJ_TYPE_SLOT) {
+            }
+            else if(objType == OBJ_TYPE_SPLINE)       { 
+    //TODO: abstract bezier into geom-bezier... cubicBezierMagic(P1, P2, P3, P4, 0.0, 1.0, tPoints);
+    }
+            else if(objType == OBJ_TYPE_TEXTMULTI)    { 
+    //TODO: saving polygons, polylines and paths must be stable before we go here.
+       }
+            else if (objType == OBJ_TYPE_TEXTSINGLE) {
+    //TODO: saving polygons, polylines and paths must be stable before we go here.
+
+    //TODO: This needs to work like a path, not a polyline. Improve this
+    TextSingleObject* obj = static_cast<TextSingleObject*>(item);
+    if(obj)
+    {
+        if(formatType == EMBFORMAT_STITCHONLY)
+        {
+            QList<QPainterPath> pathList = obj->objectSavePathList();
+            foreach(QPainterPath path, pathList)
+            {
+                toPolyline(pattern, obj->objectPos(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); //TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
+            }
+        }
+        else
+        {
+
+        }
+    }  }
+        }
+
+        //TODO: handle EMBFORMAT_STCHANDOBJ also
+        if(formatType == EMBFORMAT_STITCHONLY)
+            embPattern_movePolylinesToStitchList(pattern); //TODO: handle all objects like this
+
+        writeSuccessful = formatTable[writer].writer(pattern, qPrintable(fileName));
+        if(!writeSuccessful) { debug_message("Writing file %s was unsuccessful", qPrintable(fileName)); }
+    }
+
+    //TODO: check the embLog for errors and if any exist, report them.
+    embPattern_free(pattern);
+
+    return writeSuccessful;
 }
 
 bool MdiWindow::loadFile(const QString &fileName)
@@ -12684,7 +12486,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                 EmbEllipse e = p->ellipses->ellipse[i].ellipse;
                 EmbColor thisColor = p->ellipses->ellipse[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
-                // NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
+                /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed. */
                 mainWin->nativeAddEllipse(e.centerX, e.centerY, e.radiusX, e.radiusY, 0, false, OBJ_RUBBER_OFF); //TODO: rotation and fill
             }
         }
@@ -12693,7 +12495,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                 EmbLine li = p->lines->line[i].line;
                 EmbColor thisColor = p->lines->line[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
-                // NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
+                /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed. */
                 mainWin->nativeAddLine(li.x1, li.y1, li.x2, li.y2, 0, OBJ_RUBBER_OFF); //TODO: rotation
             }
         }
@@ -12718,7 +12520,7 @@ bool MdiWindow::loadFile(const QString &fileName)
 
                 PathObject* obj = new PathObject(0,0, pathPath, loadPen.color().rgb());
                 obj->setObjectRubberMode(OBJ_RUBBER_OFF);
-                gscene->addItem(obj);
+                _mainWin->activeScene()->addItem(obj);
             }
         }
         if (p->points) {
@@ -12809,12 +12611,11 @@ bool MdiWindow::loadFile(const QString &fileName)
     }
     embPattern_free(p);
 
-    //Clear the undo stack so it is not possible to undo past this point.
-    gview->getUndoStack()->clear();
+    /* Clear the undo stack so it is not possible to undo past this point. */
+    undo_history_length = 0;
 
     setCurrentColor(tmpColor);
     fileWasLoaded = true;
-    mainWin->setUndoCleanIcon(fileWasLoaded);
     return fileWasLoaded;
 }
 
@@ -12894,8 +12695,6 @@ void MdiWindow::closeEvent(QCloseEvent* /*e*/)
 void MdiWindow::onWindowActivated()
 {
     debug_message("MdiWindow onWindowActivated()");
-    gview->getUndoStack()->setActive(true);
-    mainWin->setUndoCleanIcon(fileWasLoaded);
     statusBarSnapButton->setChecked(gscene->property("ENABLE_SNAP").toBool());
     statusBarGridButton->setChecked(gscene->property("ENABLE_GRID").toBool());
     statusBarRulerButton->setChecked(gscene->property("ENABLE_RULER").toBool());
@@ -13325,326 +13124,5 @@ void StatusBar::setMouseCoord(float x, float y)
 
     //Scientific
     //statusBarMouseCoord->setText(QString().setNum(x, 'E', 4) + ", " + QString().setNum(y, 'E', 4)); //TODO: use precision from unit settings
-}
-
-UndoableAddCommand::UndoableAddCommand(const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    object = obj;
-    setText(text);
-}
-
-void UndoableAddCommand::undo()
-{
-    gview->deleteObject(object);
-}
-
-void UndoableAddCommand::redo()
-{
-    gview->addObject(object);
-}
-
-UndoableDeleteCommand::UndoableDeleteCommand(const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    object = obj;
-    setText(text);
-}
-
-void UndoableDeleteCommand::undo()
-{
-    gview->addObject(object);
-}
-
-void UndoableDeleteCommand::redo()
-{
-    gview->deleteObject(object);
-}
-
-//==================================================
-// Move
-//==================================================
-
-UndoableMoveCommand::UndoableMoveCommand(float deltaX, float deltaY, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    object = obj;
-    setText(text);
-    dx = deltaX;
-    dy = deltaY;
-}
-
-void UndoableMoveCommand::undo()
-{
-    object->moveBy(-dx, -dy);
-}
-
-void UndoableMoveCommand::redo()
-{
-    object->moveBy(dx, dy);
-}
-
-//==================================================
-// Rotate
-//==================================================
-
-UndoableRotateCommand::UndoableRotateCommand(float pivotPointX, float pivotPointY, float rotAngle, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    object = obj;
-    setText(text);
-    pivotX = pivotPointX;
-    pivotY = pivotPointY;
-    angle = rotAngle;
-}
-
-void UndoableRotateCommand::undo()
-{
-    rotate(pivotX, pivotY, -angle);
-}
-
-void UndoableRotateCommand::redo()
-{
-    rotate(pivotX, pivotY, angle);
-}
-
-void UndoableRotateCommand::rotate(float x, float y, float rot)
-{
-    float rad = radians(rot);
-    float cosRot = cos(rad);
-    float sinRot = sin(rad);
-    float px = object->scenePos().x();
-    float py = object->scenePos().y();
-    px -= x;
-    py -= y;
-    float rotX = px*cosRot - py*sinRot;
-    float rotY = px*sinRot + py*cosRot;
-    rotX += x;
-    rotY += y;
-
-    object->setPos(rotX, rotY);
-    object->setRotation(object->rotation()+rot);
-}
-
-//==================================================
-// Scale
-//==================================================
-
-UndoableScaleCommand::UndoableScaleCommand(float x, float y, float scaleFactor, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    object = obj;
-    setText(text);
-
-    //Prevent division by zero and other wacky behavior
-    if (scaleFactor <= 0.0) {
-        dx = 0.0;
-        dy = 0.0;
-        factor = 1.0;
-        QMessageBox::critical(0, QObject::tr("ScaleFactor Error"),
-                              QObject::tr("Hi there. If you are not a developer, report this as a bug. "
-  "If you are a developer, your code needs examined, and possibly your head too."));
-    }
-    else
-    {
-        //Calculate the offset
-        float oldX = object->x();
-        float oldY = object->y();
-        QLineF scaleLine(x, y, oldX, oldY);
-        scaleLine.setLength(scaleLine.length()*scaleFactor);
-        float newX = scaleLine.x2();
-        float newY = scaleLine.y2();
-
-        dx = newX - oldX;
-        dy = newY - oldY;
-        factor = scaleFactor;
-    }
-}
-
-void UndoableScaleCommand::undo()
-{
-    object->setScale(object->scale()*(1/factor));
-    object->moveBy(-dx, -dy);
-}
-
-void UndoableScaleCommand::redo()
-{
-    object->setScale(object->scale()*factor);
-    object->moveBy(dx, dy);
-}
-
-UndoableNavCommand::UndoableNavCommand(const QString& type, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    navType = type;
-    setText(QObject::tr("Navigation"));
-    done = false;
-    fromTransform = gview->transform();
-    fromCenter = gview->center();
-}
-
-bool UndoableNavCommand::mergeWith(const QUndoCommand* newest)
-{
-    if(newest->id() != id()) // make sure other is also an UndoableNavCommand
-         return false;
-
-    const UndoableNavCommand* cmd = static_cast<const UndoableNavCommand*>(newest);
-    toTransform = cmd->toTransform;
-    toCenter = cmd->toCenter;
-
-    return true;
-}
-
-void UndoableNavCommand::undo()
-{
-    if(!done)
-    {
-        toTransform = gview->transform();
-        toCenter = gview->center();
-    }
-    done = true;
-
-    gview->setTransform(fromTransform);
-    gview->centerAt(fromCenter);
-}
-
-void UndoableNavCommand::redo()
-{
-
-    if(!done)
-    {
-        if     (navType == "ZoomInToPoint")  { gview->zoomToPoint(gview->scene()->property("VIEW_MOUSE_POINT").toPoint(), +1); }
-        else if(navType == "ZoomOutToPoint") { gview->zoomToPoint(gview->scene()->property("VIEW_MOUSE_POINT").toPoint(), -1); }
-        else if(navType == "ZoomExtents")    { gview->zoomExtents(); }
-        else if(navType == "ZoomSelected")   { gview->zoomSelected(); }
-        else if(navType == "PanStart")       { /* Do Nothing. We are just recording the spot where the pan started. */  }
-        else if(navType == "PanStop")        { /* Do Nothing. We are just recording the spot where the pan stopped. */  }
-        else if(navType == "PanLeft")        { gview->panLeft();  }
-        else if(navType == "PanRight")       { gview->panRight(); }
-        else if(navType == "PanUp")          { gview->panUp();    }
-        else if(navType == "PanDown")        { gview->panDown();  }
-        toTransform = gview->transform();
-        toCenter = gview->center();
-    }
-    else
-    {
-        gview->setTransform(toTransform);
-        gview->centerAt(toCenter);
-    }
-}
-
-UndoableGripEditCommand::UndoableGripEditCommand(const QPointF beforePoint, const QPointF afterPoint, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    object = obj;
-    setText(text);
-    before = beforePoint;
-    after = afterPoint;
-}
-
-void UndoableGripEditCommand::undo()
-{
-    object->gripEdit(after, before);
-}
-
-void UndoableGripEditCommand::redo()
-{
-    object->gripEdit(before, after);
-}
-
-UndoableMirrorCommand::UndoableMirrorCommand(float x1, float y1, float x2, float y2, const QString& text, BaseObject* obj, View* v, QUndoCommand* parent) : QUndoCommand(parent)
-{
-    gview = v;
-    object = obj;
-    setText(text);
-    mirrorLine = QLineF(x1, y1, x2, y2);
-}
-
-void UndoableMirrorCommand::undo()
-{
-    mirror();
-}
-
-void UndoableMirrorCommand::redo()
-{
-    mirror();
-}
-
-void UndoableMirrorCommand::mirror()
-{
-    /* TODO: finish undoable mirror */
-}
-
-UndoEditor::UndoEditor(const QString& iconDirectory, QWidget* widgetToFocus, QWidget* parent, Qt::WindowFlags flags) : QDockWidget(parent, flags)
-{
-    iconDir = iconDirectory;
-    iconSize = 16;
-    setMinimumSize(100,100);
-
-    undoGroup = new QUndoGroup(this);
-    undoView = new QUndoView(undoGroup, this);
-    updateCleanIcon(false);
-
-    setWidget(undoView);
-    setWindowTitle(tr("History"));
-    setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-
-    this->setFocusProxy(widgetToFocus);
-    undoView->setFocusProxy(widgetToFocus);
-}
-
-UndoEditor::~UndoEditor()
-{
-}
-
-void UndoEditor::updateCleanIcon(bool opened)
-{
-    if(opened)
-    {
-        undoView->setEmptyLabel(tr("Open"));
-        undoView->setCleanIcon(QIcon(iconDir + "/open.png"));
-    }
-    else
-    {
-    /*
-        undoView->setEmptyLabel(tr("New"));
-        undoView->setCleanIcon(QIcon(iconDir + "/new.png"));
-    */
-    }
-}
-
-void UndoEditor::addStack(QUndoStack* stack)
-{
-    undoGroup->addStack(stack);
-}
-
-bool UndoEditor::canUndo() const
-{
-    return undoGroup->canUndo();
-}
-
-bool UndoEditor::canRedo() const
-{
-    return undoGroup->canRedo();
-}
-
-QString UndoEditor::undoText() const
-{
-    return undoGroup->undoText();
-}
-
-QString UndoEditor::redoText() const
-{
-    return undoGroup->redoText();
-}
-
-void UndoEditor::undo()
-{
-    undoGroup->undo();
-}
-
-void UndoEditor::redo()
-{
-    undoGroup->redo();
 }
 
