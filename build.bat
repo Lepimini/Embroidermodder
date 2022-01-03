@@ -7,8 +7,8 @@ echo "Build"
 
 mkdir build
 cd build
-rem cmake -DCMAKE_BUILD_TYPE=Debug ..
-rem cmake --build .
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+cmake --build .
 
 rem Just build for now: install needs fixing
 rem cmake --install .
