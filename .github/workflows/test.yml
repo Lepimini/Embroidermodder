@@ -18,6 +18,11 @@ jobs:
         cd embroidermodder
         ./build.sh --get-dependencies
         ./build.sh --build
+    - name: Upload artifact to act as the Linux Nightly
+      uses: actions/upload-artifact@v2
+      with:
+        name: embroidermodder_2_alpha_linux
+        path: .
   test-macOS:
     runs-on: macOS-latest
     
@@ -28,6 +33,11 @@ jobs:
         cd embroidermodder
         ./build.sh --get-dependencies
         ./build.sh --build
+    - name: Upload artifact to act as the Mac OS Nightly
+      uses: actions/upload-artifact@v2
+      with:
+        name: embroidermodder_2_alpha_macos
+        path: .
   test-windows:
     runs-on: windows-latest
 
@@ -37,3 +47,8 @@ jobs:
         git clone https://github.com/Embroidermodder/embroidermodder
         cd embroidermodder
         .\build.bat
+    - name: Upload artifact to act as the Windows
+      uses: actions/upload-artifact@v2
+      with:
+        name: embroidermodder_2_alpha_windows
+        path: .
