@@ -28,7 +28,7 @@ endif()
 if(UNIX)
 set(ASSET_DIR $ENV{HOME}/.embroidermodder2)
 else()
-copyset(ASSET_DIR %HOMEDRIVE%%HOMEPATH%\.embroidermodder2)
+set(ASSET_DIR %HOMEDRIVE%%HOMEPATH%\.embroidermodder2)
 endif()
 
 find_package(Qt5Widgets)
