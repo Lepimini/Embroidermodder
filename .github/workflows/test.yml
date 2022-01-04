@@ -22,7 +22,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_linux
-        path: .
+        path: build
   test-macOS:
     runs-on: macOS-latest
     
@@ -37,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_macos
-        path: .
+        path: build
   test-windows:
     runs-on: windows-latest
 
@@ -51,4 +51,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_windows
-        path: .
+        path: build
