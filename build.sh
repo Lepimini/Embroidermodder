@@ -9,7 +9,7 @@ if command -v apt-get &> /dev/null
 then
 sudo apt-get update
 sudo apt-get install --fix-missing \
-    build-essential cmake mesa-common-dev x11proto-input-dev \
+    build-essential cmake mesa-common-dev x11proto-input-dev libxcb-xinput-dev \
     qtbase5-dev libqt5widgets5 valgrind pandoc
 else
 
