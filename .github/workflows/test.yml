@@ -37,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_macos
-        path: ./build
+        path: /Users/runner/work/Embroidermodder/Embroidermodder/embroidermodder/build
   test-windows:
     runs-on: windows-latest
 
@@ -51,4 +51,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_windows
-        path: .\build
+        path: D:\a\Embroidermodder\Embroidermodder\embroidermodder\build
