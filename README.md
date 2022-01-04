@@ -27,6 +27,12 @@ To see what we're focussing on at the moment check this table.
 | Summer Solstice (21st of June) 2022 | Embroidermodder 2 is officially released. |
 | July 2022 | News and Documentation work for Embroidermodder 2 |
 
+## Nightly
+
+We're currently working on a "nightly" build see:
+
+* [Embroidermodder 2.0.0 alpha (linux)](https://github.com/Embroidermodder/Embroidermodder/suites/4828305419/artifacts/136420268)
+
 ## Build and Install
 
 ### Dependencies
