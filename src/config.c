@@ -10,6 +10,10 @@
 
 #include "embroidermodder.h"
 
+const char* _appName_ = "Embroidermodder";
+const char* _appVer_ = "v2.0 alpha";
+int exitApp = 0;
+
 char *details_label_text[] = {
     "Total Stitches:",
     "Real Stitches:",
@@ -429,6 +433,7 @@ int n_actions = 68;
 
 action_hash_data action_list[] = {
     {
+        /* 0 */
         ACTION_donothing,
         icon_donothing,
         "donothing",
@@ -438,22 +443,122 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        /* 1 */
+        ACTION_new,
+        icon__new,
+        "new",
+        "&New",
+        "Create a new file.",
+        "Ctrl+N",
+        newFile
+    },
+    {
+        /* 2 */
+        ACTION_open,
+        icon_open,
+        "open",
+        "&Open",
+        "Open an existing file.",
+        "Ctrl+O",
+        openFile
+    },
+    {
+        /* 3 */
+        ACTION_save,
+        icon_save,
+        "save",
+        "&Save",
+        "Save the design to disk.",
+        "Ctrl+S",
+        saveFile
+    },
+    {
+        /* 4 */
+        ACTION_saveas,
+        icon_saveas,
+        "saveas",
+        "Save &As",
+        "Save the design under a new name.",
+        "Ctrl+Shift+S",
+        saveAsFile
+    },
+    {
+        /* 5 */
+        ACTION_print,
+        icon_print,
+        "print",
+        "&Print",
+        "Print the design.",
+        "Ctrl+P",
+        main_print
+    },
+    {
+        /* 6 */
+        ACTION_designdetails,
+        icon_designdetails,
+        "designdetails",
+        "&Details",
+        "Details of the current design.",
+        "Ctrl+D",
+        designDetails
+    },
+    {
+        /* 7 */
+        ACTION_exit,
+        icon_exit,
+        "exit",
+        "E&xit",
+        "Exit the application.",
+        "Ctrl+Q",
+        main_exit
+    },
+    {
+        /* 8 */
+        ACTION_cut,
+        icon_cut,
+        "cut",
+        "Cu&t",
+        "Cut the current selection's contents to the clipboard.",
+        "Ctrl+X",
+        main_cut
+    },
+    {
+        /* 9 */
+        ACTION_copy,
+        icon_copy,
+        "copy",
+        "&Copy",
+        "Copy the current selection's contents to the clipboard.",
+        "Ctrl+C",
+        main_copy
+    },
+    {
+        /* 10 */
+        ACTION_paste,
+        icon_paste,
+        "paste",
+        "&Paste",
+        "Paste the clipboard's contents into the current selection.",
+        "Ctrl+V",
+        main_paste
+    },
+    {
         ACTION_windowcascade,
         icon_windowcascade,
         "windowcascade",
         "&Cascade",
         "Cascade the windows.",
         "\0",
-        doNothing
+        windowCascade
     },
     {
-         ACTION_windowtile,
-         icon_windowtile,
-         "windowtile",
-         "&Tile",
-         "Tile the windows.",
+        ACTION_windowtile,
+        icon_windowtile,
+        "windowtile",
+        "&Tile",
+        "Tile the windows.",
         "\0",
-        doNothing
+        windowTile
     },
     {
         ACTION_windowclose,
@@ -462,7 +567,7 @@ action_hash_data action_list[] = {
         "Cl&ose",
         "Close the active window.",
         "\0",
-        doNothing
+        windowClose
     },
     {
         ACTION_windowcloseall,
@@ -471,7 +576,7 @@ action_hash_data action_list[] = {
         "Close &All",
         "Close all the windows.",
         "\0",
-        doNothing
+        windowCloseAll
     },
     {
         ACTION_windownext,
@@ -480,7 +585,7 @@ action_hash_data action_list[] = {
         "Ne&xt",
         "Move the focus to the next window.",
         "\0",
-        doNothing
+        windowNext
     },
     {
         ACTION_windowprevious,
@@ -489,97 +594,7 @@ action_hash_data action_list[] = {
         "Pre&vious",
         "Move the focus to the previous window.",
         "\0",
-        doNothing
-    },
-    {
-        ACTION_new,
-        icon__new,
-        "new",
-        "&New",
-        "Create a new file.",
-        "Ctrl+N",
-        doNothing
-    },
-    {
-        ACTION_open,
-        icon_open,
-        "open",
-        "&Open",
-        "Open an existing file.",
-        "Ctrl+O",
-        doNothing
-    },
-    {
-        ACTION_save,
-        icon_save,
-        "save",
-        "&Save",
-        "Save the design to disk.",
-        "Ctrl+S",
-        doNothing
-    },
-    {
-        ACTION_saveas,
-        icon_saveas,
-        "saveas",
-        "Save &As",
-        "Save the design under a new name.",
-        "Ctrl+Shift+S",
-        doNothing
-    },
-    {
-        ACTION_print,
-        icon_print,
-        "print",
-        "&Print",
-        "Print the design.",
-        "Ctrl+P",
-        doNothing
-    },
-    {
-        ACTION_designdetails,
-        icon_designdetails,
-        "designdetails",
-        "&Details",
-        "Details of the current design.",
-        "Ctrl+D",
-        doNothing
-    },
-    {
-        ACTION_exit,
-        icon_exit,
-        "exit",
-        "E&xit",
-        "Exit the application.",
-        "Ctrl+Q",
-        doNothing
-    },
-    {
-        ACTION_cut,
-        icon_cut,
-        "cut",
-        "Cu&t",
-        "Cut the current selection's contents to the clipboard.",
-        "Ctrl+X",
-        doNothing
-    },
-    {
-        ACTION_copy,
-        icon_copy,
-        "copy",
-        "&Copy",
-        "Copy the current selection's contents to the clipboard.",
-        "Ctrl+C",
-        doNothing
-    },
-    {
-        ACTION_paste,
-        icon_paste,
-        "paste",
-        "&Paste",
-        "Paste the clipboard's contents into the current selection.",
-        "Ctrl+V",
-        doNothing
+        windowPrevious
     },
     {
         ACTION_help,
@@ -588,7 +603,7 @@ action_hash_data action_list[] = {
         "&Help",
         "Displays help.",
         "F1",
-        doNothing
+        main_help
     },
     {
         ACTION_changelog,
@@ -597,7 +612,7 @@ action_hash_data action_list[] = {
         "&Changelog",
         "Describes new features in this product.",
         "\0",
-        doNothing
+        changelog
     },
     {
         ACTION_tipoftheday,
@@ -606,7 +621,7 @@ action_hash_data action_list[] = {
         "&Tip Of The Day",
         "Displays a dialog with useful tips",
         "\0",
-        doNothing
+        tipOfTheDay
     },
     {
         ACTION_about,
@@ -615,7 +630,7 @@ action_hash_data action_list[] = {
         "&About Embroidermodder 2",
         "Displays information about this product.",
         "F2",
-        doNothing
+        main_about
     },
     {
         ACTION_whatsthis,
@@ -624,7 +639,7 @@ action_hash_data action_list[] = {
         "&What's This?",
         "What's This? Context Help!",
         "\0",
-        doNothing
+        whatsthisContextHelp
     },
     {
         ACTION_undo,
@@ -651,7 +666,7 @@ action_hash_data action_list[] = {
         "Icon&16",
         "Sets the toolbar icon size to 16x16.",
         "\0",
-        doNothing
+        icon16
     },
     {
         ACTION_icon24,
@@ -660,7 +675,7 @@ action_hash_data action_list[] = {
         "Icon&24",
         "Sets the toolbar icon size to 24x24.",
         "\0",
-        doNothing
+        icon24
     },
     {
         ACTION_icon32,
@@ -669,7 +684,7 @@ action_hash_data action_list[] = {
         "Icon&32",
         "Sets the toolbar icon size to 32x32.",
         "\0",
-        doNothing
+        icon32
     },
     {
         ACTION_icon48,
@@ -678,7 +693,7 @@ action_hash_data action_list[] = {
         "Icon&48",
         "Sets the toolbar icon size to 48x48.",
         "\0",
-        doNothing
+        icon48
     },
     {
         ACTION_icon64,
@@ -687,7 +702,7 @@ action_hash_data action_list[] = {
         "Icon&64",
         "Sets the toolbar icon size to 64x64.",
         "\0",
-        doNothing
+        icon64
     },
     {
         ACTION_icon128,
@@ -696,7 +711,7 @@ action_hash_data action_list[] = {
         "Icon12&8",
         "Sets the toolbar icon size to 128x128.",
         "\0",
-        doNothing
+        icon128
     },
     {
         ACTION_settingsdialog,
@@ -705,7 +720,7 @@ action_hash_data action_list[] = {
         "&Settings",
         "Configure settings specific to this product.",
         "\0",
-        doNothing
+        settingsDialog
     },
     {
        ACTION_makelayercurrent,
@@ -714,7 +729,7 @@ action_hash_data action_list[] = {
        "&Make Layer Active",
        "Makes the layer of a selected object the active layer",
         "\0",
-        doNothing
+        makeLayerCurrent
     },
     {
         ACTION_layers,
@@ -723,7 +738,7 @@ action_hash_data action_list[] = {
         "&Layers",
         "Manages layers and layer properties:  LAYER",
         "\0",
-        doNothing
+        layerManager
     },
     {
         ACTION_layerselector,
@@ -732,7 +747,7 @@ action_hash_data action_list[] = {
         "&Layer Selector",
         "Dropdown selector for changing the current layer",
         "\0",
-        doNothing
+        layerSelector
     },
     {
         ACTION_layerprevious,
@@ -741,7 +756,7 @@ action_hash_data action_list[] = {
         "&Layer Previous",
         "Restores the previous layer settings:  LAYERP",
         "\0",
-        doNothing
+        layerPrevious
     },
     {
         ACTION_colorselector,
@@ -750,7 +765,7 @@ action_hash_data action_list[] = {
         "&Color Selector",
         "Dropdown selector for changing the current thread color",
         "\0",
-        doNothing
+        colorSelector
     },
     {
         ACTION_linetypeselector,
@@ -759,7 +774,7 @@ action_hash_data action_list[] = {
         "&Stitchtype Selector",
         "Dropdown selector for changing the current stitch type",
         "\0",
-        doNothing
+        lineTypeSelector
     },
     {
         ACTION_lineweightselector,
@@ -768,7 +783,7 @@ action_hash_data action_list[] = {
         "&Threadweight Selector",
         "Dropdown selector for changing the current thread weight",
         "\0",
-        doNothing
+        lineWeightSelector
     },
     {
         ACTION_hidealllayers,
@@ -777,7 +792,7 @@ action_hash_data action_list[] = {
         "&Hide All Layers",
         "Turns the visibility off for all layers in the current drawing:  HIDEALL",
         "\0",
-        doNothing
+        hideAllLayers
     },
     {
         ACTION_showalllayers,
@@ -786,7 +801,7 @@ action_hash_data action_list[] = {
         "&Show All Layers",
         "Turns the visibility on for all layers in the current drawing:  SHOWALL",
         "\0",
-        doNothing
+        showAllLayers
     },
     {
         ACTION_freezealllayers,
@@ -795,7 +810,7 @@ action_hash_data action_list[] = {
         "&Freeze All Layers",
         "Freezes all layers in the current drawing:  FREEZEALL",
         "\0",
-        doNothing
+        freezeAllLayers
     },
     {
         ACTION_thawalllayers,
@@ -804,7 +819,7 @@ action_hash_data action_list[] = {
         "&Thaw All Layers",
         "Thaws all layers in the current drawing:  THAWALL",
         "\0",
-        doNothing
+        thawAllLayers
     },
     {
         ACTION_lockalllayers,
@@ -813,7 +828,7 @@ action_hash_data action_list[] = {
         "&Lock All Layers",
         "Locks all layers in the current drawing:  LOCKALL",
         "\0",
-        doNothing
+        lockAllLayers
     },
     {
         ACTION_unlockalllayers,
@@ -822,7 +837,7 @@ action_hash_data action_list[] = {
         "&Unlock All Layers",
         "Unlocks all layers in the current drawing:  UNLOCKALL",
         "\0",
-        doNothing
+        unlockAllLayers
     },
     {
         ACTION_textbold,
@@ -831,7 +846,7 @@ action_hash_data action_list[] = {
         "&Bold Text",
         "Sets text to be bold.",
         "\0",
-        doNothing
+        textBold
     },
     {
         ACTION_textitalic,
@@ -840,7 +855,7 @@ action_hash_data action_list[] = {
         "&Italic Text",
         "Sets text to be italic.",
         "\0",
-        doNothing
+        textItalic
     },
     {
         ACTION_textoverline,
@@ -849,7 +864,7 @@ action_hash_data action_list[] = {
         "&Underline Text",
         "Sets text to be underlined.",
         "\0",
-        doNothing
+        textOverline
     },
     {
         ACTION_textstrikeout,
@@ -858,7 +873,7 @@ action_hash_data action_list[] = {
         "&StrikeOut Text",
         "Sets text to be striked out.",
         "\0",
-        doNothing
+        textStrikeout
     },
     {
         ACTION_textoverline,
@@ -867,7 +882,7 @@ action_hash_data action_list[] = {
         "&Overline Text",
         "Sets text to be overlined.",
         "\0",
-        doNothing
+        textOverline
     },
     {
         ACTION_zoomrealtime,
@@ -876,7 +891,7 @@ action_hash_data action_list[] = {
         "Zoom &Realtime",
         "Zooms to increase or decrease the apparent size of objects in the current viewport.",
         "\0",
-        doNothing
+        zoomRealtime
     },
     {
         ACTION_zoomprevious,
@@ -885,7 +900,7 @@ action_hash_data action_list[] = {
         "Zoom &Previous",
         "Zooms to display the previous view.",
         "\0",
-        doNothing
+        zoomPrevious
     },
     {
         ACTION_zoomwindow,
@@ -894,7 +909,7 @@ action_hash_data action_list[] = {
         "Zoom &Window",
         "Zooms to display an area specified by a rectangular window.",
         "\0",
-        doNothing
+        zoomWindow
     },
     {
         ACTION_zoomdynamic,
@@ -903,7 +918,7 @@ action_hash_data action_list[] = {
         "Zoom &Dynamic",
         "Zooms to display the generated portion of the drawing.",
         "\0",
-        doNothing
+        zoomDynamic
     },
     {
         ACTION_zoomscale,
@@ -912,7 +927,7 @@ action_hash_data action_list[] = {
         "Zoom &Scale",
         "Zooms the display using a specified scale factor.",
         "\0",
-        doNothing
+        zoomScale
     },
     {
         ACTION_zoomcenter,
@@ -921,7 +936,7 @@ action_hash_data action_list[] = {
         "Zoom &Center",
         "Zooms to display a view specified by a center point and magnification or height.",
         "\0",
-        doNothing
+        zoomCenter
     },
     {
         ACTION_zoomin,
@@ -930,7 +945,7 @@ action_hash_data action_list[] = {
         "Zoom &In",
         "Zooms to increase the apparent size of objects.",
         "\0",
-        doNothing
+        zoomIn
     },
     {
         ACTION_zoomout,
@@ -939,7 +954,7 @@ action_hash_data action_list[] = {
         "Zoom &Out",
         "Zooms to decrease the apparent size of objects.",
         "\0",
-        doNothing
+        zoomOut
     },
     {
         ACTION_zoomselected,
@@ -948,7 +963,7 @@ action_hash_data action_list[] = {
         "Zoom Selec&ted",
         "Zooms to display the selected objects.",
         "\0",
-        doNothing
+        zoomSelected
     },
     {
         ACTION_zoomall,
@@ -957,7 +972,7 @@ action_hash_data action_list[] = {
         "Zoom &All",
         "Zooms to display the drawing extents or the grid limits.",
         "\0",
-        doNothing
+        zoomAll
     },
     {
         ACTION_zoomextents,
@@ -966,7 +981,7 @@ action_hash_data action_list[] = {
         "Zoom &Extents",
         "Zooms to display the drawing extents.",
         "\0",
-        doNothing
+        zoomExtents
     },
     {
         ACTION_panrealtime,
@@ -975,7 +990,7 @@ action_hash_data action_list[] = {
         "&Pan Realtime",
         "Moves the view in the current viewport.",
         "\0",
-        doNothing
+        panrealtime
     },
     {
         ACTION_panpoint,
@@ -984,7 +999,7 @@ action_hash_data action_list[] = {
         "&Pan Point",
         "Moves the view by the specified distance.",
         "\0",
-        doNothing
+        panpoint
     },
     {
         ACTION_panleft,
@@ -993,7 +1008,7 @@ action_hash_data action_list[] = {
         "&Pan Left",
         "Moves the view to the left.",
         "\0",
-        doNothing
+        panLeft
     },
     {
         ACTION_panright,
@@ -1002,7 +1017,7 @@ action_hash_data action_list[] = {
         "&Pan Right",
         "Moves the view to the right.",
         "\0",
-        doNothing
+        panRight
     },
     {
         ACTION_panup,
@@ -1011,7 +1026,7 @@ action_hash_data action_list[] = {
         "&Pan Up",
         "Moves the view up.",
         "\0",
-        doNothing
+        panUp
     },
     {
         ACTION_pandown,
@@ -1020,7 +1035,7 @@ action_hash_data action_list[] = {
         "&Pan Down",
         "Moves the view down.",
         "\0",
-        doNothing
+        panDown
     },
     {
         ACTION_day,
@@ -1029,7 +1044,7 @@ action_hash_data action_list[] = {
         "&Day",
         "Updates the current view using day vision settings.",
         "\0",
-        doNothing
+        dayVision
     },
     {
         ACTION_night,
@@ -1038,7 +1053,7 @@ action_hash_data action_list[] = {
         "&Night",
         "Updates the current view using night vision settings.",
         "\0",
-        doNothing
+        nightVision
     }
 };
 
@@ -1261,4 +1276,153 @@ New for toolbars: modify and draw. Inquiry toolbar?
         doNothing
     },
 #endif
+
+int n_property_editors = 8;
+
+property_editor_row property_editors[] = {
+/*
+    create_lineedit_row(formLayout, ARC_CENTER_Y, "double", false, "blank", "Center Y");
+    create_lineedit_row(formLayout, ARC_RADIUS, "double", false, "blank", "Radius");
+    create_lineedit_row(formLayout, ARC_START_ANGLE, "double", false, "blank", "Start Angle");
+    create_lineedit_row(formLayout, ARC_END_ANGLE, "double", false, "blank", "End Angle");
+    create_lineedit_row(formLayout, ARC_START_X, "double", true, "blank", "Start X");
+    create_lineedit_row(formLayout, ARC_START_Y, "double", true, "blank", "Start Y");
+    create_lineedit_row(formLayout, ARC_END_X, "double", true, "blank", "End X");
+    create_lineedit_row(formLayout, ARC_END_Y, "double", true, "blank", "End Y");
+    create_lineedit_row(formLayout, ARC_AREA, "double", true, "blank", "Area");
+    create_lineedit_row(formLayout, ARC_LENGTH, "double", true, "blank", "Length");
+    create_lineedit_row(formLayout, ARC_CHORD, "double", true, "blank", "Chord");
+    create_lineedit_row(formLayout, ARC_INC_ANGLE, "double", true, "blank", "Included Angle");
+    groupBoxGeometryArc->setLayout(formLayout);
+
+    mapSignal(lineEdit[ARC_RADIUS], "lineEditArcRadius", OBJ_TYPE_ARC);
+    mapSignal(lineEdit[ARC_START_ANGLE], "lineEditArcStartAngle", OBJ_TYPE_ARC);
+    mapSignal(lineEdit[ARC_END_ANGLE], "lineEditArcEndAngle", OBJ_TYPE_ARC);
+
+
+    toolButtonRectangleCorner1X = createToolButton("blank", tr("Corner 1 X")); //TODO: use proper icon
+    toolButtonRectangleCorner1Y = createToolButton("blank", tr("Corner 1 Y")); //TODO: use proper icon
+    toolButtonRectangleCorner2X = createToolButton("blank", tr("Corner 2 X")); //TODO: use proper icon
+    toolButtonRectangleCorner2Y = createToolButton("blank", tr("Corner 2 Y")); //TODO: use proper icon
+    toolButtonRectangleCorner3X = createToolButton("blank", tr("Corner 3 X")); //TODO: use proper icon
+    toolButtonRectangleCorner3Y = createToolButton("blank", tr("Corner 3 Y")); //TODO: use proper icon
+    toolButtonRectangleCorner4X = createToolButton("blank", tr("Corner 4 X")); //TODO: use proper icon
+    toolButtonRectangleCorner4Y = createToolButton("blank", tr("Corner 4 Y")); //TODO: use proper icon
+    toolButtonRectangleWidth = createToolButton("blank", tr("Width"));      //TODO: use proper icon
+    toolButtonRectangleHeight = createToolButton("blank", tr("Height"));     //TODO: use proper icon
+    toolButtonRectangleArea = createToolButton("blank", tr("Area"));       //TODO: use proper icon
+
+    lineEditRectangleCorner1X = createLineEdit("double", 0);
+    lineEditRectangleCorner1Y = createLineEdit("double", 0);
+    lineEditRectangleCorner2X = createLineEdit("double", 0);
+    lineEditRectangleCorner2Y = createLineEdit("double", 0);
+    lineEditRectangleCorner3X = createLineEdit("double", 0);
+    lineEditRectangleCorner3Y = createLineEdit("double", 0);
+    lineEditRectangleCorner4X = createLineEdit("double", 0);
+    lineEditRectangleCorner4Y = createLineEdit("double", 0);
+    lineEditRectangleWidth = createLineEdit("double", 0);
+    lineEditRectangleHeight = createLineEdit("double", 0);
+    lineEditRectangleArea = createLineEdit("double", 1);
+
+    mapSignal(lineEditRectangleCorner1X, "lineEditRectangleCorner1X", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleCorner1Y, "lineEditRectangleCorner1Y", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleCorner2X, "lineEditRectangleCorner2X", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleCorner2Y, "lineEditRectangleCorner2Y", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleCorner3X, "lineEditRectangleCorner3X", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleCorner3Y, "lineEditRectangleCorner3Y", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleCorner4X, "lineEditRectangleCorner4X", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleCorner4Y, "lineEditRectangleCorner4Y", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleWidth, "lineEditRectangleWidth", OBJ_TYPE_RECTANGLE);
+    mapSignal(lineEditRectangleHeight, "lineEditRectangleHeight", OBJ_TYPE_RECTANGLE);
+
+*/
+    {
+        /* 0 */
+        OBJ_TYPE_ARC,
+        ARC_CENTER_X,
+        "double",
+        0,
+        "blank",
+        "Center X",
+        LINE_EDIT_TYPE,
+        "lineEditArcCenterX"
+    },
+    {
+        /* 1 */
+        OBJ_TYPE_ARC,
+        ARC_CENTER_Y,
+        "double",
+        0,
+        "blank",
+        "Center Y",
+        LINE_EDIT_TYPE,
+        "lineEditArcCenterY"
+    },
+    {
+        /* 2 */
+        OBJ_TYPE_ELLIPSE,
+        ELLIPSE_CENTER_X,
+        "double",
+        0,
+        "blank",
+        "Center X",
+        LINE_EDIT_TYPE,
+        "lineEditEllipseCenterX"
+    },
+    {
+        /* 3 */
+        OBJ_TYPE_ELLIPSE,
+        ELLIPSE_CENTER_Y,
+        "double",
+        0,
+        "blank",
+        "Center Y",
+        LINE_EDIT_TYPE,
+        "lineEditEllipseCenterY"
+    },
+    {
+        /* 4 */
+        OBJ_TYPE_ELLIPSE,
+        ELLIPSE_RADIUS_MAJOR,
+        "double",
+        0,
+        "blank",
+        "Radius Major",
+        LINE_EDIT_TYPE,
+        "lineEditEllipseRadiusMajor"
+    },
+    {
+        /* 5 */
+        OBJ_TYPE_ELLIPSE,
+        ELLIPSE_RADIUS_MINOR,
+        "double",
+        0,
+        "blank",
+        "Radius Minor",
+        LINE_EDIT_TYPE,
+        "lineEditEllipseRadiusMinor"
+    },
+    {
+        /* 6 */
+        OBJ_TYPE_ELLIPSE,
+        ELLIPSE_DIAMETER_MAJOR,
+        "double",
+        0,
+        "blank",
+        "Diameter Major",
+        LINE_EDIT_TYPE,
+        "lineEditEllipseDiameterMajor"
+    },
+    {
+        /* 7 */
+        OBJ_TYPE_ELLIPSE,
+        ELLIPSE_DIAMETER_MINOR,
+        "double",
+        0,
+        "blank",
+        "Diameter Minor",
+        LINE_EDIT_TYPE,
+        "lineEditEllipseDiameterMinor"
+    }
+};
 

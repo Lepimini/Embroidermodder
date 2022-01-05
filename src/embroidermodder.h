@@ -26,15 +26,15 @@ extern "C" {
 #define TOOLBAR_TEXT         8
 #define TOOLBAR_PROPERTIES   9
 
-#define MENU_FILE            0
-#define MENU_EDIT            1
-#define MENU_VIEW            2
-#define MENU_SETTINGS        3
-#define MENU_WINDOW          4
-#define MENU_HELP            5
-#define MENU_RECENT          6
-#define MENU_ZOOM            7
-#define MENU_PAN             8
+#define FILE_MENU            0
+#define EDIT_MENU            1
+#define VIEW_MENU            2
+#define SETTINGS_MENU        3
+#define WINDOW_MENU          4
+#define HELP_MENU            5
+#define RECENT_MENU          6
+#define ZOOM_MENU            7
+#define PAN_MENU             8
 
 #define SYMBOL_zero          0
 #define SYMBOL_one           1
@@ -49,6 +49,95 @@ extern "C" {
 #define SYMBOL_minus        10
 #define SYMBOL_apostrophe   11
 #define SYMBOL_quote        12
+
+/* LineEdits */
+/* --------------------------------- */
+#define ARC_CENTER_X                  0
+#define ARC_CENTER_Y                  1
+#define ARC_RADIUS                    2
+#define ARC_START_ANGLE               3
+#define ARC_END_ANGLE                 4
+#define ARC_START_X                   5
+#define ARC_START_Y                   6
+#define ARC_END_X                     7
+#define ARC_END_Y                     8
+#define ARC_AREA                      9
+#define ARC_LENGTH                   10
+#define ARC_CHORD                    11
+#define ARC_INC_ANGLE                12
+
+#define TEXT_SINGLE_CONTENTS         13
+#define TEXT_SINGLE_HEIGHT           14
+#define TEXT_SINGLE_ROTATION         15
+#define TEXT_SINGLE_X                16
+#define TEXT_SINGLE_Y                17
+
+#define CIRCLE_CENTER_X              22
+#define CIRCLE_CENTER_Y              23
+#define CIRCLE_RADIUS                24
+#define CIRCLE_DIAMETER              25
+#define CIRCLE_AREA                  26
+#define CIRCLE_CIRCUMFERENCE         27
+
+#define ELLIPSE_CENTER_X             28
+#define ELLIPSE_CENTER_Y             29
+#define ELLIPSE_RADIUS_MAJOR         30
+#define ELLIPSE_RADIUS_MINOR         31
+#define ELLIPSE_DIAMETER_MAJOR       32
+#define ELLIPSE_DIAMETER_MINOR       33
+
+#define IMAGE_X                      34
+#define IMAGE_Y                      35
+#define IMAGE_WIDTH                  36
+#define IMAGE_HEIGHT                 37
+#define IMAGE_NAME                   38
+#define IMAGE_PATH                   39
+
+#define INFINITE_LINE_X1             40
+#define INFINITE_LINE_Y1             41
+#define INFINITE_LINE_X2             42
+#define INFINITE_LINE_Y2             43
+#define INFINITE_LINE_VECTOR_X       44
+#define INFINITE_LINE_VECTOR_Y       45
+
+#define BLOCK_X                      46
+#define BLOCK_Y                      47
+
+#define LINE_START_X                 48
+#define LINE_START_Y                 49
+#define LINE_END_X                   50
+#define LINE_END_Y                   51
+#define LINE_DELTA_X                 52
+#define LINE_DELTA_Y                 53
+#define LINE_ANGLE                   54
+#define LINE_LENGTH                  55
+
+#define POLYGON_CENTER_X             56
+#define POLYGON_CENTER_Y             57
+#define POLYGON_RADIUS_VERTEX        58
+#define POLYGON_RADIUS_SIDE          59
+#define POLYGON_DIAMETER_VERTEX      60
+#define POLYGON_DIAMETER_SIDE        61
+#define POLYGON_INTERIOR_ANGLE       62
+
+/* Comboboxes */
+/* --------------------------------- */
+#define ARC_CLOCKWISE                 0
+
+#define GENERAL_LAYER                 1
+#define GENERAL_COLOR                 2
+#define GENERAL_LINE_TYPE             3
+#define GENERAL_LINE_WEIGHT           4
+
+#define TEXT_SINGLE_FONT              5
+#define TEXT_SINGLE_JUSTIFY           6
+
+#define LINEEDIT_PROPERTY_EDITORS    63
+#define COMBOBOX_PROPERTY_EDITORS     7
+#define PROPERTY_EDITORS             70
+
+#define LINE_EDIT_TYPE                0
+#define COMBO_BOX_TYPE                1
 
 /* Keys */
 /* ---- */
@@ -226,15 +315,14 @@ extern "C" {
 
 /* COMMAND ACTIONS */
 /* --------------- */
-#define ACTION_null   0
-#define ACTION_donothing  1
-#define ACTION_new    2
-#define ACTION_open   3
-#define ACTION_save   4
-#define ACTION_saveas 5
-#define ACTION_print  6
-#define ACTION_designdetails  7
-#define ACTION_exit   8
+#define ACTION_donothing      0
+#define ACTION_new            1
+#define ACTION_open           2
+#define ACTION_save           3
+#define ACTION_saveas         4
+#define ACTION_print          5
+#define ACTION_designdetails  6
+#define ACTION_exit           7
 #define ACTION_cut    9
 #define ACTION_copy   10
 #define ACTION_paste  11
@@ -390,11 +478,21 @@ typedef struct Quad {
 } quad;
 
 typedef struct Texture_t {
-    float position[8];
     float corners[8];
     int width;
     int height;
 } texture_t;
+
+typedef struct Property_Editor_Row {
+    int object;
+    int id;
+    char type[20];
+    int read_only;
+    char icon[20];
+    char label[100];
+    int mode;
+    char signal[100];
+} property_editor_row;
 
 typedef struct Settings_wrapper {
     int window_width;
@@ -419,8 +517,7 @@ typedef struct Settings_wrapper {
     int qsnap_apparent;
     int qsnap_parallel;
     int grid_center_on_origin;
-    float grid_center_x;
-    float grid_center_y;
+    EmbVector grid_center;
     float grid_size_x;
     float grid_size_y;
     float grid_spacing_x;
@@ -549,6 +646,8 @@ extern int undo_history_length;
 extern int undo_history_position;
 extern action_hash_data action_list[];
 extern const char *actions_strings[];
+extern property_editor_row property_editors[];
+extern int n_property_editors;
 extern char *menu_label[];
 extern char *obj_names[];
 extern char *icon_3dviews[];
@@ -916,11 +1015,16 @@ extern char *icon_zoomscale[];
 extern char *icon_zoomselected[];
 extern char *icon_zoomwindow[];
 extern char *icon_zoom[];
+extern const char* _appName_;
+extern const char* _appVer_;
+extern int exitApp;
 
 /* C functions for embroidermodder
  * -------------------------------
  */
 
+void usage(void);
+void version(void);
 void debug_message(const char *format, ...);
 void app_dir(char *string, int folder);
 int file_exists(char *fname);
@@ -934,6 +1038,59 @@ void key_handler(int c, int x, int y);
 void render_quadlist(quad *qlist);
 void menu(int key);
 void display(void);
+
+void newFile(void);
+void openFile(void);
+void saveFile(void);
+void saveAsFile(void);
+void tipOfTheDay(void);
+void main_exit(void);
+void main_cut(void);
+void main_copy(void);
+void main_paste(void);
+void main_print(void);
+void changelog(void);
+void main_about(void);
+void main_help(void);
+
+void windowCascade(void);
+void windowTile(void);
+void windowClose(void);
+void windowCloseAll(void);
+void windowNext(void);
+void windowPrevious(void);
+
+void designDetails(void);
+void settingsDialog(void);
+
+void lineTypeSelector(void);
+void lineWeightSelector(void);
+
+void whatsthisContextHelp(void);
+
+void colorSelector(void);
+
+void layerSelector(void);
+void hideAllLayers(void);
+void showAllLayers(void);
+void freezeAllLayers(void);
+void thawAllLayers(void);
+void lockAllLayers(void);
+void unlockAllLayers(void);
+void makeLayerCurrent(void);
+
+/* Icon Toolbar */
+void icon16(void);
+void icon24(void);
+void icon32(void);
+void icon48(void);
+void icon64(void);
+void icon128(void);
+
+void textItalic(void);
+void textOverline(void);
+void textStrikeout(void);
+void textBold(void);
 
 /* Layer Toolbar */
 void makeLayerActive(void);
@@ -1246,8 +1403,6 @@ public:
     MainWindow();
     ~MainWindow();
 
-    MdiArea*    getMdiArea();
-    MainWindow* getApplication();
     MdiWindow*  activeMdiWindow();
     View*   activeView();
     QGraphicsScene* activeScene();
@@ -1309,15 +1464,15 @@ public:
     void windowMenuAboutToShow();
     void windowMenuActivated(bool checked/*int id*/ );
 
-    void    updateAllViewScrollBars(bool val);
-    void    updateAllViewCrossHairColors(unsigned int color);
-    void    updateAllViewBackgroundColors(unsigned int color);
-    void    updateAllViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
-    void    updateAllViewGridColors(unsigned int color);
-    void    updateAllViewRulerColors(unsigned int color);
+    void updateAllViewScrollBars(bool val);
+    void updateAllViewCrossHairColors(unsigned int color);
+    void updateAllViewBackgroundColors(unsigned int color);
+    void updateAllViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
+    void updateAllViewGridColors(unsigned int color);
+    void updateAllViewRulerColors(unsigned int color);
 
-    void    updatePickAddMode(bool val);
-    void    pickAddModeToggled();
+    void updatePickAddMode(bool val);
+    void pickAddModeToggled();
 
     void    settingsDialog(const QString& showTab = QString());
     void    readSettings();
@@ -1326,11 +1481,6 @@ public:
     static bool    validFileFormat(const QString &fileName);
 
     QAction*    createAction(const QString icon, const QString toolTip, const QString statusTip, bool scripted = false);
-
-    void createAllToolbars();
-    void createLayerToolbar();
-    void createPropertiesToolbar();
-    void createTextToolbar();
 
     void stub_testing();
 
@@ -1378,16 +1528,16 @@ public:
     void textSizeSelectorIndexChanged(int index);
 
     QString textFont();
-    float   textSize();
-    float   textAngle();
-    bool    textBold();
-    bool    textItalic();
-    bool    textUnderline();
-    bool    textStrikeOut();
-    bool    textOverline();
+    float textSize();
+    float textAngle();
+    bool textBold();
+    bool textItalic();
+    bool textUnderline();
+    bool textStrikeOut();
+    bool textOverline();
 
     QString getCurrentLayer();
-    unsigned int    getCurrentColor();
+    unsigned int getCurrentColor();
     QString getCurrentLineType();
     QString getCurrentLineWeight();
 
@@ -1450,6 +1600,7 @@ public:
     PropertyEditor(const QString& iconDirectory = QString(), bool pickAddMode = true, QWidget* widgetToFocus = 0, QWidget* parent = 0, Qt::WindowFlags flags = Qt::Widget);
     ~PropertyEditor();
 
+    QGroupBox* create_group_box(int objtype);
     QGroupBox*   createGroupBoxMiscImage();
     QGroupBox*   createGroupBoxGeneral();
     QGroupBox*   createGroupBoxGeometryArc();

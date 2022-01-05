@@ -240,8 +240,8 @@ void MainWindow::readSettings()
     settings.grid_load_from_file = settings_file.value("Grid/LoadFromFile", true).toBool();
     strcpy(settings.grid_type, settings_file.value("Grid/Type", "Rectangular").toString().toLocal8Bit().constData());
     settings.grid_center_on_origin = settings_file.value("Grid/CenterOnOrigin", true).toBool();
-    settings.grid_center_x = settings_file.value("Grid/CenterX", 0.0).toFloat();
-    settings.grid_center_y = settings_file.value("Grid/CenterY", 0.0).toFloat();
+    settings.grid_center.x = settings_file.value("Grid/CenterX", 0.0).toFloat();
+    settings.grid_center.y = settings_file.value("Grid/CenterY", 0.0).toFloat();
     settings.grid_size_x = settings_file.value("Grid/SizeX", 100.0).toFloat();
     settings.grid_size_y = settings_file.value("Grid/SizeY", 100.0).toFloat();
     settings.grid_spacing_x = settings_file.value("Grid/SpacingX", 25.0).toFloat();
@@ -373,8 +373,8 @@ void MainWindow::writeSettings()
     settings_file.setValue("Grid/LoadFromFile", settings.grid_load_from_file);
     settings_file.setValue("Grid/Type", settings.grid_type);
     settings_file.setValue("Grid/CenterOnOrigin", settings.grid_center_on_origin);
-    settings_file.setValue("Grid/CenterX", tmp.setNum(settings.grid_center_x));
-    settings_file.setValue("Grid/CenterY", tmp.setNum(settings.grid_center_y));
+    settings_file.setValue("Grid/CenterX", tmp.setNum(settings.grid_center.x));
+    settings_file.setValue("Grid/CenterY", tmp.setNum(settings.grid_center.y));
     settings_file.setValue("Grid/SizeX", tmp.setNum(settings.grid_size_x));
     settings_file.setValue("Grid/SizeY", tmp.setNum(settings.grid_size_y));
     settings_file.setValue("Grid/SpacingX", tmp.setNum(settings.grid_spacing_x));

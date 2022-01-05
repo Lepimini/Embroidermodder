@@ -188,12 +188,10 @@ ENDIF()
 add_executable(embroidermodder
 	src/main.cpp
 	src/settings.cpp
-	src/actions.cpp
 	src/gui.c
 	src/icons.c
 	src/config.c
 	src/embroidermodder.h
-	extern/cJSON/cJSON.c
 	${FREEGLUT_SRCS}
 )
 
@@ -201,7 +199,6 @@ target_include_directories(embroidermodder PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/libembroidery
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/freeglut3/include
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/freeglut3/src
-	${CMAKE_CURRENT_SOURCE_DIR}/extern/cJSON
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 add_subdirectory(libembroidery)

@@ -22,7 +22,6 @@
 #endif
 
 #include "GL/freeglut.h"
-#include "cJSON.h"
 
 #include "embroidermodder.h"
 
@@ -45,6 +44,36 @@ int window_height = 480;
 float mouse[2];
 int mouse_x = 0;
 int mouse_y = 0;
+
+void usage(void)
+{
+    fprintf(stderr,
+  " ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ " "\n"
+  "| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ |     |/  \\|   \\|   \\| __| _ \\  |__ \\" "\n"
+  "| __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/" "\n"
+  "|___|_|_|_|___/|_|\\_\\\\__/|_|___/|___|_|\\_\\|_|_|_|\\__/|___/|___/|___|_|\\_\\ |___|" "\n"
+  " _____________________________________________________________________________ " "\n"
+  "|                                                                             | "  "\n"
+  "|                   http://embroidermodder.github.io                          | "  "\n"
+  "|_____________________________________________________________________________| "  "\n"
+  " " "\n"
+  "Usage: embroidermodder [options] files ..."  "\n"
+   //80CHARS======================================================================MAX
+  "Options:"  "\n"
+  "  -d, --debug      Print lots of debugging information." "\n"
+  "  -h, --help       Print this message and exit." "\n"
+  "  -v, --version    Print the version number of embroidermodder and exit."  "\n"
+  "\n"
+           );
+    exitApp = 1;
+}
+
+void version()
+{
+    fprintf(stdout, "%s %s\n", _appName_, _appVer_);
+    exitApp = 1;
+}
+
 
 /* FUNCTIONS SECTION */
 
@@ -200,68 +229,6 @@ int file_exists(char *fname)
     return !stat(fname, &stats);
 }
 
-int loadJSON(char *fname)
-{
-    if (file_exists(fname)) {
-        /* Config has been written, load to settings. */
-        parseJSON(fname);
-    }
-    else {
-        /* We load from the defaults instead. */
-    }
-    return 0;
-}
-
-int saveJSON(char *fname)
-{
-    /* Write all current values of settings to JSON file. */
-    return 0;
-}
-
-int parseJSON(char *fname)
-{
-    FILE *f;
-    char str[1000];
-    cJSON *obj, *name, *value;
-    int length;
-
-    puts("Embroidermodder sandbox.");
-
-    f = fopen(fname, "rb");
-    fseek(f, 0, SEEK_END);
-    length = ftell(f);
-    fseek(f, 0, SEEK_SET);
-    fread(str, 1, length, f);
-    fclose(f);
-
-    obj = cJSON_Parse(str);
-    if (!obj) {
-        puts("Failed to parse JSON string.");
-        const char *error = cJSON_GetErrorPtr();
-        printf("%s\n", error);
-        return 1;
-    }
-    name = cJSON_GetObjectItemCaseSensitive(obj, "File");
-    if (!name) {
-        printf("Failed find key File.");
-        return 0;
-    }
-    printf("name: %d\n", name->type);
-    value = cJSON_GetObjectItemCaseSensitive(name, "type");
-    if (!value) {
-        printf("Failed find key type within dict File.");
-        return 0;
-    }
-    printf("name: %d\n", value->type);
-
-    if (cJSON_IsString(value) && value->valuestring) {
-        printf("%s\n", value->valuestring);
-    }
-
-    cJSON_Delete(obj);
-    return 0;
-}
-
 void render_quadlist(quad *qlist)
 {
     int i;
@@ -296,13 +263,13 @@ void display()
     for (i=0; i<N_TEXTURES; i++) {
         glBindTexture(GL_TEXTURE_2D, texture[i]);
         glBegin(GL_QUADS);
-        glTexCoord2f(tex[i].position[0], tex[i].position[1]);
+        glTexCoord2f(0.0, 0.0);
         glVertex2f(tex[i].corners[0], tex[i].corners[1]);
-        glTexCoord2f(tex[i].position[2], tex[i].position[3]);
+        glTexCoord2f(0.0, 1.0);
         glVertex2f(tex[i].corners[2], tex[i].corners[3]);
-        glTexCoord2f(tex[i].position[4], tex[i].position[5]);
+        glTexCoord2f(1.0, 1.0);
         glVertex2f(tex[i].corners[4], tex[i].corners[5]);
-        glTexCoord2f(tex[i].position[6], tex[i].position[7]);
+        glTexCoord2f(1.0, 0.0);
         glVertex2f(tex[i].corners[6], tex[i].corners[7]);
         glEnd();
     }
@@ -338,14 +305,6 @@ void generate_texture(int i)
     tex[i].corners[5] = 1.0;
     tex[i].corners[6] = 1.0;
     tex[i].corners[7] = 0.0;
-    tex[i].position[0] = 0.0;
-    tex[i].position[1] = 0.0;
-    tex[i].position[2] = 0.0;
-    tex[i].position[3] = 1.0;
-    tex[i].position[4] = 1.0;
-    tex[i].position[5] = 1.0;
-    tex[i].position[6] = 1.0;
-    tex[i].position[7] = 0.0;
     glBindTexture(GL_TEXTURE_2D, texture[i]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

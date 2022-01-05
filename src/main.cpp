@@ -14,6 +14,10 @@ QString opensave_custom_filter;
 
 QToolBar* toolbar[10];
 
+QToolButton* toolButton[PROPERTY_EDITORS];
+QLineEdit* lineEdit[LINEEDIT_PROPERTY_EDITORS];
+QComboBox* comboBox[COMBOBOX_PROPERTY_EDITORS];
+
 QMenu* fileMenu;
 QMenu* editMenu;
 QMenu* viewMenu;
@@ -386,6 +390,148 @@ QComboBox*   comboBoxTextSingleUpsideDown;
 
 MainWindow* _mainWin = 0;
 
+action_call undo_history[1000];
+action_call action;
+int undo_history_length = 0;
+int undo_history_position = 0;
+
+void settings_actuator(void)
+{
+    
+}
+
+void icon16(void)
+{
+    debug_message("icon16()");
+    _mainWin->iconResize(16);
+}
+
+void icon24(void)
+{
+    debug_message("icon24()");
+    _mainWin->iconResize(24);
+}
+
+void icon32(void)
+{
+    debug_message("icon32()");
+    _mainWin->iconResize(32);
+}
+
+void icon48(void)
+{
+    debug_message("icon48()");
+    _mainWin->iconResize(48);
+}
+
+void icon64(void)
+{
+    debug_message("icon64()");
+    _mainWin->iconResize(64);
+}
+
+void icon128(void)
+{
+    debug_message("icon128()");
+    _mainWin->iconResize(128);
+}
+
+void newFile(void)
+{
+    debug_message("newFile()");
+    _mainWin->newFile();
+}
+
+void openFile(void)
+{
+    debug_message("openFile()");
+    _mainWin->openFile();
+}
+
+void saveFile(void)
+{
+    debug_message("saveFile()");
+    _mainWin->savefile();
+}
+
+void main_print(void)
+{
+    debug_message("print()");
+    _mainWin->print();
+}
+
+void main_exit(void)
+{
+    debug_message("main_exit()");
+    exit(0);
+}
+
+void saveAsFile(void) {}
+void whatsthisContextHelp(void) {}
+void makeLayerCurrent(void) {}
+void layerSelector(void) {}
+void main_about(void) {}
+void main_help(void) {}
+void settingsDialog(void) {}
+void designDetails(void) {}
+void main_cut(void) {}
+void main_copy(void) {}
+void main_paste(void) {}
+void tipOfTheDay(void) {}
+void changelog(void) {}
+void showAllLayers(void) {}
+void freezeAllLayers(void) {}
+void thawAllLayers(void) {}
+void lockAllLayers(void) {}
+void unlockAllLayers(void) {}
+void hideAllLayers(void) {}
+void lineWeightSelector(void) {}
+void lineTypeSelector(void) {}
+void colorSelector(void) {}
+
+void windowClose(void) {}
+void windowTile(void) {}
+void windowCloseAll(void) {}
+void windowCascade(void) {}
+void windowNext(void) {}
+void windowPrevious(void) {}
+
+void textItalic(void)
+{
+    settings.text_style_italic = !settings.text_style_italic;
+}
+
+void textBold(void)
+{
+    settings.text_style_bold = !settings.text_style_bold;
+}
+
+void textStrikeout(void)
+{
+    settings.text_style_strikeout = !settings.text_style_strikeout;
+}
+
+void textUnderline(void)
+{
+    settings.text_style_underline = !settings.text_style_underline;
+}
+
+void textOverline(void)
+{
+    settings.text_style_overline = !settings.text_style_overline;
+}
+
+void actuator(void)
+{
+    undo_history_position++;
+    /* an action has been taken, we are at the current head of the stack */
+    undo_history_length = undo_history_position;
+    memcpy(undo_history+undo_history_position, &action, sizeof(action_call));
+    if (action.id >= 0 && action.id < n_actions) {
+        action_list[action.id].function();
+    }
+}
+
 /*
  * WARNING
  * -------
@@ -525,7 +671,7 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
         createGrid("");
 
     toggleRuler(settings.ruler_show_on_load);
-    toggleReal(true); //TODO: load this from file, else settings with default being true
+    toggleReal(1); //TODO: load this from file, else settings with default being 1
 
     settings.grippingActive = 0;
     settings.rapidMoveActive = 0;
@@ -564,7 +710,7 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
 
     installEventFilter(this);
 
-    setMouseTracking(true);
+    setMouseTracking(1);
     setBackgroundColor(settings.display_bg_color);
     //TODO: wrap this with a setBackgroundPixmap() function: setBackgroundBrush(QPixmap("images/canvas));
 
@@ -585,7 +731,7 @@ View::~View()
 void View::enterEvent(QEvent* /*event*/)
 {
     QMdiSubWindow* mdiWin = qobject_cast<QMdiSubWindow*>(parent());
-    if(mdiWin) mainWin->getMdiArea()->setActiveSubWindow(mdiWin);
+    if(mdiWin) mainWin->mdiArea->setActiveSubWindow(mdiWin);
 }
 
 void View::addObject(BaseObject* obj)
@@ -598,7 +744,7 @@ void View::addObject(BaseObject* obj)
 void View::deleteObject(BaseObject* obj)
 {
     //NOTE: We really just remove the objects from the scene. deletion actually occurs in the destructor.
-    obj->setSelected(false);
+    obj->setSelected(0);
     gscene->removeItem(obj);
     gscene->update();
     hashDeletedObjects.insert(obj->objID, obj);
@@ -623,7 +769,7 @@ void View::previewOn(int clone, int mode, float x, float y, float data)
     {
         previewPoint = QPointF(x, y); //NOTE: Move: basePt; Rotate: basePt;   Scale: basePt;
         previewData = data;           //NOTE: Move: unused; Rotate: refAngle; Scale: refFactor;
-        settings.previewActive = true;
+        settings.previewActive = 1;
     }
     else
     {
@@ -656,7 +802,7 @@ void View::previewOff()
 
 void View::enableMoveRapidFire()
 {
-    settings.rapidMoveActive = true;
+    settings.rapidMoveActive = 1;
 }
 
 void View::disableMoveRapidFire()
@@ -667,8 +813,8 @@ void View::disableMoveRapidFire()
 bool View::allowRubber()
 {
     //if(!rubberRoomList.size()) //TODO: this check should be removed later
-        return true;
-    return false;
+        return 1;
+    return 0;
 }
 
 void View::addToRubberRoom(QGraphicsItem* item)
@@ -787,10 +933,10 @@ void View::setRulerColor(unsigned int color)
 
 void View::createGrid(const QString& gridType)
 {
-    if     (gridType == "Rectangular") { createGridRect();  gscene->setProperty("ENABLE_GRID", true); }
-    else if(gridType == "Circular")    { createGridPolar(); gscene->setProperty("ENABLE_GRID", true); }
-    else if(gridType == "Isometric")   { createGridIso();   gscene->setProperty("ENABLE_GRID", true); }
-    else                               { gridPath = QPainterPath(); gscene->setProperty("ENABLE_GRID", false); }
+    if     (gridType == "Rectangular") { createGridRect();  gscene->setProperty("ENABLE_GRID", 1); }
+    else if(gridType == "Circular")    { createGridPolar(); gscene->setProperty("ENABLE_GRID", 1); }
+    else if(gridType == "Isometric")   { createGridIso();   gscene->setProperty("ENABLE_GRID", 1); }
+    else                               { gridPath = QPainterPath(); gscene->setProperty("ENABLE_GRID", 0); }
 
     createOrigin();
 
@@ -842,8 +988,8 @@ void View::createGridRect()
     QRectF gridRect = gridPath.boundingRect();
     float bx = gridRect.width()/2.0;
     float by = -gridRect.height()/2.0;
-    float cx = settings.grid_center_x;
-    float cy = -settings.grid_center_y;
+    float cx = settings.grid_center.x;
+    float cy = -settings.grid_center.y;
     float dx = cx - bx;
     float dy = cy - by;
 
@@ -871,7 +1017,7 @@ void View::createGridPolar()
     }
 
     if(!settings.grid_center_on_origin)
-        gridPath.translate(settings.grid_center_x, -settings.grid_center_y);
+        gridPath.translate(settings.grid_center.x, -settings.grid_center.y);
 }
 
 void View::createGridIso()
@@ -912,8 +1058,8 @@ void View::createGridIso()
     QRectF gridRect = gridPath.boundingRect();
     // bx is unused
     float by = -gridRect.height()/2.0;
-    float cx = settings.grid_center_x;
-    float cy = -settings.grid_center_y;
+    float cx = settings.grid_center.x;
+    float cy = -settings.grid_center.y;
 
     if (settings.grid_center_on_origin) {
         gridPath.translate(0, -by);
@@ -1028,12 +1174,12 @@ void View::drawBackground(QPainter* painter, const QRectF& rect)
     painter->fillRect(rect, backgroundBrush());
 
     /* HACK bool a = rect.intersects(gridPath.controlPointRect(); */
-    bool a = true;
+    bool a = 1;
     if (gscene->property("ENABLE_GRID").toBool() && a)
     {
         QPen gridPen(gridColor);
         gridPen.setJoinStyle(Qt::MiterJoin);
-        gridPen.setCosmetic(true);
+        gridPen.setCosmetic(1);
         painter->setPen(gridPen);
         painter->drawPath(gridPath);
         painter->drawPath(originPath);
@@ -1064,7 +1210,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
     QPen gripPen(QColor::fromRgb(gripColorCool));
     gripPen.setWidth(2);
     gripPen.setJoinStyle(Qt::MiterJoin);
-    gripPen.setCosmetic(true);
+    gripPen.setCosmetic(1);
     painter->setPen(gripPen);
     QPoint gripOffset(settings.selection_grip_size, settings.selection_grip_size);
 
@@ -1093,12 +1239,12 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
      * Draw the closest qsnap point
      * ================================================== */
 
-    if(!settings.selectingActive) //TODO: && findClosestSnapPoint == true
+    if(!settings.selectingActive) //TODO: && findClosestSnapPoint == 1
     {
         QPen qsnapPen(QColor::fromRgb(qsnapLocatorColor));
         qsnapPen.setWidth(2);
         qsnapPen.setJoinStyle(Qt::MiterJoin);
-        qsnapPen.setCosmetic(true);
+        qsnapPen.setCosmetic(1);
         painter->setPen(qsnapPen);
         QPoint qsnapOffset(settings.qsnap_locator_size, settings.qsnap_locator_size);
 
@@ -1127,7 +1273,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
      * ================================================== */
 
     if (gscene->property("ENABLE_RULER").toBool()) {
-        bool proceed = true;
+        bool proceed = 1;
 
         int vw = width();  //View Width
         int vh = height(); //View Height
@@ -1181,7 +1327,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
                 }
                 int unit = distStr.toInt();
                 float fraction;
-                bool feet = true;
+                bool feet = 1;
                 if (settings.rulerMetric) {
                     if(unit < 10) unit = 10;
                     fraction = unit/10;
@@ -1194,7 +1340,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
                     }
                     else
                     {
-                        unit = roundToMultiple(true, unit, 12);
+                        unit = roundToMultiple(1, unit, 12);
                         fraction = unit/12;
                     }
                 }
@@ -1217,7 +1363,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
                 QTransform transform;
 
                 QPen rulerPen(QColor(0,0,0));
-                rulerPen.setCosmetic(true);
+                rulerPen.setCosmetic(1);
                 painter->setPen(rulerPen);
                 painter->fillRect(QRectF(ox, oy, rhw, rhh), rulerColor);
                 painter->fillRect(QRectF(ox, oy, rvw, rvh), rulerColor);
@@ -1227,14 +1373,14 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
                     proceed = 0;
                 }
                 else {
-                    xFlow = roundToMultiple(false, ox, unit);
+                    xFlow = roundToMultiple(0, ox, unit);
                 }
                 if (willUnderflowInt32(xFlow, unit)) {
                     proceed = 0;
                 }
                 else { xStart = xFlow - unit; }
                 if (willUnderflowInt32(oy, unit)) { proceed = 0; }
-                else { yFlow = roundToMultiple(false, oy, unit); }
+                else { yFlow = roundToMultiple(0, oy, unit); }
                 if(willUnderflowInt32(yFlow, unit)) { proceed = 0; }
                 else                             { yStart = yFlow - unit; }
 
@@ -1361,7 +1507,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
     if (!settings.selectingActive) {
         //painter->setBrush(Qt::NoBrush);
         QPen crosshairPen(QColor::fromRgb(crosshairColor));
-        crosshairPen.setCosmetic(true);
+        crosshairPen.setCosmetic(1);
         painter->setPen(crosshairPen);
         painter->drawLine(QLineF(mapToScene(viewMousePoint.x(), viewMousePoint.y()-settings.crosshairSize),
                                  mapToScene(viewMousePoint.x(), viewMousePoint.y()+settings.crosshairSize)));
@@ -1553,7 +1699,7 @@ void View::setCornerButton()
     int num = settings.display_scrollbar_widget_num;
     if (num) {
         QPushButton* cornerButton = new QPushButton(this);
-        cornerButton->setFlat(true);
+        cornerButton->setFlat(1);
         QAction* act = mainWin->actionHash.value(num);
         //NOTE: Prevent crashing if the action is NULL.
         if (!act) {
@@ -1581,7 +1727,9 @@ void View::cornerButtonClicked()
 void View::zoomIn()
 {
     debug_message("View zoomIn()");
-    if(!allowZoomIn()) { return; }
+    if (!allowZoomIn()) {
+        return;
+    }
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QPointF cntr = mapToScene(QPoint(width()/2,height()/2));
     float s = settings.display_zoomscale_in;
@@ -1606,7 +1754,7 @@ void View::zoomOut()
 
 void View::zoomWindow()
 {
-    settings.zoomWindowActive = true;
+    settings.zoomWindowActive = 1;
     settings.selectingActive = 0;
     clearSelection();
 }
@@ -1643,12 +1791,12 @@ void View::zoomExtents()
 
 void View::panRealTime()
 {
-    settings.panningRealTimeActive = true;
+    settings.panningRealTimeActive = 1;
 }
 
 void View::panPoint()
 {
-    settings.panningPointActive = true;
+    settings.panningPointActive = 1;
 }
 
 void View::panLeft()
@@ -1720,7 +1868,7 @@ void View::mousePressEvent(QMouseEvent* event)
         {
             bool itemsAlreadySelected = pickList.at(0)->isSelected();
             if (!itemsAlreadySelected) {
-                pickList.at(0)->setSelected(true);
+                pickList.at(0)->setSelected(1);
             }
             else {
                 bool foundGrip = 0;
@@ -1735,7 +1883,7 @@ void View::mousePressEvent(QMouseEvent* event)
                 QRectF pickRect = QRectF(mapToScene(viewMousePoint.x()-settings.pickBoxSize, viewMousePoint.y()-settings.pickBoxSize),
                                         mapToScene(viewMousePoint.x()+settings.pickBoxSize, viewMousePoint.y()+settings.pickBoxSize));
                 if(gripRect.intersects(pickRect))
-                    foundGrip = true;
+                    foundGrip = 1;
 
                 //If the pick point is within the item's grip box, start gripping
                 if(foundGrip)
@@ -1744,17 +1892,17 @@ void View::mousePressEvent(QMouseEvent* event)
                 }
                 else //start moving
                 {
-                    settings.movingActive = true;
+                    settings.movingActive = 1;
                     pressPoint = event->pos();
                     scenePressPoint = mapToScene(pressPoint);
                 }
             }
         }
         else if (settings.grippingActive) {
-            stopGripping(true);
+            stopGripping(1);
         }
         else if (!settings.selectingActive) {
-            settings.selectingActive = true;
+            settings.selectingActive = 1;
             pressPoint = event->pos();
             scenePressPoint = mapToScene(pressPoint);
 
@@ -1779,13 +1927,13 @@ void View::mousePressEvent(QMouseEvent* event)
                     {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::ContainsItemShape);
                         foreach(QGraphicsItem* item, itemList)
-                            item->setSelected(false);
+                            item->setSelected(0);
                     }
                     else
                     {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::ContainsItemShape);
                         foreach(QGraphicsItem* item, itemList)
-                            item->setSelected(true);
+                            item->setSelected(1);
                     }
                 }
                 else {
@@ -1802,7 +1950,7 @@ void View::mousePressEvent(QMouseEvent* event)
                         clearSelection();
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::ContainsItemShape);
                         foreach(QGraphicsItem* item, itemList)
-                            item->setSelected(true);
+                            item->setSelected(1);
                     }
                 }
             }
@@ -1811,12 +1959,12 @@ void View::mousePressEvent(QMouseEvent* event)
                     if(mainWin->isShiftPressed()) {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::IntersectsItemShape);
                         foreach(QGraphicsItem* item, itemList)
-                            item->setSelected(false);
+                            item->setSelected(0);
                     }
                     else {
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::IntersectsItemShape);
                         foreach(QGraphicsItem* item, itemList)
-                            item->setSelected(true);
+                            item->setSelected(1);
                     }
                 }
                 else {
@@ -1835,7 +1983,7 @@ void View::mousePressEvent(QMouseEvent* event)
                         clearSelection();
                         QList<QGraphicsItem*> itemList = gscene->items(path, Qt::IntersectsItemShape);
                         foreach(QGraphicsItem* item, itemList)
-                            item->setSelected(true);
+                            item->setSelected(1);
                     }
                 }
             }
@@ -1877,7 +2025,7 @@ void View::panStart(const QPoint& point)
 
     alignScenePointWithViewPoint(mapToScene(point), point);
 
-    settings.panningActive = true;
+    settings.panningActive = 1;
     panStartX = point.x();
     panStartY = point.y();
 }
@@ -2049,10 +2197,10 @@ bool View::allowZoomIn()
     if(qMin(maxWidth, maxHeight) < zoomInLimit)
     {
         debug_message("ZoomIn limit reached. (limit=%.10f)", zoomInLimit);
-        return false;
+        return 0;
     }
 
-    return true;
+    return 1;
 }
 
 bool View::allowZoomOut()
@@ -2065,10 +2213,10 @@ bool View::allowZoomOut()
     float zoomOutLimit = 10000000000000.0;
     if (embMaxDouble(maxWidth, maxHeight) > zoomOutLimit) {
         debug_message("ZoomOut limit reached. (limit=%.1f)", zoomOutLimit);
-        return false;
+        return 0;
     }
 
-    return true;
+    return 1;
 }
 
 void View::wheelEvent(QWheelEvent* event)
@@ -2187,7 +2335,7 @@ void View::deletePressed()
     settings.zoomWindowActive = 0;
     settings.selectingActive = 0;
     selectBox->hide();
-    stopGripping(false);
+    stopGripping(0);
     deleteSelected();
 }
 
@@ -2202,14 +2350,14 @@ void View::escapePressed()
     settings.zoomWindowActive = 0;
     settings.selectingActive = 0;
     selectBox->hide();
-    if(settings.grippingActive) stopGripping(false);
+    if(settings.grippingActive) stopGripping(0);
     else clearSelection();
 }
 
 void View::startGripping(BaseObject* obj)
 {
     if(!obj) return;
-    settings.grippingActive = true;
+    settings.grippingActive = 1;
     gripBaseObj = obj;
     sceneGripPoint = gripBaseObj->mouseSnapPoint(to_qpointf(sceneMousePoint));
     gripBaseObj->setObjectRubberPoint("GRIP_POINT", sceneGripPoint);
@@ -2304,7 +2452,7 @@ void View::paste()
     pasteObjectItemGroup = gscene->createItemGroup(mainWin->cutCopyObjectList);
     pasteDelta = pasteObjectItemGroup->boundingRect().bottomLeft();
     pasteObjectItemGroup->setPos(to_qpointf(sceneMousePoint) - pasteDelta);
-    settings.pastingActive = true;
+    settings.pastingActive = 1;
 
     /* Re-create the list in case of multiple pastes */
     mainWin->cutCopyObjectList = createObjectList(mainWin->cutCopyObjectList);
@@ -2798,7 +2946,7 @@ QWidget* Settings_Dialog::createTabGeneral()
     radioButtonSystemHelpBrowser->setChecked(settings.general_system_help_browser);
     QRadioButton* radioButtonCustomHelpBrowser = new QRadioButton(tr("Custom"), groupBoxHelpBrowser);
     radioButtonCustomHelpBrowser->setChecked(!settings.general_system_help_browser);
-    radioButtonCustomHelpBrowser->setEnabled(false); //TODO: finish this
+    radioButtonCustomHelpBrowser->setEnabled(0); //TODO: finish this
 
     QVBoxLayout* vboxLayoutHelpBrowser = new QVBoxLayout(groupBoxHelpBrowser);
     vboxLayoutHelpBrowser->addWidget(radioButtonSystemHelpBrowser);
@@ -2816,7 +2964,7 @@ QWidget* Settings_Dialog::createTabGeneral()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -2826,7 +2974,7 @@ QWidget* Settings_Dialog::createTabFilesPaths()
     QWidget* widget = new QWidget(this);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3031,7 +3179,7 @@ QWidget* Settings_Dialog::createTabDisplay()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3043,7 +3191,7 @@ QWidget* Settings_Dialog::createTabOpenSave()
 
     //Custom Filter
     QGroupBox* groupBoxCustomFilter = new QGroupBox(tr("Custom Filter"), widget);
-    groupBoxCustomFilter->setEnabled(false); //TODO: Fixup custom filter
+    groupBoxCustomFilter->setEnabled(0); //TODO: Fixup custom filter
 
     QPushButton* buttonCustomFilterSelectAll = new QPushButton(tr("Select All"), groupBoxCustomFilter);
     connect(buttonCustomFilterSelectAll, SIGNAL(clicked()), this, SLOT(buttonCustomFilterSelectAllClicked()));
@@ -3074,7 +3222,7 @@ QWidget* Settings_Dialog::createTabOpenSave()
     QComboBox* comboBoxOpenFormat = new QComboBox(groupBoxOpening);
 
     QCheckBox* checkBoxOpenThumbnail = new QCheckBox(tr("Preview Thumbnails"), groupBoxOpening);
-    checkBoxOpenThumbnail->setChecked(false);
+    checkBoxOpenThumbnail->setChecked(0);
 
     /* TODO: Add a button to clear the recent history. */
 
@@ -3103,10 +3251,10 @@ QWidget* Settings_Dialog::createTabOpenSave()
     QComboBox* comboBoxSaveFormat = new QComboBox(groupBoxSaving);
 
     QCheckBox* checkBoxSaveThumbnail = new QCheckBox(tr("Save Thumbnails"), groupBoxSaving);
-    checkBoxSaveThumbnail->setChecked(false);
+    checkBoxSaveThumbnail->setChecked(0);
 
     QCheckBox* checkBoxAutoSave = new QCheckBox(tr("AutoSave"), groupBoxSaving);
-    checkBoxAutoSave->setChecked(false);
+    checkBoxAutoSave->setChecked(0);
 
     QVBoxLayout* vboxLayoutSaving = new QVBoxLayout(groupBoxSaving);
     vboxLayoutSaving->addWidget(comboBoxSaveFormat);
@@ -3144,7 +3292,7 @@ QWidget* Settings_Dialog::createTabOpenSave()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3196,7 +3344,7 @@ QWidget* Settings_Dialog::createTabPrinting()
 
     */
     QScrollArea* scrollArea = new QScrollArea(this);
-    /*scrollArea->setWidgetResizable(true);
+    /*scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget); */
     return scrollArea;
 }
@@ -3208,7 +3356,7 @@ QWidget* Settings_Dialog::createTabSnap()
     //TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3294,20 +3442,20 @@ QWidget* Settings_Dialog::createTabGridRuler()
     labelGridCenterX->setObjectName("labelGridCenterX");
     QDoubleSpinBox* spinBoxGridCenterX = new QDoubleSpinBox(groupBoxGridGeom);
     spinBoxGridCenterX->setObjectName("spinBoxGridCenterX");
-    dialog.grid_center_x = settings.grid_center_x;
+    dialog.grid_center.x = settings.grid_center.x;
     spinBoxGridCenterX->setSingleStep(1.000);
     spinBoxGridCenterX->setRange(-1000.000, 1000.000);
-    spinBoxGridCenterX->setValue(dialog.grid_center_x);
+    spinBoxGridCenterX->setValue(dialog.grid_center.x);
     connect(spinBoxGridCenterX, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridCenterXValueChanged(double)));
 
     QLabel* labelGridCenterY = new QLabel(tr("Grid Center Y"), groupBoxGridGeom);
     labelGridCenterY->setObjectName("labelGridCenterY");
     QDoubleSpinBox* spinBoxGridCenterY = new QDoubleSpinBox(groupBoxGridGeom);
     spinBoxGridCenterY->setObjectName("spinBoxGridCenterY");
-    dialog.grid_center_y = settings.grid_center_y;
+    dialog.grid_center.y = settings.grid_center.y;
     spinBoxGridCenterY->setSingleStep(1.000);
     spinBoxGridCenterY->setRange(-1000.000, 1000.000);
-    spinBoxGridCenterY->setValue(dialog.grid_center_y);
+    spinBoxGridCenterY->setValue(dialog.grid_center.y);
     connect(spinBoxGridCenterY, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridCenterYValueChanged(double)));
 
     QLabel* labelGridSizeX = new QLabel(tr("Grid Size X"), groupBoxGridGeom);
@@ -3402,8 +3550,8 @@ QWidget* Settings_Dialog::createTabGridRuler()
     labelGridSpacingAngle->setEnabled(!dialog.grid_load_from_file);
     spinBoxGridSpacingAngle->setEnabled(!dialog.grid_load_from_file);
 
-    bool visibility = false;
-    if(dialog.grid_type == "Circular") visibility = true;
+    bool visibility = 0;
+    if(dialog.grid_type == "Circular") visibility = 1;
     labelGridSizeX->setVisible(!visibility);
     spinBoxGridSizeX->setVisible(!visibility);
     labelGridSizeY->setVisible(!visibility);
@@ -3454,8 +3602,8 @@ QWidget* Settings_Dialog::createTabGridRuler()
 
     QLabel* labelRulerMetric = new QLabel(tr("Ruler Units"), groupBoxRulerMisc);
     QComboBox* comboBoxRulerMetric = new QComboBox(groupBoxRulerMisc);
-    comboBoxRulerMetric->addItem("Imperial", false);
-    comboBoxRulerMetric->addItem("Metric", true);
+    comboBoxRulerMetric->addItem("Imperial", 0);
+    comboBoxRulerMetric->addItem("Metric", 1);
     dialog.ruler_metric = settings.ruler_metric;
     comboBoxRulerMetric->setCurrentIndex(comboBoxRulerMetric->findData(dialog.ruler_metric));
     connect(comboBoxRulerMetric, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxRulerMetricCurrentIndexChanged(int)));
@@ -3516,7 +3664,7 @@ QWidget* Settings_Dialog::createTabGridRuler()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3528,7 +3676,7 @@ QWidget* Settings_Dialog::createTabOrthoPolar()
     //TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3625,7 +3773,7 @@ QWidget* Settings_Dialog::createTabQuickSnap()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3639,7 +3787,7 @@ QWidget* Settings_Dialog::createTabQuickTrack()
     /* TODO: finish this */
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3680,12 +3828,12 @@ QWidget* Settings_Dialog::createTabLineWeight()
     checkBoxRealRender->setEnabled(dialog.lwt_show_lwt);
 
     QLabel* labelDefaultLwt = new QLabel(tr("Default weight"), groupBoxLwtMisc);
-    labelDefaultLwt->setEnabled(false); /* TODO: remove later */
+    labelDefaultLwt->setEnabled(0); /* TODO: remove later */
     QComboBox* comboBoxDefaultLwt = new QComboBox(groupBoxLwtMisc);
     dialog.lwt_default_lwt = settings.lwt_default_lwt;
     /* TODO: populate the comboBox and set the initial value */
     comboBoxDefaultLwt->addItem(QString().setNum(dialog.lwt_default_lwt, 'F', 2).append(" mm"), dialog.lwt_default_lwt);
-    comboBoxDefaultLwt->setEnabled(false); /* TODO: remove later */
+    comboBoxDefaultLwt->setEnabled(0); /* TODO: remove later */
 
     QVBoxLayout* vboxLayoutLwtMisc = new QVBoxLayout(groupBoxLwtMisc);
     vboxLayoutLwtMisc->addWidget(checkBoxShowLwt);
@@ -3701,7 +3849,7 @@ QWidget* Settings_Dialog::createTabLineWeight()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -3716,7 +3864,7 @@ QWidget* Settings_Dialog::createTabSelection()
     QCheckBox* checkBoxSelectionModePickFirst = new QCheckBox(tr("Allow Preselection (PickFirst)"), groupBoxSelectionModes);
     dialog.selection_mode_pickfirst = settings.selection_mode_pickfirst;
     checkBoxSelectionModePickFirst->setChecked(dialog.selection_mode_pickfirst);
-    checkBoxSelectionModePickFirst->setChecked(true); checkBoxSelectionModePickFirst->setEnabled(false); /* TODO: Remove this line when Post-selection is available */
+    checkBoxSelectionModePickFirst->setChecked(1); checkBoxSelectionModePickFirst->setEnabled(0); /* TODO: Remove this line when Post-selection is available */
     connect(checkBoxSelectionModePickFirst, SIGNAL(stateChanged(int)), this, SLOT(checkBoxSelectionModePickFirstStateChanged(int)));
 
     QCheckBox* checkBoxSelectionModePickAdd = new QCheckBox(tr("Add to Selection (PickAdd)"), groupBoxSelectionModes);
@@ -3727,7 +3875,7 @@ QWidget* Settings_Dialog::createTabSelection()
     QCheckBox* checkBoxSelectionModePickDrag = new QCheckBox(tr("Drag to Select (PickDrag)"), groupBoxSelectionModes);
     dialog.selection_mode_pickdrag = settings.selection_mode_pickdrag;
     checkBoxSelectionModePickDrag->setChecked(dialog.selection_mode_pickdrag);
-    checkBoxSelectionModePickDrag->setChecked(false); checkBoxSelectionModePickDrag->setEnabled(false); //TODO: Remove this line when this functionality is available
+    checkBoxSelectionModePickDrag->setChecked(0); checkBoxSelectionModePickDrag->setEnabled(0); //TODO: Remove this line when this functionality is available
     connect(checkBoxSelectionModePickDrag, SIGNAL(stateChanged(int)), this, SLOT(checkBoxSelectionModePickDragStateChanged(int)));
 
     QVBoxLayout* vboxLayoutSelectionModes = new QVBoxLayout(groupBoxSelectionModes);
@@ -3793,7 +3941,7 @@ QWidget* Settings_Dialog::createTabSelection()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -4213,13 +4361,13 @@ void Settings_Dialog::checkBoxCustomFilterStateChanged(int checked)
 
 void Settings_Dialog::buttonCustomFilterSelectAllClicked()
 {
-    emit buttonCustomFilterSelectAll(true);
+    emit buttonCustomFilterSelectAll(1);
     opensave_custom_filter = "supported";
 }
 
 void Settings_Dialog::buttonCustomFilterClearAllClicked()
 {
-    emit buttonCustomFilterClearAll(false);
+    emit buttonCustomFilterClearAll(0);
     opensave_custom_filter.clear();
 }
 
@@ -4362,8 +4510,8 @@ void Settings_Dialog::comboBoxGridTypeCurrentIndexChanged(const QString& type)
     if (senderObj) {
         QObject* parent = senderObj->parent();
         if (parent) {
-            bool visibility = false;
-            if(type == "Circular") visibility = true;
+            bool visibility = 0;
+            if(type == "Circular") visibility = 1;
 
             QLabel* labelGridSizeX = parent->findChild<QLabel*>("labelGridSizeX");
             if (labelGridSizeX) {
@@ -4431,12 +4579,12 @@ void Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(int checked)
 
 void Settings_Dialog::spinBoxGridCenterXValueChanged(double value)
 {
-    dialog.grid_center_x = value;
+    dialog.grid_center.x = value;
 }
 
 void Settings_Dialog::spinBoxGridCenterYValueChanged(double value)
 {
-    dialog.grid_center_y = value;
+    dialog.grid_center.y = value;
 }
 
 void Settings_Dialog::spinBoxGridSizeXValueChanged(double value)
@@ -4487,7 +4635,7 @@ void Settings_Dialog::comboBoxRulerMetricCurrentIndexChanged(int index)
         dialog.ruler_metric = comboBox->itemData(index).toBool();
     }
     else {
-        dialog.ruler_metric = true;
+        dialog.ruler_metric = 1;
     }
 }
 
@@ -4590,12 +4738,12 @@ void Settings_Dialog::checkBoxQSnapParallelStateChanged(int checked)
 
 void Settings_Dialog::buttonQSnapSelectAllClicked()
 {
-    emit buttonQSnapSelectAll(true);
+    emit buttonQSnapSelectAll(1);
 }
 
 void Settings_Dialog::buttonQSnapClearAllClicked()
 {
-    emit buttonQSnapClearAll(false);
+    emit buttonQSnapClearAll(0);
 }
 
 /*
@@ -4799,8 +4947,7 @@ void Settings_Dialog::acceptChanges()
     //TODO: settings.GridLoadFromFile = dialog.grid_load_from_file;
     strcpy(settings.grid_type, dialog.grid_type);
     settings.grid_center_on_origin = dialog.grid_center_on_origin;
-    settings.grid_center_x = dialog.grid_center_x;
-    settings.grid_center_y = dialog.grid_center_y;
+    settings.grid_center = dialog.grid_center;
     settings.grid_size_x = dialog.grid_size_x;
     settings.grid_size_y = dialog.grid_size_y;
     settings.grid_spacing_x = dialog.grid_spacing_x;
@@ -4965,7 +5112,7 @@ PropertyEditor::PropertyEditor(const QString& iconDirectory, bool pickAddMode, Q
     vboxLayoutProperties->addStretch(1);
     widgetProperties->setLayout(vboxLayoutProperties);
     scrollProperties->setWidget(widgetProperties);
-    scrollProperties->setWidgetResizable(true);
+    scrollProperties->setWidgetResizable(1);
 
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(this);
     vboxLayoutMain->addWidget(widgetSelection);
@@ -4999,7 +5146,7 @@ bool PropertyEditor::eventFilter(QObject *obj, QEvent *event)
             case Qt::Key_Escape:
                 if(focusWidget)
                     focusWidget->setFocus(Qt::OtherFocusReason);
-                return true;
+                return 1;
                 break;
             default:
                 pressedKey->ignore();
@@ -5137,20 +5284,20 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
             if(obj)
             {
                 QPointF p = obj->objectCenter();
-                updateLineEditNumIfVaries(lineEditArcCenterX, p.x(), false);
-                updateLineEditNumIfVaries(lineEditArcCenterY, -p.y(), false);
-                updateLineEditNumIfVaries(lineEditArcRadius, obj->objectRadius(), false);
-                updateLineEditNumIfVaries(lineEditArcStartAngle, obj->objectStartAngle(), true);
-                updateLineEditNumIfVaries(lineEditArcEndAngle, obj->objectEndAngle(), true);
-                updateLineEditNumIfVaries(lineEditArcStartX, obj->objectStartPoint().x(), false);
-                updateLineEditNumIfVaries(lineEditArcStartY, -obj->objectStartPoint().y(), false);
-                updateLineEditNumIfVaries(lineEditArcEndX, obj->objectEndPoint().x(), false);
-                updateLineEditNumIfVaries(lineEditArcEndY, -obj->objectEndPoint().y(), false);
-                updateLineEditNumIfVaries(lineEditArcArea, obj->objectArea(), false);
-                updateLineEditNumIfVaries(lineEditArcLength, obj->objectArcLength(), false);
-                updateLineEditNumIfVaries(lineEditArcChord, obj->objectChord(), false);
-                updateLineEditNumIfVaries(lineEditArcIncAngle, obj->objectIncludedAngle(), true);
-                updateComboBoxBoolIfVaries(comboBoxArcClockwise, obj->objectClockwise(), true);
+                updateLineEditNumIfVaries(lineEditArcCenterX, p.x(), 0);
+                updateLineEditNumIfVaries(lineEditArcCenterY, -p.y(), 0);
+                updateLineEditNumIfVaries(lineEditArcRadius, obj->objectRadius(), 0);
+                updateLineEditNumIfVaries(lineEditArcStartAngle, obj->objectStartAngle(), 1);
+                updateLineEditNumIfVaries(lineEditArcEndAngle, obj->objectEndAngle(), 1);
+                updateLineEditNumIfVaries(lineEditArcStartX, obj->objectStartPoint().x(), 0);
+                updateLineEditNumIfVaries(lineEditArcStartY, -obj->objectStartPoint().y(), 0);
+                updateLineEditNumIfVaries(lineEditArcEndX, obj->objectEndPoint().x(), 0);
+                updateLineEditNumIfVaries(lineEditArcEndY, -obj->objectEndPoint().y(), 0);
+                updateLineEditNumIfVaries(lineEditArcArea, obj->objectArea(), 0);
+                updateLineEditNumIfVaries(lineEditArcLength, obj->objectArcLength(), 0);
+                updateLineEditNumIfVaries(lineEditArcChord, obj->objectChord(), 0);
+                updateLineEditNumIfVaries(lineEditArcIncAngle, obj->objectIncludedAngle(), 1);
+                updateComboBoxBoolIfVaries(comboBoxArcClockwise, obj->objectClockwise(), 1);
             }
         }
         else if(objType == OBJ_TYPE_BLOCK)
@@ -5163,12 +5310,12 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
             if(obj)
             {
                 QPointF p = obj->objectCenter();
-                updateLineEditNumIfVaries(lineEditCircleCenterX, p.x(), false);
-                updateLineEditNumIfVaries(lineEditCircleCenterY, -p.y(), false);
-                updateLineEditNumIfVaries(lineEditCircleRadius, obj->objectRadius(), false);
-                updateLineEditNumIfVaries(lineEditCircleDiameter, obj->objectDiameter(), false);
-                updateLineEditNumIfVaries(lineEditCircleArea, obj->objectArea(), false);
-                updateLineEditNumIfVaries(lineEditCircleCircumference, obj->objectCircumference(), false);
+                updateLineEditNumIfVaries(lineEditCircleCenterX, p.x(), 0);
+                updateLineEditNumIfVaries(lineEditCircleCenterY, -p.y(), 0);
+                updateLineEditNumIfVaries(lineEditCircleRadius, obj->objectRadius(), 0);
+                updateLineEditNumIfVaries(lineEditCircleDiameter, obj->objectDiameter(), 0);
+                updateLineEditNumIfVaries(lineEditCircleArea, obj->objectArea(), 0);
+                updateLineEditNumIfVaries(lineEditCircleCircumference, obj->objectCircumference(), 0);
             }
         }
         else if(objType == OBJ_TYPE_DIMALIGNED)
@@ -5209,12 +5356,12 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
             if(obj)
             {
                 QPointF p = obj->objectCenter();
-                updateLineEditNumIfVaries(lineEditEllipseCenterX, p.x(), false);
-                updateLineEditNumIfVaries(lineEditEllipseCenterY, -p.y(), false);
-                updateLineEditNumIfVaries(lineEditEllipseRadiusMajor, obj->objectRadiusMajor(), false);
-                updateLineEditNumIfVaries(lineEditEllipseRadiusMinor, obj->objectRadiusMinor(), false);
-                updateLineEditNumIfVaries(lineEditEllipseDiameterMajor, obj->objectDiameterMajor(), false);
-                updateLineEditNumIfVaries(lineEditEllipseDiameterMinor, obj->objectDiameterMinor(), false);
+                updateLineEditNumIfVaries(lineEditEllipseCenterX, p.x(), 0);
+                updateLineEditNumIfVaries(lineEditEllipseCenterY, -p.y(), 0);
+                updateLineEditNumIfVaries(lineEditEllipseRadiusMajor, obj->objectRadiusMajor(), 0);
+                updateLineEditNumIfVaries(lineEditEllipseRadiusMinor, obj->objectRadiusMinor(), 0);
+                updateLineEditNumIfVaries(lineEditEllipseDiameterMajor, obj->objectDiameterMajor(), 0);
+                updateLineEditNumIfVaries(lineEditEllipseDiameterMinor, obj->objectDiameterMinor(), 0);
             }
         }
         else if(objType == OBJ_TYPE_IMAGE)
@@ -5230,14 +5377,14 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
             LineObject* obj = static_cast<LineObject*>(item);
             if(obj)
             {
-                updateLineEditNumIfVaries(lineEditLineStartX, obj->objectEndPoint1().x(), false);
-                updateLineEditNumIfVaries(lineEditLineStartY, -obj->objectEndPoint1().y(), false);
-                updateLineEditNumIfVaries(lineEditLineEndX, obj->objectEndPoint2().x(), false);
-                updateLineEditNumIfVaries(lineEditLineEndY, -obj->objectEndPoint2().y(), false);
-                updateLineEditNumIfVaries(lineEditLineDeltaX, obj->objectDeltaX(), false);
-                updateLineEditNumIfVaries(lineEditLineDeltaY, -obj->objectDeltaY(), false);
-                updateLineEditNumIfVaries(lineEditLineAngle, obj->objectAngle(), true);
-                updateLineEditNumIfVaries(lineEditLineLength, obj->objectLength(), false);
+                updateLineEditNumIfVaries(lineEditLineStartX, obj->objectEndPoint1().x(), 0);
+                updateLineEditNumIfVaries(lineEditLineStartY, -obj->objectEndPoint1().y(), 0);
+                updateLineEditNumIfVaries(lineEditLineEndX, obj->objectEndPoint2().x(), 0);
+                updateLineEditNumIfVaries(lineEditLineEndY, -obj->objectEndPoint2().y(), 0);
+                updateLineEditNumIfVaries(lineEditLineDeltaX, obj->objectDeltaX(), 0);
+                updateLineEditNumIfVaries(lineEditLineDeltaY, -obj->objectDeltaY(), 0);
+                updateLineEditNumIfVaries(lineEditLineAngle, obj->objectAngle(), 1);
+                updateLineEditNumIfVaries(lineEditLineLength, obj->objectLength(), 0);
             }
         }
         else if(objType == OBJ_TYPE_PATH)
@@ -5249,8 +5396,8 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
             PointObject* obj = static_cast<PointObject*>(item);
             if(obj)
             {
-                updateLineEditNumIfVaries(lineEditPointX, obj->objectX(), false);
-                updateLineEditNumIfVaries(lineEditPointY, -obj->objectY(), false);
+                updateLineEditNumIfVaries(lineEditPointX, obj->objectX(), 0);
+                updateLineEditNumIfVaries(lineEditPointY, -obj->objectY(), 0);
             }
         }
         else if(objType == OBJ_TYPE_POLYGON)
@@ -5275,17 +5422,17 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
                 QPointF corn3 = obj->objectBottomLeft();
                 QPointF corn4 = obj->objectBottomRight();
 
-                updateLineEditNumIfVaries(lineEditRectangleCorner1X, corn1.x(), false);
-                updateLineEditNumIfVaries(lineEditRectangleCorner1Y, -corn1.y(), false);
-                updateLineEditNumIfVaries(lineEditRectangleCorner2X, corn2.x(), false);
-                updateLineEditNumIfVaries(lineEditRectangleCorner2Y, -corn2.y(), false);
-                updateLineEditNumIfVaries(lineEditRectangleCorner3X, corn3.x(), false);
-                updateLineEditNumIfVaries(lineEditRectangleCorner3Y, -corn3.y(), false);
-                updateLineEditNumIfVaries(lineEditRectangleCorner4X, corn4.x(), false);
-                updateLineEditNumIfVaries(lineEditRectangleCorner4Y, -corn4.y(), false);
-                updateLineEditNumIfVaries(lineEditRectangleWidth, obj->objectWidth(), false);
-                updateLineEditNumIfVaries(lineEditRectangleHeight, -obj->objectHeight(), false);
-                updateLineEditNumIfVaries(lineEditRectangleArea, obj->objectArea(), false);
+                updateLineEditNumIfVaries(lineEditRectangleCorner1X, corn1.x(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleCorner1Y, -corn1.y(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleCorner2X, corn2.x(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleCorner2Y, -corn2.y(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleCorner3X, corn3.x(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleCorner3Y, -corn3.y(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleCorner4X, corn4.x(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleCorner4Y, -corn4.y(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleWidth, obj->objectWidth(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleHeight, -obj->objectHeight(), 0);
+                updateLineEditNumIfVaries(lineEditRectangleArea, obj->objectArea(), 0);
             }
         }
         else if(objType == OBJ_TYPE_TEXTMULTI)
@@ -5300,12 +5447,12 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
                 updateLineEditStrIfVaries(lineEditTextSingleContents, obj->objText);
                 updateFontComboBoxStrIfVaries(comboBoxTextSingleFont, obj->objTextFont);
                 updateComboBoxStrIfVaries(comboBoxTextSingleJustify, obj->objTextJustify, obj->objectTextJustifyList());
-                updateLineEditNumIfVaries(lineEditTextSingleHeight, obj->objTextSize, false);
-                updateLineEditNumIfVaries(lineEditTextSingleRotation, -obj->rotation(), true);
-                updateLineEditNumIfVaries(lineEditTextSingleX, obj->objectX(), false);
-                updateLineEditNumIfVaries(lineEditTextSingleY, -obj->objectY(), false);
-                updateComboBoxBoolIfVaries(comboBoxTextSingleBackward, obj->objTextBackward, true);
-                updateComboBoxBoolIfVaries(comboBoxTextSingleUpsideDown, obj->objTextUpsideDown, true);
+                updateLineEditNumIfVaries(lineEditTextSingleHeight, obj->objTextSize, 0);
+                updateLineEditNumIfVaries(lineEditTextSingleRotation, -obj->rotation(), 1);
+                updateLineEditNumIfVaries(lineEditTextSingleX, obj->objectX(), 0);
+                updateLineEditNumIfVaries(lineEditTextSingleY, -obj->objectY(), 0);
+                updateComboBoxBoolIfVaries(comboBoxTextSingleBackward, obj->objTextBackward, 1);
+                updateComboBoxBoolIfVaries(comboBoxTextSingleUpsideDown, obj->objTextUpsideDown, 1);
             }
         }
     }
@@ -5404,12 +5551,12 @@ void PropertyEditor::updateComboBoxBoolIfVaries(QComboBox* comboBox, bool val, b
 
     if(fieldOldText.isEmpty()) {
         if (yesOrNoText) {
-            comboBox->addItem(fieldYesText, true);
-            comboBox->addItem(fieldNoText, false);
+            comboBox->addItem(fieldYesText, 1);
+            comboBox->addItem(fieldNoText, 0);
         }
         else {
-            comboBox->addItem(fieldOnText, true);
-            comboBox->addItem(fieldOffText, false);
+            comboBox->addItem(fieldOnText, 1);
+            comboBox->addItem(fieldOffText, 0);
         }
         comboBox->setCurrentIndex(comboBox->findText(fieldNewText));
     }
@@ -5646,10 +5793,10 @@ QGroupBox* PropertyEditor::createGroupBoxGeneral()
     toolButtonGeneralLineType = createToolButton("blank", tr("LineType"));   //TODO: use proper icon
     toolButtonGeneralLineWeight = createToolButton("blank", tr("LineWeight")); //TODO: use proper icon
 
-    comboBoxGeneralLayer = createComboBox(false);
-    comboBoxGeneralColor = createComboBox(false);
-    comboBoxGeneralLineType = createComboBox(false);
-    comboBoxGeneralLineWeight = createComboBox(false);
+    comboBoxGeneralLayer = createComboBox(0);
+    comboBoxGeneralColor = createComboBox(0);
+    comboBoxGeneralLineType = createComboBox(0);
+    comboBoxGeneralLineWeight = createComboBox(0);
 
     QFormLayout* formLayout = new QFormLayout(this);
     formLayout->addRow(toolButtonGeneralLayer, comboBoxGeneralLayer);
@@ -5679,19 +5826,19 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryArc()
     toolButtonArcChord = createToolButton("blank", tr("Chord"));          //TODO: use proper icon
     toolButtonArcIncAngle = createToolButton("blank", tr("Included Angle")); //TODO: use proper icon
 
-    lineEditArcCenterX = createLineEdit("double", false);
-    lineEditArcCenterY = createLineEdit("double", false);
-    lineEditArcRadius = createLineEdit("double", false);
-    lineEditArcStartAngle = createLineEdit("double", false);
-    lineEditArcEndAngle = createLineEdit("double", false);
-    lineEditArcStartX = createLineEdit("double", true);
-    lineEditArcStartY = createLineEdit("double", true);
-    lineEditArcEndX = createLineEdit("double", true);
-    lineEditArcEndY = createLineEdit("double", true);
-    lineEditArcArea = createLineEdit("double", true);
-    lineEditArcLength = createLineEdit("double", true);
-    lineEditArcChord = createLineEdit("double", true);
-    lineEditArcIncAngle = createLineEdit("double", true);
+    lineEditArcCenterX = createLineEdit("double", 0);
+    lineEditArcCenterY = createLineEdit("double", 0);
+    lineEditArcRadius = createLineEdit("double", 0);
+    lineEditArcStartAngle = createLineEdit("double", 0);
+    lineEditArcEndAngle = createLineEdit("double", 0);
+    lineEditArcStartX = createLineEdit("double", 1);
+    lineEditArcStartY = createLineEdit("double", 1);
+    lineEditArcEndX = createLineEdit("double", 1);
+    lineEditArcEndY = createLineEdit("double", 1);
+    lineEditArcArea = createLineEdit("double", 1);
+    lineEditArcLength = createLineEdit("double", 1);
+    lineEditArcChord = createLineEdit("double", 1);
+    lineEditArcIncAngle = createLineEdit("double", 1);
 
     mapSignal(lineEditArcCenterX, "lineEditArcCenterX", OBJ_TYPE_ARC);
     mapSignal(lineEditArcCenterY, "lineEditArcCenterY", OBJ_TYPE_ARC);
@@ -5724,7 +5871,7 @@ QGroupBox* PropertyEditor::createGroupBoxMiscArc()
 
     toolButtonArcClockwise = createToolButton("blank", tr("Clockwise")); //TODO: use proper icon
 
-    comboBoxArcClockwise = createComboBox(true);
+    comboBoxArcClockwise = createComboBox(1);
 
     QFormLayout* formLayout = new QFormLayout(this);
     formLayout->addRow(toolButtonArcClockwise, comboBoxArcClockwise);
@@ -5740,8 +5887,8 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryBlock()
     toolButtonBlockX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
     toolButtonBlockY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
 
-    lineEditBlockX = createLineEdit("double", false);
-    lineEditBlockY = createLineEdit("double", false);
+    lineEditBlockX = createLineEdit("double", 0);
+    lineEditBlockY = createLineEdit("double", 0);
 
     //TODO: mapSignal for blocks
 
@@ -5764,12 +5911,12 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryCircle()
     toolButtonCircleArea = createToolButton("blank", tr("Area"));          //TODO: use proper icon
     toolButtonCircleCircumference = createToolButton("blank", tr("Circumference")); //TODO: use proper icon
 
-    lineEditCircleCenterX = createLineEdit("double", false);
-    lineEditCircleCenterY = createLineEdit("double", false);
-    lineEditCircleRadius = createLineEdit("double", false);
-    lineEditCircleDiameter = createLineEdit("double", false);
-    lineEditCircleArea = createLineEdit("double", false);
-    lineEditCircleCircumference = createLineEdit("double", false);
+    lineEditCircleCenterX = createLineEdit("double", 0);
+    lineEditCircleCenterY = createLineEdit("double", 0);
+    lineEditCircleRadius = createLineEdit("double", 0);
+    lineEditCircleDiameter = createLineEdit("double", 0);
+    lineEditCircleArea = createLineEdit("double", 0);
+    lineEditCircleCircumference = createLineEdit("double", 0);
 
     mapSignal(lineEditCircleCenterX, "lineEditCircleCenterX", OBJ_TYPE_CIRCLE);
     mapSignal(lineEditCircleCenterY, "lineEditCircleCenterY", OBJ_TYPE_CIRCLE);
@@ -5864,36 +6011,20 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryDimRadius()
 
 QGroupBox* PropertyEditor::createGroupBoxGeometryEllipse()
 {
+    int i;
     groupBoxGeometryEllipse = new QGroupBox(tr("Geometry"), this);
 
-    toolButtonEllipseCenterX = createToolButton("blank", tr("Center X"));       //TODO: use proper icon
-    toolButtonEllipseCenterY = createToolButton("blank", tr("Center Y"));       //TODO: use proper icon
-    toolButtonEllipseRadiusMajor = createToolButton("blank", tr("Major Radius"));   //TODO: use proper icon
-    toolButtonEllipseRadiusMinor = createToolButton("blank", tr("Minor Radius"));   //TODO: use proper icon
-    toolButtonEllipseDiameterMajor = createToolButton("blank", tr("Major Diameter")); //TODO: use proper icon
-    toolButtonEllipseDiameterMinor = createToolButton("blank", tr("Minor Diameter")); //TODO: use proper icon
-
-    lineEditEllipseCenterX = createLineEdit("double", false);
-    lineEditEllipseCenterY = createLineEdit("double", false);
-    lineEditEllipseRadiusMajor = createLineEdit("double", false);
-    lineEditEllipseRadiusMinor = createLineEdit("double", false);
-    lineEditEllipseDiameterMajor = createLineEdit("double", false);
-    lineEditEllipseDiameterMinor = createLineEdit("double", false);
-
-    mapSignal(lineEditEllipseCenterX, "lineEditEllipseCenterX", OBJ_TYPE_ELLIPSE);
-    mapSignal(lineEditEllipseCenterY, "lineEditEllipseCenterY", OBJ_TYPE_ELLIPSE);
-    mapSignal(lineEditEllipseRadiusMajor, "lineEditEllipseRadiusMajor", OBJ_TYPE_ELLIPSE);
-    mapSignal(lineEditEllipseRadiusMinor, "lineEditEllipseRadiusMinor", OBJ_TYPE_ELLIPSE);
-    mapSignal(lineEditEllipseDiameterMajor, "lineEditEllipseDiameterMajor", OBJ_TYPE_ELLIPSE);
-    mapSignal(lineEditEllipseDiameterMinor, "lineEditEllipseDiameterMinor", OBJ_TYPE_ELLIPSE);
-
+    /* TODO: use proper icons */
     QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonEllipseCenterX, lineEditEllipseCenterX);
-    formLayout->addRow(toolButtonEllipseCenterY, lineEditEllipseCenterY);
-    formLayout->addRow(toolButtonEllipseRadiusMajor, lineEditEllipseRadiusMajor);
-    formLayout->addRow(toolButtonEllipseRadiusMinor, lineEditEllipseRadiusMinor);
-    formLayout->addRow(toolButtonEllipseDiameterMajor, lineEditEllipseDiameterMajor);
-    formLayout->addRow(toolButtonEllipseDiameterMinor, lineEditEllipseDiameterMinor);
+    for (i=0; i<n_property_editors; i++) {
+        if (property_editors[i].object == OBJ_TYPE_ELLIPSE) {
+            int index = property_editors[i].id;
+            toolButton[index] = createToolButton(property_editors[i].icon, tr(property_editors[i].label));       
+            lineEdit[index] = createLineEdit(property_editors[i].type, property_editors[i].read_only);
+            formLayout->addRow(toolButton[index], lineEdit[index]);
+            mapSignal(lineEdit[index], property_editors[i].signal, OBJ_TYPE_ELLIPSE);
+        }
+    }
     groupBoxGeometryEllipse->setLayout(formLayout);
 
     return groupBoxGeometryEllipse;
@@ -5908,10 +6039,10 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryImage()
     toolButtonImageWidth = createToolButton("blank", tr("Width"));      //TODO: use proper icon
     toolButtonImageHeight = createToolButton("blank", tr("Height"));     //TODO: use proper icon
 
-    lineEditImageX = createLineEdit("double", false);
-    lineEditImageY = createLineEdit("double", false);
-    lineEditImageWidth = createLineEdit("double", false);
-    lineEditImageHeight = createLineEdit("double", false);
+    lineEditImageX = createLineEdit("double", 0);
+    lineEditImageY = createLineEdit("double", 0);
+    lineEditImageWidth = createLineEdit("double", 0);
+    lineEditImageHeight = createLineEdit("double", 0);
 
     //TODO: mapSignal for images
 
@@ -5932,8 +6063,8 @@ QGroupBox* PropertyEditor::createGroupBoxMiscImage()
     toolButtonImageName = createToolButton("blank", tr("Name")); //TODO: use proper icon
     toolButtonImagePath = createToolButton("blank", tr("Path")); //TODO: use proper icon
 
-    lineEditImageName = createLineEdit("double", true);
-    lineEditImagePath = createLineEdit("double", true);
+    lineEditImageName = createLineEdit("double", 1);
+    lineEditImagePath = createLineEdit("double", 1);
 
     QFormLayout* formLayout = new QFormLayout(this);
     formLayout->addRow(toolButtonImageName, lineEditImageName);
@@ -5954,12 +6085,12 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryInfiniteLine()
     toolButtonInfiniteLineVectorX = createToolButton("blank", tr("Vector X")); //TODO: use proper icon
     toolButtonInfiniteLineVectorY = createToolButton("blank", tr("Vector Y")); //TODO: use proper icon
 
-    lineEditInfiniteLineX1 = createLineEdit("double", false);
-    lineEditInfiniteLineY1 = createLineEdit("double", false);
-    lineEditInfiniteLineX2 = createLineEdit("double", false);
-    lineEditInfiniteLineY2 = createLineEdit("double", false);
-    lineEditInfiniteLineVectorX = createLineEdit("double", true);
-    lineEditInfiniteLineVectorY = createLineEdit("double", true);
+    lineEditInfiniteLineX1 = createLineEdit("double", 0);
+    lineEditInfiniteLineY1 = createLineEdit("double", 0);
+    lineEditInfiniteLineX2 = createLineEdit("double", 0);
+    lineEditInfiniteLineY2 = createLineEdit("double", 0);
+    lineEditInfiniteLineVectorX = createLineEdit("double", 1);
+    lineEditInfiniteLineVectorY = createLineEdit("double", 1);
 
     //TODO: mapSignal for infinite lines
 
@@ -5988,14 +6119,14 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryLine()
     toolButtonLineAngle = createToolButton("blank", tr("Angle"));   //TODO: use proper icon
     toolButtonLineLength = createToolButton("blank", tr("Length"));  //TODO: use proper icon
 
-    lineEditLineStartX = createLineEdit("double", false);
-    lineEditLineStartY = createLineEdit("double", false);
-    lineEditLineEndX = createLineEdit("double", false);
-    lineEditLineEndY = createLineEdit("double", false);
-    lineEditLineDeltaX = createLineEdit("double", true);
-    lineEditLineDeltaY = createLineEdit("double", true);
-    lineEditLineAngle = createLineEdit("double", true);
-    lineEditLineLength = createLineEdit("double", true);
+    lineEditLineStartX = createLineEdit("double", 0);
+    lineEditLineStartY = createLineEdit("double", 0);
+    lineEditLineEndX = createLineEdit("double", 0);
+    lineEditLineEndY = createLineEdit("double", 0);
+    lineEditLineDeltaX = createLineEdit("double", 1);
+    lineEditLineDeltaY = createLineEdit("double", 1);
+    lineEditLineAngle = createLineEdit("double", 1);
+    lineEditLineLength = createLineEdit("double", 1);
 
     mapSignal(lineEditLineStartX, "lineEditLineStartX", OBJ_TYPE_LINE);
     mapSignal(lineEditLineStartY, "lineEditLineStartY", OBJ_TYPE_LINE);
@@ -6026,11 +6157,11 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPath()
     toolButtonPathArea = createToolButton("blank", tr("Area"));     //TODO: use proper icon
     toolButtonPathLength = createToolButton("blank", tr("Length"));   //TODO: use proper icon
 
-    comboBoxPathVertexNum = createComboBox(false);
-    lineEditPathVertexX = createLineEdit("double", false);
-    lineEditPathVertexY = createLineEdit("double", false);
-    lineEditPathArea = createLineEdit("double", true);
-    lineEditPathLength = createLineEdit("double", true);
+    comboBoxPathVertexNum = createComboBox(0);
+    lineEditPathVertexX = createLineEdit("double", 0);
+    lineEditPathVertexY = createLineEdit("double", 0);
+    lineEditPathArea = createLineEdit("double", 1);
+    lineEditPathLength = createLineEdit("double", 1);
 
     //TODO: mapSignal for paths
 
@@ -6051,7 +6182,7 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPath()
 
     toolButtonPathClosed = createToolButton("blank", tr("Closed")); //TODO: use proper icon
 
-    comboBoxPathClosed = createComboBox(false);
+    comboBoxPathClosed = createComboBox(0);
 
     //TODO: mapSignal for paths
 
@@ -6069,8 +6200,8 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPoint()
     toolButtonPointX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
     toolButtonPointY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
 
-    lineEditPointX = createLineEdit("double", false);
-    lineEditPointY = createLineEdit("double", false);
+    lineEditPointX = createLineEdit("double", 0);
+    lineEditPointY = createLineEdit("double", 0);
 
     mapSignal(lineEditPointX, "lineEditPointX", OBJ_TYPE_POINT);
     mapSignal(lineEditPointY, "lineEditPointY", OBJ_TYPE_POINT);
@@ -6095,13 +6226,13 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolygon()
     toolButtonPolygonDiameterSide = createToolButton("blank", tr("Side Diameter"));   //TODO: use proper icon
     toolButtonPolygonInteriorAngle = createToolButton("blank", tr("Interior Angle"));  //TODO: use proper icon
 
-    lineEditPolygonCenterX = createLineEdit("double", false);
-    lineEditPolygonCenterY = createLineEdit("double", false);
-    lineEditPolygonRadiusVertex = createLineEdit("double", false);
-    lineEditPolygonRadiusSide = createLineEdit("double", false);
-    lineEditPolygonDiameterVertex = createLineEdit("double", false);
-    lineEditPolygonDiameterSide = createLineEdit("double", false);
-    lineEditPolygonInteriorAngle = createLineEdit("double", true);
+    lineEditPolygonCenterX = createLineEdit("double", 0);
+    lineEditPolygonCenterY = createLineEdit("double", 0);
+    lineEditPolygonRadiusVertex = createLineEdit("double", 0);
+    lineEditPolygonRadiusSide = createLineEdit("double", 0);
+    lineEditPolygonDiameterVertex = createLineEdit("double", 0);
+    lineEditPolygonDiameterSide = createLineEdit("double", 0);
+    lineEditPolygonInteriorAngle = createLineEdit("double", 1);
 
     //TODO: mapSignal for polygons
 
@@ -6128,11 +6259,11 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolyline()
     toolButtonPolylineArea = createToolButton("blank", tr("Area"));     //TODO: use proper icon
     toolButtonPolylineLength = createToolButton("blank", tr("Length"));   //TODO: use proper icon
 
-    comboBoxPolylineVertexNum = createComboBox(false);
-    lineEditPolylineVertexX = createLineEdit("double", false);
-    lineEditPolylineVertexY = createLineEdit("double", false);
-    lineEditPolylineArea = createLineEdit("double", true);
-    lineEditPolylineLength = createLineEdit("double", true);
+    comboBoxPolylineVertexNum = createComboBox(0);
+    lineEditPolylineVertexX = createLineEdit("double", 0);
+    lineEditPolylineVertexY = createLineEdit("double", 0);
+    lineEditPolylineArea = createLineEdit("double", 1);
+    lineEditPolylineLength = createLineEdit("double", 1);
 
     //TODO: mapSignal for polylines
 
@@ -6153,7 +6284,7 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPolyline()
 
     toolButtonPolylineClosed = createToolButton("blank", tr("Closed")); //TODO: use proper icon
 
-    comboBoxPolylineClosed = createComboBox(false);
+    comboBoxPolylineClosed = createComboBox(0);
 
     //TODO: mapSignal for polylines
 
@@ -6175,12 +6306,12 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryRay()
     toolButtonRayVectorX = createToolButton("blank", tr("Vector X")); //TODO: use proper icon
     toolButtonRayVectorY = createToolButton("blank", tr("Vector Y")); //TODO: use proper icon
 
-    lineEditRayX1 = createLineEdit("double", false);
-    lineEditRayY1 = createLineEdit("double", false);
-    lineEditRayX2 = createLineEdit("double", false);
-    lineEditRayY2 = createLineEdit("double", false);
-    lineEditRayVectorX = createLineEdit("double", true);
-    lineEditRayVectorY = createLineEdit("double", true);
+    lineEditRayX1 = createLineEdit("double", 0);
+    lineEditRayY1 = createLineEdit("double", 0);
+    lineEditRayX2 = createLineEdit("double", 0);
+    lineEditRayY2 = createLineEdit("double", 0);
+    lineEditRayVectorX = createLineEdit("double", 1);
+    lineEditRayVectorY = createLineEdit("double", 1);
 
     //TODO: mapSignal for rays
 
@@ -6212,17 +6343,17 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryRectangle()
     toolButtonRectangleHeight = createToolButton("blank", tr("Height"));     //TODO: use proper icon
     toolButtonRectangleArea = createToolButton("blank", tr("Area"));       //TODO: use proper icon
 
-    lineEditRectangleCorner1X = createLineEdit("double", false);
-    lineEditRectangleCorner1Y = createLineEdit("double", false);
-    lineEditRectangleCorner2X = createLineEdit("double", false);
-    lineEditRectangleCorner2Y = createLineEdit("double", false);
-    lineEditRectangleCorner3X = createLineEdit("double", false);
-    lineEditRectangleCorner3Y = createLineEdit("double", false);
-    lineEditRectangleCorner4X = createLineEdit("double", false);
-    lineEditRectangleCorner4Y = createLineEdit("double", false);
-    lineEditRectangleWidth = createLineEdit("double", false);
-    lineEditRectangleHeight = createLineEdit("double", false);
-    lineEditRectangleArea = createLineEdit("double", true);
+    lineEditRectangleCorner1X = createLineEdit("double", 0);
+    lineEditRectangleCorner1Y = createLineEdit("double", 0);
+    lineEditRectangleCorner2X = createLineEdit("double", 0);
+    lineEditRectangleCorner2Y = createLineEdit("double", 0);
+    lineEditRectangleCorner3X = createLineEdit("double", 0);
+    lineEditRectangleCorner3Y = createLineEdit("double", 0);
+    lineEditRectangleCorner4X = createLineEdit("double", 0);
+    lineEditRectangleCorner4Y = createLineEdit("double", 0);
+    lineEditRectangleWidth = createLineEdit("double", 0);
+    lineEditRectangleHeight = createLineEdit("double", 0);
+    lineEditRectangleArea = createLineEdit("double", 1);
 
     mapSignal(lineEditRectangleCorner1X, "lineEditRectangleCorner1X", OBJ_TYPE_RECTANGLE);
     mapSignal(lineEditRectangleCorner1Y, "lineEditRectangleCorner1Y", OBJ_TYPE_RECTANGLE);
@@ -6259,8 +6390,8 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryTextMulti()
     toolButtonTextMultiX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
     toolButtonTextMultiY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
 
-    lineEditTextMultiX = createLineEdit("double", false);
-    lineEditTextMultiY = createLineEdit("double", false);
+    lineEditTextMultiX = createLineEdit("double", 0);
+    lineEditTextMultiY = createLineEdit("double", 0);
 
     //TODO: mapSignal for multiline text
 
@@ -6282,11 +6413,11 @@ QGroupBox* PropertyEditor::createGroupBoxTextTextSingle()
     toolButtonTextSingleHeight = createToolButton("blank", tr("Height"));   //TODO: use proper icon
     toolButtonTextSingleRotation = createToolButton("blank", tr("Rotation")); //TODO: use proper icon
 
-    lineEditTextSingleContents = createLineEdit("string", false);
-    comboBoxTextSingleFont = createFontComboBox(false);
-    comboBoxTextSingleJustify = createComboBox(false);
-    lineEditTextSingleHeight = createLineEdit("double", false);
-    lineEditTextSingleRotation = createLineEdit("double", false);
+    lineEditTextSingleContents = createLineEdit("string", 0);
+    comboBoxTextSingleFont = createFontComboBox(0);
+    comboBoxTextSingleJustify = createComboBox(0);
+    lineEditTextSingleHeight = createLineEdit("double", 0);
+    lineEditTextSingleRotation = createLineEdit("double", 0);
 
     mapSignal(lineEditTextSingleContents, "lineEditTextSingleContents", OBJ_TYPE_TEXTSINGLE);
     mapSignal(comboBoxTextSingleFont, "comboBoxTextSingleFont", OBJ_TYPE_TEXTSINGLE);
@@ -6312,8 +6443,8 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryTextSingle()
     toolButtonTextSingleX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
     toolButtonTextSingleY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
 
-    lineEditTextSingleX = createLineEdit("double", false);
-    lineEditTextSingleY = createLineEdit("double", false);
+    lineEditTextSingleX = createLineEdit("double", 0);
+    lineEditTextSingleY = createLineEdit("double", 0);
 
     mapSignal(lineEditTextSingleX, "lineEditTextSingleX", OBJ_TYPE_TEXTSINGLE);
     mapSignal(lineEditTextSingleY, "lineEditTextSingleY", OBJ_TYPE_TEXTSINGLE);
@@ -6333,8 +6464,8 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
     toolButtonTextSingleBackward = createToolButton("blank", tr("Backward"));   //TODO: use proper icon
     toolButtonTextSingleUpsideDown = createToolButton("blank", tr("UpsideDown")); //TODO: use proper icon
 
-    comboBoxTextSingleBackward = createComboBox(false);
-    comboBoxTextSingleUpsideDown = createComboBox(false);
+    comboBoxTextSingleBackward = createComboBox(0);
+    comboBoxTextSingleUpsideDown = createComboBox(0);
 
     mapSignal(comboBoxTextSingleBackward, "comboBoxTextSingleBackward", OBJ_TYPE_TEXTSINGLE);
     mapSignal(comboBoxTextSingleUpsideDown, "comboBoxTextSingleUpsideDown", OBJ_TYPE_TEXTSINGLE);
@@ -6361,8 +6492,12 @@ QToolButton* PropertyEditor::createToolButton(const QString& iconName, const QSt
 QLineEdit* PropertyEditor::createLineEdit(const QString& validatorType, bool readOnly)
 {
     QLineEdit* le = new QLineEdit(this);
-    if     (validatorType == "int")    le->setValidator(new QIntValidator(le));
-    else if(validatorType == "double") le->setValidator(new QDoubleValidator(le));
+    if (validatorType == "int") {
+        le->setValidator(new QIntValidator(le));
+    }
+    else if (validatorType == "double") {
+        le->setValidator(new QDoubleValidator(le));
+    }
     le->setReadOnly(readOnly);
     return le;
 }
@@ -6394,7 +6529,7 @@ void PropertyEditor::mapSignal(QObject* fieldObj, const QString& name, QVariant 
 
 void PropertyEditor::fieldEdited(QObject* fieldObj)
 {
-    static bool blockSignals = false;
+    static bool blockSignals = 0;
     if(blockSignals) return;
 
     debug_message("==========Field was Edited==========");
@@ -6625,7 +6760,7 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
     }
 
     //Block this slot from running twice since calling setSelectedItems will trigger it
-    blockSignals = true;
+    blockSignals = 1;
 
     QWidget* widget = QApplication::focusWidget();
     /* Update so all fields have fresh data
@@ -6637,7 +6772,7 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
 
     if(widget) widget->setFocus(Qt::OtherFocusReason);
 
-    blockSignals = false;
+    blockSignals = 0;
 }
 
 ArcObject::ArcObject(float startX, float startY, float midX, float midY, float endX, float endY, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
@@ -6666,7 +6801,7 @@ void ArcObject::init(float startX, float startY, float midX, float midY, float e
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_ARC]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     calculateArcData(startX, startY, midX, midY, endX, endY);
 
@@ -7121,7 +7256,7 @@ void CircleObject::init(float centerX, float centerY, float radius, unsigned int
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_CIRCLE]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     setObjectRadius(radius);
     setPos(centerX, centerY);
@@ -7357,10 +7492,10 @@ void DimLeaderObject::init(float x1, float y1, float x2, float y2, unsigned int 
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_DIMLEADER]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
-    curved = false;
-    filled = true;
+    curved = 0;
+    filled = 1;
     setObjectEndPoint1(to_emb_vector(QPointF(x1, y1)));
     setObjectEndPoint2(to_emb_vector(QPointF(x2, y2)));
     setObjectColor(rgb);
@@ -7634,7 +7769,7 @@ void EllipseObject::init(float centerX, float centerY, float width, float height
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_ELLIPSE]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     setObjectSize(width, height);
     setPos(centerX, centerY);
@@ -7927,7 +8062,7 @@ void ImageObject::init(float x, float y, float w, float h, unsigned int rgb, Qt:
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_IMAGE]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     setObjectRect(x, y, w, h);
     setObjectColor(rgb);
@@ -8095,7 +8230,7 @@ void LineObject::init(float x1, float y1, float x2, float y2, unsigned int rgb, 
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_LINE]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     setObjectEndPoint1(x1, y1);
     setObjectEndPoint2(x2, y2);
@@ -8286,7 +8421,7 @@ void PathObject::init(float x, float y, const QPainterPath& p, unsigned int rgb,
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_PATH]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     updatePath(p);
     setObjectPos(x,y);
@@ -8398,7 +8533,7 @@ void PointObject::init(float x, float y, unsigned int rgb, Qt::PenStyle lineType
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POINT]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     setRect(-0.00000001, -0.00000001, 0.00000002, 0.00000002);
     setObjectPos(x,y);
@@ -8501,7 +8636,7 @@ void PolygonObject::init(float x, float y, const QPainterPath& p, unsigned int r
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYGON]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     gripIndex = -1;
     updatePath(p);
@@ -8549,7 +8684,7 @@ void PolygonObject::updateRubber(QPainter* painter)
     if (rubberMode == OBJ_RUBBER_POLYGON) {
         setObjectPos(objectRubberPoint("POLYGON_POINT_0"));
 
-        bool ok = false;
+        bool ok = 0;
         QString numStr = objectRubberText("POLYGON_NUM_POINTS");
         if(numStr.isNull()) return;
         int num = numStr.toInt(&ok);
@@ -8767,7 +8902,7 @@ void PolylineObject::init(float x, float y, const QPainterPath& p, unsigned int 
     setData(OBJ_TYPE, PolylineObject::Type);
     setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYLINE]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     gripIndex = -1;
     updatePath(p);
@@ -8813,7 +8948,7 @@ void PolylineObject::updateRubber(QPainter* painter)
         QLineF rubberLine(normalPath.currentPosition(), mapFromScene(objectRubberPoint(QString())));
         if(painter) drawRubberLine(rubberLine, painter, "VIEW_COLOR_CROSSHAIR");
 
-        bool ok = false;
+        bool ok = 0;
         QString numStr = objectRubberText("POLYLINE_NUM_POINTS");
         if(numStr.isNull()) return;
         int num = numStr.toInt(&ok);
@@ -8979,7 +9114,7 @@ void RectObject::init(float x, float y, float w, float h, unsigned int rgb, Qt::
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_RECTANGLE]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     setObjectRect(x, y, w, h);
     setObjectColor(rgb);
@@ -9224,7 +9359,7 @@ void TextSingleObject::init(const QString& str, float x, float y, unsigned int r
     setData(OBJ_TYPE, type());
     setData(OBJ_NAME, obj_names[OBJ_TYPE_TEXTSINGLE]);
 
-    setFlag(QGraphicsItem::ItemIsSelectable, true);
+    setFlag(QGraphicsItem::ItemIsSelectable, 1);
 
     objTextJustify = "Left"; //TODO: set the justification properly
 
@@ -9605,7 +9740,7 @@ QAction *MainWindow::createAction(const QString icon, const QString toolTip, con
     else if(icon == "textbold" || icon == "textitalic"
         || icon == "textunderline" || icon == "textstrikeout"
        || icon == "textoverline") {
-        ACTION->setCheckable(true);
+        ACTION->setCheckable(1);
     }
 
     ACTION->setStatusTip(action_list[id].description);
@@ -9720,13 +9855,13 @@ void MainWindow::about()
                           tr("Build Hash: ") + qPrintable(BUILD_GIT_HASH)
                           #endif
                           );
-    text.setWordWrap(true);
+    text.setWordWrap(1);
 
     QDialogButtonBox buttonbox(Qt::Horizontal, &dialog);
     QPushButton button(&dialog);
     button.setText("Oh, Yeah!");
     buttonbox.addButton(&button, QDialogButtonBox::AcceptRole);
-    buttonbox.setCenterButtons(true);
+    buttonbox.setCenterButtons(1);
     connect(&buttonbox, SIGNAL(accepted()), &dialog, SLOT(accept()));
 
     QVBoxLayout layout;
@@ -9774,7 +9909,7 @@ void MainWindow::tipOfTheDay()
     if(settings.general_current_tip >= listTipOfTheDay.size())
         settings.general_current_tip = 0;
     labelTipOfTheDay = new QLabel(listTipOfTheDay.value(settings.general_current_tip), wizardTipOfTheDay);
-    labelTipOfTheDay->setWordWrap(true);
+    labelTipOfTheDay->setWordWrap(1);
 
     QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("&Show tips on startup"), wizardTipOfTheDay);
     checkBoxTipOfTheDay->setChecked(settings.general_tip_of_the_day);
@@ -9797,9 +9932,9 @@ void MainWindow::tipOfTheDay()
     wizardTipOfTheDay->setButtonText(QWizard::CustomButton1, tr("&Previous"));
     wizardTipOfTheDay->setButtonText(QWizard::CustomButton2, tr("&Next"));
     wizardTipOfTheDay->setButtonText(QWizard::CustomButton3, tr("&Close"));
-    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton1, true);
-    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton2, true);
-    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton3, true);
+    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton1, 1);
+    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton2, 1);
+    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton3, 1);
     connect(wizardTipOfTheDay, SIGNAL(customButtonClicked(int)), this, SLOT(buttonTipOfTheDayClicked(int)));
 
     QList<QWizard::WizardButton> listTipOfTheDayButtons;
@@ -9875,7 +10010,7 @@ void MainWindow::actions()
     QString caller = obj->objectName();
     for (i=0; i<n_actions; i++) {
         if (caller == action_list[i].abbreviation) {
-            action.id = action_list[i].id;
+            action.id = i;
             actuator();
             return;
         }
@@ -9923,12 +10058,12 @@ bool MainWindow::isShiftPressed()
 
 void MainWindow::setShiftPressed()
 {
-    settings.shiftKeyPressedState = true;
+    settings.shiftKeyPressedState = 1;
 }
 
 void MainWindow::setShiftReleased()
 {
-    settings.shiftKeyPressedState = false;
+    settings.shiftKeyPressedState = 0;
 }
 
 // Icons
@@ -10088,8 +10223,10 @@ void zoomPrevious(void)
 void zoomWindow(void)
 {
     debug_message("zoomWindow()");
-    View* gview =  _mainWin->activeView();
-    if(gview) { gview->zoomWindow(); }
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->zoomWindow();
+    }
 }
 
 void zoomDynamic(void)
@@ -10219,9 +10356,8 @@ void dayVision(void)
 void nightVision(void)
 {
     View* gview = _mainWin->activeView();
-    if(gview)
-    {
-        gview->setBackgroundColor(qRgb(0,0,0));      //TODO: Make night vision color settings.
+    if (gview) {
+        gview->setBackgroundColor(qRgb(0,0,0)); /* TODO: Make night vision color settings. */
         gview->setCrossHairColor(qRgb(255,255,255)); //TODO: Make night vision color settings.
         gview->setGridColor(qRgb(255,255,255));      //TODO: Make night vision color settings.
     }
@@ -10229,7 +10365,7 @@ void nightVision(void)
 
 void doNothing(void)
 {
-    //This function intentionally does nothing.
+    /* This function intentionally does nothing. */
     debug_message("doNothing()");
 }
 
@@ -10432,19 +10568,17 @@ void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float
                                 settings.text_style_underline,
                                 settings.text_style_strikeout,
                                 settings.text_style_overline);
-        obj->objTextBackward = false;
-        obj->objTextUpsideDown = false;
+        obj->objTextBackward = 0;
+        obj->objTextUpsideDown = 0;
         obj->setRotation(-rot);
         //TODO: single line text fill
         obj->setObjectRubberMode(rubberMode);
-        if(rubberMode)
-        {
+        if (rubberMode) {
             gview->addToRubberRoom(obj);
             gscene->addItem(obj);
             gscene->update();
         }
-        else
-        {
+        else {
         }
     }
 }
@@ -10480,14 +10614,12 @@ void MainWindow::nativeAddRectangle(float x, float y, float w, float h, float ro
         obj->setRotation(-rot);
         obj->setObjectRubberMode(rubberMode);
         //TODO: rect fill
-        if(rubberMode)
-        {
+        if (rubberMode) {
             gview->addToRubberRoom(obj);
             gscene->addItem(obj);
             gscene->update();
         }
-        else
-        {
+        else {
         }
     }
 }
@@ -10642,6 +10774,8 @@ MainWindow::MainWindow() : QMainWindow(0)
 {
     char current_path[1000];
     int i;
+
+    QString appDir = qApp->applicationDirPath();
     readSettings();
 
     for (i=0; i<nFolders; i++) {
@@ -10707,7 +10841,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     numOfDocs = 0;
     docIndex = 0;
 
-    settings.shiftKeyPressedState = false;
+    settings.shiftKeyPressedState = 0;
 
     app_dir(current_path, icons_folder);
     setWindowIcon(loadIcon(icon_app));
@@ -10759,6 +10893,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     /* ---------------------------------------------------------------------- */
 
     debug_message("MainWindow createAllMenus()");
+    
     debug_message("MainWindow createFileMenu()");
     menuBar()->addMenu(fileMenu);
     fileMenu->addAction(actionHash.value(ACTION_new));
@@ -10768,7 +10903,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     fileMenu->addMenu(recentMenu);
     connect(recentMenu, SIGNAL(aboutToShow()), this, SLOT(recentMenuAboutToShow()));
     //Do not allow the Recent Menu to be torn off. It's a pain in the ass to maintain.
-    recentMenu->setTearOffEnabled(false);
+    recentMenu->setTearOffEnabled(0);
 
     fileMenu->addSeparator();
     fileMenu->addAction(actionHash.value(ACTION_save));
@@ -10782,7 +10917,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     fileMenu->addSeparator();
 
     fileMenu->addAction(actionHash.value(ACTION_exit));
-    fileMenu->setTearOffEnabled(false);
+    fileMenu->setTearOffEnabled(0);
 
     /* ---------------------------------------------------------------------- */
 
@@ -10795,28 +10930,270 @@ MainWindow::MainWindow() : QMainWindow(0)
     editMenu->addAction(actionHash.value(ACTION_copy));
     editMenu->addAction(actionHash.value(ACTION_paste));
     editMenu->addSeparator();
-    editMenu->setTearOffEnabled(true);
+    editMenu->setTearOffEnabled(1);
 
     /* ---------------------------------------------------------------------- */
 
-    createViewMenu();
+    debug_message("MainWindow createViewMenu()");
+
+    menuBar()->addMenu(viewMenu);
+    viewMenu->addSeparator();
+    viewMenu->addMenu(zoomMenu);
+    zoomMenu->setIcon(loadIcon(icon_zoom));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomrealtime));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomprevious));
+    zoomMenu->addSeparator();
+    zoomMenu->addAction(actionHash.value(ACTION_zoomwindow));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomdynamic));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomscale));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomcenter));
+    zoomMenu->addSeparator();
+    zoomMenu->addAction(actionHash.value(ACTION_zoomin));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomout));
+    zoomMenu->addSeparator();
+    zoomMenu->addAction(actionHash.value(ACTION_zoomselected));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomall));
+    zoomMenu->addAction(actionHash.value(ACTION_zoomextents));
+    viewMenu->addMenu(panMenu);
+    panMenu->setIcon(loadIcon(icon_pan));
+    panMenu->addAction(actionHash.value(ACTION_panrealtime));
+    panMenu->addAction(actionHash.value(ACTION_panpoint));
+    panMenu->addSeparator();
+    panMenu->addAction(actionHash.value(ACTION_panleft));
+    panMenu->addAction(actionHash.value(ACTION_panright));
+    panMenu->addAction(actionHash.value(ACTION_panup));
+    panMenu->addAction(actionHash.value(ACTION_pandown));
+    viewMenu->addSeparator();
+    viewMenu->addAction(actionHash.value(ACTION_day));
+    viewMenu->addAction(actionHash.value(ACTION_night));
+    viewMenu->addSeparator();
+
+    viewMenu->setTearOffEnabled(1);
+    zoomMenu->setTearOffEnabled(1);
+    panMenu->setTearOffEnabled(1);
 
     /* ---------------------------------------------------------------------- */
 
-    createSettingsMenu();
+    debug_message("MainWindow createSettingsMenu()");
+    menuBar()->addMenu(settingsMenu);
+    settingsMenu->addAction(actionHash.value(ACTION_settingsdialog));
+    settingsMenu->addSeparator();
+    settingsMenu->setTearOffEnabled(1);
 
     /* ---------------------------------------------------------------------- */
 
-    createWindowMenu();
+    debug_message("MainWindow createWindowMenu()");
+    menuBar()->addMenu(windowMenu);
+    connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(windowMenuAboutToShow()));
+    //Do not allow the Window Menu to be torn off. It's a pain in the ass to maintain.
+    windowMenu->setTearOffEnabled(0);
 
     /* ---------------------------------------------------------------------- */
 
-    createHelpMenu();
+    debug_message("MainWindow createHelpMenu()");
+    menuBar()->addMenu(helpMenu);
+    helpMenu->addAction(actionHash.value(ACTION_help));
+    helpMenu->addSeparator();
+    helpMenu->addAction(actionHash.value(ACTION_changelog));
+    helpMenu->addSeparator();
+    helpMenu->addAction(actionHash.value(ACTION_tipoftheday));
+    helpMenu->addSeparator();
+    helpMenu->addAction(actionHash.value(ACTION_about));
+    helpMenu->addSeparator();
+    helpMenu->addAction(actionHash.value(ACTION_whatsthis));
+    helpMenu->setTearOffEnabled(1);
 
     /* ---------------------------------------------------------------------- */
 
-    createAllToolbars();
+    debug_message("MainWindow createAllToolbars()");
 
+    for (i=0; i<n_toolbars; i++) {
+        int j;
+        char message[100];
+        sprintf(message, "MainWindow creating %s\n", toolbar_label[i]);
+        debug_message(message);
+
+        toolbar[i]->setObjectName(toolbar_label[i]);
+
+        for (j=0; toolbars[i][j]!=-2; j++) {
+            if (toolbars[i][j] >= 0) {
+                toolbar[i]->addAction(actionHash.value(toolbars[i][j]));
+            }
+            else {
+                toolbar[i]->addSeparator();
+            }
+        }
+
+        connect(toolbar[i], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+    }
+
+    /* ---------------------------------------------------------------- */
+    
+    debug_message("MainWindow createLayerToolbar()");
+
+    toolbar[TOOLBAR_LAYER]->setObjectName("toolbarLayer");
+    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_makelayercurrent));
+    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layers));
+
+    //NOTE: Qt4.7 wont load icons without an extension...
+    //TODO: Create layer pixmaps by concatenating several icons
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "0");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "1");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "2");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "3");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "4");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "5");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "6");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "7");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "8");
+    layerSelector->addItem(loadIcon(icon_linetypebylayer), "9");
+    toolbar[TOOLBAR_LAYER]->addWidget(layerSelector);
+    connect(layerSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(layerSelectorIndexChanged(int)));
+
+    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layerprevious));
+
+    connect(toolbar[TOOLBAR_LAYER], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+    
+    /* ----------------- */
+
+    debug_message("MainWindow createPropertiesToolbar()");
+
+    toolbar[TOOLBAR_PROPERTIES]->setObjectName("toolbarProperties");
+
+    colorSelector->setFocusProxy(fileMenu);
+    //NOTE: Qt4.7 wont load icons without an extension...
+    colorSelector->addItem(loadIcon(icon_colorbylayer), "ByLayer");
+    colorSelector->addItem(loadIcon(icon_colorbyblock), "ByBlock");
+    colorSelector->addItem(loadIcon(icon_colorred), tr("Red"), qRgb(255, 0, 0));
+    colorSelector->addItem(loadIcon(icon_coloryellow), tr("Yellow"), qRgb(255,255, 0));
+    colorSelector->addItem(loadIcon(icon_colorgreen), tr("Green"), qRgb(0, 255, 0));
+    colorSelector->addItem(loadIcon(icon_colorcyan), tr("Cyan"), qRgb(  0,255,255));
+    colorSelector->addItem(loadIcon(icon_colorblue), tr("Blue"), qRgb(  0, 0,255));
+    colorSelector->addItem(loadIcon(icon_colormagenta), tr("Magenta"), qRgb(255, 0,255));
+    colorSelector->addItem(loadIcon(icon_colorwhite), tr("White"), qRgb(255,255,255));
+    colorSelector->addItem(loadIcon(icon_colorother), tr("Other..."));
+    toolbar[TOOLBAR_PROPERTIES]->addWidget(colorSelector);
+    connect(colorSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(colorSelectorIndexChanged(int)));
+
+    toolbar[TOOLBAR_PROPERTIES]->addSeparator();
+    linetypeSelector->setFocusProxy(fileMenu);
+    //NOTE: Qt4.7 wont load icons without an extension...
+    linetypeSelector->addItem(loadIcon(icon_linetypebylayer), "ByLayer");
+    linetypeSelector->addItem(loadIcon(icon_linetypebyblock), "ByBlock");
+    linetypeSelector->addItem(loadIcon(icon_linetypecontinuous), "Continuous");
+    linetypeSelector->addItem(loadIcon(icon_linetypehidden), "Hidden");
+    linetypeSelector->addItem(loadIcon(icon_linetypecenter), "Center");
+    linetypeSelector->addItem(loadIcon(icon_linetypeother), "Other...");
+    toolbar[TOOLBAR_PROPERTIES]->addWidget(linetypeSelector);
+    connect(linetypeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(linetypeSelectorIndexChanged(int)));
+
+    toolbar[TOOLBAR_PROPERTIES]->addSeparator();
+    lineweightSelector->setFocusProxy(fileMenu);
+    //NOTE: Qt4.7 wont load icons without an extension...
+    lineweightSelector->addItem(loadIcon(icon_lineweightbylayer), "ByLayer", -2.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweightbyblock), "ByBlock", -1.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweightdefault), "Default", 0.00);
+    /* TODO: Thread weight is weird. See http://en.wikipedia.org/wiki/Thread_(yarn)#Weight */
+    lineweightSelector->addItem(loadIcon(icon_lineweight01), "0.00 mm", 0.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweight02), "0.05 mm", 0.05);
+    lineweightSelector->addItem(loadIcon(icon_lineweight03), "0.15 mm", 0.15);
+    lineweightSelector->addItem(loadIcon(icon_lineweight04), "0.20 mm", 0.20);
+    lineweightSelector->addItem(loadIcon(icon_lineweight05), "0.25 mm", 0.25);
+    lineweightSelector->addItem(loadIcon(icon_lineweight06), "0.30 mm", 0.30);
+    lineweightSelector->addItem(loadIcon(icon_lineweight07), "0.35 mm", 0.35);
+    lineweightSelector->addItem(loadIcon(icon_lineweight08), "0.40 mm", 0.40);
+    lineweightSelector->addItem(loadIcon(icon_lineweight09), "0.45 mm", 0.45);
+    lineweightSelector->addItem(loadIcon(icon_lineweight10), "0.50 mm", 0.50);
+    lineweightSelector->addItem(loadIcon(icon_lineweight11), "0.55 mm", 0.55);
+    lineweightSelector->addItem(loadIcon(icon_lineweight12), "0.60 mm", 0.60);
+    lineweightSelector->addItem(loadIcon(icon_lineweight13), "0.65 mm", 0.65);
+    lineweightSelector->addItem(loadIcon(icon_lineweight14), "0.70 mm", 0.70);
+    lineweightSelector->addItem(loadIcon(icon_lineweight15), "0.75 mm", 0.75);
+    lineweightSelector->addItem(loadIcon(icon_lineweight16), "0.80 mm", 0.80);
+    lineweightSelector->addItem(loadIcon(icon_lineweight17), "0.85 mm", 0.85);
+    lineweightSelector->addItem(loadIcon(icon_lineweight18), "0.90 mm", 0.90);
+    lineweightSelector->addItem(loadIcon(icon_lineweight19), "0.95 mm", 0.95);
+    lineweightSelector->addItem(loadIcon(icon_lineweight20), "1.00 mm", 1.00);
+    lineweightSelector->addItem(loadIcon(icon_lineweight21), "1.05 mm", 1.05);
+    lineweightSelector->addItem(loadIcon(icon_lineweight22), "1.10 mm", 1.10);
+    lineweightSelector->addItem(loadIcon(icon_lineweight23), "1.15 mm", 1.15);
+    lineweightSelector->addItem(QIcon(QPixmap(icon_lineweight24)), "1.20 mm", 1.20);
+    lineweightSelector->setMinimumContentsLength(8);
+    /* Prevent dropdown text readability being squish...d. */
+    toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector);
+    connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(lineweightSelectorIndexChanged(int)));
+
+    connect(toolbar[TOOLBAR_PROPERTIES], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+
+    /* ------------------------------------------------------------- */
+
+    debug_message("MainWindow createTextToolbar()");
+
+    toolbar[TOOLBAR_TEXT]->setObjectName("toolbarText");
+
+    toolbar[TOOLBAR_TEXT]->addWidget(textFontSelector);
+    textFontSelector->setCurrentFont(QFont(settings.text_font));
+    connect(textFontSelector, SIGNAL(currentFontChanged(const QFont&)), this, SLOT(textFontSelectorCurrentFontChanged(const QFont&)));
+
+/* TODO: SEGFAULTING FOR SOME REASON 
+    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textbold));
+    actionHash.value(ACTION_textbold)->setChecked(settings.text_style_bold);
+    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textitalic));
+    actionHash.value(ACTION_textitalic)->setChecked(settings.text_style_italic);
+    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textunderline));
+    actionHash.value(ACTION_textunderline)->setChecked(settings.text_style_underline);
+    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textstrikeout));
+    actionHash.value(ACTION_textstrikeout)->setChecked(settings.text_style_strikeout);
+    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textoverline));
+    actionHash.value(ACTION_textoverline)->setChecked(settings.text_style_overline);
+
+    textSizeSelector->setFocusProxy(fileMenu);
+    textSizeSelector->addItem("6 pt", 6);
+    textSizeSelector->addItem("8 pt", 8);
+    textSizeSelector->addItem("9 pt", 9);
+    textSizeSelector->addItem("10 pt", 10);
+    textSizeSelector->addItem("11 pt", 11);
+    textSizeSelector->addItem("12 pt", 12);
+    textSizeSelector->addItem("14 pt", 14);
+    textSizeSelector->addItem("18 pt", 18);
+    textSizeSelector->addItem("24 pt", 24);
+    textSizeSelector->addItem("30 pt", 30);
+    textSizeSelector->addItem("36 pt", 36);
+    textSizeSelector->addItem("48 pt", 48);
+    textSizeSelector->addItem("60 pt", 60);
+    textSizeSelector->addItem("72 pt", 72);
+    setTextSize(settings.text_size);
+    toolbar[TOOLBAR_TEXT]->addWidget(textSizeSelector);
+    connect(textSizeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(textSizeSelectorIndexChanged(int)));
+    */
+
+    connect(toolbar[TOOLBAR_TEXT], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+
+    /* ------------------------------------------------------------ */
+
+    // Horizontal
+    toolbar[TOOLBAR_VIEW]->setOrientation(Qt::Horizontal);
+    toolbar[TOOLBAR_ZOOM]->setOrientation(Qt::Horizontal);
+    toolbar[TOOLBAR_LAYER]->setOrientation(Qt::Horizontal);
+    toolbar[TOOLBAR_PROPERTIES]->setOrientation(Qt::Horizontal);
+    toolbar[TOOLBAR_TEXT]->setOrientation(Qt::Horizontal);
+    // Top
+    addToolBarBreak(Qt::TopToolBarArea);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_FILE]);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_EDIT]);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_HELP]);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_ICON]);
+    addToolBarBreak(Qt::TopToolBarArea);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_ZOOM]);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_PAN]);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_VIEW]);
+    addToolBarBreak(Qt::TopToolBarArea);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_LAYER]);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_PROPERTIES]);
+    addToolBarBreak(Qt::TopToolBarArea);
+    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_TEXT]);
+
+    //zoomToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
     /* ---------------------------------------------------------------------- */
 
     iconResize(settings.general_icon_size);
@@ -10878,7 +11255,7 @@ void MainWindow::recentMenuAboutToShow()
                 if     (recentValue.toInt() >= 1 && recentValue.toInt() <= 9) rAction = new QAction("&" + recentValue + " " + recentFileInfo.fileName(), this);
                 else if(recentValue.toInt() == 10)                            rAction = new QAction("1&0 "                  + recentFileInfo.fileName(), this);
                 else                                                          rAction = new QAction(      recentValue + " " + recentFileInfo.fileName(), this);
-                rAction->setCheckable(false);
+                rAction->setCheckable(0);
                 rAction->setData(opensave_recent_list_of_files.at(i));
                 recentMenu->addAction(rAction);
                 connect(rAction, SIGNAL(triggered()), this, SLOT(openrecentfile()));
@@ -10909,7 +11286,7 @@ void MainWindow::windowMenuAboutToShow()
     for(int i = 0; i < windows.count(); ++i)
     {
         QAction* aAction = new QAction(windows.at(i)->windowTitle(), this);
-        aAction->setCheckable(true);
+        aAction->setCheckable(1);
         aAction->setData(i);
         windowMenu->addAction(aAction);
         connect(aAction, SIGNAL(toggled(bool)), this, SLOT(windowMenuActivated(bool)));
@@ -10926,18 +11303,6 @@ void MainWindow::windowMenuActivated(bool checked)
     QWidget* w = mdiArea->subWindowList().at(aSender->data().toInt());
     if(w && checked)
         w->setFocus();
-}
-
-MdiArea* MainWindow::getMdiArea()
-{
-    debug_message("MainWindow::getMdiArea()");
-    return mdiArea;
-}
-
-MainWindow* MainWindow::getApplication()
-{
-    debug_message("MainWindow::getApplication()");
-    return mainWin;
 }
 
 void MainWindow::newFile()
@@ -10995,7 +11360,7 @@ void MainWindow::openFile(bool recent, const QString& recentFile)
 
 void MainWindow::openFilesSelected(const QStringList& filesToOpen)
 {
-    bool doOnce = true;
+    bool doOnce = 1;
 
     if(filesToOpen.count())
     {
@@ -11020,7 +11385,7 @@ void MainWindow::openFilesSelected(const QStringList& filesToOpen)
             /* Make sure the toolbars/etc... are shown before doing their zoomExtents */
             if (doOnce) {
                 updateMenuToolbarStatusbar();
-                doOnce = false;
+                doOnce = 0;
             }
 
             if (mdiWin->loadFile(filesToOpen.at(i))) {
@@ -11060,7 +11425,7 @@ void MainWindow::openrecentfile()
     //Check to see if this from the recent files list
     QAction* recentSender = qobject_cast<QAction*>(sender());
     if (recentSender) {
-        openFile(true, recentSender->data().toString());
+        openFile(1, recentSender->data().toString());
     }
 }
 
@@ -11202,7 +11567,7 @@ void MainWindow::updateMenuToolbarStatusbar()
         menuBar()->addMenu(windowMenu);
         menuBar()->addMenu(helpMenu);
 
-        windowMenu->setEnabled(true);
+        windowMenu->setEnabled(1);
 
         //Statusbar
         statusbar->clearMessage();
@@ -11246,7 +11611,7 @@ void MainWindow::updateMenuToolbarStatusbar()
         menuBar()->addMenu(windowMenu);
         menuBar()->addMenu(helpMenu);
 
-        windowMenu->setEnabled(false);
+        windowMenu->setEnabled(0);
 
         //Statusbar
         statusbar->clearMessage();
@@ -11265,14 +11630,14 @@ void MainWindow::updateMenuToolbarStatusbar()
 bool MainWindow::validFileFormat(const QString& fileName)
 {
     if(fileName.length() == 0) {
-        return false;
+        return 0;
     }
     const char *fname;
     fname = qPrintable(fileName);
     if (emb_identify_format(fname) >= 0) {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 }
 
 void MainWindow::loadFormats()
@@ -11392,290 +11757,6 @@ void MainWindow::floatingChangedToolBar(bool isFloating)
     }
 }
 
-void MainWindow::createViewMenu()
-{
-    debug_message("MainWindow createViewMenu()");
-
-    QString appDir = ":";
-    QString icontheme = settings.general_icon_theme;
-
-    menuBar()->addMenu(viewMenu);
-    viewMenu->addSeparator();
-    viewMenu->addMenu(zoomMenu);
-    zoomMenu->setIcon(loadIcon(icon_zoom));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomrealtime));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomprevious));
-    zoomMenu->addSeparator();
-    zoomMenu->addAction(actionHash.value(ACTION_zoomwindow));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomdynamic));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomscale));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomcenter));
-    zoomMenu->addSeparator();
-    zoomMenu->addAction(actionHash.value(ACTION_zoomin));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomout));
-    zoomMenu->addSeparator();
-    zoomMenu->addAction(actionHash.value(ACTION_zoomselected));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomall));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomextents));
-    viewMenu->addMenu(panMenu);
-    panMenu->setIcon(loadIcon(icon_pan));
-    panMenu->addAction(actionHash.value(ACTION_panrealtime));
-    panMenu->addAction(actionHash.value(ACTION_panpoint));
-    panMenu->addSeparator();
-    panMenu->addAction(actionHash.value(ACTION_panleft));
-    panMenu->addAction(actionHash.value(ACTION_panright));
-    panMenu->addAction(actionHash.value(ACTION_panup));
-    panMenu->addAction(actionHash.value(ACTION_pandown));
-    viewMenu->addSeparator();
-    viewMenu->addAction(actionHash.value(ACTION_day));
-    viewMenu->addAction(actionHash.value(ACTION_night));
-    viewMenu->addSeparator();
-
-    viewMenu->setTearOffEnabled(true);
-    zoomMenu->setTearOffEnabled(true);
-    panMenu->setTearOffEnabled(true);
-}
-
-void MainWindow::createSettingsMenu()
-{
-    debug_message("MainWindow createSettingsMenu()");
-    menuBar()->addMenu(settingsMenu);
-    settingsMenu->addAction(actionHash.value(ACTION_settingsdialog));
-    settingsMenu->addSeparator();
-    settingsMenu->setTearOffEnabled(true);
-}
-
-void MainWindow::createWindowMenu()
-{
-    debug_message("MainWindow createWindowMenu()");
-    menuBar()->addMenu(windowMenu);
-    connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(windowMenuAboutToShow()));
-    //Do not allow the Window Menu to be torn off. It's a pain in the ass to maintain.
-    windowMenu->setTearOffEnabled(false);
-
-}
-
-void MainWindow::createHelpMenu()
-{
-    debug_message("MainWindow createHelpMenu()");
-    menuBar()->addMenu(helpMenu);
-    helpMenu->addAction(actionHash.value(ACTION_help));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_changelog));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_tipoftheday));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_about));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_whatsthis));
-    helpMenu->setTearOffEnabled(true);
-}
-
-void MainWindow::createLayerToolbar()
-{
-    debug_message("MainWindow createLayerToolbar()");
-
-    toolbar[TOOLBAR_LAYER]->setObjectName("toolbarLayer");
-    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_makelayercurrent));
-    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layers));
-
-    QString appDir = ":";
-    QString icontheme = settings.general_icon_theme;
-
-    //NOTE: Qt4.7 wont load icons without an extension...
-    //TODO: Create layer pixmaps by concatenating several icons
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "0");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "1");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "2");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "3");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "4");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "5");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "6");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "7");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "8");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "9");
-    toolbar[TOOLBAR_LAYER]->addWidget(layerSelector);
-    connect(layerSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(layerSelectorIndexChanged(int)));
-
-    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layerprevious));
-
-    connect(toolbar[TOOLBAR_LAYER], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
-}
-
-void MainWindow::createPropertiesToolbar()
-{
-    debug_message("MainWindow createPropertiesToolbar()");
-
-    toolbar[TOOLBAR_PROPERTIES]->setObjectName("toolbarProperties");
-
-    QString appDir = qApp->applicationDirPath();
-    QString icontheme = settings.general_icon_theme;
-
-    colorSelector->setFocusProxy(fileMenu);
-    //NOTE: Qt4.7 wont load icons without an extension...
-    colorSelector->addItem(loadIcon(icon_colorbylayer), "ByLayer");
-    colorSelector->addItem(loadIcon(icon_colorbyblock), "ByBlock");
-    colorSelector->addItem(loadIcon(icon_colorred), tr("Red"), qRgb(255, 0, 0));
-    colorSelector->addItem(loadIcon(icon_coloryellow), tr("Yellow"), qRgb(255,255, 0));
-    colorSelector->addItem(loadIcon(icon_colorgreen), tr("Green"), qRgb(0, 255, 0));
-    colorSelector->addItem(loadIcon(icon_colorcyan), tr("Cyan"), qRgb(  0,255,255));
-    colorSelector->addItem(loadIcon(icon_colorblue), tr("Blue"), qRgb(  0, 0,255));
-    colorSelector->addItem(loadIcon(icon_colormagenta), tr("Magenta"), qRgb(255, 0,255));
-    colorSelector->addItem(loadIcon(icon_colorwhite), tr("White"), qRgb(255,255,255));
-    colorSelector->addItem(loadIcon(icon_colorother), tr("Other..."));
-    toolbar[TOOLBAR_PROPERTIES]->addWidget(colorSelector);
-    connect(colorSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(colorSelectorIndexChanged(int)));
-
-    toolbar[TOOLBAR_PROPERTIES]->addSeparator();
-    linetypeSelector->setFocusProxy(fileMenu);
-    //NOTE: Qt4.7 wont load icons without an extension...
-    linetypeSelector->addItem(loadIcon(icon_linetypebylayer), "ByLayer");
-    linetypeSelector->addItem(loadIcon(icon_linetypebyblock), "ByBlock");
-    linetypeSelector->addItem(loadIcon(icon_linetypecontinuous), "Continuous");
-    linetypeSelector->addItem(loadIcon(icon_linetypehidden), "Hidden");
-    linetypeSelector->addItem(loadIcon(icon_linetypecenter), "Center");
-    linetypeSelector->addItem(loadIcon(icon_linetypeother), "Other...");
-    toolbar[TOOLBAR_PROPERTIES]->addWidget(linetypeSelector);
-    connect(linetypeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(linetypeSelectorIndexChanged(int)));
-
-    toolbar[TOOLBAR_PROPERTIES]->addSeparator();
-    lineweightSelector->setFocusProxy(fileMenu);
-    //NOTE: Qt4.7 wont load icons without an extension...
-    lineweightSelector->addItem(loadIcon(icon_lineweightbylayer), "ByLayer", -2.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweightbyblock), "ByBlock", -1.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweightdefault), "Default", 0.00);
-    /* TODO: Thread weight is weird. See http://en.wikipedia.org/wiki/Thread_(yarn)#Weight */
-    lineweightSelector->addItem(loadIcon(icon_lineweight01), "0.00 mm", 0.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweight02), "0.05 mm", 0.05);
-    lineweightSelector->addItem(loadIcon(icon_lineweight03), "0.15 mm", 0.15);
-    lineweightSelector->addItem(loadIcon(icon_lineweight04), "0.20 mm", 0.20);
-    lineweightSelector->addItem(loadIcon(icon_lineweight05), "0.25 mm", 0.25);
-    lineweightSelector->addItem(loadIcon(icon_lineweight06), "0.30 mm", 0.30);
-    lineweightSelector->addItem(loadIcon(icon_lineweight07), "0.35 mm", 0.35);
-    lineweightSelector->addItem(loadIcon(icon_lineweight08), "0.40 mm", 0.40);
-    lineweightSelector->addItem(loadIcon(icon_lineweight09), "0.45 mm", 0.45);
-    lineweightSelector->addItem(loadIcon(icon_lineweight10), "0.50 mm", 0.50);
-    lineweightSelector->addItem(loadIcon(icon_lineweight11), "0.55 mm", 0.55);
-    lineweightSelector->addItem(loadIcon(icon_lineweight12), "0.60 mm", 0.60);
-    lineweightSelector->addItem(loadIcon(icon_lineweight13), "0.65 mm", 0.65);
-    lineweightSelector->addItem(loadIcon(icon_lineweight14), "0.70 mm", 0.70);
-    lineweightSelector->addItem(loadIcon(icon_lineweight15), "0.75 mm", 0.75);
-    lineweightSelector->addItem(loadIcon(icon_lineweight16), "0.80 mm", 0.80);
-    lineweightSelector->addItem(loadIcon(icon_lineweight17), "0.85 mm", 0.85);
-    lineweightSelector->addItem(loadIcon(icon_lineweight18), "0.90 mm", 0.90);
-    lineweightSelector->addItem(loadIcon(icon_lineweight19), "0.95 mm", 0.95);
-    lineweightSelector->addItem(loadIcon(icon_lineweight20), "1.00 mm", 1.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweight21), "1.05 mm", 1.05);
-    lineweightSelector->addItem(loadIcon(icon_lineweight22), "1.10 mm", 1.10);
-    lineweightSelector->addItem(loadIcon(icon_lineweight23), "1.15 mm", 1.15);
-    lineweightSelector->addItem(QIcon(QPixmap(icon_lineweight24)), "1.20 mm", 1.20);
-    lineweightSelector->setMinimumContentsLength(8); // Prevent dropdown text readability being squish...d.
-    toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector);
-    connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(lineweightSelectorIndexChanged(int)));
-
-    connect(toolbar[TOOLBAR_PROPERTIES], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
-}
-
-void MainWindow::createTextToolbar()
-{
-    debug_message("MainWindow createTextToolbar()");
-
-    toolbar[TOOLBAR_TEXT]->setObjectName("toolbarText");
-
-    toolbar[TOOLBAR_TEXT]->addWidget(textFontSelector);
-    textFontSelector->setCurrentFont(QFont(settings.text_font));
-    connect(textFontSelector, SIGNAL(currentFontChanged(const QFont&)), this, SLOT(textFontSelectorCurrentFontChanged(const QFont&)));
-
-/* TODO: SEGFAULTING FOR SOME REASON 
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textbold));
-    actionHash.value(ACTION_textbold)->setChecked(settings.text_style_bold);
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textitalic));
-    actionHash.value(ACTION_textitalic)->setChecked(settings.text_style_italic);
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textunderline));
-    actionHash.value(ACTION_textunderline)->setChecked(settings.text_style_underline);
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textstrikeout));
-    actionHash.value(ACTION_textstrikeout)->setChecked(settings.text_style_strikeout);
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textoverline));
-    actionHash.value(ACTION_textoverline)->setChecked(settings.text_style_overline);
-
-    textSizeSelector->setFocusProxy(fileMenu);
-    textSizeSelector->addItem("6 pt", 6);
-    textSizeSelector->addItem("8 pt", 8);
-    textSizeSelector->addItem("9 pt", 9);
-    textSizeSelector->addItem("10 pt", 10);
-    textSizeSelector->addItem("11 pt", 11);
-    textSizeSelector->addItem("12 pt", 12);
-    textSizeSelector->addItem("14 pt", 14);
-    textSizeSelector->addItem("18 pt", 18);
-    textSizeSelector->addItem("24 pt", 24);
-    textSizeSelector->addItem("30 pt", 30);
-    textSizeSelector->addItem("36 pt", 36);
-    textSizeSelector->addItem("48 pt", 48);
-    textSizeSelector->addItem("60 pt", 60);
-    textSizeSelector->addItem("72 pt", 72);
-    setTextSize(settings.text_size);
-    toolbar[TOOLBAR_TEXT]->addWidget(textSizeSelector);
-    connect(textSizeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(textSizeSelectorIndexChanged(int)));
-    */
-
-    connect(toolbar[TOOLBAR_TEXT], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
-}
-
-void MainWindow::createAllToolbars()
-{
-    int i;
-    debug_message("MainWindow createAllToolbars()");
-
-    for (i=0; i<n_toolbars; i++) {
-        int j;
-        char message[100];
-        sprintf(message, "MainWindow creating %s\n", toolbar_label[i]);
-        debug_message(message);
-
-        toolbar[i]->setObjectName(toolbar_label[i]);
-
-        for (j=0; toolbars[i][j]!=-2; j++) {
-            if (toolbars[i][j] >= 0) {
-                toolbar[i]->addAction(actionHash.value(toolbars[i][j]));
-            }
-            else {
-                toolbar[i]->addSeparator();
-            }
-        }
-
-        connect(toolbar[i], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
-    }
-    createLayerToolbar();
-    createPropertiesToolbar();
-    createTextToolbar();
-
-    // Horizontal
-    toolbar[TOOLBAR_VIEW]->setOrientation(Qt::Horizontal);
-    toolbar[TOOLBAR_ZOOM]->setOrientation(Qt::Horizontal);
-    toolbar[TOOLBAR_LAYER]->setOrientation(Qt::Horizontal);
-    toolbar[TOOLBAR_PROPERTIES]->setOrientation(Qt::Horizontal);
-    toolbar[TOOLBAR_TEXT]->setOrientation(Qt::Horizontal);
-    // Top
-    addToolBarBreak(Qt::TopToolBarArea);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_FILE]);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_EDIT]);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_HELP]);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_ICON]);
-    addToolBarBreak(Qt::TopToolBarArea);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_ZOOM]);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_PAN]);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_VIEW]);
-    addToolBarBreak(Qt::TopToolBarArea);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_LAYER]);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_PROPERTIES]);
-    addToolBarBreak(Qt::TopToolBarArea);
-    addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_TEXT]);
-
-    //zoomToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
-}
-
-
-
 EmbDetailsDialog::EmbDetailsDialog(QGraphicsScene* theScene, QWidget* parent) : QDialog(parent)
 {
     setMinimumSize(750,550);
@@ -11769,7 +11850,7 @@ QWidget* EmbDetailsDialog::createMainWidget()
     widget->setLayout(vboxLayoutMain);
 
     QScrollArea* scrollArea = new QScrollArea(this);
-    scrollArea->setWidgetResizable(true);
+    scrollArea->setWidgetResizable(1);
     scrollArea->setWidget(widget);
     return scrollArea;
 }
@@ -11780,7 +11861,7 @@ bool Application::event(QEvent *event)
     case QEvent::FileOpen:
         if (_mainWin) {
             _mainWin->openFilesSelected(QStringList(static_cast<QFileOpenEvent *>(event)->file()));
-            return true;
+            return 1;
         }
         // Fall through
     default:
@@ -11805,13 +11886,13 @@ ImageWidget::ImageWidget(const QString &filename, QWidget* parent) : QWidget(par
 bool ImageWidget::load(const QString &fileName)
 {
     img.load(fileName);
-    return true;
+    return 1;
 }
 
 bool ImageWidget::save(const QString &fileName)
 {
     img.save(fileName, "PNG");
-    return true;
+    return 1;
 }
 
 ImageWidget::~ImageWidget()
@@ -11833,14 +11914,14 @@ LayerManager::LayerManager(MainWindow* mw, QWidget* parent) : QDialog(parent)
     layerModel = new QStandardItemModel(0, 8, this);
 
     layerModelSorted = new QSortFilterProxyModel;
-    layerModelSorted->setDynamicSortFilter(true);
+    layerModelSorted->setDynamicSortFilter(1);
     layerModelSorted->setSourceModel(layerModel);
 
     treeView = new QTreeView;
-    treeView->setRootIsDecorated(false);
-    treeView->setAlternatingRowColors(true);
+    treeView->setRootIsDecorated(0);
+    treeView->setAlternatingRowColors(1);
     treeView->setModel(layerModelSorted);
-    treeView->setSortingEnabled(true);
+    treeView->setSortingEnabled(1);
     treeView->sortByColumn(0, Qt::AscendingOrder);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -11859,16 +11940,16 @@ LayerManager::LayerManager(MainWindow* mw, QWidget* parent) : QDialog(parent)
     layerModel->setHeaderData(6, Qt::Horizontal, tr("Lineweight"));
     layerModel->setHeaderData(7, Qt::Horizontal, tr("Print"));
 
-    addLayer("0", true, false, 0.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("1", true, false, 1.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("2", true, false, 2.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("3", true, false, 3.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("4", true, false, 4.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("5", true, false, 5.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("6", true, false, 6.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("7", true, false, 7.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("8", true, false, 8.0, qRgb(0,0,0), "Continuous", "Default", true);
-    addLayer("9", true, false, 9.0, qRgb(0,0,0), "Continuous", "Default", true);
+    addLayer("0", 1, 0, 0.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("1", 1, 0, 1.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("2", 1, 0, 2.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("3", 1, 0, 3.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("4", 1, 0, 4.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("5", 1, 0, 5.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("6", 1, 0, 6.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("7", 1, 0, 7.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("8", 1, 0, 8.0, qRgb(0,0,0), "Continuous", "Default", 1);
+    addLayer("9", 1, 0, 9.0, qRgb(0,0,0), "Continuous", "Default", 1);
 
     for(int i = 0; i < layerModel->columnCount(); ++i)
         treeView->resizeColumnToContents(i);
@@ -11904,40 +11985,6 @@ void LayerManager::addLayer(const QString& name,
     layerModel->setData(layerModel->index(0, 5), lineType);
     layerModel->setData(layerModel->index(0, 6), lineWeight);
     layerModel->setData(layerModel->index(0, 7), print);
-}
-
-
-const char* _appName_ = "Embroidermodder";
-const char* _appVer_ = "v2.0 alpha";
-bool exitApp = false;
-
-static void usage(void)
-{
-    fprintf(stderr,
-  " ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ " "\n"
-  "| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ |     |/  \\|   \\|   \\| __| _ \\  |__ \\" "\n"
-  "| __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/" "\n"
-  "|___|_|_|_|___/|_|\\_\\\\__/|_|___/|___|_|\\_\\|_|_|_|\\__/|___/|___/|___|_|\\_\\ |___|" "\n"
-  " _____________________________________________________________________________ " "\n"
-  "|                                                                             | "  "\n"
-  "|                   http://embroidermodder.github.io                          | "  "\n"
-  "|_____________________________________________________________________________| "  "\n"
-  " " "\n"
-  "Usage: embroidermodder [options] files ..."  "\n"
-   //80CHARS======================================================================MAX
-  "Options:"  "\n"
-  "  -d, --debug      Print lots of debugging information." "\n"
-  "  -h, --help       Print this message and exit." "\n"
-  "  -v, --version    Print the version number of embroidermodder and exit."  "\n"
-  "\n"
-           );
-    exitApp = true;
-}
-
-static void version()
-{
-    fprintf(stdout, "%s %s\n", _appName_, _appVer_);
-    exitApp = true;
 }
 
 int main(int argc, char* argv[])
@@ -11992,11 +12039,11 @@ int main(int argc, char* argv[])
 
 MdiArea::MdiArea(MainWindow* mw, QWidget *parent) : QMdiArea(parent), mainWin(mw)
 {
-    setTabsClosable(true);
+    setTabsClosable(1);
 
-    useLogo = false;
-    useTexture = false;
-    useColor = false;
+    useLogo = 0;
+    useTexture = 0;
+    useColor = 0;
 }
 
 MdiArea::~MdiArea()
@@ -12123,7 +12170,7 @@ MdiWindow::MdiWindow(const int theIndex, MainWindow* mw, QMdiArea* parent, Qt::W
 
     myIndex = theIndex;
 
-    fileWasLoaded = false;
+    fileWasLoaded = 0;
 
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -12183,13 +12230,12 @@ bool MdiWindow::saveFile(const QString &fileName)
      *       to try to hide dark colored stitches beneath light colored fills.
      */
     int formatType = EMBFORMAT_UNSUPPORTED;
-    bool writeSuccessful = false;
+    bool writeSuccessful = 0;
     int i;
 
     formatType = emb_identify_format((char*)qPrintable(fileName));
-    if(formatType == EMBFORMAT_UNSUPPORTED)
-    {
-        return false;
+    if (formatType == EMBFORMAT_UNSUPPORTED) {
+        return 0;
     }
 
     EmbPattern* pattern = 0;
@@ -12435,7 +12481,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                              tr("Cannot read file %1:\n%2.")
                              .arg(fileName)
                              .arg(file.errorString()));
-        return false;
+        return 0;
     }
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -12478,7 +12524,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                 EmbColor thisColor = p->circles->circle[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 // NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddCircle(c.centerX, c.centerY, c.radius, false, OBJ_RUBBER_OFF); //TODO: fill
+                mainWin->nativeAddCircle(c.centerX, c.centerY, c.radius, 0, OBJ_RUBBER_OFF); //TODO: fill
             }
         }
         if (p->ellipses) {
@@ -12487,7 +12533,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                 EmbColor thisColor = p->ellipses->ellipse[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed. */
-                mainWin->nativeAddEllipse(e.centerX, e.centerY, e.radiusX, e.radiusY, 0, false, OBJ_RUBBER_OFF); //TODO: rotation and fill
+                mainWin->nativeAddEllipse(e.centerX, e.centerY, e.radiusX, e.radiusY, 0, 0, OBJ_RUBBER_OFF); //TODO: rotation and fill
             }
         }
         if (p->lines) {
@@ -12536,7 +12582,7 @@ bool MdiWindow::loadFile(const QString &fileName)
             for (int i = 0; i < p->polygons->count; i++) {
                 EmbArray *curPointList = p->polygons->polygon[i]->pointList;
                 QPainterPath polygonPath;
-                bool firstPoint = false;
+                bool firstPoint = 0;
                 float startX = 0, startY = 0;
                 float x = 0, y = 0;
                 EmbColor thisColor = p->polygons->polygon[i]->color;
@@ -12550,7 +12596,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                         polygonPath.lineTo(x,y);
                     } else {
                         polygonPath.moveTo(x,y);
-                        firstPoint = true;
+                        firstPoint = 1;
                         startX = x;
                         startY = y;
                     }
@@ -12564,7 +12610,7 @@ bool MdiWindow::loadFile(const QString &fileName)
             for (int i=0; i<p->polylines->count; i++) {
                 EmbArray* curPointList = p->polylines->polyline[i]->pointList;
                 QPainterPath polylinePath;
-                bool firstPoint = false;
+                bool firstPoint = 0;
                 float startX = 0, startY = 0;
                 float x = 0, y = 0;
                 EmbColor thisColor = p->polylines->polyline[i]->color;
@@ -12577,7 +12623,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                         polylinePath.lineTo(x,y);
                     } else {
                         polylinePath.moveTo(x,y);
-                        firstPoint = true;
+                        firstPoint = 1;
                         startX = x;
                         startY = y;
                     }
@@ -12593,7 +12639,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                 EmbColor thisColor = p->rects->rect[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 //NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddRectangle(embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r), 0, false, OBJ_RUBBER_OFF); //TODO: rotation and fill
+                mainWin->nativeAddRectangle(embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r), 0, 0, OBJ_RUBBER_OFF); //TODO: rotation and fill
             }
         }
         setCurrentFile(fileName);
@@ -12615,7 +12661,7 @@ bool MdiWindow::loadFile(const QString &fileName)
     undo_history_length = 0;
 
     setCurrentColor(tmpColor);
-    fileWasLoaded = true;
+    fileWasLoaded = 1;
     return fileWasLoaded;
 }
 
@@ -12672,7 +12718,7 @@ void MdiWindow::saveBMC()
 void MdiWindow::setCurrentFile(const QString &fileName)
 {
     curFile = QFileInfo(fileName).canonicalFilePath();
-    setWindowModified(false);
+    setWindowModified(0);
     setWindowTitle(getShortCurrentFile());
 }
 
@@ -12794,7 +12840,7 @@ PreviewDialog::PreviewDialog(QWidget* parent,
         grid->addWidget(imgWidget, 0, grid->columnCount(), grid->rowCount(), 1);
     }
 
-    setModal(true);
+    setModal(1);
     setOption(QFileDialog::DontUseNativeDialog);
     setViewMode(QFileDialog::Detail);
     setFileMode(QFileDialog::ExistingFiles);
@@ -12871,8 +12917,8 @@ StatusBarButton::StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* 
     this->setObjectName("StatusBarButton" + buttonText);
 
     this->setText(buttonText);
-    this->setAutoRaise(true);
-    this->setCheckable(true);
+    this->setAutoRaise(1);
+    this->setCheckable(1);
 
     if     (objectName() == "StatusBarButtonSNAP")   { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleSnap(bool))); }
     else if(objectName() == "StatusBarButtonGRID")   { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleGrid(bool))); }
@@ -13005,15 +13051,19 @@ void StatusBarButton::toggleSnap(bool on)
 void StatusBarButton::toggleGrid(bool on)
 {
     debug_message("StatusBarButton toggleGrid()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleGrid(on); }
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->toggleGrid(on);
+    }
 }
 
 void StatusBarButton::toggleRuler(bool on)
 {
     debug_message("StatusBarButton toggleRuler()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleRuler(on); }
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->toggleRuler(on);
+    }
 }
 
 void StatusBarButton::toggleOrtho(bool on)
@@ -13058,7 +13108,7 @@ void StatusBarButton::enableLwt()
     if(gview)
     {
         if(!gview->isLwtEnabled())
-            gview->toggleLwt(true);
+            gview->toggleLwt(1);
     }
 }
 
@@ -13069,7 +13119,7 @@ void StatusBarButton::disableLwt()
     if(gview)
     {
         if(gview->isLwtEnabled())
-            gview->toggleLwt(false);
+            gview->toggleLwt(0);
     }
 }
 
@@ -13077,14 +13127,14 @@ void StatusBarButton::enableReal()
 {
     debug_message("StatusBarButton enableReal()");
     View* gview = mainWin->activeView();
-    if(gview) { gview->toggleReal(true); }
+    if(gview) { gview->toggleReal(1); }
 }
 
 void StatusBarButton::disableReal()
 {
     debug_message("StatusBarButton disableReal()");
     View* gview = mainWin->activeView();
-    if(gview) { gview->toggleReal(false); }
+    if(gview) { gview->toggleReal(0); }
 }
 
 StatusBar::StatusBar(MainWindow* mw, QWidget *parent) : QStatusBar(parent)
