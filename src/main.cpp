@@ -463,62 +463,236 @@ void main_print(void)
 void main_exit(void)
 {
     debug_message("main_exit()");
+    qApp->closeAllWindows();
+    _mainWin->deleteLater();
+    /* Force the MainWindow destructor to run before exiting. Makes Valgrind "still reachable" happy :) */
     exit(0);
 }
 
-void saveAsFile(void) {}
-void whatsthisContextHelp(void) {}
-void makeLayerCurrent(void) {}
-void layerSelector(void) {}
-void main_about(void) {}
-void main_help(void) {}
-void settingsDialog(void) {}
-void designDetails(void) {}
-void main_cut(void) {}
-void main_copy(void) {}
-void main_paste(void) {}
-void tipOfTheDay(void) {}
-void changelog(void) {}
-void showAllLayers(void) {}
-void freezeAllLayers(void) {}
-void thawAllLayers(void) {}
-void lockAllLayers(void) {}
-void unlockAllLayers(void) {}
-void hideAllLayers(void) {}
-void lineWeightSelector(void) {}
-void lineTypeSelector(void) {}
-void colorSelector(void) {}
+void saveAsFile(void)
+{
 
-void windowClose(void) {}
-void windowTile(void) {}
-void windowCloseAll(void) {}
-void windowCascade(void) {}
-void windowNext(void) {}
-void windowPrevious(void) {}
+}
+
+void whatsthisContextHelp(void)
+{
+
+}
+
+void makeLayerCurrent(void)
+{
+
+}
+
+void layerSelector(void)
+{
+
+}
+
+void main_about(void)
+{
+    //TODO: QTabWidget for about dialog
+    QApplication::setOverrideCursor(Qt::ArrowCursor);
+    debug_message("about()");
+    QString appDir = qApp->applicationDirPath();
+    QString title = "About Embroidermodder 2";
+
+    QDialog dialog(_mainWin);
+    ImageWidget img(appDir + "/images/logo-small.png");
+    QLabel text("Embroidermodder 2\n\n" +
+                          _mainWin->tr("http://embroidermodder.github.io") +
+                          "\n\n" +
+                          _mainWin->tr("Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi") +
+                          "\n\n" +
+                          _mainWin->tr("Embroidery formats by Josh Varga.") +
+                          "\n" +
+                          _mainWin->tr("User Interface by Jonathan Greig.") +
+                          "\n\n" +
+                          _mainWin->tr("Free under the zlib/libpng license.")
+                          #if defined(BUILD_GIT_HASH)
+                          + "\n\n" +
+                          _mainWin->tr("Build Hash: ") + qPrintable(BUILD_GIT_HASH)
+                          #endif
+                          );
+    text.setWordWrap(1);
+
+    QDialogButtonBox buttonbox(Qt::Horizontal, &dialog);
+    QPushButton button(&dialog);
+    button.setText("Oh, Yeah!");
+    buttonbox.addButton(&button, QDialogButtonBox::AcceptRole);
+    buttonbox.setCenterButtons(1);
+    _mainWin->connect(&buttonbox, SIGNAL(accepted()), &dialog, SLOT(accept()));
+
+    QVBoxLayout layout;
+    layout.setAlignment(Qt::AlignCenter);
+    layout.addWidget(&img);
+    layout.addWidget(&text);
+    layout.addWidget(&buttonbox);
+
+    dialog.setWindowTitle(title);
+    dialog.setMinimumWidth(img.minimumWidth()+30);
+    dialog.setMinimumHeight(img.minimumHeight()+50);
+    dialog.setLayout(&layout);
+    dialog.exec();
+    QApplication::restoreOverrideCursor();
+}
+
+void main_help(void)
+{
+
+}
+
+void settingsDialog(void)
+{
+
+}
+
+void designDetails(void)
+{
+
+}
+
+void main_cut(void)
+{
+    debug_message("cut()");
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->cut();
+    }
+}
+
+void main_copy(void)
+{
+    debug_message("copy()");
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->copy();
+    }
+}
+
+void main_paste(void)
+{
+    debug_message("main_paste()");
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->paste();
+    }
+}
+
+void tipOfTheDay(void)
+{
+
+}
+
+void changelog(void)
+{
+    debug_message("changelog()");
+
+    /* display in a custom widget instead */
+    /*
+    QUrl changelogURL("help/changelog.html");
+    QDesktopServices::openUrl(changelogURL);
+    */
+}
+
+void showAllLayers(void)
+{
+
+}
+
+void freezeAllLayers(void)
+{
+
+}
+
+void thawAllLayers(void)
+{
+
+}
+
+void lockAllLayers(void)
+{
+
+}
+
+void unlockAllLayers(void)
+{
+
+}
+
+void hideAllLayers(void)
+{
+
+}
+
+void lineWeightSelector(void)
+{
+
+}
+
+void lineTypeSelector(void)
+{
+
+}
+
+void colorSelector(void)
+{
+
+}
+
+void windowClose(void)
+{
+
+}
+
+void windowTile(void)
+{
+
+}
+
+void windowCloseAll(void)
+{
+
+}
+
+void windowCascade(void)
+{
+
+}
+
+void windowNext(void)
+{
+
+}
+
+void windowPrevious(void)
+{
+
+}
 
 void textItalic(void)
 {
-    settings.text_style_italic = !settings.text_style_italic;
+    settings.text_style.italic = !settings.text_style.italic;
 }
 
 void textBold(void)
 {
-    settings.text_style_bold = !settings.text_style_bold;
+    settings.text_style.bold = !settings.text_style.bold;
 }
 
 void textStrikeout(void)
 {
-    settings.text_style_strikeout = !settings.text_style_strikeout;
+    settings.text_style.strikeout = !settings.text_style.strikeout;
 }
 
 void textUnderline(void)
 {
-    settings.text_style_underline = !settings.text_style_underline;
+    settings.text_style.underline = !settings.text_style.underline;
 }
 
 void textOverline(void)
 {
-    settings.text_style_overline = !settings.text_style_overline;
+    settings.text_style.overline = !settings.text_style.overline;
 }
 
 void actuator(void)
@@ -5076,38 +5250,62 @@ PropertyEditor::PropertyEditor(const QString& iconDirectory, bool pickAddMode, Q
     hboxLayoutSelection->addWidget(createToolButtonPickAdd());
     widgetSelection->setLayout(hboxLayoutSelection);
 
+    groupBoxGeometryArc = createGroupBoxGeometry(OBJ_TYPE_ARC);
+    groupBoxGeometryBlock = createGroupBoxGeometry(OBJ_TYPE_BLOCK);
+    groupBoxGeometryCircle = createGroupBoxGeometry(OBJ_TYPE_CIRCLE);
+    groupBoxGeometryDimAligned = createGroupBoxGeometry(OBJ_TYPE_DIMALIGNED);
+    groupBoxGeometryDimAngular = createGroupBoxGeometry(OBJ_TYPE_DIMANGULAR);
+    groupBoxGeometryDimArcLength = createGroupBoxGeometry(OBJ_TYPE_DIMARCLENGTH);
+    groupBoxGeometryDimDiameter = createGroupBoxGeometry(OBJ_TYPE_DIMDIAMETER);
+    groupBoxGeometryDimLeader = createGroupBoxGeometry(OBJ_TYPE_DIMLEADER);
+    groupBoxGeometryDimLinear = createGroupBoxGeometry(OBJ_TYPE_DIMLINEAR);
+    groupBoxGeometryDimOrdinate = createGroupBoxGeometry(OBJ_TYPE_DIMORDINATE);
+    groupBoxGeometryDimRadius = createGroupBoxGeometry(OBJ_TYPE_DIMRADIUS);
+    groupBoxGeometryEllipse = createGroupBoxGeometry(OBJ_TYPE_ELLIPSE);
+    groupBoxGeometryImage = createGroupBoxGeometry(OBJ_TYPE_IMAGE);
+    groupBoxGeometryInfiniteLine = createGroupBoxGeometry(OBJ_TYPE_INFINITELINE);
+    groupBoxGeometryLine = createGroupBoxGeometry(OBJ_TYPE_LINE);
+    groupBoxGeometryPath = createGroupBoxGeometry(OBJ_TYPE_PATH);
+    groupBoxGeometryPoint = createGroupBoxGeometry(OBJ_TYPE_POINT);
+    groupBoxGeometryPolygon = createGroupBoxGeometry(OBJ_TYPE_POLYGON);
+    groupBoxGeometryPolyline = createGroupBoxGeometry(OBJ_TYPE_POLYLINE);
+    groupBoxGeometryRay = createGroupBoxGeometry(OBJ_TYPE_RAY);
+    groupBoxGeometryRectangle = createGroupBoxGeometry(OBJ_TYPE_RECTANGLE);
+    groupBoxGeometryTextMulti = createGroupBoxGeometry(OBJ_TYPE_TEXTMULTI);
+    groupBoxGeometryTextSingle = createGroupBoxGeometry(OBJ_TYPE_TEXTSINGLE);
+
     QScrollArea* scrollProperties = new QScrollArea(this);
     QWidget* widgetProperties = new QWidget(this);
     QVBoxLayout* vboxLayoutProperties = new QVBoxLayout(this);
     vboxLayoutProperties->addWidget(createGroupBoxGeneral());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryArc());
+    vboxLayoutProperties->addWidget(groupBoxGeometryArc);
     vboxLayoutProperties->addWidget(createGroupBoxMiscArc());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryBlock());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryCircle());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimAligned());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimAngular());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimArcLength());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimDiameter());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimLeader());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimLinear());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimOrdinate());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryDimRadius());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryEllipse());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryImage());
+    vboxLayoutProperties->addWidget(groupBoxGeometryBlock);
+    vboxLayoutProperties->addWidget(groupBoxGeometryCircle);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimAligned);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimAngular);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimArcLength);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimDiameter);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimLeader);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimLinear);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimOrdinate);
+    vboxLayoutProperties->addWidget(groupBoxGeometryDimRadius);
+    vboxLayoutProperties->addWidget(groupBoxGeometryEllipse);
+    vboxLayoutProperties->addWidget(groupBoxGeometryImage);
     vboxLayoutProperties->addWidget(createGroupBoxMiscImage());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryInfiniteLine());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryLine());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryPath());
+    vboxLayoutProperties->addWidget(groupBoxGeometryInfiniteLine);
+    vboxLayoutProperties->addWidget(groupBoxGeometryLine);
+    vboxLayoutProperties->addWidget(groupBoxGeometryPath);
     vboxLayoutProperties->addWidget(createGroupBoxMiscPath());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryPoint());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryPolygon());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryPolyline());
+    vboxLayoutProperties->addWidget(groupBoxGeometryPoint);
+    vboxLayoutProperties->addWidget(groupBoxGeometryPolygon);
+    vboxLayoutProperties->addWidget(groupBoxGeometryPolyline);
     vboxLayoutProperties->addWidget(createGroupBoxMiscPolyline());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryRay());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryRectangle());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryTextMulti());
+    vboxLayoutProperties->addWidget(groupBoxGeometryRay);
+    vboxLayoutProperties->addWidget(groupBoxGeometryRectangle);
+    vboxLayoutProperties->addWidget(groupBoxGeometryTextMulti);
     vboxLayoutProperties->addWidget(createGroupBoxTextTextSingle());
-    vboxLayoutProperties->addWidget(createGroupBoxGeometryTextSingle());
+    vboxLayoutProperties->addWidget(groupBoxGeometryTextSingle);
     vboxLayoutProperties->addWidget(createGroupBoxMiscTextSingle());
     vboxLayoutProperties->addStretch(1);
     widgetProperties->setLayout(vboxLayoutProperties);
@@ -5447,12 +5645,12 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
                 updateLineEditStrIfVaries(lineEditTextSingleContents, obj->objText);
                 updateFontComboBoxStrIfVaries(comboBoxTextSingleFont, obj->objTextFont);
                 updateComboBoxStrIfVaries(comboBoxTextSingleJustify, obj->objTextJustify, obj->objectTextJustifyList());
-                updateLineEditNumIfVaries(lineEditTextSingleHeight, obj->objTextSize, 0);
+                updateLineEditNumIfVaries(lineEditTextSingleHeight, obj->obj_text.size, 0);
                 updateLineEditNumIfVaries(lineEditTextSingleRotation, -obj->rotation(), 1);
                 updateLineEditNumIfVaries(lineEditTextSingleX, obj->objectX(), 0);
                 updateLineEditNumIfVaries(lineEditTextSingleY, -obj->objectY(), 0);
-                updateComboBoxBoolIfVaries(comboBoxTextSingleBackward, obj->objTextBackward, 1);
-                updateComboBoxBoolIfVaries(comboBoxTextSingleUpsideDown, obj->objTextUpsideDown, 1);
+                updateComboBoxBoolIfVaries(comboBoxTextSingleBackward, obj->obj_text.backward, 1);
+                updateComboBoxBoolIfVaries(comboBoxTextSingleUpsideDown, obj->obj_text.upsidedown, 1);
             }
         }
     }
@@ -5808,63 +6006,6 @@ QGroupBox* PropertyEditor::createGroupBoxGeneral()
     return groupBoxGeneral;
 }
 
-QGroupBox* PropertyEditor::createGroupBoxGeometryArc()
-{
-    groupBoxGeometryArc = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonArcCenterX = createToolButton("blank", tr("Center X"));       //TODO: use proper icon
-    toolButtonArcCenterY = createToolButton("blank", tr("Center Y"));       //TODO: use proper icon
-    toolButtonArcRadius = createToolButton("blank", tr("Radius"));         //TODO: use proper icon
-    toolButtonArcStartAngle = createToolButton("blank", tr("Start Angle"));    //TODO: use proper icon
-    toolButtonArcEndAngle = createToolButton("blank", tr("End Angle"));      //TODO: use proper icon
-    toolButtonArcStartX = createToolButton("blank", tr("Start X"));        //TODO: use proper icon
-    toolButtonArcStartY = createToolButton("blank", tr("Start Y"));        //TODO: use proper icon
-    toolButtonArcEndX = createToolButton("blank", tr("End X"));          //TODO: use proper icon
-    toolButtonArcEndY = createToolButton("blank", tr("End Y"));          //TODO: use proper icon
-    toolButtonArcArea = createToolButton("blank", tr("Area"));           //TODO: use proper icon
-    toolButtonArcLength = createToolButton("blank", tr("Arc Length"));     //TODO: use proper icon
-    toolButtonArcChord = createToolButton("blank", tr("Chord"));          //TODO: use proper icon
-    toolButtonArcIncAngle = createToolButton("blank", tr("Included Angle")); //TODO: use proper icon
-
-    lineEditArcCenterX = createLineEdit("double", 0);
-    lineEditArcCenterY = createLineEdit("double", 0);
-    lineEditArcRadius = createLineEdit("double", 0);
-    lineEditArcStartAngle = createLineEdit("double", 0);
-    lineEditArcEndAngle = createLineEdit("double", 0);
-    lineEditArcStartX = createLineEdit("double", 1);
-    lineEditArcStartY = createLineEdit("double", 1);
-    lineEditArcEndX = createLineEdit("double", 1);
-    lineEditArcEndY = createLineEdit("double", 1);
-    lineEditArcArea = createLineEdit("double", 1);
-    lineEditArcLength = createLineEdit("double", 1);
-    lineEditArcChord = createLineEdit("double", 1);
-    lineEditArcIncAngle = createLineEdit("double", 1);
-
-    mapSignal(lineEditArcCenterX, "lineEditArcCenterX", OBJ_TYPE_ARC);
-    mapSignal(lineEditArcCenterY, "lineEditArcCenterY", OBJ_TYPE_ARC);
-    mapSignal(lineEditArcRadius, "lineEditArcRadius", OBJ_TYPE_ARC);
-    mapSignal(lineEditArcStartAngle, "lineEditArcStartAngle", OBJ_TYPE_ARC);
-    mapSignal(lineEditArcEndAngle, "lineEditArcEndAngle", OBJ_TYPE_ARC);
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonArcCenterX, lineEditArcCenterX);
-    formLayout->addRow(toolButtonArcCenterY, lineEditArcCenterY);
-    formLayout->addRow(toolButtonArcRadius, lineEditArcRadius);
-    formLayout->addRow(toolButtonArcStartAngle, lineEditArcStartAngle);
-    formLayout->addRow(toolButtonArcEndAngle, lineEditArcEndAngle);
-    formLayout->addRow(toolButtonArcStartX, lineEditArcStartX);
-    formLayout->addRow(toolButtonArcStartY, lineEditArcStartY);
-    formLayout->addRow(toolButtonArcEndX, lineEditArcEndX);
-    formLayout->addRow(toolButtonArcEndY, lineEditArcEndY);
-    formLayout->addRow(toolButtonArcArea, lineEditArcArea);
-    formLayout->addRow(toolButtonArcLength, lineEditArcLength);
-    formLayout->addRow(toolButtonArcChord, lineEditArcChord);
-    formLayout->addRow(toolButtonArcIncAngle, lineEditArcIncAngle);
-    groupBoxGeometryArc->setLayout(formLayout);
-
-    return groupBoxGeometryArc;
-}
-
 QGroupBox* PropertyEditor::createGroupBoxMiscArc()
 {
     groupBoxMiscArc = new QGroupBox(tr("Misc"), this);
@@ -5880,180 +6021,25 @@ QGroupBox* PropertyEditor::createGroupBoxMiscArc()
     return groupBoxMiscArc;
 }
 
-QGroupBox* PropertyEditor::createGroupBoxGeometryBlock()
-{
-    groupBoxGeometryBlock = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonBlockX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
-    toolButtonBlockY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
-
-    lineEditBlockX = createLineEdit("double", 0);
-    lineEditBlockY = createLineEdit("double", 0);
-
-    //TODO: mapSignal for blocks
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonBlockX, lineEditBlockX);
-    formLayout->addRow(toolButtonBlockY, lineEditBlockY);
-    groupBoxGeometryBlock->setLayout(formLayout);
-
-    return groupBoxGeometryBlock;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryCircle()
-{
-    groupBoxGeometryCircle = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonCircleCenterX = createToolButton("blank", tr("Center X"));      //TODO: use proper icon
-    toolButtonCircleCenterY = createToolButton("blank", tr("Center Y"));      //TODO: use proper icon
-    toolButtonCircleRadius = createToolButton("blank", tr("Radius"));        //TODO: use proper icon
-    toolButtonCircleDiameter = createToolButton("blank", tr("Diameter"));      //TODO: use proper icon
-    toolButtonCircleArea = createToolButton("blank", tr("Area"));          //TODO: use proper icon
-    toolButtonCircleCircumference = createToolButton("blank", tr("Circumference")); //TODO: use proper icon
-
-    lineEditCircleCenterX = createLineEdit("double", 0);
-    lineEditCircleCenterY = createLineEdit("double", 0);
-    lineEditCircleRadius = createLineEdit("double", 0);
-    lineEditCircleDiameter = createLineEdit("double", 0);
-    lineEditCircleArea = createLineEdit("double", 0);
-    lineEditCircleCircumference = createLineEdit("double", 0);
-
-    mapSignal(lineEditCircleCenterX, "lineEditCircleCenterX", OBJ_TYPE_CIRCLE);
-    mapSignal(lineEditCircleCenterY, "lineEditCircleCenterY", OBJ_TYPE_CIRCLE);
-    mapSignal(lineEditCircleRadius, "lineEditCircleRadius", OBJ_TYPE_CIRCLE);
-    mapSignal(lineEditCircleDiameter, "lineEditCircleDiameter", OBJ_TYPE_CIRCLE);
-    mapSignal(lineEditCircleArea, "lineEditCircleArea", OBJ_TYPE_CIRCLE);
-    mapSignal(lineEditCircleCircumference, "lineEditCircleCircumference", OBJ_TYPE_CIRCLE);
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonCircleCenterX, lineEditCircleCenterX);
-    formLayout->addRow(toolButtonCircleCenterY, lineEditCircleCenterY);
-    formLayout->addRow(toolButtonCircleRadius, lineEditCircleRadius);
-    formLayout->addRow(toolButtonCircleDiameter, lineEditCircleDiameter);
-    formLayout->addRow(toolButtonCircleArea, lineEditCircleArea);
-    formLayout->addRow(toolButtonCircleCircumference, lineEditCircleCircumference);
-    groupBoxGeometryCircle->setLayout(formLayout);
-
-    return groupBoxGeometryCircle;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimAligned()
-{
-    groupBoxGeometryDimAligned = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimAligned
-
-    return groupBoxGeometryDimAligned;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimAngular()
-{
-    groupBoxGeometryDimAngular = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimAngular
-
-    return groupBoxGeometryDimAngular;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimArcLength()
-{
-    groupBoxGeometryDimArcLength = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimArcLength
-
-    return groupBoxGeometryDimArcLength;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimDiameter()
-{
-    groupBoxGeometryDimDiameter = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimDiameter
-
-    return groupBoxGeometryDimDiameter;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimLeader()
-{
-    groupBoxGeometryDimLeader = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimLeader
-
-    return groupBoxGeometryDimLeader;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimLinear()
-{
-    groupBoxGeometryDimLinear = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimLinear
-
-    return groupBoxGeometryDimLinear;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimOrdinate()
-{
-    groupBoxGeometryDimOrdinate = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimOrdinate
-
-    return groupBoxGeometryDimOrdinate;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimRadius()
-{
-    groupBoxGeometryDimRadius = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimRadius
-
-    return groupBoxGeometryDimRadius;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryEllipse()
+QGroupBox* PropertyEditor::createGroupBoxGeometry(int objType)
 {
     int i;
-    groupBoxGeometryEllipse = new QGroupBox(tr("Geometry"), this);
+    QGroupBox *gb = new QGroupBox(tr("Geometry"), this);
 
     /* TODO: use proper icons */
     QFormLayout* formLayout = new QFormLayout(this);
-    for (i=0; i<n_property_editors; i++) {
-        if (property_editors[i].object == OBJ_TYPE_ELLIPSE) {
+    for (i=0; property_editors[i].object != OBJ_TYPE_UNKNOWN; i++) {
+        if (property_editors[i].object == objType) {
             int index = property_editors[i].id;
             toolButton[index] = createToolButton(property_editors[i].icon, tr(property_editors[i].label));       
             lineEdit[index] = createLineEdit(property_editors[i].type, property_editors[i].read_only);
             formLayout->addRow(toolButton[index], lineEdit[index]);
-            mapSignal(lineEdit[index], property_editors[i].signal, OBJ_TYPE_ELLIPSE);
+            mapSignal(lineEdit[index], property_editors[i].signal, objType);
         }
     }
-    groupBoxGeometryEllipse->setLayout(formLayout);
+    gb->setLayout(formLayout);
 
-    return groupBoxGeometryEllipse;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryImage()
-{
-    groupBoxGeometryImage = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonImageX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
-    toolButtonImageY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
-    toolButtonImageWidth = createToolButton("blank", tr("Width"));      //TODO: use proper icon
-    toolButtonImageHeight = createToolButton("blank", tr("Height"));     //TODO: use proper icon
-
-    lineEditImageX = createLineEdit("double", 0);
-    lineEditImageY = createLineEdit("double", 0);
-    lineEditImageWidth = createLineEdit("double", 0);
-    lineEditImageHeight = createLineEdit("double", 0);
-
-    //TODO: mapSignal for images
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonImageX, lineEditImageX);
-    formLayout->addRow(toolButtonImageY, lineEditImageY);
-    formLayout->addRow(toolButtonImageWidth, lineEditImageWidth);
-    formLayout->addRow(toolButtonImageHeight, lineEditImageHeight);
-    groupBoxGeometryImage->setLayout(formLayout);
-
-    return groupBoxGeometryImage;
+    return gb;
 }
 
 QGroupBox* PropertyEditor::createGroupBoxMiscImage()
@@ -6074,108 +6060,6 @@ QGroupBox* PropertyEditor::createGroupBoxMiscImage()
     return groupBoxMiscImage;
 }
 
-QGroupBox* PropertyEditor::createGroupBoxGeometryInfiniteLine()
-{
-    groupBoxGeometryInfiniteLine = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonInfiniteLineX1 = createToolButton("blank", tr("Start X"));  //TODO: use proper icon
-    toolButtonInfiniteLineY1 = createToolButton("blank", tr("Start Y"));  //TODO: use proper icon
-    toolButtonInfiniteLineX2 = createToolButton("blank", tr("2nd X"));    //TODO: use proper icon
-    toolButtonInfiniteLineY2 = createToolButton("blank", tr("2nd Y"));    //TODO: use proper icon
-    toolButtonInfiniteLineVectorX = createToolButton("blank", tr("Vector X")); //TODO: use proper icon
-    toolButtonInfiniteLineVectorY = createToolButton("blank", tr("Vector Y")); //TODO: use proper icon
-
-    lineEditInfiniteLineX1 = createLineEdit("double", 0);
-    lineEditInfiniteLineY1 = createLineEdit("double", 0);
-    lineEditInfiniteLineX2 = createLineEdit("double", 0);
-    lineEditInfiniteLineY2 = createLineEdit("double", 0);
-    lineEditInfiniteLineVectorX = createLineEdit("double", 1);
-    lineEditInfiniteLineVectorY = createLineEdit("double", 1);
-
-    //TODO: mapSignal for infinite lines
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonInfiniteLineX1, lineEditInfiniteLineX1);
-    formLayout->addRow(toolButtonInfiniteLineY1, lineEditInfiniteLineY1);
-    formLayout->addRow(toolButtonInfiniteLineX2, lineEditInfiniteLineX2);
-    formLayout->addRow(toolButtonInfiniteLineY2, lineEditInfiniteLineY2);
-    formLayout->addRow(toolButtonInfiniteLineVectorX, lineEditInfiniteLineVectorX);
-    formLayout->addRow(toolButtonInfiniteLineVectorY, lineEditInfiniteLineVectorY);
-    groupBoxGeometryInfiniteLine->setLayout(formLayout);
-
-    return groupBoxGeometryInfiniteLine;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryLine()
-{
-    groupBoxGeometryLine = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonLineStartX = createToolButton("blank", tr("Start X")); //TODO: use proper icon
-    toolButtonLineStartY = createToolButton("blank", tr("Start Y")); //TODO: use proper icon
-    toolButtonLineEndX = createToolButton("blank", tr("End X"));   //TODO: use proper icon
-    toolButtonLineEndY = createToolButton("blank", tr("End Y"));   //TODO: use proper icon
-    toolButtonLineDeltaX = createToolButton("blank", tr("Delta X")); //TODO: use proper icon
-    toolButtonLineDeltaY = createToolButton("blank", tr("Delta Y")); //TODO: use proper icon
-    toolButtonLineAngle = createToolButton("blank", tr("Angle"));   //TODO: use proper icon
-    toolButtonLineLength = createToolButton("blank", tr("Length"));  //TODO: use proper icon
-
-    lineEditLineStartX = createLineEdit("double", 0);
-    lineEditLineStartY = createLineEdit("double", 0);
-    lineEditLineEndX = createLineEdit("double", 0);
-    lineEditLineEndY = createLineEdit("double", 0);
-    lineEditLineDeltaX = createLineEdit("double", 1);
-    lineEditLineDeltaY = createLineEdit("double", 1);
-    lineEditLineAngle = createLineEdit("double", 1);
-    lineEditLineLength = createLineEdit("double", 1);
-
-    mapSignal(lineEditLineStartX, "lineEditLineStartX", OBJ_TYPE_LINE);
-    mapSignal(lineEditLineStartY, "lineEditLineStartY", OBJ_TYPE_LINE);
-    mapSignal(lineEditLineEndX, "lineEditLineEndX", OBJ_TYPE_LINE);
-    mapSignal(lineEditLineEndY, "lineEditLineEndY", OBJ_TYPE_LINE);
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonLineStartX, lineEditLineStartX);
-    formLayout->addRow(toolButtonLineStartY, lineEditLineStartY);
-    formLayout->addRow(toolButtonLineEndX, lineEditLineEndX);
-    formLayout->addRow(toolButtonLineEndY, lineEditLineEndY);
-    formLayout->addRow(toolButtonLineDeltaX, lineEditLineDeltaX);
-    formLayout->addRow(toolButtonLineDeltaY, lineEditLineDeltaY);
-    formLayout->addRow(toolButtonLineAngle, lineEditLineAngle);
-    formLayout->addRow(toolButtonLineLength, lineEditLineLength);
-    groupBoxGeometryLine->setLayout(formLayout);
-
-    return groupBoxGeometryLine;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryPath()
-{
-    groupBoxGeometryPath = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonPathVertexNum = createToolButton("blank", tr("Vertex #")); //TODO: use proper icon
-    toolButtonPathVertexX = createToolButton("blank", tr("Vertex X")); //TODO: use proper icon
-    toolButtonPathVertexY = createToolButton("blank", tr("Vertex Y")); //TODO: use proper icon
-    toolButtonPathArea = createToolButton("blank", tr("Area"));     //TODO: use proper icon
-    toolButtonPathLength = createToolButton("blank", tr("Length"));   //TODO: use proper icon
-
-    comboBoxPathVertexNum = createComboBox(0);
-    lineEditPathVertexX = createLineEdit("double", 0);
-    lineEditPathVertexY = createLineEdit("double", 0);
-    lineEditPathArea = createLineEdit("double", 1);
-    lineEditPathLength = createLineEdit("double", 1);
-
-    //TODO: mapSignal for paths
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonPathVertexNum, comboBoxPathVertexNum);
-    formLayout->addRow(toolButtonPathVertexX, lineEditPathVertexX);
-    formLayout->addRow(toolButtonPathVertexY, lineEditPathVertexY);
-    formLayout->addRow(toolButtonPathArea, lineEditPathArea);
-    formLayout->addRow(toolButtonPathLength, lineEditPathLength);
-    groupBoxGeometryPath->setLayout(formLayout);
-
-    return groupBoxGeometryPath;
-}
-
 QGroupBox* PropertyEditor::createGroupBoxMiscPath()
 {
     groupBoxMiscPath = new QGroupBox(tr("Misc"), this);
@@ -6193,91 +6077,6 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPath()
     return groupBoxMiscPath;
 }
 
-QGroupBox* PropertyEditor::createGroupBoxGeometryPoint()
-{
-    groupBoxGeometryPoint = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonPointX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
-    toolButtonPointY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
-
-    lineEditPointX = createLineEdit("double", 0);
-    lineEditPointY = createLineEdit("double", 0);
-
-    mapSignal(lineEditPointX, "lineEditPointX", OBJ_TYPE_POINT);
-    mapSignal(lineEditPointY, "lineEditPointY", OBJ_TYPE_POINT);
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonPointX, lineEditPointX);
-    formLayout->addRow(toolButtonPointY, lineEditPointY);
-    groupBoxGeometryPoint->setLayout(formLayout);
-
-    return groupBoxGeometryPoint;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryPolygon()
-{
-    groupBoxGeometryPolygon = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonPolygonCenterX = createToolButton("blank", tr("Center X"));        //TODO: use proper icon
-    toolButtonPolygonCenterY = createToolButton("blank", tr("Center Y"));        //TODO: use proper icon
-    toolButtonPolygonRadiusVertex = createToolButton("blank", tr("Vertex Radius"));   //TODO: use proper icon
-    toolButtonPolygonRadiusSide = createToolButton("blank", tr("Side Radius"));     //TODO: use proper icon
-    toolButtonPolygonDiameterVertex = createToolButton("blank", tr("Vertex Diameter")); //TODO: use proper icon
-    toolButtonPolygonDiameterSide = createToolButton("blank", tr("Side Diameter"));   //TODO: use proper icon
-    toolButtonPolygonInteriorAngle = createToolButton("blank", tr("Interior Angle"));  //TODO: use proper icon
-
-    lineEditPolygonCenterX = createLineEdit("double", 0);
-    lineEditPolygonCenterY = createLineEdit("double", 0);
-    lineEditPolygonRadiusVertex = createLineEdit("double", 0);
-    lineEditPolygonRadiusSide = createLineEdit("double", 0);
-    lineEditPolygonDiameterVertex = createLineEdit("double", 0);
-    lineEditPolygonDiameterSide = createLineEdit("double", 0);
-    lineEditPolygonInteriorAngle = createLineEdit("double", 1);
-
-    //TODO: mapSignal for polygons
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonPolygonCenterX, lineEditPolygonCenterX);
-    formLayout->addRow(toolButtonPolygonCenterY, lineEditPolygonCenterY);
-    formLayout->addRow(toolButtonPolygonRadiusVertex, lineEditPolygonRadiusVertex);
-    formLayout->addRow(toolButtonPolygonRadiusSide, lineEditPolygonRadiusSide);
-    formLayout->addRow(toolButtonPolygonDiameterVertex, lineEditPolygonDiameterVertex);
-    formLayout->addRow(toolButtonPolygonDiameterSide, lineEditPolygonDiameterSide);
-    formLayout->addRow(toolButtonPolygonInteriorAngle, lineEditPolygonInteriorAngle);
-    groupBoxGeometryPolygon->setLayout(formLayout);
-
-    return groupBoxGeometryPolygon;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryPolyline()
-{
-    groupBoxGeometryPolyline = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonPolylineVertexNum = createToolButton("blank", tr("Vertex #")); //TODO: use proper icon
-    toolButtonPolylineVertexX = createToolButton("blank", tr("Vertex X")); //TODO: use proper icon
-    toolButtonPolylineVertexY = createToolButton("blank", tr("Vertex Y")); //TODO: use proper icon
-    toolButtonPolylineArea = createToolButton("blank", tr("Area"));     //TODO: use proper icon
-    toolButtonPolylineLength = createToolButton("blank", tr("Length"));   //TODO: use proper icon
-
-    comboBoxPolylineVertexNum = createComboBox(0);
-    lineEditPolylineVertexX = createLineEdit("double", 0);
-    lineEditPolylineVertexY = createLineEdit("double", 0);
-    lineEditPolylineArea = createLineEdit("double", 1);
-    lineEditPolylineLength = createLineEdit("double", 1);
-
-    //TODO: mapSignal for polylines
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonPolylineVertexNum, comboBoxPolylineVertexNum);
-    formLayout->addRow(toolButtonPolylineVertexX, lineEditPolylineVertexX);
-    formLayout->addRow(toolButtonPolylineVertexY, lineEditPolylineVertexY);
-    formLayout->addRow(toolButtonPolylineArea, lineEditPolylineArea);
-    formLayout->addRow(toolButtonPolylineLength, lineEditPolylineLength);
-    groupBoxGeometryPolyline->setLayout(formLayout);
-
-    return groupBoxGeometryPolyline;
-}
-
 QGroupBox* PropertyEditor::createGroupBoxMiscPolyline()
 {
     groupBoxMiscPolyline = new QGroupBox(tr("Misc"), this);
@@ -6293,114 +6092,6 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPolyline()
     groupBoxMiscPolyline->setLayout(formLayout);
 
     return groupBoxMiscPolyline;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryRay()
-{
-    groupBoxGeometryRay = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonRayX1 = createToolButton("blank", tr("Start X"));  //TODO: use proper icon
-    toolButtonRayY1 = createToolButton("blank", tr("Start Y"));  //TODO: use proper icon
-    toolButtonRayX2 = createToolButton("blank", tr("2nd X"));    //TODO: use proper icon
-    toolButtonRayY2 = createToolButton("blank", tr("2nd Y"));    //TODO: use proper icon
-    toolButtonRayVectorX = createToolButton("blank", tr("Vector X")); //TODO: use proper icon
-    toolButtonRayVectorY = createToolButton("blank", tr("Vector Y")); //TODO: use proper icon
-
-    lineEditRayX1 = createLineEdit("double", 0);
-    lineEditRayY1 = createLineEdit("double", 0);
-    lineEditRayX2 = createLineEdit("double", 0);
-    lineEditRayY2 = createLineEdit("double", 0);
-    lineEditRayVectorX = createLineEdit("double", 1);
-    lineEditRayVectorY = createLineEdit("double", 1);
-
-    //TODO: mapSignal for rays
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonRayX1, lineEditRayX1);
-    formLayout->addRow(toolButtonRayY1, lineEditRayY1);
-    formLayout->addRow(toolButtonRayX2, lineEditRayX2);
-    formLayout->addRow(toolButtonRayY2, lineEditRayY2);
-    formLayout->addRow(toolButtonRayVectorX, lineEditRayVectorX);
-    formLayout->addRow(toolButtonRayVectorY, lineEditRayVectorY);
-    groupBoxGeometryRay->setLayout(formLayout);
-
-    return groupBoxGeometryRay;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryRectangle()
-{
-    groupBoxGeometryRectangle = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonRectangleCorner1X = createToolButton("blank", tr("Corner 1 X")); //TODO: use proper icon
-    toolButtonRectangleCorner1Y = createToolButton("blank", tr("Corner 1 Y")); //TODO: use proper icon
-    toolButtonRectangleCorner2X = createToolButton("blank", tr("Corner 2 X")); //TODO: use proper icon
-    toolButtonRectangleCorner2Y = createToolButton("blank", tr("Corner 2 Y")); //TODO: use proper icon
-    toolButtonRectangleCorner3X = createToolButton("blank", tr("Corner 3 X")); //TODO: use proper icon
-    toolButtonRectangleCorner3Y = createToolButton("blank", tr("Corner 3 Y")); //TODO: use proper icon
-    toolButtonRectangleCorner4X = createToolButton("blank", tr("Corner 4 X")); //TODO: use proper icon
-    toolButtonRectangleCorner4Y = createToolButton("blank", tr("Corner 4 Y")); //TODO: use proper icon
-    toolButtonRectangleWidth = createToolButton("blank", tr("Width"));      //TODO: use proper icon
-    toolButtonRectangleHeight = createToolButton("blank", tr("Height"));     //TODO: use proper icon
-    toolButtonRectangleArea = createToolButton("blank", tr("Area"));       //TODO: use proper icon
-
-    lineEditRectangleCorner1X = createLineEdit("double", 0);
-    lineEditRectangleCorner1Y = createLineEdit("double", 0);
-    lineEditRectangleCorner2X = createLineEdit("double", 0);
-    lineEditRectangleCorner2Y = createLineEdit("double", 0);
-    lineEditRectangleCorner3X = createLineEdit("double", 0);
-    lineEditRectangleCorner3Y = createLineEdit("double", 0);
-    lineEditRectangleCorner4X = createLineEdit("double", 0);
-    lineEditRectangleCorner4Y = createLineEdit("double", 0);
-    lineEditRectangleWidth = createLineEdit("double", 0);
-    lineEditRectangleHeight = createLineEdit("double", 0);
-    lineEditRectangleArea = createLineEdit("double", 1);
-
-    mapSignal(lineEditRectangleCorner1X, "lineEditRectangleCorner1X", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleCorner1Y, "lineEditRectangleCorner1Y", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleCorner2X, "lineEditRectangleCorner2X", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleCorner2Y, "lineEditRectangleCorner2Y", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleCorner3X, "lineEditRectangleCorner3X", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleCorner3Y, "lineEditRectangleCorner3Y", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleCorner4X, "lineEditRectangleCorner4X", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleCorner4Y, "lineEditRectangleCorner4Y", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleWidth, "lineEditRectangleWidth", OBJ_TYPE_RECTANGLE);
-    mapSignal(lineEditRectangleHeight, "lineEditRectangleHeight", OBJ_TYPE_RECTANGLE);
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonRectangleCorner1X, lineEditRectangleCorner1X);
-    formLayout->addRow(toolButtonRectangleCorner1Y, lineEditRectangleCorner1Y);
-    formLayout->addRow(toolButtonRectangleCorner2X, lineEditRectangleCorner2X);
-    formLayout->addRow(toolButtonRectangleCorner2Y, lineEditRectangleCorner2Y);
-    formLayout->addRow(toolButtonRectangleCorner3X, lineEditRectangleCorner3X);
-    formLayout->addRow(toolButtonRectangleCorner3Y, lineEditRectangleCorner3Y);
-    formLayout->addRow(toolButtonRectangleCorner4X, lineEditRectangleCorner4X);
-    formLayout->addRow(toolButtonRectangleCorner4Y, lineEditRectangleCorner4Y);
-    formLayout->addRow(toolButtonRectangleWidth, lineEditRectangleWidth);
-    formLayout->addRow(toolButtonRectangleHeight, lineEditRectangleHeight);
-    formLayout->addRow(toolButtonRectangleArea, lineEditRectangleArea);
-    groupBoxGeometryRectangle->setLayout(formLayout);
-
-    return groupBoxGeometryRectangle;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryTextMulti()
-{
-    groupBoxGeometryTextMulti = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonTextMultiX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
-    toolButtonTextMultiY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
-
-    lineEditTextMultiX = createLineEdit("double", 0);
-    lineEditTextMultiY = createLineEdit("double", 0);
-
-    //TODO: mapSignal for multiline text
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonTextMultiX, lineEditTextMultiX);
-    formLayout->addRow(toolButtonTextMultiY, lineEditTextMultiY);
-    groupBoxGeometryTextMulti->setLayout(formLayout);
-
-    return groupBoxGeometryTextMulti;
 }
 
 QGroupBox* PropertyEditor::createGroupBoxTextTextSingle()
@@ -6434,27 +6125,6 @@ QGroupBox* PropertyEditor::createGroupBoxTextTextSingle()
     groupBoxTextTextSingle->setLayout(formLayout);
 
     return groupBoxTextTextSingle;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryTextSingle()
-{
-    groupBoxGeometryTextSingle = new QGroupBox(tr("Geometry"), this);
-
-    toolButtonTextSingleX = createToolButton("blank", tr("Position X")); //TODO: use proper icon
-    toolButtonTextSingleY = createToolButton("blank", tr("Position Y")); //TODO: use proper icon
-
-    lineEditTextSingleX = createLineEdit("double", 0);
-    lineEditTextSingleY = createLineEdit("double", 0);
-
-    mapSignal(lineEditTextSingleX, "lineEditTextSingleX", OBJ_TYPE_TEXTSINGLE);
-    mapSignal(lineEditTextSingleY, "lineEditTextSingleY", OBJ_TYPE_TEXTSINGLE);
-
-    QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonTextSingleX, lineEditTextSingleX);
-    formLayout->addRow(toolButtonTextSingleY, lineEditTextSingleY);
-    groupBoxGeometryTextSingle->setLayout(formLayout);
-
-    return groupBoxGeometryTextSingle;
 }
 
 QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
@@ -6521,8 +6191,12 @@ void PropertyEditor::mapSignal(QObject* fieldObj, const QString& name, QVariant 
     fieldObj->setObjectName(name);
     fieldObj->setProperty(qPrintable(name), value);
 
-    if     (name.startsWith("lineEdit")) connect(fieldObj, SIGNAL(editingFinished()), signalMapper, SLOT(map()));
-    else if(name.startsWith("comboBox")) connect(fieldObj, SIGNAL(activated(const QString&)), signalMapper, SLOT(map()));
+    if (name.startsWith("lineEdit")) {
+        connect(fieldObj, SIGNAL(editingFinished()), signalMapper, SLOT(map()));
+    }
+    else if (name.startsWith("comboBox")) {
+        connect(fieldObj, SIGNAL(activated(const QString&)), signalMapper, SLOT(map()));
+    }
 
     signalMapper->setMapping(fieldObj, fieldObj);
 }
@@ -9339,11 +9013,9 @@ TextSingleObject::TextSingleObject(TextSingleObject* obj, QGraphicsItem* parent)
     debug_message("TextSingleObject Constructor()");
     if (obj) {
         objTextFont = obj->objTextFont;
-        objTextSize = obj->objTextSize;
+        obj_text = obj->obj_text;
         setRotation(obj->rotation());
-        objTextBackward = obj->objTextBackward;
-        objTextUpsideDown = obj->objTextUpsideDown;
-        setObjectTextStyle(obj->objTextBold, obj->objTextItalic, obj->objTextUnderline, obj->objTextStrikeOut, obj->objTextOverline);
+        setObjectText(obj->objText);
         init(obj->objText, obj->objectX(), obj->objectY(), obj->objectColorRGB(), Qt::SolidLine); //TODO: getCurrentLineType
         setScale(obj->scale());
     }
@@ -9387,12 +9059,12 @@ void TextSingleObject::setObjectText(const QString& str)
     QPainterPath textPath;
     QFont font;
     font.setFamily(objTextFont);
-    font.setPointSizeF(objTextSize);
-    font.setBold(objTextBold);
-    font.setItalic(objTextItalic);
-    font.setUnderline(objTextUnderline);
-    font.setStrikeOut(objTextStrikeOut);
-    font.setOverline(objTextOverline);
+    font.setPointSizeF(obj_text.size);
+    font.setBold(obj_text.bold);
+    font.setItalic(obj_text.italic);
+    font.setUnderline(obj_text.underline);
+    font.setStrikeOut(obj_text.strikeout);
+    font.setOverline(obj_text.overline);
     textPath.addText(0, 0, font, str);
 
     //Translate the path based on the justification
@@ -9414,12 +9086,12 @@ void TextSingleObject::setObjectText(const QString& str)
     else if(objTextJustify == "Bottom Right")  { textPath.translate(-jRect.bottomRight()); }
 
     //Backward or Upside Down
-    if(objTextBackward || objTextUpsideDown)
+    if(obj_text.backward || obj_text.upsidedown)
     {
         float horiz = 1.0;
         float vert = 1.0;
-        if(objTextBackward) horiz = -1.0;
-        if(objTextUpsideDown) vert = -1.0;
+        if(obj_text.backward) horiz = -1.0;
+        if(obj_text.upsidedown) vert = -1.0;
 
         QPainterPath flippedPath;
 
@@ -9494,59 +9166,49 @@ void TextSingleObject::setObjectTextJustify(const QString& justify)
 
 void TextSingleObject::setObjectTextSize(float size)
 {
-    objTextSize = size;
-    setObjectText(objText);
-}
-
-void TextSingleObject::setObjectTextStyle(bool bold, bool italic, bool under, bool strike, bool over)
-{
-    objTextBold = bold;
-    objTextItalic = italic;
-    objTextUnderline = under;
-    objTextStrikeOut = strike;
-    objTextOverline = over;
+    obj_text.size = size;
     setObjectText(objText);
 }
 
 void TextSingleObject::setObjectTextBold(bool val)
 {
-    objTextBold = val;
+    obj_text.bold = val;
     setObjectText(objText);
 }
 
 void TextSingleObject::setObjectTextItalic(bool val)
 {
-    objTextItalic = val;
+    obj_text.italic = val;
     setObjectText(objText);
 }
 
 void TextSingleObject::setObjectTextUnderline(bool val)
 {
-    objTextUnderline = val;
+    obj_text.underline = val;
     setObjectText(objText);
 }
 
 void TextSingleObject::setObjectTextStrikeOut(bool val)
 {
-    objTextStrikeOut = val;
+    obj_text.strikeout = val;
     setObjectText(objText);
 }
 
 void TextSingleObject::setObjectTextOverline(bool val)
 {
-    objTextOverline = val;
+    obj_text.overline = val;
     setObjectText(objText);
 }
 
 void TextSingleObject::setObjectTextBackward(bool val)
 {
-    objTextBackward = val;
+    obj_text.backward = val;
     setObjectText(objText);
 }
 
 void TextSingleObject::setObjectTextUpsideDown(bool val)
 {
-    objTextUpsideDown = val;
+    obj_text.upsidedown = val;
     setObjectText(objText);
 }
 
@@ -9665,134 +9327,15 @@ QList<QPainterPath> TextSingleObject::subPathList() const
     return pathList;
 }
 
-QAction *MainWindow::createAction(const QString icon, const QString toolTip, const QString statusTip, bool scripted)
-{
-    int i, id = 0;
-    QString appDir = qApp->applicationDirPath();
-
-    for (i=0; i<n_actions; i++) {
-        if (icon == action_list[i].abbreviation) {
-            id = i;
-            break;
-        }
-    }
-
-    QAction *ACTION = new QAction(loadIcon(action_list[id].icon), toolTip, this);
-    // TODO: Set What's This Context Help to statusTip for now so there is some infos there.
-    // Make custom What's This Context Help popup with more descriptive help than just
-    // the status bar/tip one liner(short but not real long) with a hyperlink in the custom popup
-    // at the bottom to open full help file description. Ex: like wxPython AGW's SuperToolTip.
-    // TODO: Finish All Commands ... <.<
-
-    if (icon == "new") {
-        ACTION->setShortcut(QKeySequence::New);
-    }
-    else if (icon == "open") {
-        ACTION->setShortcut(QKeySequence::Open);
-    }
-    else if (icon == "save") {
-        ACTION->setShortcut(QKeySequence::Save);
-    }
-    else if(icon == "saveas") {
-        ACTION->setShortcut(QKeySequence::SaveAs);
-    }
-    else if(icon == "print") {
-        ACTION->setShortcut(QKeySequence::Print);
-    }
-    else if(icon == "designdetails") {
-        ACTION->setShortcut(QKeySequence("Ctrl+D"));
-    }
-    else if(icon == "exit") {
-        ACTION->setShortcut(QKeySequence("Ctrl+Q"));
-    }
-    else if(icon == "cut") {
-        ACTION->setShortcut(QKeySequence::Cut);
-    }
-    else if(icon == "copy") {
-        ACTION->setShortcut(QKeySequence::Copy);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(copy()));
-    }
-    else if(icon == "paste") {
-        ACTION->setShortcut(QKeySequence::Paste);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(paste()));
-    }
-    else if(icon == "windowcascade") {
-        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(cascade()));
-    }
-    else if(icon == "windowtile") {
-        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(tile()));
-    }
-    else if(icon == "windowclose") {
-        ACTION->setShortcut(QKeySequence::Close);
-        connect(ACTION, SIGNAL(triggered()), this, SLOT(onCloseWindow()));
-    }
-    else if(icon == "windowcloseall") {
-        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(closeAllSubWindows()));
-    }
-    else if(icon == "windownext") {
-        ACTION->setShortcut(QKeySequence::NextChild);
-        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));
-    }
-    else if(icon == "windowprevious") {
-        ACTION->setShortcut(QKeySequence::PreviousChild);
-        connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()));
-    }
-    else if(icon == "textbold" || icon == "textitalic"
-        || icon == "textunderline" || icon == "textstrikeout"
-       || icon == "textoverline") {
-        ACTION->setCheckable(1);
-    }
-
-    ACTION->setStatusTip(action_list[id].description);
-    ACTION->setObjectName(icon);
-    ACTION->setWhatsThis(action_list[id].description);
-    connect(ACTION, SIGNAL(triggered()), this, SLOT(actions()));
-    return ACTION;
-}
-
 void MainWindow::stub_testing()
 {
     QMessageBox::warning(this, tr("Testing Feature"), tr("<b>This feature is in testing.</b>"));
-}
-
-void MainWindow::exit()
-{
-    debug_message("exit()");
-    qApp->closeAllWindows();
-    this->deleteLater(); //Force the MainWindow destructor to run before exiting. Makes Valgrind "still reachable" happy :)
-}
-
-void MainWindow::quit()
-{
-    debug_message("quit()");
-    exit();
 }
 
 void MainWindow::checkForUpdates()
 {
     debug_message("checkForUpdates()");
     //TODO: Check website for new versions, commands, etc...
-}
-
-void MainWindow::cut()
-{
-    debug_message("cut()");
-    View* gview = _mainWin->activeView();
-    if (gview) { gview->cut(); }
-}
-
-void MainWindow::copy()
-{
-    debug_message("copy()");
-    View* gview = activeView();
-    if(gview) { gview->copy(); }
-}
-
-void MainWindow::paste()
-{
-    debug_message("paste()");
-    View* gview = activeView();
-    if(gview) { gview->paste(); }
 }
 
 void MainWindow::selectAll()
@@ -9829,55 +9372,6 @@ void MainWindow::designDetails()
     }
 }
 
-void MainWindow::about()
-{
-    //TODO: QTabWidget for about dialog
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
-    debug_message("about()");
-    QString appDir = qApp->applicationDirPath();
-    QString appName = QApplication::applicationName();
-    QString title = "About " + appName;
-
-    QDialog dialog(this);
-    ImageWidget img(appDir + "/images/logo-small.png");
-    QLabel text(appName + tr("\n\n") +
-                          tr("http://embroidermodder.github.io") +
-                          tr("\n\n") +
-                          tr("Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi") +
-                          tr("\n\n") +
-                          tr("Embroidery formats by Josh Varga.") +
-                          tr("\n") +
-                          tr("User Interface by Jonathan Greig.") +
-                          tr("\n\n") +
-                          tr("Free under the zlib/libpng license.")
-                          #if defined(BUILD_GIT_HASH)
-                          + tr("\n\n") +
-                          tr("Build Hash: ") + qPrintable(BUILD_GIT_HASH)
-                          #endif
-                          );
-    text.setWordWrap(1);
-
-    QDialogButtonBox buttonbox(Qt::Horizontal, &dialog);
-    QPushButton button(&dialog);
-    button.setText("Oh, Yeah!");
-    buttonbox.addButton(&button, QDialogButtonBox::AcceptRole);
-    buttonbox.setCenterButtons(1);
-    connect(&buttonbox, SIGNAL(accepted()), &dialog, SLOT(accept()));
-
-    QVBoxLayout layout;
-    layout.setAlignment(Qt::AlignCenter);
-    layout.addWidget(&img);
-    layout.addWidget(&text);
-    layout.addWidget(&buttonbox);
-
-    dialog.setWindowTitle(title);
-    dialog.setMinimumWidth(img.minimumWidth()+30);
-    dialog.setMinimumHeight(img.minimumHeight()+50);
-    dialog.setLayout(&layout);
-    dialog.exec();
-    QApplication::restoreOverrideCursor();
-}
-
 void MainWindow::whatsThisContextHelp()
 {
     debug_message("whatsThisContextHelp()");
@@ -9896,52 +9390,47 @@ void MainWindow::tipOfTheDay()
     debug_message("tipOfTheDay()");
 
     QString appDir = qApp->applicationDirPath();
+    QDialog *dialog = new QDialog();
+    QToolButton *button1 = new QToolButton(dialog);
+    QToolButton *button2 = new QToolButton(dialog);
+    QToolButton *button3 = new QToolButton(dialog);
 
-    wizardTipOfTheDay = new QWizard(this);
-    wizardTipOfTheDay->setAttribute(Qt::WA_DeleteOnClose);
-    wizardTipOfTheDay->setWizardStyle(QWizard::ModernStyle);
-    wizardTipOfTheDay->setMinimumSize(550, 400);
+    ImageWidget* imgBanner = new ImageWidget(appDir + "/images/did-you-know.png", dialog);
 
-    QWizardPage* page = new QWizardPage(wizardTipOfTheDay);
-
-    ImageWidget* imgBanner = new ImageWidget(appDir + "/images/did-you-know.png", wizardTipOfTheDay);
-
-    if(settings.general_current_tip >= listTipOfTheDay.size())
-        settings.general_current_tip = 0;
-    labelTipOfTheDay = new QLabel(listTipOfTheDay.value(settings.general_current_tip), wizardTipOfTheDay);
-    labelTipOfTheDay->setWordWrap(1);
-
-    QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("&Show tips on startup"), wizardTipOfTheDay);
+    QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("&Show tips on startup"), dialog);
     checkBoxTipOfTheDay->setChecked(settings.general_tip_of_the_day);
     connect(checkBoxTipOfTheDay, SIGNAL(stateChanged(int)), this, SLOT(checkBoxTipOfTheDayStateChanged(int)));
 
-    QVBoxLayout* layout = new QVBoxLayout(wizardTipOfTheDay);
+    if (strlen(tips[settings.general_current_tip])==0) {
+        settings.general_current_tip = 0;
+    }
+    labelTipOfTheDay = new QLabel(tips[settings.general_current_tip], dialog);
+    labelTipOfTheDay->setWordWrap(1);
+
+    button1->setText("&Previous");
+    button2->setText("&Next");
+    button3->setText("&Close");
+    connect(button1, SIGNAL(triggered()), dialog, SLOT(dialog.close()));
+    connect(button2, SIGNAL(triggered()), dialog, SLOT(dialog.close()));
+    connect(button3, SIGNAL(triggered()), dialog, SLOT(dialog.close()));
+
+    QVBoxLayout* layout = new QVBoxLayout(dialog);
     layout->addWidget(imgBanner);
     layout->addStrut(1);
     layout->addWidget(labelTipOfTheDay);
     layout->addStretch(1);
     layout->addWidget(checkBoxTipOfTheDay);
-    page->setLayout(layout);
-    wizardTipOfTheDay->addPage(page);
+    layout->addStrut(1);
+    layout->addWidget(button1);
+    layout->addStrut(1);
+    layout->addWidget(button2);
+    layout->addStrut(1);
+    layout->addWidget(button3);
 
-    wizardTipOfTheDay->setWindowTitle("Tip of the Day");
-
-    //TODO: Add icons to buttons by using wizardTipOfTheDay->setButton(QWizard::CustomButton1, buttonPrevious)
-    //TODO: Add icons to buttons by using wizardTipOfTheDay->setButton(QWizard::CustomButton1, buttonNext)
-    //TODO: Add icons to buttons by using wizardTipOfTheDay->setButton(QWizard::CustomButton1, buttonClose)
-    wizardTipOfTheDay->setButtonText(QWizard::CustomButton1, tr("&Previous"));
-    wizardTipOfTheDay->setButtonText(QWizard::CustomButton2, tr("&Next"));
-    wizardTipOfTheDay->setButtonText(QWizard::CustomButton3, tr("&Close"));
-    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton1, 1);
-    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton2, 1);
-    wizardTipOfTheDay->setOption(QWizard::HaveCustomButton3, 1);
-    connect(wizardTipOfTheDay, SIGNAL(customButtonClicked(int)), this, SLOT(buttonTipOfTheDayClicked(int)));
-
-    QList<QWizard::WizardButton> listTipOfTheDayButtons;
-    listTipOfTheDayButtons << QWizard::Stretch << QWizard::CustomButton1 << QWizard::CustomButton2 << QWizard::CustomButton3;
-    wizardTipOfTheDay->setButtonLayout(listTipOfTheDayButtons);
-
-    wizardTipOfTheDay->exec();
+    dialog->setLayout(layout);
+    dialog->setWindowTitle("Tip of the Day");
+    dialog->setMinimumSize(550, 400);
+    dialog->exec();
 }
 
 void MainWindow::checkBoxTipOfTheDayStateChanged(int checked)
@@ -9989,17 +9478,6 @@ void MainWindow::help()
     //arguments << "help/commands.html";
     //QProcess *myProcess = new QProcess(this);
     //myProcess->start(program, arguments);
-}
-
-void MainWindow::changelog()
-{
-    debug_message("changelog()");
-
-    /* display in a custom widget instead */
-    /*
-    QUrl changelogURL("help/changelog.html");
-    QDesktopServices::openUrl(changelogURL);
-    */
 }
 
 /* this wrapper connects the signal to the C-style actuator */
@@ -10066,7 +9544,7 @@ void MainWindow::setShiftReleased()
     settings.shiftKeyPressedState = 0;
 }
 
-// Icons
+/* Icons */
 void MainWindow::iconResize(int iconSize)
 {
     this->setIconSize(QSize(iconSize, iconSize));
@@ -10080,7 +9558,8 @@ void MainWindow::iconResize(int iconSize)
     linetypeSelector->  setMinimumWidth(iconSize*4);
     lineweightSelector->setMinimumWidth(iconSize*4);
 
-    //TODO: low-priority: open app with iconSize set to 128. resize the icons to a smaller size.
+    /* TODO: low-priority:
+     * open app with iconSize set to 128. resize the icons to a smaller size. */
 
     settings.general_icon_size = iconSize;
 }
@@ -10415,7 +9894,7 @@ void MainWindow::textFontSelectorCurrentFontChanged(const QFont& font)
 void MainWindow::textSizeSelectorIndexChanged(int index)
 {
     debug_message("textSizeSelectorIndexChanged(%d)", index);
-    settings.text_size = fabs(textSizeSelector->itemData(index).toReal()); //TODO: check that the toReal() conversion is ok
+    settings.text_style.size = fabs(textSizeSelector->itemData(index).toReal()); //TODO: check that the toReal() conversion is ok
 }
 
 QString MainWindow::textFont()
@@ -10423,44 +9902,9 @@ QString MainWindow::textFont()
     return settings.text_font;
 }
 
-float MainWindow::textSize()
-{
-    return settings.text_size;
-}
-
-float MainWindow::textAngle()
-{
-    return settings.text_angle;
-}
-
-bool MainWindow::textBold()
-{
-    return settings.text_style_bold;
-}
-
-bool MainWindow::textItalic()
-{
-    return settings.text_style_italic;
-}
-
-bool MainWindow::textUnderline()
-{
-    return settings.text_style_underline;
-}
-
-bool MainWindow::textStrikeOut()
-{
-    return settings.text_style_strikeout;
-}
-
-bool MainWindow::textOverline()
-{
-    return settings.text_style_overline;
-}
-
 void MainWindow::setTextSize(float num)
 {
-    settings.text_size = fabs(num);
+    settings.text_style.size = fabs(num);
     int index = textSizeSelector->findText("Custom", Qt::MatchContains);
     if(index != -1)
         textSizeSelector->removeItem(index);
@@ -10562,14 +10006,8 @@ void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float
     {
         TextSingleObject* obj = new TextSingleObject(str, x, -y, getCurrentColor());
         obj->objTextFont = settings.text_font;
-        obj->objTextSize = settings.text_size;
-        obj->setObjectTextStyle(settings.text_style_bold,
-                                settings.text_style_italic,
-                                settings.text_style_underline,
-                                settings.text_style_strikeout,
-                                settings.text_style_overline);
-        obj->objTextBackward = 0;
-        obj->objTextUpsideDown = 0;
+        obj->obj_text = settings.text_style;
+        obj->setObjectText(obj->objText);
         obj->setRotation(-rot);
         //TODO: single line text fill
         obj->setObjectRubberMode(rubberMode);
@@ -10881,10 +10319,48 @@ MainWindow::MainWindow() : QMainWindow(0)
     QString appName = QApplication::applicationName();
 
     for (i=0; i<n_actions; i++) {
-        actionHash.insert(action_list[i].id,
-            createAction(tr(action_list[i].abbreviation),
-                tr(action_list[i].menu_name),
-                tr(action_list[i].description)));
+        QAction *ACTION = new QAction(loadIcon(action_list[i].icon), action_list[i].menu_name, this);
+        // TODO: Set What's This Context Help to statusTip for now so there is some infos there.
+        // Make custom What's This Context Help popup with more descriptive help than just
+        // the status bar/tip one liner(short but not real long) with a hyperlink in the custom popup
+        // at the bottom to open full help file description. Ex: like wxPython AGW's SuperToolTip.
+        // TODO: Finish All Commands ... <.<
+
+        /*
+        if(icon == "windowcascade") {
+            connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(cascade()));
+        }
+        else if(icon == "windowtile") {
+            connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(tile()));
+        }
+        else if(icon == "windowclose") {
+            ACTION->setShortcut(QKeySequence::Close);
+            connect(ACTION, SIGNAL(triggered()), this, SLOT(onCloseWindow()));
+        }
+        else if(icon == "windowcloseall") {
+            connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(closeAllSubWindows()));
+        }
+        else if(icon == "windownext") {
+            connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));
+        }
+        else if(icon == "windowprevious") {
+            connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()));
+        }
+        else if(icon == "textbold" || icon == "textitalic"
+            || icon == "textunderline" || icon == "textstrikeout"
+            || icon == "textoverline") {
+            ACTION->setCheckable(1);
+        }
+        */
+
+        if (strlen(action_list[i].shortcut)>0) {
+            ACTION->setShortcut(QKeySequence(action_list[i].shortcut));
+        }
+        ACTION->setStatusTip(action_list[i].description);
+        ACTION->setObjectName(action_list[i].abbreviation);
+        ACTION->setWhatsThis(action_list[i].description);
+        connect(ACTION, SIGNAL(triggered()), this, SLOT(actions()));
+        actionHash.insert(i, ACTION);
     }
 
     actionHash.value(ACTION_windowclose)->setEnabled(numOfDocs > 0);
@@ -11206,24 +10682,9 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     showNormal();
 
-    //Load tips from external file
-    app_dir(current_path, app_folder);
-    strcat(current_path, "tips.txt");
-    QFile tipFile(current_path);
-    if(tipFile.open(QFile::ReadOnly))
-    {
-        QTextStream stream(&tipFile);
-        QString tipLine;
-        do
-        {
-            tipLine = stream.readLine();
-            if(!tipLine.isEmpty())
-                listTipOfTheDay << tipLine;
-        }
-        while(!tipLine.isNull());
-    }
-    if (settings.general_tip_of_the_day)
+    if (settings.general_tip_of_the_day) {
         tipOfTheDay();
+    }
 }
 
 MainWindow::~MainWindow()

@@ -120,6 +120,21 @@ extern "C" {
 #define POLYGON_DIAMETER_SIDE        61
 #define POLYGON_INTERIOR_ANGLE       62
 
+#define RECT_CORNER_X1               63
+#define RECT_CORNER_Y1               64
+#define RECT_CORNER_X2               65
+#define RECT_CORNER_Y2               66
+#define RECT_CORNER_X3               67
+#define RECT_CORNER_Y3               68
+#define RECT_CORNER_X4               69
+#define RECT_CORNER_Y4               70
+#define RECT_HEIGHT                  71
+#define RECT_WIDTH                   72
+#define RECT_AREA                    73
+
+#define POINT_X                      74
+#define POINT_Y                      75
+
 /* Comboboxes */
 /* --------------------------------- */
 #define ARC_CLOCKWISE                 0
@@ -132,9 +147,10 @@ extern "C" {
 #define TEXT_SINGLE_FONT              5
 #define TEXT_SINGLE_JUSTIFY           6
 
-#define LINEEDIT_PROPERTY_EDITORS    63
+#define LINEEDIT_PROPERTY_EDITORS    76
 #define COMBOBOX_PROPERTY_EDITORS     7
-#define PROPERTY_EDITORS             70
+#define PROPERTY_EDITORS \
+    ( LINEEDIT_PROPERTY_EDITORS + COMBOBOX_PROPERTY_EDITORS )
 
 #define LINE_EDIT_TYPE                0
 #define COMBO_BOX_TYPE                1
@@ -494,6 +510,18 @@ typedef struct Property_Editor_Row {
     char signal[100];
 } property_editor_row;
 
+typedef struct Text_Properties {
+    float size;
+    float angle;
+    int bold;
+    int italic;
+    int underline;
+    int overline;
+    int strikeout;
+    int backward;
+    int upsidedown;
+} text_properties;
+
 typedef struct Settings_wrapper {
     int window_width;
     int window_height;
@@ -564,13 +592,7 @@ typedef struct Settings_wrapper {
     int selection_mode_pickdrag;
     unsigned char selection_grip_size;
     unsigned char selection_pickbox_size;
-    float text_size;
-    float text_angle;
-    int text_style_bold;
-    int text_style_italic;
-    int text_style_underline;
-    int text_style_overline;
-    int text_style_strikeout;
+    text_properties text_style;
 
     int file_toolbar[20];
     int edit_toolbar[20];
@@ -648,6 +670,7 @@ extern action_hash_data action_list[];
 extern const char *actions_strings[];
 extern property_editor_row property_editors[];
 extern int n_property_editors;
+extern char *tips[];
 extern char *menu_label[];
 extern char *obj_names[];
 extern char *icon_3dviews[];
@@ -1480,8 +1503,6 @@ public:
 
     static bool    validFileFormat(const QString &fileName);
 
-    QAction*    createAction(const QString icon, const QString toolTip, const QString statusTip, bool scripted = false);
-
     void stub_testing();
 
     void newFile();
@@ -1492,21 +1513,14 @@ public:
     void saveasfile();
     void print();
     void designDetails();
-    void exit();
-    void quit();
     void checkForUpdates();
     // Help Menu
     void tipOfTheDay();
     void buttonTipOfTheDayClicked(int);
     void checkBoxTipOfTheDayStateChanged(int);
-    void help();
-    void changelog();
-    void about();
+    void help();;
     void whatsThisContextHelp();
 
-    void cut();
-    void copy();
-    void paste();
     void selectAll();
 
     void closeToolBar(QAction*);
@@ -1528,13 +1542,6 @@ public:
     void textSizeSelectorIndexChanged(int index);
 
     QString textFont();
-    float textSize();
-    float textAngle();
-    bool textBold();
-    bool textItalic();
-    bool textUnderline();
-    bool textStrikeOut();
-    bool textOverline();
 
     QString getCurrentLayer();
     unsigned int getCurrentColor();
@@ -1566,10 +1573,10 @@ public:
     float nativeCalculateDistance(float x1, float y1, float x2, float y2);
     float nativePerpendicularDistance(float px, float py, float x1, float y1, float x2, float y2);
 
-    virtual void    resizeEvent(QResizeEvent*);
-    void    closeEvent(QCloseEvent *event);
-    QAction*    getFileSeparator();
-    void    loadFormats();
+    virtual void resizeEvent(QResizeEvent*);
+    void closeEvent(QCloseEvent *event);
+    QAction* getFileSeparator();
+    void loadFormats();
 
 public slots:
     void actions();
@@ -1600,57 +1607,15 @@ public:
     PropertyEditor(const QString& iconDirectory = QString(), bool pickAddMode = true, QWidget* widgetToFocus = 0, QWidget* parent = 0, Qt::WindowFlags flags = Qt::Widget);
     ~PropertyEditor();
 
-    QGroupBox* create_group_box(int objtype);
+    QGroupBox* createGroupBoxGeometry(int objtype);
     QGroupBox*   createGroupBoxMiscImage();
     QGroupBox*   createGroupBoxGeneral();
-    QGroupBox*   createGroupBoxGeometryArc();
     QGroupBox*   createGroupBoxMiscArc();
-    QGroupBox*   createGroupBoxGeometryBlock();
-    QGroupBox*   createGroupBoxGeometryCircle();
-    QGroupBox*   createGroupBoxGeometryDimAligned();
-    QGroupBox*   createGroupBoxGeometryDimAngular();
-    QGroupBox*   createGroupBoxGeometryDimArcLength();
-    QGroupBox*   createGroupBoxGeometryDimDiameter();
-    QGroupBox*   createGroupBoxGeometryDimLeader();
-    QGroupBox*   createGroupBoxGeometryDimLinear();
-    QGroupBox*   createGroupBoxGeometryDimOrdinate();
-    QGroupBox*   createGroupBoxGeometryDimRadius();
-    QGroupBox*   createGroupBoxGeometryEllipse();
-    QGroupBox*   createGroupBoxGeometryImage();
-    QGroupBox*   createGroupBoxGeometryInfiniteLine();
-    QGroupBox*   createGroupBoxGeometryLine();
-    QGroupBox*   createGroupBoxGeometryPath();
     QGroupBox*   createGroupBoxMiscPath();
-    QGroupBox*   createGroupBoxGeometryPoint();
-    QGroupBox*   createGroupBoxGeometryPolygon();
-    QGroupBox*   createGroupBoxGeometryPolyline();
     QGroupBox*   createGroupBoxMiscPolyline();
-    QGroupBox*   createGroupBoxGeometryRay();
-    QGroupBox*   createGroupBoxGeometryRectangle();
-    QGroupBox*   createGroupBoxGeometryTextMulti();
     QGroupBox*   createGroupBoxTextTextSingle();
-    QGroupBox*   createGroupBoxGeometryTextSingle();
     QGroupBox*   createGroupBoxMiscTextSingle();
 
-protected:
-    bool eventFilter(QObject *obj, QEvent *event);
-
-signals:
-    void pickAddModeToggled();
-
-public slots:
-    void setSelectedItems(QList<QGraphicsItem*> itemList);
-    void updatePickAddModeButton(bool pickAddMode);
-
-private slots:
-    void fieldEdited(QObject* fieldObj);
-    void showGroups(int objType);
-    void showOneType(int index);
-    void hideAllGroups();
-    void clearAllFields();
-    void togglePickAddMode();
-
-private:
     QWidget* focusWidget;
 
     QString  iconDir;
@@ -1687,6 +1652,23 @@ private:
 
     //TODO: Alphabetic/Categorized TabWidget
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *event);
+
+signals:
+    void pickAddModeToggled();
+
+public slots:
+    void setSelectedItems(QList<QGraphicsItem*> itemList);
+    void updatePickAddModeButton(bool pickAddMode);
+
+private slots:
+    void fieldEdited(QObject* fieldObj);
+    void showGroups(int objType);
+    void showOneType(int index);
+    void hideAllGroups();
+    void clearAllFields();
+    void togglePickAddMode();
 };
 
 class SelectBox : public QRubberBand
@@ -2616,14 +2598,7 @@ public:
     QString objText;
     QString objTextFont;
     QString objTextJustify;
-    float objTextSize;
-    int objTextBold;
-    int objTextItalic;
-    int    objTextUnderline;
-    int    objTextStrikeOut;
-    int    objTextOverline;
-    int    objTextBackward;
-    int    objTextUpsideDown;
+    text_properties obj_text;
     QPainterPath objTextPath;
 protected:
     void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);

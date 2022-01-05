@@ -182,24 +182,24 @@ void MainWindow::readSettings()
     if(!restoreState(layoutState))
     {
         debug_message("LayoutState NOT restored! Setting Default Layout...");
-        //someToolBar->setVisible(true);
+        //someToolBar->setVisible(1);
     }
 
     //General
     strcpy(settings.general_mdi_bg_logo, load_setting_str("MdiBGLogo", QString(assets_dir) + "/images/logo-spirals.png").toLocal8Bit().constData());
     strcpy(settings.general_mdi_bg_texture, load_setting_str("MdiBGTexture", QString(assets_dir) + "/images/texture-spirals.png").toLocal8Bit().constData());
     settings.general_mdi_bg_color = settings_file.value("MdiBGColor", qRgb(192,192,192)).toInt();
-    settings.general_tip_of_the_day = settings_file.value("TipOfTheDay", true).toBool();
+    settings.general_tip_of_the_day = settings_file.value("TipOfTheDay", 1).toBool();
     settings.general_current_tip = settings_file.value("CurrentTip", 0).toInt();
-    settings.general_system_help_browser = settings_file.value("SystemHelpBrowser", true).toBool();
+    settings.general_system_help_browser = settings_file.value("SystemHelpBrowser", 1).toBool();
     //Display
-    settings.display_use_opengl = settings_file.value("Display/UseOpenGL", false).toBool();
-    settings.display_renderhint_aa = settings_file.value("Display/RenderHintAntiAlias", false).toBool();
-    settings.display_renderhint_text_aa = settings_file.value("Display/RenderHintTextAntiAlias", false).toBool();
-    settings.display_renderhint_smooth_pix = settings_file.value("Display/RenderHintSmoothPixmap", false).toBool();
-    settings.display_renderhint_high_aa = settings_file.value("Display/RenderHintHighQualityAntiAlias", false).toBool();
-    settings.display_renderhint_noncosmetic = settings_file.value("Display/RenderHintNonCosmetic", false).toBool();
-    settings.display_show_scrollbars = settings_file.value("Display/ShowScrollBars", true).toBool();
+    settings.display_use_opengl = settings_file.value("Display/UseOpenGL", 0).toBool();
+    settings.display_renderhint_aa = settings_file.value("Display/RenderHintAntiAlias", 0).toBool();
+    settings.display_renderhint_text_aa = settings_file.value("Display/RenderHintTextAntiAlias", 0).toBool();
+    settings.display_renderhint_smooth_pix = settings_file.value("Display/RenderHintSmoothPixmap", 0).toBool();
+    settings.display_renderhint_high_aa = settings_file.value("Display/RenderHintHighQualityAntiAlias", 0).toBool();
+    settings.display_renderhint_noncosmetic = settings_file.value("Display/RenderHintNonCosmetic", 0).toBool();
+    settings.display_show_scrollbars = settings_file.value("Display/ShowScrollBars", 1).toBool();
     settings.display_scrollbar_widget_num = settings_file.value("Display/ScrollBarWidgetNum", 0).toInt();
     settings.display_crosshair_color = settings_file.value("Display/CrossHairColor", qRgb(  0, 0, 0)).toInt();
     settings.display_bg_color = settings_file.value("Display/BackgroundColor", qRgb(235,235,235)).toInt();
@@ -216,9 +216,9 @@ void MainWindow::readSettings()
     //OpenSave
     opensave_custom_filter = settings_file.value("OpenSave/CustomFilter", "supported").toString();
     strcpy(settings.opensave_open_format, settings_file.value("OpenSave/OpenFormat", "*.*").toString().toLocal8Bit().constData());
-    settings.opensave_open_thumbnail = settings_file.value("OpenSave/OpenThumbnail", false).toBool();
+    settings.opensave_open_thumbnail = settings_file.value("OpenSave/OpenThumbnail", 0).toBool();
     strcpy(settings.opensave_save_format, settings_file.value("OpenSave/SaveFormat", "*.*").toString().toLocal8Bit().constData());
-    settings.opensave_save_thumbnail = settings_file.value("OpenSave/SaveThumbnail", false).toBool();
+    settings.opensave_save_thumbnail = settings_file.value("OpenSave/SaveThumbnail", 0).toBool();
     //Recent
     settings.opensave_recent_max_files = settings_file.value("OpenSave/RecentMax", 10).toInt();
     opensave_recent_list_of_files = settings_file.value("OpenSave/RecentFiles")                                .toStringList();
@@ -227,19 +227,19 @@ void MainWindow::readSettings()
     settings.opensave_trim_dst_num_jumps = settings_file.value("OpenSave/TrimDstNumJumps", 5).toInt();
     /* Printing
     settings.printing_default_device = settings_file.value("Printing/DefaultDevice", "").toString();
-    settings.printing_use_last_device = settings_file.value("Printing/UseLastDevice", false).toBool();
-    settings.printing_disable_bg = settings_file.value("Printing/DisableBG", true).toBool();
+    settings.printing_use_last_device = settings_file.value("Printing/UseLastDevice", 0).toBool();
+    settings.printing_disable_bg = settings_file.value("Printing/DisableBG", 1).toBool();
     //Grid */
-    settings.grid_show_on_load = settings_file.value("Grid/ShowOnLoad", true).toBool();
-    settings.grid_show_origin = settings_file.value("Grid/ShowOrigin", true).toBool();
-    settings.grid_color_match_crosshair = settings_file.value("Grid/ColorMatchCrossHair", true).toBool();
+    settings.grid_show_on_load = settings_file.value("Grid/ShowOnLoad", 1).toBool();
+    settings.grid_show_origin = settings_file.value("Grid/ShowOrigin", 1).toBool();
+    settings.grid_color_match_crosshair = settings_file.value("Grid/ColorMatchCrossHair", 1).toBool();
     int red = settings_file.value("Grid/ColorR", 0).toInt();
     int green = settings_file.value("Grid/ColorG", 0).toInt();
     int blue = settings_file.value("Grid/ColorB", 0).toInt();
     settings.grid_color = QColor(red, green, blue).rgb();
-    settings.grid_load_from_file = settings_file.value("Grid/LoadFromFile", true).toBool();
+    settings.grid_load_from_file = settings_file.value("Grid/LoadFromFile", 1).toBool();
     strcpy(settings.grid_type, settings_file.value("Grid/Type", "Rectangular").toString().toLocal8Bit().constData());
-    settings.grid_center_on_origin = settings_file.value("Grid/CenterOnOrigin", true).toBool();
+    settings.grid_center_on_origin = settings_file.value("Grid/CenterOnOrigin", 1).toBool();
     settings.grid_center.x = settings_file.value("Grid/CenterX", 0.0).toFloat();
     settings.grid_center.y = settings_file.value("Grid/CenterY", 0.0).toFloat();
     settings.grid_size_x = settings_file.value("Grid/SizeX", 100.0).toFloat();
@@ -250,49 +250,49 @@ void MainWindow::readSettings()
     settings.grid_spacing_radius = settings_file.value("Grid/SpacingRadius", 25.0).toFloat();
     settings.grid_spacing_angle = settings_file.value("Grid/SpacingAngle", 45.0).toFloat();
     //Ruler
-    settings.ruler_show_on_load = settings_file.value("Ruler/ShowOnLoad", true).toBool();
-    settings.ruler_metric = settings_file.value("Ruler/Metric", true).toBool();
+    settings.ruler_show_on_load = settings_file.value("Ruler/ShowOnLoad", 1).toBool();
+    settings.ruler_metric = settings_file.value("Ruler/Metric", 1).toBool();
     settings.ruler_color = settings_file.value("Ruler/Color", qRgb(210,210, 50)).toInt();
     settings.ruler_pixel_size = settings_file.value("Ruler/PixelSize", 20).toInt();
     //Quick Snap
-    settings.qsnap_enabled = settings_file.value("QuickSnap/Enabled", true).toBool();
+    settings.qsnap_enabled = settings_file.value("QuickSnap/Enabled", 1).toBool();
     settings.qsnap_locator_color = settings_file.value("QuickSnap/LocatorColor", qRgb(255,255, 0)).toInt();
     settings.qsnap_locator_size = settings_file.value("QuickSnap/LocatorSize", 4).toInt();
     settings.qsnap_aperture_size = settings_file.value("QuickSnap/ApertureSize", 10).toInt();
-    settings.qsnap_endpoint = settings_file.value("QuickSnap/EndPoint", true).toBool();
-    settings.qsnap_midpoint = settings_file.value("QuickSnap/MidPoint", true).toBool();
-    settings.qsnap_center = settings_file.value("QuickSnap/Center", true).toBool();
-    settings.qsnap_node = settings_file.value("QuickSnap/Node", true).toBool();
-    settings.qsnap_quadrant = settings_file.value("QuickSnap/Quadrant", true).toBool();
-    settings.qsnap_intersection = settings_file.value("QuickSnap/Intersection", true).toBool();
-    settings.qsnap_extension = settings_file.value("QuickSnap/Extension", true).toBool();
-    settings.qsnap_insertion = settings_file.value("QuickSnap/Insertion", false).toBool();
-    settings.qsnap_perpendicular = settings_file.value("QuickSnap/Perpendicular", true).toBool();
-    settings.qsnap_tangent = settings_file.value("QuickSnap/Tangent", true).toBool();
-    settings.qsnap_nearest = settings_file.value("QuickSnap/Nearest", false).toBool();
-    settings.qsnap_apparent = settings_file.value("QuickSnap/Apparent", false).toBool();
-    settings.qsnap_parallel = settings_file.value("QuickSnap/Parallel", false).toBool();
+    settings.qsnap_endpoint = settings_file.value("QuickSnap/EndPoint", 1).toBool();
+    settings.qsnap_midpoint = settings_file.value("QuickSnap/MidPoint", 1).toBool();
+    settings.qsnap_center = settings_file.value("QuickSnap/Center", 1).toBool();
+    settings.qsnap_node = settings_file.value("QuickSnap/Node", 1).toBool();
+    settings.qsnap_quadrant = settings_file.value("QuickSnap/Quadrant", 1).toBool();
+    settings.qsnap_intersection = settings_file.value("QuickSnap/Intersection", 1).toBool();
+    settings.qsnap_extension = settings_file.value("QuickSnap/Extension", 1).toBool();
+    settings.qsnap_insertion = settings_file.value("QuickSnap/Insertion", 0).toBool();
+    settings.qsnap_perpendicular = settings_file.value("QuickSnap/Perpendicular", 1).toBool();
+    settings.qsnap_tangent = settings_file.value("QuickSnap/Tangent", 1).toBool();
+    settings.qsnap_nearest = settings_file.value("QuickSnap/Nearest", 0).toBool();
+    settings.qsnap_apparent = settings_file.value("QuickSnap/Apparent", 0).toBool();
+    settings.qsnap_parallel = settings_file.value("QuickSnap/Parallel", 0).toBool();
     //LineWeight
-    settings.lwt_show_lwt = settings_file.value("LineWeight/ShowLineWeight", false).toBool();
-    settings.lwt_real_render = settings_file.value("LineWeight/RealRender", true).toBool();
+    settings.lwt_show_lwt = settings_file.value("LineWeight/ShowLineWeight", 0).toBool();
+    settings.lwt_real_render = settings_file.value("LineWeight/RealRender", 1).toBool();
     settings.lwt_default_lwt = settings_file.value("LineWeight/DefaultLineWeight", 0).toReal();
     //Selection
-    settings.selection_mode_pickfirst = settings_file.value("Selection/PickFirst", true).toBool();
-    settings.selection_mode_pickadd = settings_file.value("Selection/PickAdd", true).toBool();
-    settings.selection_mode_pickdrag = settings_file.value("Selection/PickDrag", false).toBool();
+    settings.selection_mode_pickfirst = settings_file.value("Selection/PickFirst", 1).toBool();
+    settings.selection_mode_pickadd = settings_file.value("Selection/PickAdd", 1).toBool();
+    settings.selection_mode_pickdrag = settings_file.value("Selection/PickDrag", 0).toBool();
     settings.selection_coolgrip_color = settings_file.value("Selection/CoolGripColor", qRgb(  0, 0,255)).toInt();
     settings.selection_hotgrip_color = settings_file.value("Selection/HotGripColor", qRgb(255, 0, 0)).toInt();
     settings.selection_grip_size = settings_file.value("Selection/GripSize", 4).toInt();
     settings.selection_pickbox_size = settings_file.value("Selection/PickBoxSize", 4).toInt();
     //Text
     strcpy(settings.text_font, settings_file.value("Text/Font", "Arial").toString().toLocal8Bit().constData());
-    settings.text_size = settings_file.value("Text/Size", 12).toReal();
-    settings.text_angle = settings_file.value("Text/Angle", 0).toReal();
-    settings.text_style_bold = settings_file.value("Text/StyleBold", false).toBool();
-    settings.text_style_italic = settings_file.value("Text/StyleItalic", false).toBool();
-    settings.text_style_underline = settings_file.value("Text/StyleUnderline", false).toBool();
-    settings.text_style_strikeout = settings_file.value("Text/StyleStrikeOut", false).toBool();
-    settings.text_style_overline = settings_file.value("Text/StyleOverline", false).toBool();
+    settings.text_style.size = settings_file.value("Text/Size", 12).toReal();
+    settings.text_style.angle = settings_file.value("Text/Angle", 0).toReal();
+    settings.text_style.bold = settings_file.value("Text/StyleBold", 0).toBool();
+    settings.text_style.italic = settings_file.value("Text/StyleItalic", 0).toBool();
+    settings.text_style.underline = settings_file.value("Text/StyleUnderline", 0).toBool();
+    settings.text_style.strikeout = settings_file.value("Text/StyleStrikeOut", 0).toBool();
+    settings.text_style.overline = settings_file.value("Text/StyleOverline", 0).toBool();
 
     move(pos);
     resize(size);
@@ -419,13 +419,13 @@ void MainWindow::writeSettings()
     settings_file.setValue("Selection/PickBoxSize", tmp.setNum(settings.selection_pickbox_size));
     //Text
     settings_file.setValue("Text/Font", settings.text_font);
-    settings_file.setValue("Text/Size", tmp.setNum(settings.text_size));
-    settings_file.setValue("Text/Angle", tmp.setNum(settings.text_angle));
-    settings_file.setValue("Text/StyleBold", settings.text_style_bold);
-    settings_file.setValue("Text/StyleItalic", settings.text_style_italic);
-    settings_file.setValue("Text/StyleUnderline", settings.text_style_underline);
-    settings_file.setValue("Text/StyleStrikeOut", settings.text_style_strikeout);
-    settings_file.setValue("Text/StyleOverline", settings.text_style_overline);
+    settings_file.setValue("Text/Size", tmp.setNum(settings.text_style.size));
+    settings_file.setValue("Text/Angle", tmp.setNum(settings.text_style.angle));
+    settings_file.setValue("Text/StyleBold", settings.text_style.bold);
+    settings_file.setValue("Text/StyleItalic", settings.text_style.italic);
+    settings_file.setValue("Text/StyleUnderline", settings.text_style.underline);
+    settings_file.setValue("Text/StyleStrikeOut", settings.text_style.strikeout);
+    settings_file.setValue("Text/StyleOverline", settings.text_style.overline);
 }
 
 void MainWindow::settingsDialog(const QString& showTab)
