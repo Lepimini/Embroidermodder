@@ -10,12 +10,12 @@ then
 sudo apt-get update
 sudo apt-get install --fix-missing \
     build-essential cmake mesa-common-dev x11proto-input-dev libxcb-xinput-dev \
-    qtbase5-dev libqt5widgets5 valgrind pandoc
+    qtbase5-dev libqt5widgets5 pandoc
 else
 
 if command -v yum &> /dev/null
 then
-sudo yum install gdb gcc-c++ qt-devel valgrind qt5-qtscript-devel \
+sudo yum install gdb gcc-c++ qt-devel qt5-qtscript-devel \
 	 pandoc
 else
 
@@ -116,7 +116,12 @@ rm -fr build
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
-cmake --build . --target clean
+cmake --build .
+mv libembroidery/embroider .
+mv libembroidery/libembroidery.so .
+mv libembroidery/libembroidery_static.a .
+rm -fr CMakeFiles CMakeCache.txt cmake_install.cmake Makefile
+rm -fr libembroidery embroidermodder_autogen
 cd ..
 }
 
