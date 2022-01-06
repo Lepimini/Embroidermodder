@@ -3,51 +3,37 @@ name: Test Suite
 on:
   push:
     branches: [ master ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ master ]
 
 jobs:
-  test-linux64:
-    runs-on: ubuntu-latest
-
+  nightly:
+    name: Tests and produces nightly assets.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - name: Run test script on Linux.
+    - name: Run test script.
       run: |
         git clone https://github.com/Embroidermodder/embroidermodder
         cd embroidermodder
         ./build.sh --get-dependencies
         ./build.sh --build
-    - name: Upload artifact to act as the Linux Nightly
+      shell: bash
+    - name: Upload artifact to act as the ${{ matrix.os }} Nightly
+      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v2
       with:
-        name: embroidermodder_2_alpha_linux
+        name: embroidermodder_2_alpha_${{ matrix.os }}
         path: /home/runner/work/Embroidermodder/Embroidermodder/embroidermodder/build
-  test-macOS:
-    runs-on: macOS-latest
-    
-    steps:
-    - name: Run test script on macOS.
-      run: |
-        git clone https://github.com/Embroidermodder/embroidermodder
-        cd embroidermodder
-        ./build.sh --get-dependencies
-        ./build.sh --build
     - name: Upload artifact to act as the Mac OS Nightly
+      if: matrix.os == 'macOS-latest'
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_macos
         path: /Users/runner/work/Embroidermodder/Embroidermodder/embroidermodder/build
-  test-windows:
-    runs-on: windows-latest
-
-    steps:
-    - name: Run test script on Windows.
-      run: |
-        git clone https://github.com/Embroidermodder/embroidermodder
-        cd embroidermodder
-        .\build.bat
     - name: Upload artifact to act as the Windows
+      if: matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_windows
