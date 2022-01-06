@@ -22,4 +22,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_${{ matrix.os }}
-        path: ./Embroidermodder/Embroidermodder/embroidermodder/build
+        path: ${{ github.workspace }}/embroidermodder/build
