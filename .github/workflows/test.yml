@@ -1,8 +1,6 @@
 name: Test Suite
 
-on:
-  push:
-    branches: [ master ]
+on: [push]
 
 jobs:
   nightly:
@@ -21,20 +19,7 @@ jobs:
         ./build.sh --build
       shell: bash
     - name: Upload artifact to act as the ${{ matrix.os }} Nightly
-      if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v2
       with:
         name: embroidermodder_2_alpha_${{ matrix.os }}
-        path: /home/runner/work/Embroidermodder/Embroidermodder/embroidermodder/build
-    - name: Upload artifact to act as the Mac OS Nightly
-      if: matrix.os == 'macOS-latest'
-      uses: actions/upload-artifact@v2
-      with:
-        name: embroidermodder_2_alpha_macos
-        path: /Users/runner/work/Embroidermodder/Embroidermodder/embroidermodder/build
-    - name: Upload artifact to act as the Windows
-      if: matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v2
-      with:
-        name: embroidermodder_2_alpha_windows
-        path: D:\a\Embroidermodder\Embroidermodder\embroidermodder\build
+        path: ./Embroidermodder/embroidermodder/build
