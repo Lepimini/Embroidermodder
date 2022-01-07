@@ -316,7 +316,7 @@ char *menu_label[] = {
     "&Pan"
 };
 
-char *status_bar_labels[] = {
+char *status_bar_label[] = {
     "SNAP",
     "GRID",
     "RULER",
@@ -335,6 +335,21 @@ char *folders[] = {
     "images",
     "samples",
     "translations"
+};
+
+char *settings_tab_label[] = {
+    "General",
+    "Files/Path",
+    "Display",
+    "Open/Save",
+    "Printing",
+    "Snap",
+    "Grid/Ruler",
+    "Ortho/Polar",
+    "QuickSnap",
+    "QuickTrack",
+    "LineWeight",
+    "Selection"
 };
 
 int n_toolbars = 10;
@@ -587,24 +602,27 @@ action_hash_data action_list[] = {
         main_paste
     },
     {
-        ACTION_windowcascade,
-        icon_windowcascade,
-        "windowcascade",
-        "&Cascade",
-        "Cascade the windows.",
-        "\0",
-        windowCascade
+        /* 11 */
+        ACTION_undo,
+        icon_undo,
+        "undo",
+        "&Undo",
+        "Reverses the most recent action.",
+        "Ctrl+Z",
+        main_undo
     },
     {
-        ACTION_windowtile,
-        icon_windowtile,
-        "windowtile",
-        "&Tile",
-        "Tile the windows.",
-        "\0",
-        windowTile
+        /* 12 */
+        ACTION_redo,
+        icon_redo,
+        "redo",
+        "&Redo",
+        "Reverses the effects of the previous undo action.",
+        "Ctrl+Shift+Z",
+        main_redo
     },
     {
+        /* 13 */
         ACTION_windowclose,
         icon_windowclose,
         "windowclose",
@@ -614,6 +632,7 @@ action_hash_data action_list[] = {
         windowClose
     },
     {
+        /* 14 */
         ACTION_windowcloseall,
         icon_windowcloseall,
         "windowcloseall",
@@ -621,6 +640,26 @@ action_hash_data action_list[] = {
         "Close all the windows.",
         "\0",
         windowCloseAll
+    },
+    {
+        /* 15 */
+        ACTION_windowcascade,
+        icon_windowcascade,
+        "windowcascade",
+        "&Cascade",
+        "Cascade the windows.",
+        "\0",
+        windowCascade
+    },
+    {
+        /* 16 */
+        ACTION_windowtile,
+        icon_windowtile,
+        "windowtile",
+        "&Tile",
+        "Tile the windows.",
+        "\0",
+        windowTile
     },
     {
         ACTION_windownext,
@@ -684,24 +723,6 @@ action_hash_data action_list[] = {
         "What's This? Context Help!",
         "\0",
         whatsthisContextHelp
-    },
-    {
-        ACTION_undo,
-        icon_undo,
-        "undo",
-        "&Undo",
-        "Reverses the most recent action.",
-        "Ctrl+Z",
-        main_undo
-    },
-    {
-        ACTION_redo,
-        icon_redo,
-        "redo",
-        "&Redo",
-        "Reverses the effects of the previous undo action.",
-        "Ctrl+Shift+Z",
-        main_redo
     },
     {
         ACTION_icon16,
@@ -1098,20 +1119,20 @@ action_hash_data action_list[] = {
         "Updates the current view using night vision settings.",
         "\0",
         nightVision
+    },
+    {
+        ACTION_night,
+        icon_night,
+        "\0",
+        "\0",
+        "\0",
+        "\0",
+        doNothing
     }
 };
 
 #if 0
 New for toolbars: modify and draw. Inquiry toolbar?
-
-#define ACTION_circle      70
-#define ACTION_line        71
-#define ACTION_distance    72
-#define ACTION_dolphin     73
-#define ACTION_ellipse     74
-#define ACTION_delete      75
-#define ACTION_heart       76
-#define ACTION_locatepoint 77
 
     {
         ACTION_circle,
@@ -1321,7 +1342,9 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
 #endif
 
-int n_property_editors = 8;
+/* TODO: associate the property editor with the function callbacks using
+ * a function pointer.
+ */
 
 property_editor_row property_editors[] = {
 /*

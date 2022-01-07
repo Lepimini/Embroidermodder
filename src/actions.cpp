@@ -613,3 +613,142 @@ void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& 
     embPattern_addPolylineObjectAbs(pattern, polyObject);
 }
 
+
+void settingsSnap()
+{
+    _mainWin->settingsDialog("Snap");
+}
+
+void settingsGrid()
+{
+    _mainWin->settingsDialog("Grid/Ruler");
+}
+
+void settingsRuler()
+{
+    _mainWin->settingsDialog("Grid/Ruler");
+}
+
+void settingsOrtho()
+{
+    _mainWin->settingsDialog("Ortho/Polar");
+}
+
+void settingsPolar()
+{
+    _mainWin->settingsDialog("Ortho/Polar");
+}
+
+void settingsQSnap()
+{
+    _mainWin->settingsDialog("QuickSnap");
+}
+
+void settingsQTrack()
+{
+    _mainWin->settingsDialog("QuickTrack");
+}
+
+void settingsLwt()
+{
+    _mainWin->settingsDialog("LineWeight");
+}
+
+void toggleSnap(int on)
+{
+    debug_message("StatusBarButton toggleSnap()");
+    View* gview = _mainWin->activeView();
+    if(gview) { gview->toggleSnap(on); }
+}
+
+void toggleGrid(int on)
+{
+    debug_message("StatusBarButton toggleGrid()");
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->toggleGrid(on);
+    }
+}
+
+void toggleRuler(int on)
+{
+    debug_message("StatusBarButton toggleRuler()");
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->toggleRuler(on);
+    }
+}
+
+void toggleOrtho(int on)
+{
+    debug_message("StatusBarButton toggleOrtho()");
+    View* gview = _mainWin->activeView();
+    if(gview) { gview->toggleOrtho(on); }
+}
+
+void togglePolar(int on)
+{
+    debug_message("StatusBarButton togglePolar()");
+    View* gview = _mainWin->activeView();
+    if(gview) { gview->togglePolar(on); }
+}
+
+void toggleQSnap(int on)
+{
+    debug_message("StatusBarButton toggleQSnap()");
+    View* gview = _mainWin->activeView();
+    if(gview) { gview->toggleQSnap(on); }
+}
+
+void toggleQTrack(int on)
+{
+    debug_message("StatusBarButton toggleQTrack()");
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->toggleQTrack(on);
+    }
+}
+
+void toggleLwt(int on)
+{
+    debug_message("StatusBarButton toggleLwt()");
+    View* gview = _mainWin->activeView();
+    if(gview) { gview->toggleLwt(on); }
+}
+
+void enableLwt()
+{
+    debug_message("StatusBarButton enableLwt()");
+    View* gview = _mainWin->activeView();
+    if(gview)
+    {
+        if(!gview->isLwtEnabled())
+            gview->toggleLwt(1);
+    }
+}
+
+void disableLwt()
+{
+    debug_message("StatusBarButton disableLwt()");
+    View* gview = _mainWin->activeView();
+    if(gview)
+    {
+        if(gview->isLwtEnabled())
+            gview->toggleLwt(0);
+    }
+}
+
+void enableReal()
+{
+    debug_message("StatusBarButton enableReal()");
+    View* gview = _mainWin->activeView();
+    if(gview) { gview->toggleReal(1); }
+}
+
+void disableReal()
+{
+    debug_message("StatusBarButton disableReal()");
+    View* gview = _mainWin->activeView();
+    if(gview) { gview->toggleReal(0); }
+}
+

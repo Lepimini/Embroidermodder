@@ -13,8 +13,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-extern settings_wrapper settings;
-
 char assets_dir[1000];
 char settings_fname[1000];
 char settings_data[5000];
@@ -184,10 +182,10 @@ int load_settings(void)
     settings.grid_center_on_origin = get_ini_int("Grid_CenterOnOrigin", 1);
     settings.grid_center.x = get_ini_float("Grid_CenterX", 0.0);
     settings.grid_center.y = get_ini_float("Grid_CenterY", 0.0);
-    settings.grid_size_x = get_ini_float("Grid_SizeX", 100.0);
-    settings.grid_size_y = get_ini_float("Grid_SizeY", 100.0);
-    settings.grid_spacing_x = get_ini_float("Grid_SpacingX", 25.0);
-    settings.grid_spacing_y = get_ini_float("Grid_SpacingY", 25.0);
+    settings.grid_size.x = get_ini_float("Grid_SizeX", 100.0);
+    settings.grid_size.y = get_ini_float("Grid_SizeY", 100.0);
+    settings.grid_spacing.x = get_ini_float("Grid_SpacingX", 25.0);
+    settings.grid_spacing.y = get_ini_float("Grid_SpacingY", 25.0);
     settings.grid_size_radius = get_ini_float("Grid_SizeRadius", 50.0);
     settings.grid_spacing_radius = get_ini_float("Grid_SpacingRadius", 25.0);
     settings.grid_spacing_angle = get_ini_float("Grid_SpacingAngle", 45.0);
@@ -324,10 +322,10 @@ int save_settings(void)
     fprintf(f, "Grid_CenterOnOrigin=%d\r\n", settings.grid_center_on_origin);
     fprintf(f, "Grid_CenterX=%f\r\n", settings.grid_center.x);
     fprintf(f, "Grid_CenterY=%f\r\n", settings.grid_center.y);
-    fprintf(f, "Grid_SizeX=%f\r\n", settings.grid_size_x);
-    fprintf(f, "Grid_SizeY=%f\r\n", settings.grid_size_y);
-    fprintf(f, "Grid_SpacingX=%f\r\n", settings.grid_spacing_x);
-    fprintf(f, "Grid_SpacingY=%f\r\n", settings.grid_spacing_y);
+    fprintf(f, "Grid_SizeX=%f\r\n", settings.grid_size.x);
+    fprintf(f, "Grid_SizeY=%f\r\n", settings.grid_size.y);
+    fprintf(f, "Grid_SpacingX=%f\r\n", settings.grid_spacing.x);
+    fprintf(f, "Grid_SpacingY=%f\r\n", settings.grid_spacing.y);
     fprintf(f, "Grid_SizeRadius=%f\r\n", settings.grid_size_radius);
     fprintf(f, "Grid_SpacingRadius=%f\r\n", settings.grid_spacing_radius);
     fprintf(f, "Grid_SpacingAngle=%f\r\n", settings.grid_spacing_angle);
@@ -389,4 +387,224 @@ int embClamp(int lower, int x, int upper)
     return x;
 }
 
+void checkBoxTipOfTheDayStateChanged(int checked)
+{
+    dialog.general_tip_of_the_day = checked;
+}
+
+void checkBoxUseOpenGLStateChanged(int checked)
+{
+    dialog.display_use_opengl = checked;
+}
+
+void checkBoxRenderHintAAStateChanged(int checked)
+{
+    dialog.display_renderhint_aa = checked;
+}
+
+void checkBoxRenderHintTextAAStateChanged(int checked)
+{
+    dialog.display_renderhint_text_aa = checked;
+}
+
+void checkBoxRenderHintSmoothPixStateChanged(int checked)
+{
+    dialog.display_renderhint_smooth_pix = checked;
+}
+
+void checkBoxRenderHintHighAAStateChanged(int checked)
+{
+    dialog.display_renderhint_high_aa = checked;
+}
+
+void checkBoxRenderHintNonCosmeticStateChanged(int checked)
+{
+    dialog.display_renderhint_noncosmetic = checked;
+}
+
+void comboBoxScrollBarWidgetCurrentIndexChanged(int index)
+{
+    dialog.display_scrollbar_widget_num = index;
+}
+
+void spinBoxZoomScaleInValueChanged(double value)
+{
+    dialog.display_zoomscale_in = value;
+}
+
+void spinBoxZoomScaleOutValueChanged(double value)
+{
+    dialog.display_zoomscale_out = value;
+}
+
+void checkBoxDisableBGStateChanged(int checked)
+{
+    dialog.printing_disable_bg = checked;
+}
+
+void spinBoxRecentMaxFilesValueChanged(int value)
+{
+    dialog.opensave_recent_max_files = value;
+}
+
+void spinBoxTrimDstNumJumpsValueChanged(int value)
+{
+    dialog.opensave_trim_dst_num_jumps = value;
+}
+
+void checkBoxGridShowOnLoadStateChanged(int checked)
+{
+    dialog.grid_show_on_load = checked;
+}
+
+void checkBoxGridShowOriginStateChanged(int checked)
+{
+    dialog.grid_show_origin = checked;
+}
+
+
+void spinBoxRulerPixelSizeValueChanged(double value)
+{
+    dialog.ruler_pixel_size = value;
+}
+
+void checkBoxQSnapEndPointStateChanged(int checked)
+{
+    dialog.qsnap_endpoint = checked;
+}
+
+void checkBoxQSnapMidPointStateChanged(int checked)
+{
+    dialog.qsnap_midpoint = checked;
+}
+
+void checkBoxQSnapCenterStateChanged(int checked)
+{
+    dialog.qsnap_center = checked;
+}
+
+void checkBoxQSnapNodeStateChanged(int checked)
+{
+    dialog.qsnap_node = checked;
+}
+
+void checkBoxQSnapQuadrantStateChanged(int checked)
+{
+    dialog.qsnap_quadrant = checked;
+}
+
+void checkBoxQSnapIntersectionStateChanged(int checked)
+{
+    dialog.qsnap_intersection = checked;
+}
+
+void checkBoxQSnapExtensionStateChanged(int checked)
+{
+    dialog.qsnap_extension = checked;
+}
+
+void checkBoxQSnapInsertionStateChanged(int checked)
+{
+    dialog.qsnap_insertion = checked;
+}
+
+void checkBoxQSnapPerpendicularStateChanged(int checked)
+{
+    dialog.qsnap_perpendicular = checked;
+}
+
+void checkBoxQSnapTangentStateChanged(int checked)
+{
+    dialog.qsnap_tangent = checked;
+}
+
+void checkBoxQSnapNearestStateChanged(int checked)
+{
+    dialog.qsnap_nearest = checked;
+}
+
+void checkBoxQSnapApparentStateChanged(int checked)
+{
+    dialog.qsnap_apparent = checked;
+}
+
+void checkBoxQSnapParallelStateChanged(int checked)
+{
+    dialog.qsnap_parallel = checked;
+}
+
+void checkBoxSelectionModePickFirstStateChanged(int checked)
+{
+    dialog.selection_mode_pickfirst = checked;
+}
+
+void checkBoxSelectionModePickAddStateChanged(int checked)
+{
+    dialog.selection_mode_pickadd = checked;
+}
+
+void checkBoxSelectionModePickDragStateChanged(int checked)
+{
+    dialog.selection_mode_pickdrag = checked;
+}
+
+void sliderSelectionGripSizeValueChanged(int value)
+{
+    dialog.selection_grip_size = value;
+}
+
+void sliderSelectionPickBoxSizeValueChanged(int value)
+{
+    dialog.selection_pickbox_size = value;
+}
+
+void spinBoxGridCenterXValueChanged(double value)
+{
+    dialog.grid_center.x = value;
+}
+
+void spinBoxGridCenterYValueChanged(double value)
+{
+    dialog.grid_center.y = value;
+}
+
+void spinBoxGridSizeXValueChanged(double value)
+{
+    dialog.grid_size.x = value;
+}
+
+void spinBoxGridSizeYValueChanged(double value)
+{
+    dialog.grid_size.y = value;
+}
+
+void spinBoxGridSpacingXValueChanged(double value)
+{
+    dialog.grid_spacing.x = value;
+}
+
+void spinBoxGridSpacingYValueChanged(double value)
+{
+    dialog.grid_spacing.y = value;
+}
+
+void spinBoxGridSizeRadiusValueChanged(double value)
+{
+    dialog.grid_size_radius = value;
+}
+
+void spinBoxGridSpacingRadiusValueChanged(double value)
+{
+    dialog.grid_spacing_radius = value;
+}
+
+void spinBoxGridSpacingAngleValueChanged(double value)
+{
+    dialog.grid_spacing_angle = value;
+}
+
+void checkBoxRulerShowOnLoadStateChanged(int checked)
+{
+    dialog.ruler_show_on_load = checked;
+}
 

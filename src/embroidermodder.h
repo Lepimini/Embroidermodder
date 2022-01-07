@@ -35,6 +35,7 @@ extern "C" {
 #define RECENT_MENU                   6
 #define ZOOM_MENU                     7
 #define PAN_MENU                      8
+#define N_MENUS                       9
 
 #define STATUS_SNAP                   0
 #define STATUS_GRID                   1
@@ -44,6 +45,16 @@ extern "C" {
 #define STATUS_QSNAP                  5
 #define STATUS_QTRACK                 6
 #define STATUS_LWT                    7
+#define N_STATUS                      8
+
+#define TAB_SNAP                      0
+#define TAB_GRID                      1
+#define TAB_RULER                     2
+#define TAB_ORTHO                     3
+#define TAB_POLAR                     4
+#define TAB_QSNAP                     5
+#define TAB_QTRACK                    6
+#define TAB_LWT                       7
 
 #define SYMBOL_zero                   0
 #define SYMBOL_one                    1
@@ -81,68 +92,68 @@ extern "C" {
 #define TEXT_SINGLE_X                16
 #define TEXT_SINGLE_Y                17
 
-#define CIRCLE_CENTER_X              22
-#define CIRCLE_CENTER_Y              23
-#define CIRCLE_RADIUS                24
-#define CIRCLE_DIAMETER              25
-#define CIRCLE_AREA                  26
-#define CIRCLE_CIRCUMFERENCE         27
+#define CIRCLE_CENTER_X              18
+#define CIRCLE_CENTER_Y              19
+#define CIRCLE_RADIUS                20
+#define CIRCLE_DIAMETER              21
+#define CIRCLE_AREA                  22
+#define CIRCLE_CIRCUMFERENCE         23
 
-#define ELLIPSE_CENTER_X             28
-#define ELLIPSE_CENTER_Y             29
-#define ELLIPSE_RADIUS_MAJOR         30
-#define ELLIPSE_RADIUS_MINOR         31
-#define ELLIPSE_DIAMETER_MAJOR       32
-#define ELLIPSE_DIAMETER_MINOR       33
+#define ELLIPSE_CENTER_X             24
+#define ELLIPSE_CENTER_Y             25
+#define ELLIPSE_RADIUS_MAJOR         26
+#define ELLIPSE_RADIUS_MINOR         27
+#define ELLIPSE_DIAMETER_MAJOR       28
+#define ELLIPSE_DIAMETER_MINOR       29
 
-#define IMAGE_X                      34
-#define IMAGE_Y                      35
-#define IMAGE_WIDTH                  36
-#define IMAGE_HEIGHT                 37
-#define IMAGE_NAME                   38
-#define IMAGE_PATH                   39
+#define IMAGE_X                      30
+#define IMAGE_Y                      31
+#define IMAGE_WIDTH                  32
+#define IMAGE_HEIGHT                 33
+#define IMAGE_NAME                   34
+#define IMAGE_PATH                   35
 
-#define INFINITE_LINE_X1             40
-#define INFINITE_LINE_Y1             41
-#define INFINITE_LINE_X2             42
-#define INFINITE_LINE_Y2             43
-#define INFINITE_LINE_VECTOR_X       44
-#define INFINITE_LINE_VECTOR_Y       45
+#define INFINITE_LINE_X1             36
+#define INFINITE_LINE_Y1             37
+#define INFINITE_LINE_X2             38
+#define INFINITE_LINE_Y2             39
+#define INFINITE_LINE_VECTOR_X       40
+#define INFINITE_LINE_VECTOR_Y       41
 
-#define BLOCK_X                      46
-#define BLOCK_Y                      47
+#define BLOCK_X                      42
+#define BLOCK_Y                      43
 
-#define LINE_START_X                 48
-#define LINE_START_Y                 49
-#define LINE_END_X                   50
-#define LINE_END_Y                   51
-#define LINE_DELTA_X                 52
-#define LINE_DELTA_Y                 53
-#define LINE_ANGLE                   54
-#define LINE_LENGTH                  55
+#define LINE_START_X                 44
+#define LINE_START_Y                 45
+#define LINE_END_X                   46
+#define LINE_END_Y                   47
+#define LINE_DELTA_X                 48
+#define LINE_DELTA_Y                 49
+#define LINE_ANGLE                   50
+#define LINE_LENGTH                  51
 
-#define POLYGON_CENTER_X             56
-#define POLYGON_CENTER_Y             57
-#define POLYGON_RADIUS_VERTEX        58
-#define POLYGON_RADIUS_SIDE          59
-#define POLYGON_DIAMETER_VERTEX      60
-#define POLYGON_DIAMETER_SIDE        61
-#define POLYGON_INTERIOR_ANGLE       62
+#define POLYGON_CENTER_X             52
+#define POLYGON_CENTER_Y             53
+#define POLYGON_RADIUS_VERTEX        54
+#define POLYGON_RADIUS_SIDE          55
+#define POLYGON_DIAMETER_VERTEX      56
+#define POLYGON_DIAMETER_SIDE        57
+#define POLYGON_INTERIOR_ANGLE       58
 
-#define RECT_CORNER_X1               63
-#define RECT_CORNER_Y1               64
-#define RECT_CORNER_X2               65
-#define RECT_CORNER_Y2               66
-#define RECT_CORNER_X3               67
-#define RECT_CORNER_Y3               68
-#define RECT_CORNER_X4               69
-#define RECT_CORNER_Y4               70
-#define RECT_HEIGHT                  71
-#define RECT_WIDTH                   72
-#define RECT_AREA                    73
+#define RECT_CORNER_X1               59
+#define RECT_CORNER_Y1               60
+#define RECT_CORNER_X2               61
+#define RECT_CORNER_Y2               62
+#define RECT_CORNER_X3               63
+#define RECT_CORNER_Y3               64
+#define RECT_CORNER_X4               65
+#define RECT_CORNER_Y4               66
+#define RECT_HEIGHT                  67
+#define RECT_WIDTH                   68
+#define RECT_AREA                    69
 
-#define POINT_X                      74
-#define POINT_Y                      75
+#define POINT_X                      70
+#define POINT_Y                      71
 
 /* Comboboxes */
 /* --------------------------------- */
@@ -156,7 +167,7 @@ extern "C" {
 #define TEXT_SINGLE_FONT              5
 #define TEXT_SINGLE_JUSTIFY           6
 
-#define LINEEDIT_PROPERTY_EDITORS    76
+#define LINEEDIT_PROPERTY_EDITORS    72
 #define COMBOBOX_PROPERTY_EDITORS     7
 #define PROPERTY_EDITORS \
     ( LINEEDIT_PROPERTY_EDITORS + COMBOBOX_PROPERTY_EDITORS )
@@ -244,9 +255,9 @@ extern "C" {
 #define OBJ_LWT_01                    1
 #define OBJ_LWT_02                    2
 #define OBJ_LWT_03                    3
-#define OBJ_LWT_04    4 
-#define OBJ_LWT_05    5 
-#define OBJ_LWT_06    6 
+#define OBJ_LWT_04                    4 
+#define OBJ_LWT_05                    5 
+#define OBJ_LWT_06                    6 
 #define OBJ_LWT_07    7 
 #define OBJ_LWT_08    8 
 #define OBJ_LWT_09    9 
@@ -389,36 +400,45 @@ extern "C" {
 #define ACTION_lockalllayers         42
 #define ACTION_unlockalllayers       43
 /* Text ToolBar */
-#define ACTION_textbold              45
-#define ACTION_textitalic            46
-#define ACTION_textunderline         47
-#define ACTION_textstrikeout         48
-#define ACTION_textoverline          49
+#define ACTION_textbold              44
+#define ACTION_textitalic            45
+#define ACTION_textunderline         46
+#define ACTION_textstrikeout         47
+#define ACTION_textoverline          48
 /* Zoom ToolBar */
-#define ACTION_zoomrealtime          50
-#define ACTION_zoomprevious          51
-#define ACTION_zoomwindow            52
-#define ACTION_zoomdynamic           53
-#define ACTION_zoomscale             54
-#define ACTION_zoomcenter            55
-#define ACTION_zoomin                56
-#define ACTION_zoomout  57
-#define ACTION_zoomselected 58
-#define ACTION_zoomall  59
-#define ACTION_zoomextents  60
+#define ACTION_zoomrealtime          49
+#define ACTION_zoomprevious          50
+#define ACTION_zoomwindow            51
+#define ACTION_zoomdynamic           52
+#define ACTION_zoomscale             53
+#define ACTION_zoomcenter            54
+#define ACTION_zoomin                55
+#define ACTION_zoomout               56
+#define ACTION_zoomselected          57
+#define ACTION_zoomall               58
+#define ACTION_zoomextents           59
 /* Pan SubMenu */
-#define ACTION_panrealtime  61
-#define ACTION_panpoint 62
-#define ACTION_panleft  63
-#define ACTION_panright 64
-#define ACTION_panup    65
-#define ACTION_pandown  66
+#define ACTION_panrealtime           60
+#define ACTION_panpoint              61
+#define ACTION_panleft               62
+#define ACTION_panright              63
+#define ACTION_panup                 64
+#define ACTION_pandown               65
 /* View */
-#define ACTION_day  67
-#define ACTION_night    68
+#define ACTION_day                   66
+#define ACTION_night                 67
 
 /* Just added */
-#define ACTION_delete   69
+#define ACTION_trebleclef            68
+#define ACTION_path                  69
+#define ACTION_circle                70
+#define ACTION_line                  71
+#define ACTION_distance              72
+#define ACTION_dolphin               73
+#define ACTION_ellipse               74
+#define ACTION_delete                75
+#define ACTION_heart                 76
+#define ACTION_locatepoint           77
 
 /*
 TODO: ACTION_spellcheck 
@@ -555,10 +575,8 @@ typedef struct Settings_wrapper {
     int qsnap_parallel;
     int grid_center_on_origin;
     EmbVector grid_center;
-    float grid_size_x;
-    float grid_size_y;
-    float grid_spacing_x;
-    float grid_spacing_y;
+    EmbVector grid_size;
+    EmbVector grid_spacing;
     float grid_size_radius;
     float grid_spacing_radius;
     float grid_spacing_angle;
@@ -671,6 +689,8 @@ extern property_editor_row property_editors[];
 extern int n_property_editors;
 extern char *tips[];
 extern char *menu_label[];
+extern char *settings_tab_label[];
+extern char *status_bar_label[];
 extern char *obj_names[];
 extern char *icon_3dviews[];
 extern char *icon_about[];
@@ -1046,6 +1066,7 @@ extern settings_wrapper settings, preview, dialog, accept_;
  * -------------------------------
  */
 
+void to_lower(char *, char *);
 void usage(void);
 void version(void);
 void debug_message(const char *format, ...);
@@ -1154,6 +1175,49 @@ int load_settings(void);
 int save_settings(void);
 
 void comboBoxScrollBarWidgetCurrentIndexChanged(int);
+void checkBoxTipOfTheDayStateChanged(int);
+void checkBoxUseOpenGLStateChanged(int);
+void checkBoxRenderHintAAStateChanged(int);
+void checkBoxRenderHintTextAAStateChanged(int);
+void checkBoxRenderHintSmoothPixStateChanged(int);
+void checkBoxRenderHintHighAAStateChanged(int);
+void checkBoxRenderHintNonCosmeticStateChanged(int);
+void spinBoxZoomScaleInValueChanged(double);
+void spinBoxZoomScaleOutValueChanged(double);
+void checkBoxDisableBGStateChanged(int);
+void spinBoxGridCenterXValueChanged(double);
+void spinBoxGridCenterYValueChanged(double);
+void spinBoxGridSizeXValueChanged(double);
+void spinBoxGridSizeYValueChanged(double);
+void spinBoxGridSpacingXValueChanged(double);
+void spinBoxGridSpacingYValueChanged(double);
+void spinBoxGridSizeRadiusValueChanged(double);
+void spinBoxGridSpacingRadiusValueChanged(double);
+void spinBoxGridSpacingAngleValueChanged(double);
+void checkBoxRulerShowOnLoadStateChanged(int);
+void checkBoxQSnapEndPointStateChanged(int);
+void checkBoxQSnapMidPointStateChanged(int);
+void checkBoxQSnapCenterStateChanged(int);
+void checkBoxQSnapNodeStateChanged(int);
+void checkBoxQSnapQuadrantStateChanged(int);
+void checkBoxQSnapIntersectionStateChanged(int);
+void checkBoxQSnapExtensionStateChanged(int);
+void checkBoxQSnapInsertionStateChanged(int);
+void checkBoxQSnapPerpendicularStateChanged(int);
+void checkBoxQSnapTangentStateChanged(int);
+void checkBoxQSnapNearestStateChanged(int);
+void checkBoxQSnapApparentStateChanged(int);
+void checkBoxQSnapParallelStateChanged(int);
+void spinBoxRecentMaxFilesValueChanged(int);
+void spinBoxTrimDstNumJumpsValueChanged(int);
+void checkBoxGridShowOnLoadStateChanged(int);
+void checkBoxGridShowOriginStateChanged(int);
+void checkBoxSelectionModePickFirstStateChanged(int);
+void checkBoxSelectionModePickAddStateChanged(int);
+void checkBoxSelectionModePickDragStateChanged(int);
+void sliderSelectionGripSizeValueChanged(int);
+void sliderSelectionPickBoxSizeValueChanged(int);
+void spinBoxRulerPixelSizeValueChanged(double);
 
 EmbVector unit_vector(float angle);
 EmbVector rotate_vector(EmbVector a, float angle);
@@ -1169,7 +1233,6 @@ EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
 
 #include <QApplication>
 #include <QCheckBox>
-#include <QCloseEvent>
 #include <QColorDialog>
 #include <QComboBox>
 #include <QDateTime>
@@ -1181,12 +1244,10 @@ EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
 #include <QFontComboBox>
 #include <QFormLayout>
 #include <QGraphicsItem>
-#include <QGraphicsPathItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include <QKeyEvent>
 #include <QLabel>
 #include <QLibraryInfo>
 #include <QLineEdit>
@@ -1198,29 +1259,22 @@ EmbVector scale_and_rotate(EmbVector a, float scale, float angle);
 #include <QMessageBox>
 #include <QMetaObject>
 #include <QMouseEvent>
-#include <QPainter>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QRandomGenerator>
 #include <QScreen>
 #include <QScrollBar>
-#include <QSettings>
 #include <QSignalMapper>
 #include <QSortFilterProxyModel>
 #include <QSpinBox>
 #include <QStandardItemModel>
 #include <QStandardPaths>
 #include <QStatusBar>
-#include <QStyleOption>
-#include <QTextStream>
-#include <QtGlobal>
 #include <QToolBar>
 #include <QToolButton>
 #include <QTranslator>
 #include <QTreeView>
 #include <QVBoxLayout>
 #include <QWhatsThis>
-#include <QWizard>
 
 class MainWindow;
 class BaseObject;
@@ -1240,6 +1294,9 @@ EmbColor to_emb_color(QColor c);
 QPointF to_qpointf(EmbVector c);
 EmbVector to_emb_vector(QPointF c);
 QIcon loadIcon(char *image[]);
+void toggleGrid();
+void toggleRuler();
+void toggleLwt();
 
 void actuator(void);
 void settings_actuator(void);
@@ -1470,7 +1527,7 @@ public:
 
     QAction* myFileSeparator;
 
-    QWizard*    wizardTipOfTheDay;
+    QDialog* wizardTipOfTheDay;
     QLabel* labelTipOfTheDay;
     QCheckBox*  checkBoxTipOfTheDay;
     QStringList listTipOfTheDay;
@@ -1529,7 +1586,6 @@ public:
     // Help Menu
     void tipOfTheDay();
     void buttonTipOfTheDayClicked(int);
-    void checkBoxTipOfTheDayStateChanged(int);
     void help();;
     void whatsThisContextHelp();
 
@@ -1537,10 +1593,6 @@ public:
 
     void closeToolBar(QAction*);
     void floatingChangedToolBar(bool);
-
-    void toggleGrid();
-    void toggleRuler();
-    void toggleLwt();
 
     // Icons
     void iconResize(int iconSize);
@@ -1758,17 +1810,7 @@ private slots:
     void checkBoxGeneralMdiBGUseColorStateChanged(int);
     void chooseGeneralMdiBackgroundColor();
     void currentGeneralMdiBackgroundColorChanged(const QColor&);
-    void checkBoxTipOfTheDayStateChanged(int);
-    void checkBoxUseOpenGLStateChanged(int);
-    void checkBoxRenderHintAAStateChanged(int);
-    void checkBoxRenderHintTextAAStateChanged(int);
-    void checkBoxRenderHintSmoothPixStateChanged(int);
-    void checkBoxRenderHintHighAAStateChanged(int);
-    void checkBoxRenderHintNonCosmeticStateChanged(int);
     void checkBoxShowScrollBarsStateChanged(int);
-    void spinBoxZoomScaleInValueChanged(double);
-    void spinBoxZoomScaleOutValueChanged(double);
-    void checkBoxDisableBGStateChanged(int);
     void chooseDisplayCrossHairColor();
     void currentDisplayCrossHairColorChanged(const QColor&);
     void chooseDisplayBackgroundColor();
@@ -1785,43 +1827,12 @@ private slots:
     void checkBoxCustomFilterStateChanged(int);
     void buttonCustomFilterSelectAllClicked();
     void buttonCustomFilterClearAllClicked();
-    void spinBoxRecentMaxFilesValueChanged(int);
-    void spinBoxTrimDstNumJumpsValueChanged(int);
-    void checkBoxGridShowOnLoadStateChanged(int);
-    void checkBoxGridShowOriginStateChanged(int);
-    void checkBoxGridColorMatchCrossHairStateChanged(int);
     void chooseGridColor();
     void currentGridColorChanged(const QColor&);
     void checkBoxGridLoadFromFileStateChanged(int);
     void comboBoxGridTypeCurrentIndexChanged(const QString&);
-    void checkBoxGridCenterOnOriginStateChanged(int);
-    void spinBoxGridCenterXValueChanged(double);
-    void spinBoxGridCenterYValueChanged(double);
-    void spinBoxGridSizeXValueChanged(double);
-    void spinBoxGridSizeYValueChanged(double);
-    void spinBoxGridSpacingXValueChanged(double);
-    void spinBoxGridSpacingYValueChanged(double);
-    void spinBoxGridSizeRadiusValueChanged(double);
-    void spinBoxGridSpacingRadiusValueChanged(double);
-    void spinBoxGridSpacingAngleValueChanged(double);
-    void checkBoxRulerShowOnLoadStateChanged(int);
-    void comboBoxRulerMetricCurrentIndexChanged(int);
     void chooseRulerColor();
     void currentRulerColorChanged(const QColor&);
-    void spinBoxRulerPixelSizeValueChanged(double);
-    void checkBoxQSnapEndPointStateChanged(int);
-    void checkBoxQSnapMidPointStateChanged(int);
-    void checkBoxQSnapCenterStateChanged(int);
-    void checkBoxQSnapNodeStateChanged(int);
-    void checkBoxQSnapQuadrantStateChanged(int);
-    void checkBoxQSnapIntersectionStateChanged(int);
-    void checkBoxQSnapExtensionStateChanged(int);
-    void checkBoxQSnapInsertionStateChanged(int);
-    void checkBoxQSnapPerpendicularStateChanged(int);
-    void checkBoxQSnapTangentStateChanged(int);
-    void checkBoxQSnapNearestStateChanged(int);
-    void checkBoxQSnapApparentStateChanged(int);
-    void checkBoxQSnapParallelStateChanged(int);
     void buttonQSnapSelectAllClicked();
     void buttonQSnapClearAllClicked();
     void comboBoxQSnapLocatorColorCurrentIndexChanged(int);
@@ -1829,13 +1840,11 @@ private slots:
     void sliderQSnapApertureSizeValueChanged(int);
     void checkBoxLwtShowLwtStateChanged(int);
     void checkBoxLwtRealRenderStateChanged(int);
-    void checkBoxSelectionModePickFirstStateChanged(int);
-    void checkBoxSelectionModePickAddStateChanged(int);
-    void checkBoxSelectionModePickDragStateChanged(int);
     void comboBoxSelectionCoolGripColorCurrentIndexChanged(int);
     void comboBoxSelectionHotGripColorCurrentIndexChanged(int);
-    void sliderSelectionGripSizeValueChanged(int);
-    void sliderSelectionPickBoxSizeValueChanged(int);
+    void checkBoxGridCenterOnOriginStateChanged(int);
+    void comboBoxRulerMetricCurrentIndexChanged(int);
+    void checkBoxGridColorMatchCrossHairStateChanged(int);
 
     void acceptChanges();
     void rejectChanges();
@@ -1847,25 +1856,14 @@ signals:
     void buttonQSnapClearAll(bool);
 };
 
-class StatusBarButton : public QToolButton
-{
-    Q_OBJECT
-
-public:
-    StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* statbar, QWidget *parent = 0);
-
-protected:
-    void contextMenuEvent(QContextMenuEvent *event = 0);
-
-private slots:
-    void settingsSnap();
-    void settingsGrid();
-    void settingsRuler();
-    void settingsOrtho();
-    void settingsPolar();
-    void settingsQSnap();
-    void settingsQTrack();
-    void settingsLwt();
+void settingsSnap(void);
+void settingsGrid(void);
+void settingsRuler(void);
+void settingsOrtho(void);
+void settingsPolar(void);
+    void settingsQSnap(void);
+    void settingsQTrack(void);
+    void settingsLwt(void);
     void toggleSnap(bool on);
     void toggleGrid(bool on);
     void toggleRuler(bool on);
@@ -1874,15 +1872,22 @@ private slots:
     void toggleQSnap(bool on);
     void toggleQTrack(bool on);
     void toggleLwt(bool on);
-public slots:
-    void enableLwt();
-    void disableLwt();
-    void enableReal();
-    void disableReal();
+    void enableLwt(void);
+    void disableLwt(void);
+    void enableReal(void);
+    void disableReal(void);
 
-private:
-    MainWindow* mainWin;
+class StatusBarButton : public QToolButton
+{
+    Q_OBJECT
+
+public:
+    StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* statbar, QWidget *parent = 0);
+
     StatusBar*  statusbar;
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *event = 0);
 };
 
 class StatusBar : public QStatusBar

@@ -313,3 +313,17 @@ char *translate(char *a)
     return a;
 }
 
+void
+to_lower(char *dst, char *src)
+{
+    int i;
+    for (i=0; i<MAX_STRING_LENGTH; i++) {
+        if (src[i] >= 'A' && src[i] <= 'Z') {
+            dst[i] = src[i] - 'A';
+        }
+        else {
+            dst[i] = src[i];
+        }
+    }
+}
+

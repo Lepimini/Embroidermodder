@@ -8,15 +8,15 @@
 
 #include "embroidermodder.h"
 
-QStringList opensave_recent_list_of_files;
-QString opensave_custom_filter;
-
 QToolBar* toolbar[10];
 QMenu* menu[10];
-
+StatusBarButton* status_bar[8];
 QToolButton* toolButton[PROPERTY_EDITORS];
 QLineEdit* lineEdit[LINEEDIT_PROPERTY_EDITORS];
 QComboBox* comboBox[COMBOBOX_PROPERTY_EDITORS];
+
+QStringList opensave_recent_list_of_files;
+QString opensave_custom_filter;
 
 QToolButton* toolButtonTextSingleContents;
 QToolButton* toolButtonTextSingleFont;
@@ -58,22 +58,6 @@ QToolButton* toolButtonImagePath;
 QLineEdit*   lineEditImageName;
 QLineEdit*   lineEditImagePath;
 
-QToolButton* toolButtonPolygonCenterX;
-QToolButton* toolButtonPolygonCenterY;
-QToolButton* toolButtonPolygonRadiusVertex;
-QToolButton* toolButtonPolygonRadiusSide;
-QToolButton* toolButtonPolygonDiameterVertex;
-QToolButton* toolButtonPolygonDiameterSide;
-QToolButton* toolButtonPolygonInteriorAngle;
-
-QLineEdit* lineEditPolygonCenterX;
-QLineEdit*   lineEditPolygonCenterY;
-QLineEdit*   lineEditPolygonRadiusVertex;
-QLineEdit*   lineEditPolygonRadiusSide;
-QLineEdit*   lineEditPolygonDiameterVertex;
-QLineEdit*   lineEditPolygonDiameterSide;
-QLineEdit*   lineEditPolygonInteriorAngle;
-
 EmbVector pasteDelta;
 QPointF scenePressPoint;
 QPoint pressPoint;
@@ -94,14 +78,6 @@ unsigned int crosshairColor;
 int precisionAngle;
 int precisionLength;
 
-StatusBarButton* statusBarSnapButton;
-StatusBarButton* statusBarGridButton;
-StatusBarButton* statusBarRulerButton;
-StatusBarButton* statusBarOrthoButton;
-StatusBarButton* statusBarPolarButton;
-StatusBarButton* statusBarQSnapButton;
-StatusBarButton* statusBarQTrackButton;
-StatusBarButton* statusBarLwtButton;
 QLabel* statusBarMouseCoord;
 
 QToolButton* toolButtonInfiniteLineX1;
@@ -325,10 +301,10 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
     settings.qSnapActive = 0;
     settings.qSnapToggle = 0;
 
-    //Randomize the hot grip location initially so it's not located at (0,0)
-    QRandomGenerator generator = QRandomGenerator((int)QDateTime::currentMSecsSinceEpoch());
+    /* Randomize the hot grip location initially so it's not located at (0,0). */
+    srand(1234);
 
-    sceneGripPoint = QPointF(generator.generateDouble() *1000, generator.generateDouble()*1000);
+    sceneGripPoint = QPointF((rand()%1000)*0.1, (rand()%1000)*0.1);
 
     gripBaseObj = 0;
     tempBaseObj = 0;
@@ -598,10 +574,10 @@ void View::createOrigin() /* TODO: Make Origin Customizable */
 
 void View::createGridRect()
 {
-    float xSpacing = settings.grid_spacing_x;
-    float ySpacing = settings.grid_spacing_y;
+    float xSpacing = settings.grid_spacing.x;
+    float ySpacing = settings.grid_spacing.y;
 
-    QRectF gr(0, 0, settings.grid_size_x, -settings.grid_size_y);
+    QRectF gr(0, 0, settings.grid_size.x, -settings.grid_size.y);
     //Ensure the loop will work correctly with negative numbers
     float x1 = embMinDouble(gr.left(), gr.right());
     float y1 = embMinDouble(gr.top(), gr.bottom());
@@ -657,12 +633,9 @@ void View::createGridPolar()
 
 void View::createGridIso()
 {
-    float xSpacing = settings.grid_spacing_x;
-    float ySpacing = settings.grid_spacing_y;
-
     /* Ensure the loop will work correctly with negative numbers */
-    float isoW = fabs(settings.grid_size_x);
-    float isoH = fabs(settings.grid_size_y);
+    float isoW = fabs(settings.grid_size.x);
+    float isoH = fabs(settings.grid_size.y);
 
     QPointF p1 = QPointF(0,0);
     QPointF p2 = QLineF::fromPolar(isoW, 30).p2();
@@ -676,8 +649,8 @@ void View::createGridIso()
     gridPath.lineTo(p3);
     gridPath.lineTo(p1);
 
-    for (float x = 0; x < isoW; x += xSpacing) {
-        for (float y = 0; y < isoH; y += ySpacing) {
+    for (float x = 0; x < isoW; x += settings.grid_spacing.x) {
+        for (float y = 0; y < isoH; y += settings.grid_spacing.y) {
             QPointF px = QLineF::fromPolar(x, 30).p2();
             QPointF py = QLineF::fromPolar(y, 150).p2();
 
@@ -1416,8 +1389,8 @@ void View::zoomExtents()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QRectF extents = gscene->itemsBoundingRect();
     if (extents.isNull()) {
-        extents.setWidth(settings.grid_size_x);
-        extents.setHeight(settings.grid_size_y);
+        extents.setWidth(settings.grid_size.x);
+        extents.setHeight(settings.grid_size.y);
         extents.moveCenter(QPointF(0,0));
     }
     fitInView(extents, Qt::KeepAspectRatio);
@@ -2382,6 +2355,7 @@ void View::setSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned 
 
 Settings_Dialog::Settings_Dialog(MainWindow* mw, const QString& showTab, QWidget* parent) : QDialog(parent)
 {
+    int i;
     mainWin = mw;
     setMinimumSize(750,550);
 
@@ -2401,18 +2375,11 @@ Settings_Dialog::Settings_Dialog(MainWindow* mw, const QString& showTab, QWidget
     tabWidget->addTab(createTabLineWeight(), tr("LineWeight"));
     tabWidget->addTab(createTabSelection(), tr("Selection"));
 
-    if     (showTab == "General")     tabWidget->setCurrentIndex( 0);
-    else if(showTab == "Files/Path")  tabWidget->setCurrentIndex( 1);
-    else if(showTab == "Display")     tabWidget->setCurrentIndex( 2);
-    else if(showTab == "Open/Save")   tabWidget->setCurrentIndex( 3);
-    else if(showTab == "Printing")    tabWidget->setCurrentIndex( 4);
-    else if(showTab == "Snap")        tabWidget->setCurrentIndex( 5);
-    else if(showTab == "Grid/Ruler")  tabWidget->setCurrentIndex( 6);
-    else if(showTab == "Ortho/Polar") tabWidget->setCurrentIndex( 7);
-    else if(showTab == "QuickSnap")   tabWidget->setCurrentIndex( 8);
-    else if(showTab == "QuickTrack")  tabWidget->setCurrentIndex( 9);
-    else if(showTab == "LineWeight")  tabWidget->setCurrentIndex(10);
-    else if(showTab == "Selection")   tabWidget->setCurrentIndex(11);
+    for (i=0; i<12; i++) {
+        if (showTab == settings_tab_label[i]) {
+            tabWidget->setCurrentIndex(i);
+        }
+    }
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
@@ -2432,20 +2399,6 @@ Settings_Dialog::Settings_Dialog(MainWindow* mw, const QString& showTab, QWidget
 Settings_Dialog::~Settings_Dialog()
 {
     QApplication::restoreOverrideCursor();
-}
-
-void
-to_lower(char *dst, char *src)
-{
-    int i;
-    for (i=0; i<MAX_STRING_LENGTH; i++) {
-        if (src[i] >= 'A' && src[i] <= 'Z') {
-            dst[i] = src[i] - 'A';
-        }
-        else {
-            dst[i] = src[i];
-        }
-    }
 }
 
 QWidget* Settings_Dialog::createTabGeneral()
@@ -2514,7 +2467,6 @@ QWidget* Settings_Dialog::createTabGeneral()
 
     //Mdi Background
     QGroupBox* groupBoxMdiBG = new QGroupBox(tr("Background"), widget);
-
 
     QCheckBox* checkBoxMdiBGUseLogo = new QCheckBox(tr("Use Logo"), groupBoxMdiBG);
     dialog.general_mdi_bg_use_logo = settings.general_mdi_bg_use_logo;
@@ -3103,40 +3055,40 @@ QWidget* Settings_Dialog::createTabGridRuler()
     labelGridSizeX->setObjectName("labelGridSizeX");
     QDoubleSpinBox* spinBoxGridSizeX = new QDoubleSpinBox(groupBoxGridGeom);
     spinBoxGridSizeX->setObjectName("spinBoxGridSizeX");
-    dialog.grid_size_x = settings.grid_size_x;
+    dialog.grid_size.x = settings.grid_size.x;
     spinBoxGridSizeX->setSingleStep(1.000);
     spinBoxGridSizeX->setRange(1.000, 1000.000);
-    spinBoxGridSizeX->setValue(dialog.grid_size_x);
+    spinBoxGridSizeX->setValue(dialog.grid_size.x);
     connect(spinBoxGridSizeX, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSizeXValueChanged(double)));
 
     QLabel* labelGridSizeY = new QLabel(tr("Grid Size Y"), groupBoxGridGeom);
     labelGridSizeY->setObjectName("labelGridSizeY");
     QDoubleSpinBox* spinBoxGridSizeY = new QDoubleSpinBox(groupBoxGridGeom);
     spinBoxGridSizeY->setObjectName("spinBoxGridSizeY");
-    dialog.grid_size_y = settings.grid_size_y;
+    dialog.grid_size.y = settings.grid_size.y;
     spinBoxGridSizeY->setSingleStep(1.000);
     spinBoxGridSizeY->setRange(1.000, 1000.000);
-    spinBoxGridSizeY->setValue(dialog.grid_size_y);
+    spinBoxGridSizeY->setValue(dialog.grid_size.y);
     connect(spinBoxGridSizeY, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSizeYValueChanged(double)));
 
     QLabel* labelGridSpacingX = new QLabel(tr("Grid Spacing X"), groupBoxGridGeom);
     labelGridSpacingX->setObjectName("labelGridSpacingX");
     QDoubleSpinBox* spinBoxGridSpacingX = new QDoubleSpinBox(groupBoxGridGeom);
     spinBoxGridSpacingX->setObjectName("spinBoxGridSpacingX");
-    dialog.grid_spacing_x = settings.grid_spacing_x;
+    dialog.grid_spacing.x = settings.grid_spacing.x;
     spinBoxGridSpacingX->setSingleStep(1.000);
     spinBoxGridSpacingX->setRange(0.001, 1000.000);
-    spinBoxGridSpacingX->setValue(dialog.grid_spacing_x);
+    spinBoxGridSpacingX->setValue(dialog.grid_spacing.x);
     connect(spinBoxGridSpacingX, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSpacingXValueChanged(double)));
 
     QLabel* labelGridSpacingY = new QLabel(tr("Grid Spacing Y"), groupBoxGridGeom);
     labelGridSpacingY->setObjectName("labelGridSpacingY");
     QDoubleSpinBox* spinBoxGridSpacingY = new QDoubleSpinBox(groupBoxGridGeom);
     spinBoxGridSpacingY->setObjectName("spinBoxGridSpacingY");
-    dialog.grid_spacing_y = settings.grid_spacing_y;
+    dialog.grid_spacing.y = settings.grid_spacing.y;
     spinBoxGridSpacingY->setSingleStep(1.000);
     spinBoxGridSpacingY->setRange(0.001, 1000.000);
-    spinBoxGridSpacingY->setValue(dialog.grid_spacing_y);
+    spinBoxGridSpacingY->setValue(dialog.grid_spacing.y);
     connect(spinBoxGridSpacingY, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSpacingYValueChanged(double)));
 
     QLabel* labelGridSizeRadius = new QLabel(tr("Grid Size Radius"), groupBoxGridGeom);
@@ -3704,50 +3656,10 @@ void Settings_Dialog::currentGeneralMdiBackgroundColorChanged(const QColor& colo
     mainWin->mdiArea->setBackgroundColor(QColor(preview.general_mdi_bg_color));
 }
 
-#define check_func(f, x) \
-    void Settings_Dialog::f(int checked) \
-    { \
-        dialog.x = checked; \
-    }
-
-#define settings_set_double(f, x) \
-    void Settings_Dialog::f(double value) \
-    { \
-        dialog.x = value; \
-    }
-
-check_func(checkBoxTipOfTheDayStateChanged, general_tip_of_the_day)
-check_func(checkBoxUseOpenGLStateChanged, display_use_opengl)
-check_func(checkBoxRenderHintAAStateChanged, display_renderhint_aa)
-check_func(checkBoxRenderHintTextAAStateChanged, display_renderhint_text_aa)
-check_func(checkBoxRenderHintSmoothPixStateChanged, display_renderhint_smooth_pix)
-check_func(checkBoxRenderHintHighAAStateChanged, display_renderhint_high_aa)
-check_func(checkBoxRenderHintNonCosmeticStateChanged, display_renderhint_noncosmetic)
-
 void Settings_Dialog::checkBoxShowScrollBarsStateChanged(int checked)
 {
     preview.display_show_scrollbars = checked;
     mainWin->updateAllViewScrollBars(preview.display_show_scrollbars);
-}
-
-void comboBoxScrollBarWidgetCurrentIndexChanged(int index)
-{
-    dialog.display_scrollbar_widget_num = index;
-}
-
-void Settings_Dialog::spinBoxZoomScaleInValueChanged(double value)
-{
-    dialog.display_zoomscale_in = value;
-}
-
-void Settings_Dialog::spinBoxZoomScaleOutValueChanged(double value)
-{
-    dialog.display_zoomscale_out = value;
-}
-
-void Settings_Dialog::checkBoxDisableBGStateChanged(int checked)
-{
-    dialog.printing_disable_bg = checked;
 }
 
 void Settings_Dialog::chooseDisplayCrossHairColor()
@@ -4000,26 +3912,6 @@ void Settings_Dialog::buttonCustomFilterClearAllClicked()
     opensave_custom_filter.clear();
 }
 
-void Settings_Dialog::spinBoxRecentMaxFilesValueChanged(int value)
-{
-    dialog.opensave_recent_max_files = value;
-}
-
-void Settings_Dialog::spinBoxTrimDstNumJumpsValueChanged(int value)
-{
-    dialog.opensave_trim_dst_num_jumps = value;
-}
-
-void Settings_Dialog::checkBoxGridShowOnLoadStateChanged(int checked)
-{
-    dialog.grid_show_on_load = checked;
-}
-
-void Settings_Dialog::checkBoxGridShowOriginStateChanged(int checked)
-{
-    dialog.grid_show_origin = checked;
-}
-
 void Settings_Dialog::checkBoxGridColorMatchCrossHairStateChanged(int checked)
 {
     dialog.grid_color_match_crosshair = checked;
@@ -4206,56 +4098,6 @@ void Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(int checked)
     }
 }
 
-void Settings_Dialog::spinBoxGridCenterXValueChanged(double value)
-{
-    dialog.grid_center.x = value;
-}
-
-void Settings_Dialog::spinBoxGridCenterYValueChanged(double value)
-{
-    dialog.grid_center.y = value;
-}
-
-void Settings_Dialog::spinBoxGridSizeXValueChanged(double value)
-{
-    dialog.grid_size_x = value;
-}
-
-void Settings_Dialog::spinBoxGridSizeYValueChanged(double value)
-{
-    dialog.grid_size_y = value;
-}
-
-void Settings_Dialog::spinBoxGridSpacingXValueChanged(double value)
-{
-    dialog.grid_spacing_x = value;
-}
-
-void Settings_Dialog::spinBoxGridSpacingYValueChanged(double value)
-{
-    dialog.grid_spacing_y = value;
-}
-
-void Settings_Dialog::spinBoxGridSizeRadiusValueChanged(double value)
-{
-    dialog.grid_size_radius = value;
-}
-
-void Settings_Dialog::spinBoxGridSpacingRadiusValueChanged(double value)
-{
-    dialog.grid_spacing_radius = value;
-}
-
-void Settings_Dialog::spinBoxGridSpacingAngleValueChanged(double value)
-{
-    dialog.grid_spacing_angle = value;
-}
-
-void Settings_Dialog::checkBoxRulerShowOnLoadStateChanged(int checked)
-{
-    dialog.ruler_show_on_load = checked;
-}
-
 void Settings_Dialog::comboBoxRulerMetricCurrentIndexChanged(int index)
 {
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender());
@@ -4293,76 +4135,6 @@ void Settings_Dialog::currentRulerColorChanged(const QColor& color)
 {
     preview.ruler_color = color.rgb();
     mainWin->updateAllViewRulerColors(preview.ruler_color);
-}
-
-void Settings_Dialog::spinBoxRulerPixelSizeValueChanged(double value)
-{
-    dialog.ruler_pixel_size = value;
-}
-
-void Settings_Dialog::checkBoxQSnapEndPointStateChanged(int checked)
-{
-    dialog.qsnap_endpoint = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapMidPointStateChanged(int checked)
-{
-    dialog.qsnap_midpoint = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapCenterStateChanged(int checked)
-{
-    dialog.qsnap_center = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapNodeStateChanged(int checked)
-{
-    dialog.qsnap_node = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapQuadrantStateChanged(int checked)
-{
-    dialog.qsnap_quadrant = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapIntersectionStateChanged(int checked)
-{
-    dialog.qsnap_intersection = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapExtensionStateChanged(int checked)
-{
-    dialog.qsnap_extension = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapInsertionStateChanged(int checked)
-{
-    dialog.qsnap_insertion = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapPerpendicularStateChanged(int checked)
-{
-    dialog.qsnap_perpendicular = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapTangentStateChanged(int checked)
-{
-    dialog.qsnap_tangent = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapNearestStateChanged(int checked)
-{
-    dialog.qsnap_nearest = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapApparentStateChanged(int checked)
-{
-    dialog.qsnap_apparent = checked;
-}
-
-void Settings_Dialog::checkBoxQSnapParallelStateChanged(int checked)
-{
-    dialog.qsnap_parallel = checked;
 }
 
 void Settings_Dialog::buttonQSnapSelectAllClicked()
@@ -4416,10 +4188,10 @@ void Settings_Dialog::checkBoxLwtShowLwtStateChanged(int checked)
 {
     preview.lwt_show_lwt = checked;
     if (preview.lwt_show_lwt) {
-        statusBarLwtButton->enableLwt();
+        enableLwt();
     }
     else {
-        statusBarLwtButton->disableLwt();
+        disableLwt();
     }
 
     QObject* senderObj = sender();
@@ -4438,36 +4210,11 @@ void Settings_Dialog::checkBoxLwtRealRenderStateChanged(int checked)
 {
     preview.lwt_real_render = checked;
     if (preview.lwt_real_render) {
-        statusBarLwtButton->enableReal();
+        enableReal();
     }
     else {
-        statusBarLwtButton->disableReal();
+        disableReal();
     }
-}
-
-void Settings_Dialog::checkBoxSelectionModePickFirstStateChanged(int checked)
-{
-    dialog.selection_mode_pickfirst = checked;
-}
-
-void Settings_Dialog::checkBoxSelectionModePickAddStateChanged(int checked)
-{
-    dialog.selection_mode_pickadd = checked;
-}
-
-void Settings_Dialog::checkBoxSelectionModePickDragStateChanged(int checked)
-{
-    dialog.selection_mode_pickdrag = checked;
-}
-
-void Settings_Dialog::sliderSelectionGripSizeValueChanged(int value)
-{
-    dialog.selection_grip_size = value;
-}
-
-void Settings_Dialog::sliderSelectionPickBoxSizeValueChanged(int value)
-{
-    dialog.selection_pickbox_size = value;
 }
 
 void Settings_Dialog::comboBoxSelectionCoolGripColorCurrentIndexChanged(int index)
@@ -4577,10 +4324,8 @@ void Settings_Dialog::acceptChanges()
     strcpy(settings.grid_type, dialog.grid_type);
     settings.grid_center_on_origin = dialog.grid_center_on_origin;
     settings.grid_center = dialog.grid_center;
-    settings.grid_size_x = dialog.grid_size_x;
-    settings.grid_size_y = dialog.grid_size_y;
-    settings.grid_spacing_x = dialog.grid_spacing_x;
-    settings.grid_spacing_y = dialog.grid_spacing_y;
+    settings.grid_size = dialog.grid_size;
+    settings.grid_spacing = dialog.grid_spacing;
     settings.grid_size_radius = dialog.grid_size_radius;
     settings.grid_spacing_radius = dialog.grid_spacing_radius;
     settings.grid_spacing_angle = dialog.grid_spacing_angle;
@@ -4633,10 +4378,12 @@ void Settings_Dialog::acceptChanges()
                                           dialog.display_selectbox_alpha);
     mainWin->updateAllViewGridColors(dialog.grid_color);
     mainWin->updateAllViewRulerColors(dialog.ruler_color);
-    if(dialog.lwt_show_lwt) { statusBarLwtButton->enableLwt(); }
-    else                    { statusBarLwtButton->disableLwt(); }
-    if(dialog.lwt_real_render) { statusBarLwtButton->enableReal(); }
-    else                       { statusBarLwtButton->disableReal(); }
+    if (dialog.lwt_show_lwt) {
+        enableLwt();
+    }
+    else { disableLwt(); }
+    if (dialog.lwt_real_render) { enableReal(); }
+    else { disableReal(); }
     mainWin->updatePickAddMode(dialog.selection_mode_pickadd);
 
     mainWin->writeSettings();
@@ -4664,10 +4411,10 @@ void Settings_Dialog::rejectChanges()
                                           dialog.display_selectbox_alpha);
     mainWin->updateAllViewGridColors(dialog.grid_color);
     mainWin->updateAllViewRulerColors(dialog.ruler_color);
-    if(dialog.lwt_show_lwt) { statusBarLwtButton->enableLwt(); }
-    else                    { statusBarLwtButton->disableLwt(); }
-    if(dialog.lwt_real_render) { statusBarLwtButton->enableReal(); }
-    else                       { statusBarLwtButton->disableReal(); }
+    if(dialog.lwt_show_lwt) { enableLwt(); }
+    else                    { disableLwt(); }
+    if(dialog.lwt_real_render) { enableReal(); }
+    else                       { disableReal(); }
 
     reject();
 }
@@ -8046,8 +7793,7 @@ int PolylineObject::findIndex(const QPointF& point)
     int elemCount = normalPath.elementCount();
     //NOTE: Points here are in item coordinates
     QPointF itemPoint = mapFromScene(point);
-    for(int i = 0; i < elemCount; i++)
-    {
+    for (int i = 0; i < elemCount; i++) {
         QPainterPath::Element e = normalPath.elementAt(i);
         QPointF elemPoint = QPointF(e.x, e.y);
         if(itemPoint == elemPoint) return i;
@@ -8686,31 +8432,31 @@ void MainWindow::tipOfTheDay()
     debug_message("tipOfTheDay()");
 
     QString appDir = qApp->applicationDirPath();
-    QDialog *dialog = new QDialog();
-    QToolButton *button1 = new QToolButton(dialog);
-    QToolButton *button2 = new QToolButton(dialog);
-    QToolButton *button3 = new QToolButton(dialog);
+    wizardTipOfTheDay = new QDialog();
+    QToolButton *button1 = new QToolButton(wizardTipOfTheDay);
+    QToolButton *button2 = new QToolButton(wizardTipOfTheDay);
+    QToolButton *button3 = new QToolButton(wizardTipOfTheDay);
 
-    ImageWidget* imgBanner = new ImageWidget(appDir + "/images/did-you-know.png", dialog);
+    ImageWidget* imgBanner = new ImageWidget(appDir + "/images/did-you-know.png", wizardTipOfTheDay);
 
-    QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("&Show tips on startup"), dialog);
+    QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("&Show tips on startup"), wizardTipOfTheDay);
     checkBoxTipOfTheDay->setChecked(settings.general_tip_of_the_day);
     connect(checkBoxTipOfTheDay, SIGNAL(stateChanged(int)), this, SLOT(checkBoxTipOfTheDayStateChanged(int)));
 
     if (strlen(tips[settings.general_current_tip])==0) {
         settings.general_current_tip = 0;
     }
-    labelTipOfTheDay = new QLabel(tips[settings.general_current_tip], dialog);
+    labelTipOfTheDay = new QLabel(tips[settings.general_current_tip], wizardTipOfTheDay);
     labelTipOfTheDay->setWordWrap(1);
 
     button1->setText("&Previous");
     button2->setText("&Next");
     button3->setText("&Close");
-    connect(button1, SIGNAL(triggered()), dialog, SLOT(dialog.close()));
-    connect(button2, SIGNAL(triggered()), dialog, SLOT(dialog.close()));
-    connect(button3, SIGNAL(triggered()), dialog, SLOT(dialog.close()));
+    connect(button1, SIGNAL(triggered()), wizardTipOfTheDay, SLOT(wizardTipOfTheDay.close()));
+    connect(button2, SIGNAL(triggered()), wizardTipOfTheDay, SLOT(wizardTipOfTheDay.close()));
+    connect(button3, SIGNAL(triggered()), wizardTipOfTheDay, SLOT(wizardTipOfTheDay.close()));
 
-    QVBoxLayout* layout = new QVBoxLayout(dialog);
+    QVBoxLayout* layout = new QVBoxLayout(wizardTipOfTheDay);
     layout->addWidget(imgBanner);
     layout->addStrut(1);
     layout->addWidget(labelTipOfTheDay);
@@ -8723,19 +8469,15 @@ void MainWindow::tipOfTheDay()
     layout->addStrut(1);
     layout->addWidget(button3);
 
-    dialog->setLayout(layout);
-    dialog->setWindowTitle("Tip of the Day");
-    dialog->setMinimumSize(550, 400);
-    dialog->exec();
-}
-
-void MainWindow::checkBoxTipOfTheDayStateChanged(int checked)
-{
-    settings.general_tip_of_the_day = checked;
+    wizardTipOfTheDay->setLayout(layout);
+    wizardTipOfTheDay->setWindowTitle("Tip of the Day");
+    wizardTipOfTheDay->setMinimumSize(550, 400);
+    wizardTipOfTheDay->exec();
 }
 
 void MainWindow::buttonTipOfTheDayClicked(int button)
 {
+    /*
     debug_message("buttonTipOfTheDayClicked(%d)", button);
     if(button == QWizard::CustomButton1)
     {
@@ -8756,6 +8498,7 @@ void MainWindow::buttonTipOfTheDayClicked(int button)
     {
         wizardTipOfTheDay->close();
     }
+    */
 }
 
 void MainWindow::help()
@@ -9083,28 +8826,28 @@ void MainWindow::escapePressed()
     }
 }
 
-void MainWindow::toggleGrid()
+void toggleGrid()
 {
     debug_message("toggleGrid()");
-    statusBarGridButton->toggle();
+    status_bar[STATUS_GRID]->toggle();
 }
 
-void MainWindow::toggleRuler()
+void toggleRuler()
 {
     debug_message("toggleRuler()");
-    statusBarRulerButton->toggle();
+    status_bar[STATUS_RULER]->toggle();
 }
 
-void MainWindow::toggleLwt()
+void toggleLwt()
 {
     debug_message("toggleLwt()");
-    statusBarLwtButton->toggle();
+    status_bar[STATUS_LWT]->toggle();
 }
 
 void MainWindow::enableMoveRapidFire()
 {
     View* gview = activeView();
-    if(gview) gview->enableMoveRapidFire();
+    if (gview) gview->enableMoveRapidFire();
 }
 
 void MainWindow::disableMoveRapidFire()
@@ -10103,6 +9846,7 @@ QAction* MainWindow::getFileSeparator()
 
 void MainWindow::updateMenuToolbarStatusbar()
 {
+    int i;
     debug_message("MainWindow::updateMenuToolbarStatusbar()");
 
     actionHash.value(ACTION_print)->setEnabled(numOfDocs > 0);
@@ -10144,21 +9888,21 @@ void MainWindow::updateMenuToolbarStatusbar()
 
         menu[WINDOW_MENU]->setEnabled(1);
 
-        //Statusbar
+        /* Statusbar */
         statusbar->clearMessage();
         statusBarMouseCoord->show();
-        statusBarSnapButton->show();
-        statusBarGridButton->show();
-        statusBarRulerButton->show();
-        statusBarOrthoButton->show();
-        statusBarPolarButton->show();
-        statusBarQSnapButton->show();
-        statusBarQTrackButton->show();
-        statusBarLwtButton->show();
+        status_bar[STATUS_SNAP]->show();
+        status_bar[STATUS_GRID]->show();
+        status_bar[STATUS_RULER]->show();
+        status_bar[STATUS_ORTHO]->show();
+        status_bar[STATUS_POLAR]->show();
+        status_bar[STATUS_QSNAP]->show();
+        status_bar[STATUS_QTRACK]->show();
+        status_bar[STATUS_LWT]->show();
     }
     else
     {
-        //Toolbars
+        /* Toolbars */
         toolbar[TOOLBAR_VIEW]->hide();
         toolbar[TOOLBAR_ZOOM]->hide();
         toolbar[TOOLBAR_PAN]->hide();
@@ -10191,14 +9935,9 @@ void MainWindow::updateMenuToolbarStatusbar()
         //Statusbar
         statusbar->clearMessage();
         statusBarMouseCoord->hide();
-        statusBarSnapButton->hide();
-        statusBarGridButton->hide();
-        statusBarRulerButton->hide();
-        statusBarOrthoButton->hide();
-        statusBarPolarButton->hide();
-        statusBarQSnapButton->hide();
-        statusBarQTrackButton->hide();
-        statusBarLwtButton->hide();
+        for (i=0; i<N_STATUS; i++) {
+            status_bar[i]->hide();
+        }
     }
 }
 
@@ -11316,14 +11055,14 @@ void MdiWindow::closeEvent(QCloseEvent* /*e*/)
 void MdiWindow::onWindowActivated()
 {
     debug_message("MdiWindow onWindowActivated()");
-    statusBarSnapButton->setChecked(gscene->property("ENABLE_SNAP").toBool());
-    statusBarGridButton->setChecked(gscene->property("ENABLE_GRID").toBool());
-    statusBarRulerButton->setChecked(gscene->property("ENABLE_RULER").toBool());
-    statusBarOrthoButton->setChecked(gscene->property("ENABLE_ORTHO").toBool());
-    statusBarPolarButton->setChecked(gscene->property("ENABLE_POLAR").toBool());
-    statusBarQSnapButton->setChecked(gscene->property("ENABLE_QSNAP").toBool());
-    statusBarQTrackButton->setChecked(gscene->property("ENABLE_QTRACK").toBool());
-    statusBarLwtButton->setChecked(gscene->property("ENABLE_LWT").toBool());
+    status_bar[STATUS_SNAP]->setChecked(gscene->property("ENABLE_SNAP").toBool());
+    status_bar[STATUS_GRID]->setChecked(gscene->property("ENABLE_GRID").toBool());
+    status_bar[STATUS_RULER]->setChecked(gscene->property("ENABLE_RULER").toBool());
+    status_bar[STATUS_ORTHO]->setChecked(gscene->property("ENABLE_ORTHO").toBool());
+    status_bar[STATUS_POLAR]->setChecked(gscene->property("ENABLE_POLAR").toBool());
+    status_bar[STATUS_QSNAP]->setChecked(gscene->property("ENABLE_QSNAP").toBool());
+    status_bar[STATUS_QTRACK]->setChecked(gscene->property("ENABLE_QTRACK").toBool());
+    status_bar[STATUS_LWT]->setChecked(gscene->property("ENABLE_LWT").toBool());
     //mainWin->prompt->setHistory(promptHistory);
 }
 
@@ -11483,10 +11222,8 @@ void SelectBox::forceRepaint()
     resize(hack);
 }
 
-
 StatusBarButton::StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* statbar, QWidget *parent) : QToolButton(parent)
 {
-    mainWin = mw;
     statusbar = statbar;
 
     this->setObjectName("StatusBarButton" + buttonText);
@@ -11495,9 +11232,15 @@ StatusBarButton::StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* 
     this->setAutoRaise(1);
     this->setCheckable(1);
 
-    if     (objectName() == "StatusBarButtonSNAP")   { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleSnap(bool))); }
-    else if(objectName() == "StatusBarButtonGRID")   { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleGrid(bool))); }
-    else if(objectName() == "StatusBarButtonRULER")  { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleRuler(bool))); }
+    if (objectName() == "StatusBarButtonSNAP") {
+        connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleSnap(bool)));
+    }
+    else if (objectName() == "StatusBarButtonGRID") {
+        connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleGrid(bool)));
+    }
+    else if(objectName() == "StatusBarButtonRULER") {
+        connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleRuler(bool)));
+    }
     else if(objectName() == "StatusBarButtonORTHO")  { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleOrtho(bool))); }
     else if(objectName() == "StatusBarButtonPOLAR")  { connect(this, SIGNAL(toggled(bool)), this, SLOT(togglePolar(bool))); }
     else if(objectName() == "StatusBarButtonQSNAP")  { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleQSnap(bool))); }
@@ -11509,20 +11252,17 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
 {
     QApplication::setOverrideCursor(Qt::ArrowCursor);
     QMenu menu_(this);
-    if(objectName() == "StatusBarButtonSNAP")
-    {
+    if (objectName() == "StatusBarButtonSNAP") {
         QAction* settingsSnapAction = new QAction(loadIcon(icon_gridsnapsettings), "&Settings...", &menu_);
         connect(settingsSnapAction, SIGNAL(triggered()), this, SLOT(settingsSnap()));
         menu_.addAction(settingsSnapAction);
     }
-    else if(objectName() == "StatusBarButtonGRID")
-    {
+    else if (objectName() == "StatusBarButtonGRID") {
         QAction* settingsGridAction = new QAction(loadIcon(icon_gridsettings), "&Settings...", &menu_);
         connect(settingsGridAction, SIGNAL(triggered()), this, SLOT(settingsGrid()));
         menu_.addAction(settingsGridAction);
     }
-    else if(objectName() == "StatusBarButtonRULER")
-    {
+    else if (objectName() == "StatusBarButtonRULER") {
         QAction* settingsRulerAction = new QAction(QIcon("icons/rulersettings.png"), "&Settings...", &menu_);
         connect(settingsRulerAction, SIGNAL(triggered()), this, SLOT(settingsRuler()));
         menu_.addAction(settingsRulerAction);
@@ -11553,9 +11293,8 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
     }
     else if(objectName() == "StatusBarButtonLWT")
     {
-        View* gview = mainWin->activeView();
-        if(gview)
-        {
+        View* gview = _mainWin->activeView();
+        if (gview) {
             QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu_);
             enableRealAction->setEnabled(!gview->isRealEnabled());
             connect(enableRealAction, SIGNAL(triggered()), this, SLOT(enableReal()));
@@ -11576,180 +11315,34 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
     statusbar->clearMessage();
 }
 
-void StatusBarButton::settingsSnap()
-{
-    _mainWin->settingsDialog("Snap");
-}
-
-void StatusBarButton::settingsGrid()
-{
-    _mainWin->settingsDialog("Grid/Ruler");
-}
-
-void StatusBarButton::settingsRuler()
-{
-    _mainWin->settingsDialog("Grid/Ruler");
-}
-
-void StatusBarButton::settingsOrtho()
-{
-    _mainWin->settingsDialog("Ortho/Polar");
-}
-
-void StatusBarButton::settingsPolar()
-{
-    mainWin->settingsDialog("Ortho/Polar");
-}
-
-void StatusBarButton::settingsQSnap()
-{
-    mainWin->settingsDialog("QuickSnap");
-}
-
-void StatusBarButton::settingsQTrack()
-{
-    mainWin->settingsDialog("QuickTrack");
-}
-
-void StatusBarButton::settingsLwt()
-{
-    mainWin->settingsDialog("LineWeight");
-}
-
-void StatusBarButton::toggleSnap(bool on)
-{
-    debug_message("StatusBarButton toggleSnap()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleSnap(on); }
-}
-
-void StatusBarButton::toggleGrid(bool on)
-{
-    debug_message("StatusBarButton toggleGrid()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->toggleGrid(on);
-    }
-}
-
-void StatusBarButton::toggleRuler(bool on)
-{
-    debug_message("StatusBarButton toggleRuler()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->toggleRuler(on);
-    }
-}
-
-void StatusBarButton::toggleOrtho(bool on)
-{
-    debug_message("StatusBarButton toggleOrtho()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleOrtho(on); }
-}
-
-void StatusBarButton::togglePolar(bool on)
-{
-    debug_message("StatusBarButton togglePolar()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->togglePolar(on); }
-}
-
-void StatusBarButton::toggleQSnap(bool on)
-{
-    debug_message("StatusBarButton toggleQSnap()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleQSnap(on); }
-}
-
-void StatusBarButton::toggleQTrack(bool on)
-{
-    debug_message("StatusBarButton toggleQTrack()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->toggleQTrack(on);
-    }
-}
-
-void StatusBarButton::toggleLwt(bool on)
-{
-    debug_message("StatusBarButton toggleLwt()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleLwt(on); }
-}
-
-void StatusBarButton::enableLwt()
-{
-    debug_message("StatusBarButton enableLwt()");
-    View* gview = mainWin->activeView();
-    if(gview)
-    {
-        if(!gview->isLwtEnabled())
-            gview->toggleLwt(1);
-    }
-}
-
-void StatusBarButton::disableLwt()
-{
-    debug_message("StatusBarButton disableLwt()");
-    View* gview = mainWin->activeView();
-    if(gview)
-    {
-        if(gview->isLwtEnabled())
-            gview->toggleLwt(0);
-    }
-}
-
-void StatusBarButton::enableReal()
-{
-    debug_message("StatusBarButton enableReal()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleReal(1); }
-}
-
-void StatusBarButton::disableReal()
-{
-    debug_message("StatusBarButton disableReal()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleReal(0); }
-}
-
 StatusBar::StatusBar(MainWindow* mw, QWidget *parent) : QStatusBar(parent)
 {
+    int i;
     this->setObjectName("StatusBar");
 
-    statusBarSnapButton = new StatusBarButton("SNAP", mw, this, this);
-    statusBarGridButton = new StatusBarButton("GRID", mw, this, this);
-    statusBarRulerButton = new StatusBarButton("RULER", mw, this, this);
-    statusBarOrthoButton = new StatusBarButton("ORTHO", mw, this, this);
-    statusBarPolarButton = new StatusBarButton("POLAR", mw, this, this);
-    statusBarQSnapButton = new StatusBarButton("QSNAP", mw, this, this);
-    statusBarQTrackButton = new StatusBarButton("QTRACK", mw, this, this);
-    statusBarLwtButton = new StatusBarButton("LWT", mw, this, this);
+    for (i=0; i<N_STATUS; i++) {
+        status_bar[i] = new StatusBarButton(status_bar_label[i], _mainWin, this, this);
+    }
     statusBarMouseCoord = new QLabel(this);
 
     statusBarMouseCoord->setMinimumWidth(300); // Must fit this text always
     statusBarMouseCoord->setMaximumWidth(300); // "+1.2345E+99, +1.2345E+99, +1.2345E+99"
 
     this->addWidget(statusBarMouseCoord);
-    this->addWidget(statusBarSnapButton);
-    this->addWidget(statusBarGridButton);
-    this->addWidget(statusBarRulerButton);
-    this->addWidget(statusBarOrthoButton);
-    this->addWidget(statusBarPolarButton);
-    this->addWidget(statusBarQSnapButton);
-    this->addWidget(statusBarQTrackButton);
-    this->addWidget(statusBarLwtButton);
+    for (i=0; i<N_STATUS; i++) {
+        this->addWidget(status_bar[i]);
+    }
 }
 
 void StatusBar::setMouseCoord(float x, float y)
 {
-    //TODO: set format from settings (Architectural, Decimal, Engineering, Fractional, Scientific)
+    /* TODO: set format from settings (Architectural, Decimal, Engineering, Fractional, Scientific) */
 
-    //Decimal
+    /* Decimal */
     statusBarMouseCoord->setText(QString().setNum(x, 'F', 4) + ", " + QString().setNum(y, 'F', 4)); //TODO: use precision from unit settings
 
-    //Scientific
-    //statusBarMouseCoord->setText(QString().setNum(x, 'E', 4) + ", " + QString().setNum(y, 'E', 4)); //TODO: use precision from unit settings
+    /* Scientific */
+    /* statusBarMouseCoord->setText(QString().setNum(x, 'E', 4) + ", " + QString().setNum(y, 'E', 4)); */
+    /* TODO: use precision from unit settings */
 }
 
