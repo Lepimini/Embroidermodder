@@ -192,14 +192,16 @@ int file_menu[] = {
     ACTION_print,
     ACTION_designdetails,
     -1,
-    ACTION_undo,
-    ACTION_redo,
-    -1,
     ACTION_help,
+    -1,
+    ACTION_exit,
     -2
 };
 
 int edit_menu[] = {
+    ACTION_undo,
+    ACTION_redo,
+    -1,
     ACTION_cut,
     ACTION_copy,
     ACTION_paste,

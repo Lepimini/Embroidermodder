@@ -12,48 +12,11 @@ QStringList opensave_recent_list_of_files;
 QString opensave_custom_filter;
 
 QToolBar* toolbar[10];
+QMenu* menu[10];
 
 QToolButton* toolButton[PROPERTY_EDITORS];
 QLineEdit* lineEdit[LINEEDIT_PROPERTY_EDITORS];
 QComboBox* comboBox[COMBOBOX_PROPERTY_EDITORS];
-
-QMenu* fileMenu;
-QMenu* editMenu;
-QMenu* viewMenu;
-QMenu* settingsMenu;
-QMenu* windowMenu;
-QMenu* helpMenu;
-QMenu* recentMenu;
-QMenu* zoomMenu;
-QMenu* panMenu;
-
-QToolButton* toolButtonArcCenterX;
-QToolButton* toolButtonArcCenterY;
-QToolButton* toolButtonArcRadius;
-QToolButton* toolButtonArcStartAngle;
-QToolButton* toolButtonArcEndAngle;
-QToolButton* toolButtonArcStartX;
-QToolButton* toolButtonArcStartY;
-QToolButton* toolButtonArcEndX;
-QToolButton* toolButtonArcEndY;
-QToolButton* toolButtonArcArea;
-QToolButton* toolButtonArcLength;
-QToolButton* toolButtonArcChord;
-QToolButton* toolButtonArcIncAngle;
-
-QLineEdit*   lineEditArcCenterX;
-QLineEdit*   lineEditArcCenterY;
-QLineEdit*   lineEditArcRadius;
-QLineEdit*   lineEditArcStartAngle;
-QLineEdit*   lineEditArcEndAngle;
-QLineEdit*   lineEditArcStartX;
-QLineEdit*   lineEditArcStartY;
-QLineEdit*   lineEditArcEndX;
-QLineEdit*   lineEditArcEndY;
-QLineEdit*   lineEditArcArea;
-QLineEdit*   lineEditArcLength;
-QLineEdit*   lineEditArcChord;
-QLineEdit*   lineEditArcIncAngle;
 
 QToolButton* toolButtonTextSingleContents;
 QToolButton* toolButtonTextSingleFont;
@@ -76,34 +39,6 @@ QComboBox* comboBoxGeneralLayer;
 QComboBox* comboBoxGeneralColor;
 QComboBox* comboBoxGeneralLineType;
 QComboBox* comboBoxGeneralLineWeight;
-
-QToolButton* toolButtonCircleCenterX;
-QToolButton* toolButtonCircleCenterY;
-QToolButton* toolButtonCircleRadius;
-QToolButton* toolButtonCircleDiameter;
-QToolButton* toolButtonCircleArea;
-QToolButton* toolButtonCircleCircumference;
-
-QLineEdit*   lineEditCircleCenterX;
-QLineEdit*   lineEditCircleCenterY;
-QLineEdit*   lineEditCircleRadius;
-QLineEdit*   lineEditCircleDiameter;
-QLineEdit*   lineEditCircleArea;
-QLineEdit*   lineEditCircleCircumference;
-
-QToolButton* toolButtonEllipseCenterX;
-QToolButton* toolButtonEllipseCenterY;
-QToolButton* toolButtonEllipseRadiusMajor;
-QToolButton* toolButtonEllipseRadiusMinor;
-QToolButton* toolButtonEllipseDiameterMajor;
-QToolButton* toolButtonEllipseDiameterMinor;
-
-QLineEdit*   lineEditEllipseCenterX;
-QLineEdit*   lineEditEllipseCenterY;
-QLineEdit*   lineEditEllipseRadiusMajor;
-QLineEdit*   lineEditEllipseRadiusMinor;
-QLineEdit*   lineEditEllipseDiameterMajor;
-QLineEdit*   lineEditEllipseDiameterMinor;
 
 QToolButton* toolButtonImageX;
 QToolButton* toolButtonImageY;
@@ -206,63 +141,44 @@ QString fieldNoText;
 QString fieldOnText;
 QString fieldOffText;
 
-QGroupBox*   groupBoxGeneral;
-QGroupBox*   groupBoxGeometryArc;
-QGroupBox*   groupBoxMiscArc;
 QToolButton* toolButtonArcClockwise;
-QComboBox*   comboBoxArcClockwise;
-QGroupBox*   groupBoxGeometryBlock;
+QComboBox* comboBoxArcClockwise;
+
+QGroupBox* groupBoxGeneral;
+QGroupBox* groupBoxGeometryArc;
+QGroupBox* groupBoxMiscArc;
+QGroupBox* groupBoxGeometryBlock;
+QGroupBox* groupBoxGeometryCircle;
+QGroupBox* groupBoxGeometryDimAligned;
+QGroupBox* groupBoxGeometryDimAngular;
+QGroupBox* groupBoxGeometryDimArcLength;
+QGroupBox* groupBoxGeometryDimDiameter;
+QGroupBox* groupBoxGeometryDimLeader;
+QGroupBox* groupBoxGeometryDimLinear;
+QGroupBox* groupBoxGeometryDimOrdinate;
+QGroupBox* groupBoxGeometryDimRadius;
+QGroupBox* groupBoxGeometryEllipse;
+QGroupBox* groupBoxGeometryImage;
+QGroupBox* groupBoxGeometryInfiniteLine;
+QGroupBox* groupBoxGeometryLine;
+QGroupBox* groupBoxGeometryPath;
+QGroupBox* groupBoxMiscPath;
+QGroupBox* groupBoxGeometryPoint;
+QGroupBox* groupBoxGeometryPolygon;
+QGroupBox* groupBoxGeometryPolyline;
+QGroupBox* groupBoxMiscPolyline;
+QGroupBox* groupBoxGeometryRay;
+QGroupBox* groupBoxGeometryRectangle;
+QGroupBox* groupBoxGeometryTextMulti;
+QGroupBox* groupBoxTextTextSingle;
+QGroupBox* groupBoxGeometryTextSingle;
+QGroupBox* groupBoxMiscTextSingle;
 
 QToolButton* toolButtonBlockX;
 QToolButton* toolButtonBlockY;
 
-QLineEdit*   lineEditBlockX;
-QLineEdit*   lineEditBlockY;
-
-QGroupBox*   groupBoxGeometryCircle;
-QGroupBox*   groupBoxGeometryDimAligned;
-
-//TODO: toolButtons and lineEdits for DimAligned
-QGroupBox*   groupBoxGeometryDimAngular;
-//TODO: toolButtons and lineEdits for DimAngular
-QGroupBox*   groupBoxGeometryDimArcLength;
-    //TODO: toolButtons and lineEdits for DimArcLength
-QGroupBox*   groupBoxGeometryDimDiameter;
-    //TODO: toolButtons and lineEdits for DimDiameter
-QGroupBox*   groupBoxGeometryDimLeader;
-    //TODO: toolButtons and lineEdits for DimLeader
-QGroupBox*   groupBoxGeometryDimLinear;
-    //TODO: toolButtons and lineEdits for DimLinear
-QGroupBox*   groupBoxGeometryDimOrdinate;
-    //TODO: toolButtons and lineEdits for DimOrdinate
-QGroupBox*   groupBoxGeometryDimRadius;
-    //TODO: toolButtons and lineEdits for DimRadius
-QGroupBox*   groupBoxGeometryEllipse;
-QGroupBox*   groupBoxGeometryImage;
-QGroupBox*   groupBoxGeometryInfiniteLine;
-
-QGroupBox*   groupBoxGeometryLine;
-
-QToolButton* toolButtonLineStartX;
-QToolButton* toolButtonLineStartY;
-QToolButton* toolButtonLineEndX;
-QToolButton* toolButtonLineEndY;
-QToolButton* toolButtonLineDeltaX;
-QToolButton* toolButtonLineDeltaY;
-QToolButton* toolButtonLineAngle;
-QToolButton* toolButtonLineLength;
-
-QLineEdit*   lineEditLineStartX;
-QLineEdit*   lineEditLineStartY;
-QLineEdit*   lineEditLineEndX;
-QLineEdit*   lineEditLineEndY;
-QLineEdit*   lineEditLineDeltaX;
-QLineEdit*   lineEditLineDeltaY;
-QLineEdit*   lineEditLineAngle;
-QLineEdit*   lineEditLineLength;
-
-    //Path
-QGroupBox*   groupBoxGeometryPath;
+QLineEdit* lineEditBlockX;
+QLineEdit* lineEditBlockY;
 
 QToolButton* toolButtonPathVertexNum;
 QToolButton* toolButtonPathVertexX;
@@ -271,31 +187,20 @@ QToolButton* toolButtonPathArea;
 QToolButton* toolButtonPathLength;
 
 QComboBox*   comboBoxPathVertexNum;
-QLineEdit*   lineEditPathVertexX;
-QLineEdit*   lineEditPathVertexY;
-QLineEdit*   lineEditPathArea;
-QLineEdit*   lineEditPathLength;
-
-QGroupBox*   groupBoxMiscPath;
+QLineEdit* lineEditPathVertexX;
+QLineEdit* lineEditPathVertexY;
+QLineEdit* lineEditPathArea;
+QLineEdit* lineEditPathLength;
 
 QToolButton* toolButtonPathClosed;
 
 QComboBox*   comboBoxPathClosed;
-
-    //Point
-QGroupBox*   groupBoxGeometryPoint;
 
 QToolButton* toolButtonPointX;
 QToolButton* toolButtonPointY;
 
 QLineEdit*   lineEditPointX;
 QLineEdit*   lineEditPointY;
-
-    //Polygon
-QGroupBox*   groupBoxGeometryPolygon;
-
-    //Polyline
-QGroupBox*   groupBoxGeometryPolyline;
 
 QToolButton* toolButtonPolylineVertexNum;
 QToolButton* toolButtonPolylineVertexX;
@@ -309,14 +214,9 @@ QLineEdit*   lineEditPolylineVertexY;
 QLineEdit*   lineEditPolylineArea;
 QLineEdit*   lineEditPolylineLength;
 
-QGroupBox*   groupBoxMiscPolyline;
-
 QToolButton* toolButtonPolylineClosed;
 
 QComboBox*   comboBoxPolylineClosed;
-
-/* Ray */
-QGroupBox* groupBoxGeometryRay;
 
 QToolButton* toolButtonRayX1;
 QToolButton* toolButtonRayY1;
@@ -332,54 +232,17 @@ QLineEdit*   lineEditRayY2;
 QLineEdit*   lineEditRayVectorX;
 QLineEdit*   lineEditRayVectorY;
 
-/* Rectangle */
-QGroupBox* groupBoxGeometryRectangle;
-
-QToolButton* toolButtonRectangleCorner1X;
-QToolButton* toolButtonRectangleCorner1Y;
-QToolButton* toolButtonRectangleCorner2X;
-QToolButton* toolButtonRectangleCorner2Y;
-QToolButton* toolButtonRectangleCorner3X;
-QToolButton* toolButtonRectangleCorner3Y;
-QToolButton* toolButtonRectangleCorner4X;
-QToolButton* toolButtonRectangleCorner4Y;
-QToolButton* toolButtonRectangleWidth;
-QToolButton* toolButtonRectangleHeight;
-QToolButton* toolButtonRectangleArea;
-
-QLineEdit* lineEditRectangleCorner1X;
-QLineEdit* lineEditRectangleCorner1Y;
-QLineEdit* lineEditRectangleCorner2X;
-QLineEdit* lineEditRectangleCorner2Y;
-QLineEdit*   lineEditRectangleCorner3X;
-QLineEdit*   lineEditRectangleCorner3Y;
-QLineEdit*   lineEditRectangleCorner4X;
-QLineEdit*   lineEditRectangleCorner4Y;
-QLineEdit*   lineEditRectangleWidth;
-QLineEdit*   lineEditRectangleHeight;
-QLineEdit*   lineEditRectangleArea;
-
-    //Text Multi
-QGroupBox*   groupBoxGeometryTextMulti;
-
 QToolButton* toolButtonTextMultiX;
 QToolButton* toolButtonTextMultiY;
 
 QLineEdit*   lineEditTextMultiX;
 QLineEdit*   lineEditTextMultiY;
 
-    //Text Single
-QGroupBox*   groupBoxTextTextSingle;
-
-QGroupBox*   groupBoxGeometryTextSingle;
-
 QToolButton* toolButtonTextSingleX;
 QToolButton* toolButtonTextSingleY;
 
 QLineEdit*   lineEditTextSingleX;
 QLineEdit*   lineEditTextSingleY;
-
-QGroupBox*   groupBoxMiscTextSingle;
 
 QToolButton* toolButtonTextSingleBackward;
 QToolButton* toolButtonTextSingleUpsideDown;
@@ -5003,11 +4866,6 @@ void PropertyEditor::togglePickAddMode()
     emit pickAddModeToggled();
 }
 
-char *translate(char *a)
-{
-    return a;
-}
-
 void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
 {
     selectedItemList = itemList;
@@ -5029,6 +4887,7 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
     for (i=0; i<31; i++) {
         numObjects[i] = 0;
     }
+    int numTypes = 0;
 
     foreach (QGraphicsItem* item, itemList) {
         if(!item) continue;
@@ -5037,14 +4896,15 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
         typeSet.insert(objType);
 
         if (objType > OBJ_TYPE_BASE && objType < OBJ_TYPE_UNKNOWN) {
+            if (numObjects[objType-OBJ_TYPE_BASE] == 0) {
+                numTypes++;
+            }
             numObjects[objType-OBJ_TYPE_BASE]++;
         }
         else {
             numObjects[OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE]++;
         }
     }
-
-    int numTypes = typeSet.size();
 
     //==================================================
     // Populate the selection comboBox
@@ -5075,172 +4935,188 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
         /* TODO: load data into the General field */
 
         int objType = item->type();
-        if(objType == OBJ_TYPE_ARC)
-        {
+        switch (objType) {
+        case OBJ_TYPE_ARC:
+            {
             ArcObject* obj = static_cast<ArcObject*>(item);
-            if(obj)
-            {
+            if (obj) {
                 QPointF p = obj->objectCenter();
-                updateLineEditNumIfVaries(lineEditArcCenterX, p.x(), 0);
-                updateLineEditNumIfVaries(lineEditArcCenterY, -p.y(), 0);
-                updateLineEditNumIfVaries(lineEditArcRadius, obj->objectRadius(), 0);
-                updateLineEditNumIfVaries(lineEditArcStartAngle, obj->objectStartAngle(), 1);
-                updateLineEditNumIfVaries(lineEditArcEndAngle, obj->objectEndAngle(), 1);
-                updateLineEditNumIfVaries(lineEditArcStartX, obj->objectStartPoint().x(), 0);
-                updateLineEditNumIfVaries(lineEditArcStartY, -obj->objectStartPoint().y(), 0);
-                updateLineEditNumIfVaries(lineEditArcEndX, obj->objectEndPoint().x(), 0);
-                updateLineEditNumIfVaries(lineEditArcEndY, -obj->objectEndPoint().y(), 0);
-                updateLineEditNumIfVaries(lineEditArcArea, obj->objectArea(), 0);
-                updateLineEditNumIfVaries(lineEditArcLength, obj->objectArcLength(), 0);
-                updateLineEditNumIfVaries(lineEditArcChord, obj->objectChord(), 0);
-                updateLineEditNumIfVaries(lineEditArcIncAngle, obj->objectIncludedAngle(), 1);
-                updateComboBoxBoolIfVaries(comboBoxArcClockwise, obj->objectClockwise(), 1);
+                updateLineEditNumIfVaries(lineEdit[ARC_CENTER_X], p.x(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_CENTER_Y], -p.y(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_RADIUS], obj->objectRadius(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_START_ANGLE], obj->objectStartAngle(), 1);
+                updateLineEditNumIfVaries(lineEdit[ARC_END_ANGLE], obj->objectEndAngle(), 1);
+                updateLineEditNumIfVaries(lineEdit[ARC_START_X], obj->objectStartPoint().x(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_START_Y], -obj->objectStartPoint().y(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_END_X], obj->objectEndPoint().x(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_END_Y], -obj->objectEndPoint().y(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_AREA], obj->objectArea(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_LENGTH], obj->objectArcLength(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_CHORD], obj->objectChord(), 0);
+                updateLineEditNumIfVaries(lineEdit[ARC_INC_ANGLE], obj->objectIncludedAngle(), 1);
+                updateComboBoxBoolIfVaries(comboBox[ARC_CLOCKWISE], obj->objectClockwise(), 1);
             }
-        }
-        else if(objType == OBJ_TYPE_BLOCK)
-        {
+            }
+            break;
+        case OBJ_TYPE_BLOCK:
+            {
             //TODO: load block data
-        }
-        else if(objType == OBJ_TYPE_CIRCLE)
-        {
+            }
+            break;
+        case OBJ_TYPE_CIRCLE:
+            {
             CircleObject* obj = static_cast<CircleObject*>(item);
-            if(obj)
-            {
+            if (obj) {
                 QPointF p = obj->objectCenter();
-                updateLineEditNumIfVaries(lineEditCircleCenterX, p.x(), 0);
-                updateLineEditNumIfVaries(lineEditCircleCenterY, -p.y(), 0);
-                updateLineEditNumIfVaries(lineEditCircleRadius, obj->objectRadius(), 0);
-                updateLineEditNumIfVaries(lineEditCircleDiameter, obj->objectDiameter(), 0);
-                updateLineEditNumIfVaries(lineEditCircleArea, obj->objectArea(), 0);
-                updateLineEditNumIfVaries(lineEditCircleCircumference, obj->objectCircumference(), 0);
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_CENTER_X], p.x(), 0);
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_CENTER_Y], -p.y(), 0);
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_RADIUS], obj->objectRadius(), 0);
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_DIAMETER], obj->objectDiameter(), 0);
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_AREA], obj->objectArea(), 0);
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_CIRCUMFERENCE], obj->objectCircumference(), 0);
             }
-        }
-        else if(objType == OBJ_TYPE_DIMALIGNED)
-        {
+            }
+            break;
+        case OBJ_TYPE_DIMALIGNED:
+            {
             /* TODO: load aligned dimension data */
-        }
-        else if(objType == OBJ_TYPE_DIMANGULAR)
-        {
+            }
+            break;
+        case OBJ_TYPE_DIMANGULAR:
+            {
             /* TODO: load angular dimension data */
-        }
-        else if(objType == OBJ_TYPE_DIMARCLENGTH)
-        {
+            }
+            break;
+        case OBJ_TYPE_DIMARCLENGTH:
+            {
             /* TODO: load arclength dimension data */
-        }
-        else if(objType == OBJ_TYPE_DIMDIAMETER)
-        {
+            }
+            break;
+        case OBJ_TYPE_DIMDIAMETER:
+            {
             /* TODO: load diameter dimension data */
-        }
-        else if(objType == OBJ_TYPE_DIMLEADER)
-        {
+            }
+            break;
+        case OBJ_TYPE_DIMLEADER:
+            {
             /* TODO: load leader dimension data */
-        }
-        else if(objType == OBJ_TYPE_DIMLINEAR)
-        {
-            //TODO: load linear dimension data
-        }
-        else if(objType == OBJ_TYPE_DIMORDINATE)
-        {
-            //TODO: load ordinate dimension data
-        }
-        else if(objType == OBJ_TYPE_DIMRADIUS)
-        {
-            //TODO: load radius dimension data
-        }
-        else if(objType == OBJ_TYPE_ELLIPSE)
-        {
+            }
+            break;
+        case OBJ_TYPE_DIMLINEAR:
+            {
+            /* TODO: load linear dimension data */
+            }
+            break;
+        case OBJ_TYPE_DIMORDINATE:
+            {
+            /* TODO: load ordinate dimension data */
+            }
+            break;
+        case OBJ_TYPE_DIMRADIUS:
+            {
+            /* TODO: load radius dimension data */
+            }
+            break;
+        case OBJ_TYPE_ELLIPSE:
+            {
             EllipseObject* obj = static_cast<EllipseObject*>(item);
-            if(obj)
-            {
+            if (obj) {
                 QPointF p = obj->objectCenter();
-                updateLineEditNumIfVaries(lineEditEllipseCenterX, p.x(), 0);
-                updateLineEditNumIfVaries(lineEditEllipseCenterY, -p.y(), 0);
-                updateLineEditNumIfVaries(lineEditEllipseRadiusMajor, obj->objectRadiusMajor(), 0);
-                updateLineEditNumIfVaries(lineEditEllipseRadiusMinor, obj->objectRadiusMinor(), 0);
-                updateLineEditNumIfVaries(lineEditEllipseDiameterMajor, obj->objectDiameterMajor(), 0);
-                updateLineEditNumIfVaries(lineEditEllipseDiameterMinor, obj->objectDiameterMinor(), 0);
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_CENTER_X], p.x(), 0);
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_CENTER_Y], -p.y(), 0);
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_RADIUS_MAJOR], obj->objectRadiusMajor(), 0);
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_RADIUS_MINOR], obj->objectRadiusMinor(), 0);
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_DIAMETER_MAJOR], obj->objectDiameterMajor(), 0);
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_DIAMETER_MINOR], obj->objectDiameterMinor(), 0);
             }
-        }
-        else if(objType == OBJ_TYPE_IMAGE)
-        {
-            //TODO: load image data
-        }
-        else if(objType == OBJ_TYPE_INFINITELINE)
-        {
-            //TODO: load infinite line data
-        }
-        else if(objType == OBJ_TYPE_LINE)
-        {
-            LineObject* obj = static_cast<LineObject*>(item);
-            if(obj)
+            }
+            break;
+        case OBJ_TYPE_IMAGE:
             {
-                updateLineEditNumIfVaries(lineEditLineStartX, obj->objectEndPoint1().x(), 0);
-                updateLineEditNumIfVaries(lineEditLineStartY, -obj->objectEndPoint1().y(), 0);
-                updateLineEditNumIfVaries(lineEditLineEndX, obj->objectEndPoint2().x(), 0);
-                updateLineEditNumIfVaries(lineEditLineEndY, -obj->objectEndPoint2().y(), 0);
-                updateLineEditNumIfVaries(lineEditLineDeltaX, obj->objectDeltaX(), 0);
-                updateLineEditNumIfVaries(lineEditLineDeltaY, -obj->objectDeltaY(), 0);
-                updateLineEditNumIfVaries(lineEditLineAngle, obj->objectAngle(), 1);
-                updateLineEditNumIfVaries(lineEditLineLength, obj->objectLength(), 0);
+            //TODO: load image data
             }
-        }
-        else if(objType == OBJ_TYPE_PATH)
+            break;
+        case OBJ_TYPE_INFINITELINE:
+            {
+            /* TODO: load infinite line data */
+            }
+            break;
+        case OBJ_TYPE_LINE:
+            {
+            LineObject* obj = static_cast<LineObject*>(item);
+            if (obj) {
+                updateLineEditNumIfVaries(lineEdit[LINE_START_X], obj->objectEndPoint1().x(), 0);
+                updateLineEditNumIfVaries(lineEdit[LINE_START_Y], -obj->objectEndPoint1().y(), 0);
+                updateLineEditNumIfVaries(lineEdit[LINE_END_X], obj->objectEndPoint2().x(), 0);
+                updateLineEditNumIfVaries(lineEdit[LINE_END_Y], -obj->objectEndPoint2().y(), 0);
+                updateLineEditNumIfVaries(lineEdit[LINE_DELTA_X], obj->objectDeltaX(), 0);
+                updateLineEditNumIfVaries(lineEdit[LINE_DELTA_Y], -obj->objectDeltaY(), 0);
+                updateLineEditNumIfVaries(lineEdit[LINE_ANGLE], obj->objectAngle(), 1);
+                updateLineEditNumIfVaries(lineEdit[LINE_LENGTH], obj->objectLength(), 0);
+            }
+            }
+            break;
+        case OBJ_TYPE_PATH:
         {
             //TODO: load path data
         }
-        else if(objType == OBJ_TYPE_POINT)
-        {
+            break;
+        case OBJ_TYPE_POINT:
+            {
             PointObject* obj = static_cast<PointObject*>(item);
-            if(obj)
-            {
-                updateLineEditNumIfVaries(lineEditPointX, obj->objectX(), 0);
-                updateLineEditNumIfVaries(lineEditPointY, -obj->objectY(), 0);
+            if (obj) {
+                updateLineEditNumIfVaries(lineEdit[POINT_X], obj->objectX(), 0);
+                updateLineEditNumIfVaries(lineEdit[POINT_Y], -obj->objectY(), 0);
             }
-        }
-        else if(objType == OBJ_TYPE_POLYGON)
-        {
-            //TODO: load polygon data
-        }
-        else if(objType == OBJ_TYPE_POLYLINE)
-        {
-            //TODO: load polyline data
-        }
-        else if(objType == OBJ_TYPE_RAY)
-        {
-            //TODO: load ray data
-        }
-        else if(objType == OBJ_TYPE_RECTANGLE)
-        {
-            RectObject* obj = static_cast<RectObject*>(item);
-            if(obj)
+            }
+            break;
+        case OBJ_TYPE_POLYGON:
             {
+            //TODO: load polygon data
+            }
+            break;
+        case OBJ_TYPE_POLYLINE:
+            {
+            //TODO: load polyline data
+            }
+            break;
+        case OBJ_TYPE_RAY:
+            {
+            //TODO: load ray data
+            }
+            break;
+        case OBJ_TYPE_RECTANGLE:
+            {
+            RectObject* obj = static_cast<RectObject*>(item);
+            if(obj) {
                 QPointF corn1 = obj->objectTopLeft();
                 QPointF corn2 = obj->objectTopRight();
                 QPointF corn3 = obj->objectBottomLeft();
                 QPointF corn4 = obj->objectBottomRight();
 
-                updateLineEditNumIfVaries(lineEditRectangleCorner1X, corn1.x(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleCorner1Y, -corn1.y(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleCorner2X, corn2.x(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleCorner2Y, -corn2.y(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleCorner3X, corn3.x(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleCorner3Y, -corn3.y(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleCorner4X, corn4.x(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleCorner4Y, -corn4.y(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleWidth, obj->objectWidth(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleHeight, -obj->objectHeight(), 0);
-                updateLineEditNumIfVaries(lineEditRectangleArea, obj->objectArea(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_X1], corn1.x(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_Y1], -corn1.y(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_X2], corn2.x(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_Y2], -corn2.y(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_X3], corn3.x(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_Y3], -corn3.y(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_X4], corn4.x(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_CORNER_Y4], -corn4.y(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_WIDTH], obj->objectWidth(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_HEIGHT], -obj->objectHeight(), 0);
+                updateLineEditNumIfVaries(lineEdit[RECT_AREA], obj->objectArea(), 0);
             }
-        }
-        else if(objType == OBJ_TYPE_TEXTMULTI)
-        {
-            //TODO: load multiline text data
-        }
-        else if(objType == OBJ_TYPE_TEXTSINGLE)
-        {
-            TextSingleObject* obj = static_cast<TextSingleObject*>(item);
-            if(obj)
+            }
+            break;
+        case OBJ_TYPE_TEXTMULTI:
             {
+            /* TODO: load multiline text data */
+            }
+            break;
+        case OBJ_TYPE_TEXTSINGLE:
+            {
+            TextSingleObject* obj = static_cast<TextSingleObject*>(item);
+            if (obj) {
                 updateLineEditStrIfVaries(lineEditTextSingleContents, obj->objText);
                 updateFontComboBoxStrIfVaries(comboBoxTextSingleFont, obj->objTextFont);
                 updateComboBoxStrIfVaries(comboBoxTextSingleJustify, obj->objTextJustify, obj->objectTextJustifyList());
@@ -5251,6 +5127,10 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
                 updateComboBoxBoolIfVaries(comboBoxTextSingleBackward, obj->obj_text.backward, 1);
                 updateComboBoxBoolIfVaries(comboBoxTextSingleUpsideDown, obj->obj_text.upsidedown, 1);
             }
+            }
+            break;
+        default:
+            break;
         }
     }
 
@@ -5369,16 +5249,27 @@ void PropertyEditor::updateComboBoxBoolIfVaries(QComboBox* comboBox, bool val, b
 void PropertyEditor::showGroups(int objType)
 {
     if (objType == OBJ_TYPE_ARC) {
-        groupBoxGeometryArc->show(); groupBoxMiscArc->show();
+        groupBoxGeometryArc->show();
+        groupBoxMiscArc->show();
     }
     else if(objType == OBJ_TYPE_BLOCK) {
         groupBoxGeometryBlock->show();
     }
-    else if(objType == OBJ_TYPE_CIRCLE)       { groupBoxGeometryCircle->show(); }
-    else if(objType == OBJ_TYPE_DIMALIGNED)   { groupBoxGeometryDimAligned->show(); }
-    else if(objType == OBJ_TYPE_DIMANGULAR)   { groupBoxGeometryDimAngular->show(); }
-    else if(objType == OBJ_TYPE_DIMARCLENGTH) { groupBoxGeometryDimArcLength->show(); }
-    else if(objType == OBJ_TYPE_DIMDIAMETER)  { groupBoxGeometryDimDiameter->show(); }
+    else if(objType == OBJ_TYPE_CIRCLE) {
+        groupBoxGeometryCircle->show();
+    }
+    else if(objType == OBJ_TYPE_DIMALIGNED) {
+        groupBoxGeometryDimAligned->show();
+    }
+    else if(objType == OBJ_TYPE_DIMANGULAR) {
+        groupBoxGeometryDimAngular->show();
+    }
+    else if(objType == OBJ_TYPE_DIMARCLENGTH) {
+        groupBoxGeometryDimArcLength->show();
+    }
+    else if(objType == OBJ_TYPE_DIMDIAMETER) {
+        groupBoxGeometryDimDiameter->show();
+    }
     else if(objType == OBJ_TYPE_DIMLEADER)    { groupBoxGeometryDimLeader->show(); }
     else if(objType == OBJ_TYPE_DIMLINEAR)    { groupBoxGeometryDimLinear->show(); }
     else if(objType == OBJ_TYPE_DIMORDINATE)  { groupBoxGeometryDimOrdinate->show(); }
@@ -5405,7 +5296,7 @@ void PropertyEditor::showOneType(int index)
 
 void PropertyEditor::hideAllGroups()
 {
-    //NOTE: General group will never be hidden
+    /* NOTE: General group will never be hidden */
     groupBoxGeometryArc->hide();
     groupBoxMiscArc->hide();
     groupBoxGeometryBlock->hide();
@@ -5439,146 +5330,18 @@ void PropertyEditor::hideAllGroups()
 
 void PropertyEditor::clearAllFields()
 {
-    //General
-    comboBoxGeneralLayer->clear();
-    comboBoxGeneralColor->clear();
-    comboBoxGeneralLineType->clear();
-    comboBoxGeneralLineWeight->clear();
+    int i;
+    for (i=0; i<COMBOBOX_PROPERTY_EDITORS; i++) {
+        comboBox[i]->clear();
+    }
+    for (i=0; i<LINEEDIT_PROPERTY_EDITORS; i++) {
+        lineEdit[i]->clear();
+    }
 
-    //Arc
-    lineEditArcCenterX->clear();
-    lineEditArcCenterY->clear();
-    lineEditArcRadius->clear();
-    lineEditArcStartAngle->clear();
-    lineEditArcEndAngle->clear();
-    lineEditArcStartX->clear();
-    lineEditArcStartY->clear();
-    lineEditArcEndX->clear();
-    lineEditArcEndY->clear();
-    lineEditArcArea->clear();
-    lineEditArcLength->clear();
-    lineEditArcChord->clear();
-    lineEditArcIncAngle->clear();
-    comboBoxArcClockwise->clear();
-
-    //Block
-    lineEditBlockX->clear();
-    lineEditBlockY->clear();
-
-    //Circle
-    lineEditCircleCenterX->clear();
-    lineEditCircleCenterY->clear();
-    lineEditCircleRadius->clear();
-    lineEditCircleDiameter->clear();
-    lineEditCircleArea->clear();
-    lineEditCircleCircumference->clear();
-
-    /* TODO: DimAligned */
-    /* TODO: DimAngular */
-    /* TODO: DimArcLength */
-    /* TODO: DimDiameter */
-    /* TODO: DimLeader */
-    /* TODO: DimLinear */
-    /* TODO: DimOrdinate */
-    /* TODO: DimRadius */
-
-    //Ellipse
-    lineEditEllipseCenterX->clear();
-    lineEditEllipseCenterY->clear();
-    lineEditEllipseRadiusMajor->clear();
-    lineEditEllipseRadiusMinor->clear();
-    lineEditEllipseDiameterMajor->clear();
-    lineEditEllipseDiameterMinor->clear();
-
-    //Image
-    lineEditImageX->clear();
-    lineEditImageY->clear();
-    lineEditImageWidth->clear();
-    lineEditImageHeight->clear();
-
-    //Infinite Line
-    lineEditInfiniteLineX1->clear();
-    lineEditInfiniteLineY1->clear();
-    lineEditInfiniteLineX2->clear();
-    lineEditInfiniteLineY2->clear();
-    lineEditInfiniteLineVectorX->clear();
-    lineEditInfiniteLineVectorY->clear();
-
-    //Line
-    lineEditLineStartX->clear();
-    lineEditLineStartY->clear();
-    lineEditLineEndX->clear();
-    lineEditLineEndY->clear();
-    lineEditLineDeltaX->clear();
-    lineEditLineDeltaY->clear();
-    lineEditLineAngle->clear();
-    lineEditLineLength->clear();
-
-    //Path
-    comboBoxPathVertexNum->clear();
-    lineEditPathVertexX->clear();
-    lineEditPathVertexY->clear();
-    lineEditPathArea->clear();
-    lineEditPathLength->clear();
-    comboBoxPathClosed->clear();
-
-    //Point
-    lineEditPointX->clear();
-    lineEditPointY->clear();
-
-    //Polygon
-    lineEditPolygonCenterX->clear();
-    lineEditPolygonCenterY->clear();
-    lineEditPolygonRadiusVertex->clear();
-    lineEditPolygonRadiusSide->clear();
-    lineEditPolygonDiameterVertex->clear();
-    lineEditPolygonDiameterSide->clear();
-    lineEditPolygonInteriorAngle->clear();
-
-    //Polyline
-    comboBoxPolylineVertexNum->clear();
-    lineEditPolylineVertexX->clear();
-    lineEditPolylineVertexY->clear();
-    lineEditPolylineArea->clear();
-    lineEditPolylineLength->clear();
-    comboBoxPolylineClosed->clear();
-
-    //Ray
-    lineEditRayX1->clear();
-    lineEditRayY1->clear();
-    lineEditRayX2->clear();
-    lineEditRayY2->clear();
-    lineEditRayVectorX->clear();
-    lineEditRayVectorY->clear();
-
-    //Rectangle
-    lineEditRectangleCorner1X->clear();
-    lineEditRectangleCorner1Y->clear();
-    lineEditRectangleCorner2X->clear();
-    lineEditRectangleCorner2Y->clear();
-    lineEditRectangleCorner3X->clear();
-    lineEditRectangleCorner3Y->clear();
-    lineEditRectangleCorner4X->clear();
-    lineEditRectangleCorner4Y->clear();
-    lineEditRectangleWidth->clear();
-    lineEditRectangleHeight->clear();
-    lineEditRectangleArea->clear();
-
-    //Text Multi
-    lineEditTextMultiX->clear();
-    lineEditTextMultiY->clear();
-
-    //Text Single
-    lineEditTextSingleContents->clear();
-    comboBoxTextSingleFont->removeItem(comboBoxTextSingleFont->findText(fieldVariesText)); //NOTE: Do not clear comboBoxTextSingleFont
+    /* Text Single */
+    comboBoxTextSingleFont->removeItem(comboBoxTextSingleFont->findText(fieldVariesText));
+    /* NOTE: Do not clear comboBoxTextSingleFont */
     comboBoxTextSingleFont->setProperty("FontFamily", "");
-    comboBoxTextSingleJustify->clear();
-    lineEditTextSingleHeight->clear();
-    lineEditTextSingleRotation->clear();
-    lineEditTextSingleX->clear();
-    lineEditTextSingleY->clear();
-    comboBoxTextSingleBackward->clear();
-    comboBoxTextSingleUpsideDown->clear();
 }
 
 QGroupBox* PropertyEditor::createGroupBoxGeneral()
@@ -5820,7 +5583,7 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                     tempArcObj = static_cast<ArcObject*>(item);
                     if (tempArcObj) {
                         QPointF p = tempArcObj->objectCenter();
-                        p.setX(lineEditArcCenterX->text().toDouble());
+                        p.setX(lineEdit[ARC_CENTER_X]->text().toDouble());
                         tempArcObj->setPos(p);
                     }
                 }
@@ -5828,21 +5591,27 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                     tempArcObj = static_cast<ArcObject*>(item);
                     if (tempArcObj) {
                         QPointF p = tempArcObj->objectCenter();
-                        p.setY(lineEditArcCenterY->text().toDouble());
+                        p.setY(lineEdit[ARC_CENTER_Y]->text().toDouble());
                         tempArcObj->setPos(p);
                     }
                 }
                 if(objName == "lineEditArcRadius") {
                     tempArcObj = static_cast<ArcObject*>(item);
-                    if(tempArcObj) { tempArcObj->setObjectRadius(lineEditArcRadius->text().toDouble()); }
+                    if (tempArcObj) {
+                        tempArcObj->setObjectRadius(lineEdit[ARC_RADIUS]->text().toDouble());
+                    }
                 }
                 if(objName == "lineEditArcStartAngle") {
                     tempArcObj = static_cast<ArcObject*>(item);
-                    if(tempArcObj) { tempArcObj->setObjectStartAngle(lineEditArcStartAngle->text().toDouble()); }
+                    if (tempArcObj) {
+                        tempArcObj->setObjectStartAngle(lineEdit[ARC_START_ANGLE]->text().toDouble());
+                    }
                 }
                 if(objName == "lineEditArcEndAngle") {
                     tempArcObj = static_cast<ArcObject*>(item);
-                    if(tempArcObj) { tempArcObj->setObjectEndAngle(lineEditArcEndAngle->text().toDouble()); }
+                    if (tempArcObj) {
+                        tempArcObj->setObjectEndAngle(lineEdit[ARC_END_ANGLE]->text().toDouble());
+                    }
                 }
                 break;
             case OBJ_TYPE_BLOCK: //TODO: field editing
@@ -5852,7 +5621,7 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                     tempCircleObj = static_cast<CircleObject*>(item);
                     if (tempCircleObj) {
                         QPointF p = tempCircleObj->objectCenter();
-                        p.setX(lineEditArcCenterX->text().toDouble());
+                        p.setX(lineEdit[CIRCLE_CENTER_X]->text().toDouble());
                         tempCircleObj->setPos(p);
                     }
                 }
@@ -5860,23 +5629,31 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                     tempCircleObj = static_cast<CircleObject*>(item);
                     if (tempCircleObj) {
                         QPointF p = tempCircleObj->objectCenter();
-                        p.setY(lineEditArcCenterY->text().toDouble());
+                        p.setY(lineEdit[CIRCLE_CENTER_Y]->text().toDouble());
                         tempCircleObj->setPos(p);
                     }
                 }
                 if(objName == "lineEditCircleRadius") {
                     tempCircleObj = static_cast<CircleObject*>(item);
-                    if(tempCircleObj) { tempCircleObj->setObjectRadius(lineEditCircleRadius->text().toDouble()); } }
+                    if (tempCircleObj) {
+                        tempCircleObj->setObjectRadius(lineEdit[CIRCLE_RADIUS]->text().toDouble());
+                    }
+                }
                 if(objName == "lineEditCircleDiameter") {
                     tempCircleObj = static_cast<CircleObject*>(item);
-                    if(tempCircleObj) { tempCircleObj->setObjectDiameter(lineEditCircleDiameter->text().toDouble()); } }
+                    if (tempCircleObj) {
+                        tempCircleObj->setObjectDiameter(lineEdit[CIRCLE_DIAMETER]->text().toDouble());
+                    }
+                }
                 if(objName == "lineEditCircleArea") {
                     tempCircleObj = static_cast<CircleObject*>(item);
-                    if(tempCircleObj) { tempCircleObj->setObjectArea(lineEditCircleArea->text().toDouble()); }
+                    if(tempCircleObj) { tempCircleObj->setObjectArea(lineEdit[CIRCLE_AREA]->text().toDouble()); }
                 }
                 if(objName == "lineEditCircleCircumference") {
                     tempCircleObj = static_cast<CircleObject*>(item);
-                    if(tempCircleObj) { tempCircleObj->setObjectCircumference(lineEditCircleCircumference->text().toDouble()); }
+                    if (tempCircleObj) {
+                        tempCircleObj->setObjectCircumference(lineEdit[CIRCLE_CIRCUMFERENCE]->text().toDouble());
+                    }
                 }
                 break;
             case OBJ_TYPE_DIMALIGNED: //TODO: field editing
@@ -5900,7 +5677,7 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                     tempEllipseObj = static_cast<EllipseObject*>(item);
                     if (tempEllipseObj) {
                         QPointF p = tempCircleObj->objectCenter();
-                        p.setX(lineEditArcCenterX->text().toDouble());
+                        p.setX(lineEdit[ELLIPSE_CENTER_X]->text().toDouble());
                         tempCircleObj->setPos(p);
                     }
                 }
@@ -5908,25 +5685,33 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                     tempEllipseObj = static_cast<EllipseObject*>(item);
                     if (tempEllipseObj) {
                         QPointF p = tempCircleObj->objectCenter();
-                        p.setY(lineEditArcCenterY->text().toDouble());
+                        p.setY(lineEdit[ELLIPSE_CENTER_Y]->text().toDouble());
                         tempCircleObj->setPos(p);
                     }
                 }
                 if(objName == "lineEditEllipseRadiusMajor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item);
-                    if(tempEllipseObj) { tempEllipseObj->setObjectRadiusMajor(lineEditEllipseRadiusMajor->text().toDouble()); }
+                    if (tempEllipseObj) {
+                        tempEllipseObj->setObjectRadiusMajor(lineEdit[ELLIPSE_RADIUS_MAJOR]->text().toDouble());
+                    }
                 }
                 if(objName == "lineEditEllipseRadiusMinor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item);
-                    if(tempEllipseObj) { tempEllipseObj->setObjectRadiusMinor(lineEditEllipseRadiusMinor->text().toDouble()); }
+                    if (tempEllipseObj) {
+                        tempEllipseObj->setObjectRadiusMinor(lineEdit[ELLIPSE_RADIUS_MINOR]->text().toDouble());
+                    }
                 }
                 if(objName == "lineEditEllipseDiameterMajor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item);
-                    if(tempEllipseObj) { tempEllipseObj->setObjectDiameterMajor(lineEditEllipseDiameterMajor->text().toDouble()); }
+                    if (tempEllipseObj) {
+                        tempEllipseObj->setObjectDiameterMajor(lineEdit[ELLIPSE_DIAMETER_MAJOR]->text().toDouble());
+                    }
                 }
                 if(objName == "lineEditEllipseDiameterMinor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item);
-                    if(tempEllipseObj) { tempEllipseObj->setObjectDiameterMinor(lineEditEllipseDiameterMinor->text().toDouble()); }
+                    if (tempEllipseObj) {
+                        tempEllipseObj->setObjectDiameterMinor(lineEdit[ELLIPSE_DIAMETER_MINOR]->text().toDouble());
+                    }
                 }
                 break;
             case OBJ_TYPE_IMAGE: //TODO: field editing
@@ -5937,25 +5722,25 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                 if(objName == "lineEditLineStartX") {
                     tempLineObj = static_cast<LineObject*>(item);
                     if (tempLineObj) {
-                        tempLineObj->setObjectX1(lineEditLineStartX->text().toDouble());
+                        tempLineObj->setObjectX1(lineEdit[LINE_START_X]->text().toDouble());
                     }
                 }
                 if(objName == "lineEditLineStartY") {
                     tempLineObj = static_cast<LineObject*>(item);
                     if (tempLineObj) {
-                        tempLineObj->setObjectY1(-lineEditLineStartY->text().toDouble());
+                        tempLineObj->setObjectY1(-lineEdit[LINE_START_Y]->text().toDouble());
                     }
                 }
                 if(objName == "lineEditLineEndX") {
                     tempLineObj = static_cast<LineObject*>(item);
                     if (tempLineObj) {
-                        tempLineObj->setObjectX2(lineEditLineEndX->text().toDouble());
+                        tempLineObj->setObjectX2(lineEdit[LINE_END_X]->text().toDouble());
                     }
                 }
                 if(objName == "lineEditLineEndY") {
                     tempLineObj = static_cast<LineObject*>(item);
                     if (tempLineObj) {
-                        tempLineObj->setObjectY2(-lineEditLineEndY->text().toDouble());
+                        tempLineObj->setObjectY2(-lineEdit[LINE_END_Y]->text().toDouble());
                     }
                 }
                 break;
@@ -5965,13 +5750,13 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                 if(objName == "lineEditPointX") {
                     tempPointObj = static_cast<PointObject*>(item);
                     if (tempPointObj) {
-                        tempPointObj->setObjectX(lineEditPointX->text().toDouble());
+                        tempPointObj->setObjectX(lineEdit[POINT_X]->text().toDouble());
                     }
                 }
                 if(objName == "lineEditPointY") {
                     tempPointObj = static_cast<PointObject*>(item);
                     if (tempPointObj) {
-                        tempPointObj->setObjectY(-lineEditPointY->text().toDouble());
+                        tempPointObj->setObjectY(-lineEdit[POINT_Y]->text().toDouble());
                     }
                 }
                 break;
@@ -5988,7 +5773,10 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
             case OBJ_TYPE_TEXTSINGLE: //TODO: field editing
                 if(objName == "lineEditTextSingleContents") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item);
-                    if(tempTextSingleObj) { tempTextSingleObj->setObjectText(lineEditTextSingleContents->text()); } }
+                    if (tempTextSingleObj) {
+                        tempTextSingleObj->setObjectText(lineEditTextSingleContents->text());
+                    }
+                }
                 if(objName == "comboBoxTextSingleFont") {
                     if(comboBoxTextSingleFont->currentText() == fieldVariesText) { break; }
                     tempTextSingleObj = static_cast<TextSingleObject*>(item);
@@ -6010,7 +5798,10 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
                 }
                 if(objName == "lineEditTextSingleRotation") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item);
-                    if(tempTextSingleObj) { tempTextSingleObj->setRotation(-lineEditTextSingleRotation->text().toDouble()); } }
+                    if (tempTextSingleObj) {
+                        tempTextSingleObj->setRotation(-lineEditTextSingleRotation->text().toDouble());
+                    }
+                }
                 if(objName == "lineEditTextSingleX") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item);
                     if(tempTextSingleObj) { tempTextSingleObj->setObjectX(lineEditTextSingleX->text().toDouble()); } }
@@ -6059,7 +5850,8 @@ ArcObject::ArcObject(ArcObject* obj, QGraphicsItem* parent) : BaseObject(parent)
     debug_message("ArcObject Constructor()");
     if(obj)
     {
-        init(obj->objectStartPoint().x(), obj->objectStartPoint().y(), obj->objectMidPoint().x(), obj->objectMidPoint().y(), obj->objectEndPoint().x(), obj->objectEndPoint().y(), obj->objectColorRGB(), Qt::SolidLine); //TODO: getCurrentLineType
+        init(obj->objectStartPoint().x(), obj->objectStartPoint().y(), obj->objectMidPoint().x(), obj->objectMidPoint().y(), obj->objectEndPoint().x(), obj->objectEndPoint().y(), obj->objectColorRGB(), Qt::SolidLine);
+        /* TODO: getCurrentLineType */
         setRotation(obj->rotation());
     }
 }
@@ -8577,29 +8369,6 @@ QPainterPath RectObject::objectSavePath() const
     return trans.map(path);
 }
 
-//NOTE: This function should be used to interpret various object types and save them as polylines for stitchOnly formats.
-void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight)
-{
-    float startX = objPos.x();
-    float startY = objPos.y();
-    EmbArray* pointList = embArray_create(EMB_POINT);
-    QPainterPath::Element element;
-    for(int i = 0; i < objPath.elementCount(); ++i)
-    {
-        element = objPath.elementAt(i);
-        EmbPointObject a;
-        a.point.x = element.x + startX;
-        a.point.y = -(element.y + startY);
-        embArray_addPoint(pointList, &a);
-    }
-    EmbPolylineObject* polyObject;
-    polyObject = (EmbPolylineObject *) malloc(sizeof(EmbPolylineObject));
-    polyObject->pointList = pointList;
-    polyObject->color = embColor_make(color.red(), color.green(), color.blue());
-    polyObject->lineType = 1; //TODO: proper lineType
-    embPattern_addPolylineObjectAbs(pattern, polyObject);
-}
-
 
 TextSingleObject::TextSingleObject(const QString& str, float x, float y, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent)
 {
@@ -9665,16 +9434,16 @@ MainWindow::MainWindow() : QMainWindow(0)
     //Init
     mainWin = this;
     //Menus
-    fileMenu = new QMenu(tr("&File"), this);
-    editMenu = new QMenu(tr("&Edit"), this);
-    viewMenu = new QMenu(tr("&View"), this);
-    settingsMenu = new QMenu(tr("&Settings"), this);
-    windowMenu = new QMenu(tr("&Window"), this);
-    helpMenu = new QMenu(tr("&Help"), this);
+    menu[FILE_MENU] = new QMenu(tr("&File"), this);
+    menu[EDIT_MENU] = new QMenu(tr("&Edit"), this);
+    menu[VIEW_MENU] = new QMenu(tr("&View"), this);
+    menu[SETTINGS_MENU] = new QMenu(tr("&Settings"), this);
+    menu[WINDOW_MENU] = new QMenu(tr("&Window"), this);
+    menu[HELP_MENU] = new QMenu(tr("&Help"), this);
     //SubMenus
-    recentMenu = new QMenu(tr("Open &Recent"), this);
-    zoomMenu = new QMenu(tr("&Zoom"), this);
-    panMenu = new QMenu(tr("&Pan"), this);
+    menu[RECENT_MENU] = new QMenu(tr("Open &Recent"), this);
+    menu[ZOOM_MENU] = new QMenu(tr("&Zoom"), this);
+    menu[PAN_MENU] = new QMenu(tr("&Pan"), this);
     //Toolbars
     for (i=0; i<n_toolbars; i++) {
         toolbar[i] = addToolBar(tr(toolbar_label[i]));
@@ -9782,113 +9551,113 @@ MainWindow::MainWindow() : QMainWindow(0)
     debug_message("MainWindow createAllMenus()");
     
     debug_message("MainWindow createFileMenu()");
-    menuBar()->addMenu(fileMenu);
-    fileMenu->addAction(actionHash.value(ACTION_new));
-    fileMenu->addSeparator();
-    fileMenu->addAction(actionHash.value(ACTION_open));
+    menuBar()->addMenu(menu[FILE_MENU]);
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_new));
+    menu[FILE_MENU]->addSeparator();
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_open));
 
-    fileMenu->addMenu(recentMenu);
-    connect(recentMenu, SIGNAL(aboutToShow()), this, SLOT(recentMenuAboutToShow()));
-    //Do not allow the Recent Menu to be torn off. It's a pain in the ass to maintain.
-    recentMenu->setTearOffEnabled(0);
+    menu[FILE_MENU]->addMenu(menu[RECENT_MENU]);
+    connect(menu[RECENT_MENU], SIGNAL(aboutToShow()), this, SLOT(recentMenuAboutToShow()));
+    /* Do not allow the Recent Menu to be torn off. It's a pain in the ass to maintain. */
+    menu[RECENT_MENU]->setTearOffEnabled(0);
 
-    fileMenu->addSeparator();
-    fileMenu->addAction(actionHash.value(ACTION_save));
-    fileMenu->addAction(actionHash.value(ACTION_saveas));
-    fileMenu->addSeparator();
-    fileMenu->addAction(actionHash.value(ACTION_print));
-    fileMenu->addSeparator();
-    fileMenu->addAction(actionHash.value(ACTION_windowclose));
-    fileMenu->addSeparator();
-    fileMenu->addAction(actionHash.value(ACTION_designdetails));
-    fileMenu->addSeparator();
+    menu[FILE_MENU]->addSeparator();
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_save));
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_saveas));
+    menu[FILE_MENU]->addSeparator();
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_print));
+    menu[FILE_MENU]->addSeparator();
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_windowclose));
+    menu[FILE_MENU]->addSeparator();
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_designdetails));
+    menu[FILE_MENU]->addSeparator();
 
-    fileMenu->addAction(actionHash.value(ACTION_exit));
-    fileMenu->setTearOffEnabled(0);
-
-    /* ---------------------------------------------------------------------- */
-
-    debug_message("MainWindow createEditMenu()");
-    menuBar()->addMenu(editMenu);
-    editMenu->addAction(actionHash.value(ACTION_undo));
-    editMenu->addAction(actionHash.value(ACTION_redo));
-    editMenu->addSeparator();
-    editMenu->addAction(actionHash.value(ACTION_cut));
-    editMenu->addAction(actionHash.value(ACTION_copy));
-    editMenu->addAction(actionHash.value(ACTION_paste));
-    editMenu->addSeparator();
-    editMenu->setTearOffEnabled(1);
+    menu[FILE_MENU]->addAction(actionHash.value(ACTION_exit));
+    menu[FILE_MENU]->setTearOffEnabled(0);
 
     /* ---------------------------------------------------------------------- */
 
-    debug_message("MainWindow createViewMenu()");
+    debug_message("MainWindow createmenu[EDIT_MENU]()");
+    menuBar()->addMenu(menu[EDIT_MENU]);
+    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_undo));
+    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_redo));
+    menu[EDIT_MENU]->addSeparator();
+    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_cut));
+    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_copy));
+    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_paste));
+    menu[EDIT_MENU]->addSeparator();
+    menu[EDIT_MENU]->setTearOffEnabled(1);
 
-    menuBar()->addMenu(viewMenu);
-    viewMenu->addSeparator();
-    viewMenu->addMenu(zoomMenu);
-    zoomMenu->setIcon(loadIcon(icon_zoom));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomrealtime));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomprevious));
-    zoomMenu->addSeparator();
-    zoomMenu->addAction(actionHash.value(ACTION_zoomwindow));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomdynamic));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomscale));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomcenter));
-    zoomMenu->addSeparator();
-    zoomMenu->addAction(actionHash.value(ACTION_zoomin));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomout));
-    zoomMenu->addSeparator();
-    zoomMenu->addAction(actionHash.value(ACTION_zoomselected));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomall));
-    zoomMenu->addAction(actionHash.value(ACTION_zoomextents));
-    viewMenu->addMenu(panMenu);
-    panMenu->setIcon(loadIcon(icon_pan));
-    panMenu->addAction(actionHash.value(ACTION_panrealtime));
-    panMenu->addAction(actionHash.value(ACTION_panpoint));
-    panMenu->addSeparator();
-    panMenu->addAction(actionHash.value(ACTION_panleft));
-    panMenu->addAction(actionHash.value(ACTION_panright));
-    panMenu->addAction(actionHash.value(ACTION_panup));
-    panMenu->addAction(actionHash.value(ACTION_pandown));
-    viewMenu->addSeparator();
-    viewMenu->addAction(actionHash.value(ACTION_day));
-    viewMenu->addAction(actionHash.value(ACTION_night));
-    viewMenu->addSeparator();
+    /* ---------------------------------------------------------------------- */
 
-    viewMenu->setTearOffEnabled(1);
-    zoomMenu->setTearOffEnabled(1);
-    panMenu->setTearOffEnabled(1);
+    debug_message("MainWindow createmenu[VIEW_MENU]()");
+
+    menuBar()->addMenu(menu[VIEW_MENU]);
+    menu[VIEW_MENU]->addSeparator();
+    menu[VIEW_MENU]->addMenu(menu[ZOOM_MENU]);
+    menu[ZOOM_MENU]->setIcon(loadIcon(icon_zoom));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomrealtime));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomprevious));
+    menu[ZOOM_MENU]->addSeparator();
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomwindow));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomdynamic));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomscale));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomcenter));
+    menu[ZOOM_MENU]->addSeparator();
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomin));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomout));
+    menu[ZOOM_MENU]->addSeparator();
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomselected));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomall));
+    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomextents));
+    menu[VIEW_MENU]->addMenu(menu[PAN_MENU]);
+    menu[PAN_MENU]->setIcon(loadIcon(icon_pan));
+    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panrealtime));
+    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panpoint));
+    menu[PAN_MENU]->addSeparator();
+    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panleft));
+    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panright));
+    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panup));
+    menu[PAN_MENU]->addAction(actionHash.value(ACTION_pandown));
+    menu[VIEW_MENU]->addSeparator();
+    menu[VIEW_MENU]->addAction(actionHash.value(ACTION_day));
+    menu[VIEW_MENU]->addAction(actionHash.value(ACTION_night));
+    menu[VIEW_MENU]->addSeparator();
+
+    menu[VIEW_MENU]->setTearOffEnabled(1);
+    menu[ZOOM_MENU]->setTearOffEnabled(1);
+    menu[PAN_MENU]->setTearOffEnabled(1);
 
     /* ---------------------------------------------------------------------- */
 
     debug_message("MainWindow createSettingsMenu()");
-    menuBar()->addMenu(settingsMenu);
-    settingsMenu->addAction(actionHash.value(ACTION_settingsdialog));
-    settingsMenu->addSeparator();
-    settingsMenu->setTearOffEnabled(1);
+    menuBar()->addMenu(menu[SETTINGS_MENU]);
+    menu[SETTINGS_MENU]->addAction(actionHash.value(ACTION_settingsdialog));
+    menu[SETTINGS_MENU]->addSeparator();
+    menu[SETTINGS_MENU]->setTearOffEnabled(1);
 
     /* ---------------------------------------------------------------------- */
 
     debug_message("MainWindow createWindowMenu()");
-    menuBar()->addMenu(windowMenu);
-    connect(windowMenu, SIGNAL(aboutToShow()), this, SLOT(windowMenuAboutToShow()));
+    menuBar()->addMenu(menu[WINDOW_MENU]);
+    connect(menu[WINDOW_MENU], SIGNAL(aboutToShow()), this, SLOT(windowMenuAboutToShow()));
     //Do not allow the Window Menu to be torn off. It's a pain in the ass to maintain.
-    windowMenu->setTearOffEnabled(0);
+    menu[WINDOW_MENU]->setTearOffEnabled(0);
 
     /* ---------------------------------------------------------------------- */
 
     debug_message("MainWindow createHelpMenu()");
-    menuBar()->addMenu(helpMenu);
-    helpMenu->addAction(actionHash.value(ACTION_help));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_changelog));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_tipoftheday));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_about));
-    helpMenu->addSeparator();
-    helpMenu->addAction(actionHash.value(ACTION_whatsthis));
-    helpMenu->setTearOffEnabled(1);
+    menuBar()->addMenu(menu[HELP_MENU]);
+    menu[HELP_MENU]->addAction(actionHash.value(ACTION_help));
+    menu[HELP_MENU]->addSeparator();
+    menu[HELP_MENU]->addAction(actionHash.value(ACTION_changelog));
+    menu[HELP_MENU]->addSeparator();
+    menu[HELP_MENU]->addAction(actionHash.value(ACTION_tipoftheday));
+    menu[HELP_MENU]->addSeparator();
+    menu[HELP_MENU]->addAction(actionHash.value(ACTION_about));
+    menu[HELP_MENU]->addSeparator();
+    menu[HELP_MENU]->addAction(actionHash.value(ACTION_whatsthis));
+    menu[HELP_MENU]->setTearOffEnabled(1);
 
     /* ---------------------------------------------------------------------- */
 
@@ -9947,7 +9716,7 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     toolbar[TOOLBAR_PROPERTIES]->setObjectName("toolbarProperties");
 
-    colorSelector->setFocusProxy(fileMenu);
+    colorSelector->setFocusProxy(menu[FILE_MENU]);
     //NOTE: Qt4.7 wont load icons without an extension...
     colorSelector->addItem(loadIcon(icon_colorbylayer), "ByLayer");
     colorSelector->addItem(loadIcon(icon_colorbyblock), "ByBlock");
@@ -9963,7 +9732,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     connect(colorSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(colorSelectorIndexChanged(int)));
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator();
-    linetypeSelector->setFocusProxy(fileMenu);
+    linetypeSelector->setFocusProxy(menu[FILE_MENU]);
     //NOTE: Qt4.7 wont load icons without an extension...
     linetypeSelector->addItem(loadIcon(icon_linetypebylayer), "ByLayer");
     linetypeSelector->addItem(loadIcon(icon_linetypebyblock), "ByBlock");
@@ -9975,7 +9744,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     connect(linetypeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(linetypeSelectorIndexChanged(int)));
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator();
-    lineweightSelector->setFocusProxy(fileMenu);
+    lineweightSelector->setFocusProxy(menu[FILE_MENU]);
     //NOTE: Qt4.7 wont load icons without an extension...
     lineweightSelector->addItem(loadIcon(icon_lineweightbylayer), "ByLayer", -2.00);
     lineweightSelector->addItem(loadIcon(icon_lineweightbyblock), "ByBlock", -1.00);
@@ -10034,7 +9803,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textoverline));
     actionHash.value(ACTION_textoverline)->setChecked(settings.text_style_overline);
 
-    textSizeSelector->setFocusProxy(fileMenu);
+    textSizeSelector->setFocusProxy(menu[FILE_MENU]);
     textSizeSelector->addItem("6 pt", 6);
     textSizeSelector->addItem("8 pt", 8);
     textSizeSelector->addItem("9 pt", 9);
@@ -10110,7 +9879,7 @@ MainWindow::~MainWindow()
 void MainWindow::recentMenuAboutToShow()
 {
     debug_message("MainWindow::recentMenuAboutToShow()");
-    recentMenu->clear();
+    menu[RECENT_MENU]->clear();
 
     QFileInfo recentFileInfo;
     QString recentValue;
@@ -10129,7 +9898,7 @@ void MainWindow::recentMenuAboutToShow()
                 else                                                          rAction = new QAction(      recentValue + " " + recentFileInfo.fileName(), this);
                 rAction->setCheckable(0);
                 rAction->setData(opensave_recent_list_of_files.at(i));
-                recentMenu->addAction(rAction);
+                menu[RECENT_MENU]->addAction(rAction);
                 connect(rAction, SIGNAL(triggered()), this, SLOT(openrecentfile()));
             }
         }
@@ -10143,24 +9912,24 @@ void MainWindow::recentMenuAboutToShow()
 void MainWindow::windowMenuAboutToShow()
 {
     debug_message("MainWindow::windowMenuAboutToShow()");
-    windowMenu->clear();
-    windowMenu->addAction(actionHash.value(ACTION_windowclose));
-    windowMenu->addAction(actionHash.value(ACTION_windowcloseall));
-    windowMenu->addSeparator();
-    windowMenu->addAction(actionHash.value(ACTION_windowcascade));
-    windowMenu->addAction(actionHash.value(ACTION_windowtile));
-    windowMenu->addSeparator();
-    windowMenu->addAction(actionHash.value(ACTION_windownext));
-    windowMenu->addAction(actionHash.value(ACTION_windowprevious));
+    menu[WINDOW_MENU]->clear();
+    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowclose));
+    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowcloseall));
+    menu[WINDOW_MENU]->addSeparator();
+    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowcascade));
+    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowtile));
+    menu[WINDOW_MENU]->addSeparator();
+    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windownext));
+    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowprevious));
 
-    windowMenu->addSeparator();
+    menu[WINDOW_MENU]->addSeparator();
     QList<QMdiSubWindow*> windows = mdiArea->subWindowList();
     for(int i = 0; i < windows.count(); ++i)
     {
         QAction* aAction = new QAction(windows.at(i)->windowTitle(), this);
         aAction->setCheckable(1);
         aAction->setData(i);
-        windowMenu->addAction(aAction);
+        menu[WINDOW_MENU]->addAction(aAction);
         connect(aAction, SIGNAL(toggled(bool)), this, SLOT(windowMenuActivated(bool)));
         aAction->setChecked(mdiArea->activeSubWindow() == windows.at(i));
     }
@@ -10426,20 +10195,20 @@ void MainWindow::updateMenuToolbarStatusbar()
 
         //Menus
         menuBar()->clear();
-        menuBar()->addMenu(fileMenu);
-        menuBar()->addMenu(editMenu);
-        menuBar()->addMenu(viewMenu);
+        menuBar()->addMenu(menu[FILE_MENU]);
+        menuBar()->addMenu(menu[EDIT_MENU]);
+        menuBar()->addMenu(menu[VIEW_MENU]);
 
-        foreach(QMenu* menu, menuHash)
+        foreach(QMenu* menu_, menuHash)
         {
-            menuBar()->addMenu(menu);
+            menuBar()->addMenu(menu_);
         }
 
-        menuBar()->addMenu(settingsMenu);
-        menuBar()->addMenu(windowMenu);
-        menuBar()->addMenu(helpMenu);
+        menuBar()->addMenu(menu[SETTINGS_MENU]);
+        menuBar()->addMenu(menu[WINDOW_MENU]);
+        menuBar()->addMenu(menu[HELP_MENU]);
 
-        windowMenu->setEnabled(1);
+        menu[WINDOW_MENU]->setEnabled(1);
 
         //Statusbar
         statusbar->clearMessage();
@@ -10477,13 +10246,13 @@ void MainWindow::updateMenuToolbarStatusbar()
         
         //Menus
         menuBar()->clear();
-        menuBar()->addMenu(fileMenu);
-        menuBar()->addMenu(editMenu);
-        menuBar()->addMenu(settingsMenu);
-        menuBar()->addMenu(windowMenu);
-        menuBar()->addMenu(helpMenu);
+        menuBar()->addMenu(menu[FILE_MENU]);
+        menuBar()->addMenu(menu[EDIT_MENU]);
+        menuBar()->addMenu(menu[SETTINGS_MENU]);
+        menuBar()->addMenu(menu[WINDOW_MENU]);
+        menuBar()->addMenu(menu[HELP_MENU]);
 
-        windowMenu->setEnabled(0);
+        menu[WINDOW_MENU]->setEnabled(0);
 
         //Statusbar
         statusbar->clearMessage();
@@ -11805,92 +11574,92 @@ StatusBarButton::StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* 
 void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
 {
     QApplication::setOverrideCursor(Qt::ArrowCursor);
-    QMenu menu(this);
+    QMenu menu_(this);
     if(objectName() == "StatusBarButtonSNAP")
     {
-        QAction* settingsSnapAction = new QAction(loadIcon(icon_gridsnapsettings), "&Settings...", &menu);
+        QAction* settingsSnapAction = new QAction(loadIcon(icon_gridsnapsettings), "&Settings...", &menu_);
         connect(settingsSnapAction, SIGNAL(triggered()), this, SLOT(settingsSnap()));
-        menu.addAction(settingsSnapAction);
+        menu_.addAction(settingsSnapAction);
     }
     else if(objectName() == "StatusBarButtonGRID")
     {
-        QAction* settingsGridAction = new QAction(loadIcon(icon_gridsettings), "&Settings...", &menu);
+        QAction* settingsGridAction = new QAction(loadIcon(icon_gridsettings), "&Settings...", &menu_);
         connect(settingsGridAction, SIGNAL(triggered()), this, SLOT(settingsGrid()));
-        menu.addAction(settingsGridAction);
+        menu_.addAction(settingsGridAction);
     }
     else if(objectName() == "StatusBarButtonRULER")
     {
-        QAction* settingsRulerAction = new QAction(QIcon("icons/rulersettings.png"), "&Settings...", &menu);
+        QAction* settingsRulerAction = new QAction(QIcon("icons/rulersettings.png"), "&Settings...", &menu_);
         connect(settingsRulerAction, SIGNAL(triggered()), this, SLOT(settingsRuler()));
-        menu.addAction(settingsRulerAction);
+        menu_.addAction(settingsRulerAction);
     }
     else if(objectName() == "StatusBarButtonORTHO")
     {
-        QAction* settingsOrthoAction = new QAction(QIcon("icons/orthosettings.png"), "&Settings...", &menu);
+        QAction* settingsOrthoAction = new QAction(QIcon("icons/orthosettings.png"), "&Settings...", &menu_);
         connect(settingsOrthoAction, SIGNAL(triggered()), this, SLOT(settingsOrtho()));
-        menu.addAction(settingsOrthoAction);
+        menu_.addAction(settingsOrthoAction);
     }
     else if(objectName() == "StatusBarButtonPOLAR")
     {
-        QAction* settingsPolarAction = new QAction(QIcon("icons/polarsettings.png"), "&Settings...", &menu);
+        QAction* settingsPolarAction = new QAction(QIcon("icons/polarsettings.png"), "&Settings...", &menu_);
         connect(settingsPolarAction, SIGNAL(triggered()), this, SLOT(settingsPolar()));
-        menu.addAction(settingsPolarAction);
+        menu_.addAction(settingsPolarAction);
     }
     else if(objectName() == "StatusBarButtonQSNAP")
     {
-        QAction* settingsQSnapAction = new QAction(QIcon("icons/qsnapsettings.png"), "&Settings...", &menu);
+        QAction* settingsQSnapAction = new QAction(QIcon("icons/qsnapsettings.png"), "&Settings...", &menu_);
         connect(settingsQSnapAction, SIGNAL(triggered()), this, SLOT(settingsQSnap()));
-        menu.addAction(settingsQSnapAction);
+        menu_.addAction(settingsQSnapAction);
     }
     else if(objectName() == "StatusBarButtonQTRACK")
     {
-        QAction* settingsQTrackAction = new QAction(QIcon("icons/qtracksettings.png"), "&Settings...", &menu);
+        QAction* settingsQTrackAction = new QAction(QIcon("icons/qtracksettings.png"), "&Settings...", &menu_);
         connect(settingsQTrackAction, SIGNAL(triggered()), this, SLOT(settingsQTrack()));
-        menu.addAction(settingsQTrackAction);
+        menu_.addAction(settingsQTrackAction);
     }
     else if(objectName() == "StatusBarButtonLWT")
     {
         View* gview = mainWin->activeView();
         if(gview)
         {
-            QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu);
+            QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu_);
             enableRealAction->setEnabled(!gview->isRealEnabled());
             connect(enableRealAction, SIGNAL(triggered()), this, SLOT(enableReal()));
-            menu.addAction(enableRealAction);
+            menu_.addAction(enableRealAction);
 
-            QAction* disableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender Off", &menu);
+            QAction* disableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender Off", &menu_);
             disableRealAction->setEnabled(gview->isRealEnabled());
             connect(disableRealAction, SIGNAL(triggered()), this, SLOT(disableReal()));
-            menu.addAction(disableRealAction);
+            menu_.addAction(disableRealAction);
         }
 
-        QAction* settingsLwtAction = new QAction(loadIcon(icon_lineweightsettings), "&Settings...", &menu);
+        QAction* settingsLwtAction = new QAction(loadIcon(icon_lineweightsettings), "&Settings...", &menu_);
         connect(settingsLwtAction, SIGNAL(triggered()), this, SLOT(settingsLwt()));
-        menu.addAction(settingsLwtAction);
+        menu_.addAction(settingsLwtAction);
     }
-    menu.exec(event->globalPos());
+    menu_.exec(event->globalPos());
     QApplication::restoreOverrideCursor();
     statusbar->clearMessage();
 }
 
 void StatusBarButton::settingsSnap()
 {
-    mainWin->settingsDialog("Snap");
+    _mainWin->settingsDialog("Snap");
 }
 
 void StatusBarButton::settingsGrid()
 {
-    mainWin->settingsDialog("Grid/Ruler");
+    _mainWin->settingsDialog("Grid/Ruler");
 }
 
 void StatusBarButton::settingsRuler()
 {
-    mainWin->settingsDialog("Grid/Ruler");
+    _mainWin->settingsDialog("Grid/Ruler");
 }
 
 void StatusBarButton::settingsOrtho()
 {
-    mainWin->settingsDialog("Ortho/Polar");
+    _mainWin->settingsDialog("Ortho/Polar");
 }
 
 void StatusBarButton::settingsPolar()

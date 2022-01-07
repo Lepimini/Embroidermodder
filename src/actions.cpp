@@ -590,3 +590,26 @@ void add_to_path(
     }
 }
 
+//NOTE: This function should be used to interpret various object types and save them as polylines for stitchOnly formats.
+void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight)
+{
+    float startX = objPos.x();
+    float startY = objPos.y();
+    EmbArray* pointList = embArray_create(EMB_POINT);
+    QPainterPath::Element element;
+    for(int i = 0; i < objPath.elementCount(); ++i)
+    {
+        element = objPath.elementAt(i);
+        EmbPointObject a;
+        a.point.x = element.x + startX;
+        a.point.y = -(element.y + startY);
+        embArray_addPoint(pointList, &a);
+    }
+    EmbPolylineObject* polyObject;
+    polyObject = (EmbPolylineObject *) malloc(sizeof(EmbPolylineObject));
+    polyObject->pointList = pointList;
+    polyObject->color = embColor_make(color.red(), color.green(), color.blue());
+    polyObject->lineType = 1; //TODO: proper lineType
+    embPattern_addPolylineObjectAbs(pattern, polyObject);
+}
+

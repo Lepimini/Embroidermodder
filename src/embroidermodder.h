@@ -1050,8 +1050,9 @@ double sgn(double x);
 double theta(double x);
 void key_handler(int c, int x, int y);
 void render_quadlist(quad *qlist);
-void menu(int key);
+void menu___(int key);
 void display(void);
+char *translate(char *a);
 
 void newFile(void);
 void openFile(void);

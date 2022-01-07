@@ -88,21 +88,21 @@ int main_tex_example(int argc, char *argv[])
     window = glutCreateWindow("Embroidermodder 2 (SDL)");
     glClearColor (0.5, 0.5, 0.5, 0.0);
     
-    file_menu = glutCreateMenu(menu);
+    file_menu = glutCreateMenu(menu___);
     glutAddMenuEntry("New", ACTION_new);
     glutAddMenuEntry("Open", ACTION_open);
     glutAddMenuEntry("Save", ACTION_save);
     glutAddMenuEntry("Save as", ACTION_saveas);
     glutAddMenuEntry("Exit", ACTION_exit);
-    edit_menu = glutCreateMenu(menu);
+    edit_menu = glutCreateMenu(menu___);
     glutAddMenuEntry("Undo", ACTION_undo);
-    settings_menu = glutCreateMenu(menu);
+    settings_menu = glutCreateMenu(menu___);
     glutAddMenuEntry("Undo", ACTION_undo);
-    window_menu = glutCreateMenu(menu);
+    window_menu = glutCreateMenu(menu___);
     glutAddMenuEntry("Undo", ACTION_undo);
-    help_menu = glutCreateMenu(menu);
+    help_menu = glutCreateMenu(menu___);
     glutAddMenuEntry("Undo", ACTION_undo);
-    rightclick_menu = glutCreateMenu(menu);
+    rightclick_menu = glutCreateMenu(menu___);
     glutAddSubMenu("File", file_menu);
     glutAddSubMenu("Edit", edit_menu);
     glutAddSubMenu("Settings", settings_menu);
@@ -243,7 +243,7 @@ void render_quadlist(quad *qlist)
     }
 }
 
-void menu(int key)
+void menu___(int key)
 {
     switch (key) {
     default:
@@ -308,4 +308,8 @@ void generate_texture(int i)
         GL_RGB, GL_UNSIGNED_BYTE, data);
 }
 
+char *translate(char *a)
+{
+    return a;
+}
 
