@@ -12,43 +12,43 @@ extern "C" {
  * -------
  */
 
-#define DEBUG                1
-#define MAX_STRING_LENGTH  500
+#define DEBUG                         1
+#define MAX_STRING_LENGTH           500
 
-#define TOOLBAR_FILE         0
-#define TOOLBAR_EDIT         1
-#define TOOLBAR_VIEW         2
-#define TOOLBAR_ZOOM         3
-#define TOOLBAR_PAN          4
-#define TOOLBAR_ICON         5
-#define TOOLBAR_HELP         6
-#define TOOLBAR_LAYER        7
-#define TOOLBAR_TEXT         8
-#define TOOLBAR_PROPERTIES   9
+#define TOOLBAR_FILE                  0
+#define TOOLBAR_EDIT                  1
+#define TOOLBAR_VIEW                  2
+#define TOOLBAR_ZOOM                  3
+#define TOOLBAR_PAN                   4
+#define TOOLBAR_ICON                  5
+#define TOOLBAR_HELP                  6
+#define TOOLBAR_LAYER                 7
+#define TOOLBAR_TEXT                  8
+#define TOOLBAR_PROPERTIES            9
 
-#define FILE_MENU            0
-#define EDIT_MENU            1
-#define VIEW_MENU            2
-#define SETTINGS_MENU        3
-#define WINDOW_MENU          4
-#define HELP_MENU            5
-#define RECENT_MENU          6
-#define ZOOM_MENU            7
-#define PAN_MENU             8
+#define FILE_MENU                     0
+#define EDIT_MENU                     1
+#define VIEW_MENU                     2
+#define SETTINGS_MENU                 3
+#define WINDOW_MENU                   4
+#define HELP_MENU                     5
+#define RECENT_MENU                   6
+#define ZOOM_MENU                     7
+#define PAN_MENU                      8
 
-#define SYMBOL_zero          0
-#define SYMBOL_one           1
-#define SYMBOL_two           2
-#define SYMBOL_three         3
-#define SYMBOL_four          4
-#define SYMBOL_five          5
-#define SYMBOL_six           6
-#define SYMBOL_seven         7
-#define SYMBOL_eight         8
-#define SYMBOL_nine          9
-#define SYMBOL_minus        10
-#define SYMBOL_apostrophe   11
-#define SYMBOL_quote        12
+#define SYMBOL_zero                   0
+#define SYMBOL_one                    1
+#define SYMBOL_two                    2
+#define SYMBOL_three                  3
+#define SYMBOL_four                   4
+#define SYMBOL_five                   5
+#define SYMBOL_six                    6
+#define SYMBOL_seven                  7
+#define SYMBOL_eight                  8
+#define SYMBOL_nine                   9
+#define SYMBOL_minus                 10
+#define SYMBOL_apostrophe            11
+#define SYMBOL_quote                 12
 
 /* LineEdits */
 /* --------------------------------- */
@@ -158,83 +158,83 @@ extern "C" {
 /* Keys */
 /* ---- */
 /* value type - int: See OBJ_TYPE_VALUES */
-#define OBJ_TYPE    0
+#define OBJ_TYPE                      0
 /* value type - str: See OBJ_NAME_VALUES */
-#define OBJ_NAME    1
+#define OBJ_NAME                      1
 /* value type - str: "USER", "DEFINED", "STRINGS", etc... */
-#define OBJ_LAYER   2
+#define OBJ_LAYER                     2
 /* value type - int: 0-255
   TODO: Use color chart in formats/format-dxf.h for this */
-#define OBJ_COLOR   3
+#define OBJ_COLOR                     3
 //value type - int: See OBJ_LTYPE_VALUES
-#define OBJ_LTYPE   4
+#define OBJ_LTYPE                     4
  //value type - int: 0-27
-#define OBJ_LWT 5
+#define OBJ_LWT                       5
 /* value type - int: See OBJ_RUBBER_VALUES */
-#define OBJ_RUBBER  6
+#define OBJ_RUBBER                    6
 
 /* Values */
 /* ------ */
 /* NOTE: Allow this enum to evaluate false */
-#define OBJ_TYPE_NULL          0
+#define OBJ_TYPE_NULL                 0
 /* NOTE: Values >= 65536 ensure compatibility with qgraphicsitem_cast() */
-#define OBJ_TYPE_BASE          100000
-#define OBJ_TYPE_ARC           100001
-#define OBJ_TYPE_BLOCK         100002
-#define OBJ_TYPE_CIRCLE        100003
-#define OBJ_TYPE_DIMALIGNED    100004
-#define OBJ_TYPE_DIMANGULAR    100005
-#define OBJ_TYPE_DIMARCLENGTH  100006
-#define OBJ_TYPE_DIMDIAMETER   100007
-#define OBJ_TYPE_DIMLEADER 100008
-#define OBJ_TYPE_DIMLINEAR 100009
-#define OBJ_TYPE_DIMORDINATE   100010
-#define OBJ_TYPE_DIMRADIUS 100011
-#define OBJ_TYPE_ELLIPSE   100012
-#define OBJ_TYPE_ELLIPSEARC    100013
-#define OBJ_TYPE_RUBBER    100014
-#define OBJ_TYPE_GRID  100015
-#define OBJ_TYPE_HATCH 100016
-#define OBJ_TYPE_IMAGE 100017
-#define OBJ_TYPE_INFINITELINE  100018
-#define OBJ_TYPE_LINE  100019
-#define OBJ_TYPE_PATH  100020
-#define OBJ_TYPE_POINT         100021
-#define OBJ_TYPE_POLYGON       100022
-#define OBJ_TYPE_POLYLINE      100023
-#define OBJ_TYPE_RAY           100024
-#define OBJ_TYPE_RECTANGLE     100025
-#define OBJ_TYPE_SLOT          100026
-#define OBJ_TYPE_SPLINE        100027
-#define OBJ_TYPE_TEXTMULTI     100028
-#define OBJ_TYPE_TEXTSINGLE    100029
-#define OBJ_TYPE_UNKNOWN    100030
+#define OBJ_TYPE_BASE            100000
+#define OBJ_TYPE_ARC             100001
+#define OBJ_TYPE_BLOCK           100002
+#define OBJ_TYPE_CIRCLE          100003
+#define OBJ_TYPE_DIMALIGNED      100004
+#define OBJ_TYPE_DIMANGULAR      100005
+#define OBJ_TYPE_DIMARCLENGTH    100006
+#define OBJ_TYPE_DIMDIAMETER     100007
+#define OBJ_TYPE_DIMLEADER       100008
+#define OBJ_TYPE_DIMLINEAR       100009
+#define OBJ_TYPE_DIMORDINATE     100010
+#define OBJ_TYPE_DIMRADIUS       100011
+#define OBJ_TYPE_ELLIPSE         100012
+#define OBJ_TYPE_ELLIPSEARC      100013
+#define OBJ_TYPE_RUBBER          100014
+#define OBJ_TYPE_GRID            100015
+#define OBJ_TYPE_HATCH           100016
+#define OBJ_TYPE_IMAGE           100017
+#define OBJ_TYPE_INFINITELINE    100018
+#define OBJ_TYPE_LINE            100019
+#define OBJ_TYPE_PATH            100020
+#define OBJ_TYPE_POINT           100021
+#define OBJ_TYPE_POLYGON         100022
+#define OBJ_TYPE_POLYLINE        100023
+#define OBJ_TYPE_RAY             100024
+#define OBJ_TYPE_RECTANGLE       100025
+#define OBJ_TYPE_SLOT            100026
+#define OBJ_TYPE_SPLINE          100027
+#define OBJ_TYPE_TEXTMULTI       100028
+#define OBJ_TYPE_TEXTSINGLE      100029
+#define OBJ_TYPE_UNKNOWN         100030
 
 
 /* CAD Linetypes */
-#define OBJ_LTYPE_CONT   0
-#define OBJ_LTYPE_CENTER 1
-#define OBJ_LTYPE_DOT    2
-#define OBJ_LTYPE_HIDDEN 3
-#define OBJ_LTYPE_PHANTOM    4
-#define OBJ_LTYPE_ZIGZAG 5
+#define OBJ_LTYPE_CONT                0
+#define OBJ_LTYPE_CENTER              1
+#define OBJ_LTYPE_DOT                 2
+#define OBJ_LTYPE_HIDDEN              3
+#define OBJ_LTYPE_PHANTOM             4
+#define OBJ_LTYPE_ZIGZAG              5
 /* Embroidery Stitchtypes */
 /* __________ */
-#define OBJ_LTYPE_RUNNING    6
+#define OBJ_LTYPE_RUNNING             6
 /* vvvvvvvvvv */
-#define OBJ_LTYPE_SATIN  7
+#define OBJ_LTYPE_SATIN               7
 /* >>>>>>>>>> */
-#define OBJ_LTYPE_FISHBONE   8
+#define OBJ_LTYPE_FISHBONE            8
 
 /* OBJ_LWT_VALUES
  * --------------
  */
-#define OBJ_LWT_BYLAYER (-2)
-#define OBJ_LWT_BYBLOCK (-1)
-#define OBJ_LWT_DEFAULT   0
-#define OBJ_LWT_01    1
-#define OBJ_LWT_02    2 
-#define OBJ_LWT_03    3 
+#define OBJ_LWT_BYLAYER            (-2)
+#define OBJ_LWT_BYBLOCK            (-1)
+#define OBJ_LWT_DEFAULT               0
+#define OBJ_LWT_01                    1
+#define OBJ_LWT_02                    2
+#define OBJ_LWT_03                    3
 #define OBJ_LWT_04    4 
 #define OBJ_LWT_05    5 
 #define OBJ_LWT_06    6 
@@ -315,84 +315,84 @@ extern "C" {
 /* PREVIEW_CLONE_VALUES
  * --------------------
  * NOTE: Allow this enum to evaluate false */
-#define PREVIEW_CLONE_NULL  0
-#define PREVIEW_CLONE_SELECTED  1
-#define PREVIEW_CLONE_RUBBER    2
+#define PREVIEW_CLONE_NULL            0
+#define PREVIEW_CLONE_SELECTED        1
+#define PREVIEW_CLONE_RUBBER          2
 
 
 /* PREVIEW_MODE_VALUES
  * -------------------
  * NOTE: Allow this enum to evaluate false */
-#define PREVIEW_MODE_NULL   0
-#define PREVIEW_MODE_MOVE   1
-#define PREVIEW_MODE_ROTATE 2
-#define PREVIEW_MODE_SCALE  3
+#define PREVIEW_MODE_NULL             0
+#define PREVIEW_MODE_MOVE             1
+#define PREVIEW_MODE_ROTATE           2
+#define PREVIEW_MODE_SCALE            3
 
 
 /* COMMAND ACTIONS */
 /* --------------- */
-#define ACTION_donothing      0
-#define ACTION_new            1
-#define ACTION_open           2
-#define ACTION_save           3
-#define ACTION_saveas         4
-#define ACTION_print          5
-#define ACTION_designdetails  6
-#define ACTION_exit           7
-#define ACTION_cut    9
-#define ACTION_copy   10
-#define ACTION_paste  11
-#define ACTION_undo   12
-#define ACTION_redo   13
+#define ACTION_donothing              0
+#define ACTION_new                    1
+#define ACTION_open                   2
+#define ACTION_save                   3
+#define ACTION_saveas                 4
+#define ACTION_print                  5
+#define ACTION_designdetails          6
+#define ACTION_exit                   7
+#define ACTION_cut                    8
+#define ACTION_copy                   9
+#define ACTION_paste                 10
+#define ACTION_undo                  11
+#define ACTION_redo                  12
 /* Window Menu */
-#define ACTION_windowclose    14
-#define ACTION_windowcloseall 15
-#define ACTION_windowcascade  16
-#define ACTION_windowtile 17
-#define ACTION_windownext 18
-#define ACTION_windowprevious 19
+#define ACTION_windowclose           13
+#define ACTION_windowcloseall        14
+#define ACTION_windowcascade         15
+#define ACTION_windowtile            16
+#define ACTION_windownext            17
+#define ACTION_windowprevious        18
 /* Help Menu */
-#define ACTION_help   20
-#define ACTION_changelog  21
-#define ACTION_tipoftheday    22
-#define ACTION_about  23
-#define ACTION_whatsthis  24
+#define ACTION_help                  19
+#define ACTION_changelog             20
+#define ACTION_tipoftheday           21
+#define ACTION_about                 22
+#define ACTION_whatsthis             23
 /* Icons */
-#define ACTION_icon16 25
-#define ACTION_icon24 26
-#define ACTION_icon32 27
-#define ACTION_icon48 28
-#define ACTION_icon64 29
-#define ACTION_icon128    30
-#define ACTION_settingsdialog 31
+#define ACTION_icon16                24
+#define ACTION_icon24                25
+#define ACTION_icon32                26
+#define ACTION_icon48                27
+#define ACTION_icon64                28
+#define ACTION_icon128               29
+#define ACTION_settingsdialog        30
 /* Layer ToolBar */
-#define ACTION_makelayercurrent 32
-#define ACTION_layers   33
-#define ACTION_layerselector    34
-#define ACTION_layerprevious    35
-#define ACTION_colorselector    36
-#define ACTION_linetypeselector 37
-#define ACTION_lineweightselector 38
-#define ACTION_hidealllayers    39
-#define ACTION_showalllayers    40
-#define ACTION_freezealllayers  41
-#define ACTION_thawalllayers    42
-#define ACTION_lockalllayers    43
-#define ACTION_unlockalllayers  44
+#define ACTION_makelayercurrent      31
+#define ACTION_layers                32
+#define ACTION_layerselector         33
+#define ACTION_layerprevious         34
+#define ACTION_colorselector         35
+#define ACTION_linetypeselector      36
+#define ACTION_lineweightselector    37
+#define ACTION_hidealllayers         38
+#define ACTION_showalllayers         39
+#define ACTION_freezealllayers       40
+#define ACTION_thawalllayers         41
+#define ACTION_lockalllayers         42
+#define ACTION_unlockalllayers       43
 /* Text ToolBar */
-#define ACTION_textbold 45
-#define ACTION_textitalic   46
-#define ACTION_textunderline    47
-#define ACTION_textstrikeout    48
-#define ACTION_textoverline 49
+#define ACTION_textbold              45
+#define ACTION_textitalic            46
+#define ACTION_textunderline         47
+#define ACTION_textstrikeout         48
+#define ACTION_textoverline          49
 /* Zoom ToolBar */
-#define ACTION_zoomrealtime 50
-#define ACTION_zoomprevious 51
-#define ACTION_zoomwindow   52
-#define ACTION_zoomdynamic  53
-#define ACTION_zoomscale    54
-#define ACTION_zoomcenter   55
-#define ACTION_zoomin   56
+#define ACTION_zoomrealtime          50
+#define ACTION_zoomprevious          51
+#define ACTION_zoomwindow            52
+#define ACTION_zoomdynamic           53
+#define ACTION_zoomscale             54
+#define ACTION_zoomcenter            55
+#define ACTION_zoomin                56
 #define ACTION_zoomout  57
 #define ACTION_zoomselected 58
 #define ACTION_zoomall  59
@@ -416,29 +416,29 @@ TODO: ACTION_spellcheck
 TODO: ACTION_quickselect 
 */
 
-#define circle_mode_1P_RAD   0
-#define circle_mode_1P_DIA   1
-#define circle_mode_2P       2
-#define circle_mode_3P       3
-#define circle_mode_TTR      4
+#define circle_mode_1P_RAD            0
+#define circle_mode_1P_DIA            1
+#define circle_mode_2P                2
+#define circle_mode_3P                3
+#define circle_mode_TTR               4
 
-#define app_folder  0
-#define commands_folder 1
-#define help_folder 2
-#define icons_folder    3
-#define images_folder   4
-#define samples_folder  5
-#define translations_folder 6
-#define nFolders    7
+#define app_folder                    0
+#define commands_folder               1
+#define help_folder                   2
+#define icons_folder                  3
+#define images_folder                 4
+#define samples_folder                5
+#define translations_folder           6
+#define nFolders                      7
 
-#define PATHS_MOVETO    0
-#define PATHS_LINETO    1
-#define PATHS_ARCTO     2
-#define PATHS_ARCMOVETO 3
-#define PATHS_ELLIPSE   4
-#define PATHS_END       5
+#define PATHS_MOVETO                  0
+#define PATHS_LINETO                  1
+#define PATHS_ARCTO                   2
+#define PATHS_ARCMOVETO               3
+#define PATHS_ELLIPSE                 4
+#define PATHS_END                     5
 
-#define N_TEXTURES      2
+#define N_TEXTURES                    2
 
 /*
  * TYPEDEFS
@@ -594,17 +594,6 @@ typedef struct Settings_wrapper {
     unsigned char selection_pickbox_size;
     text_properties text_style;
 
-    int file_toolbar[20];
-    int edit_toolbar[20];
-    int view_toolbar[20];
-    int pan_toolbar[20];
-    int icon_toolbar[20];
-    int help_toolbar[20];
-    int zoom_toolbar[20];
-    char *folders[20];
-    quad quad_list1[20];
-    quad quad_list2[20];
-
     int rulerPixelSize;
     int gripSize;
     int pickBoxSize;
@@ -662,6 +651,7 @@ extern int n_toolbars, n_actions, n_menus;
 extern int *toolbars[];
 extern int *menus[];
 extern char *toolbar_label[];
+extern char *folders[];
 extern action_call undo_history[1000];
 extern action_call action;
 extern int undo_history_length;
@@ -1041,6 +1031,7 @@ extern char *icon_zoom[];
 extern const char* _appName_;
 extern const char* _appVer_;
 extern int exitApp;
+extern settings_wrapper settings, preview, dialog, accept_;
 
 /* C functions for embroidermodder
  * -------------------------------
@@ -1225,10 +1216,15 @@ class View;
 class PropertyEditor;
 class ImageWidget;
 
-extern settings_wrapper settings, preview, dialog, accept;
 extern QStringList opensave_recent_list_of_files;
 extern MainWindow* _mainWin;
 extern QString opensave_custom_filter;
+
+QColor to_qcolor(EmbColor c);
+EmbColor to_emb_color(QColor c);
+QPointF to_qpointf(EmbVector c);
+EmbVector to_emb_vector(QPointF c);
+QIcon loadIcon(char *image[]);
 
 void actuator(void);
 void settings_actuator(void);

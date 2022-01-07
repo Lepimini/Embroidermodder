@@ -312,6 +312,16 @@ char *menu_label[] = {
     "Properties"
 };
 
+char *folders[] = {
+    "",
+    "commands",
+    "help",
+    "icons",
+    "images",
+    "samples",
+    "translations"
+};
+
 int n_toolbars = 10;
 int n_menus = 10;
 

@@ -28,15 +28,6 @@
 /* DATA SECTION */
 texture_t tex[N_TEXTURES];
 GLuint texture[N_TEXTURES];
-char *folders[] = {
-    "",
-    "commands",
-    "help",
-    "icons",
-    "images",
-    "samples",
-    "translations"
-};
 int interaction_mode = 0;
 int run = 1;
 int window_width = 640;
@@ -44,6 +35,11 @@ int window_height = 480;
 float mouse[2];
 int mouse_x = 0;
 int mouse_y = 0;
+action_call undo_history[1000];
+action_call action;
+int undo_history_length = 0;
+int undo_history_position = 0;
+settings_wrapper settings, preview, dialog, accept_;
 
 void usage(void)
 {
