@@ -36,6 +36,15 @@ extern "C" {
 #define ZOOM_MENU                     7
 #define PAN_MENU                      8
 
+#define STATUS_SNAP                   0
+#define STATUS_GRID                   1
+#define STATUS_RULER                  2
+#define STATUS_ORTHO                  3
+#define STATUS_POLAR                  4
+#define STATUS_QSNAP                  5
+#define STATUS_QTRACK                 6
+#define STATUS_LWT                    7
+
 #define SYMBOL_zero                   0
 #define SYMBOL_one                    1
 #define SYMBOL_two                    2
@@ -1141,6 +1150,11 @@ void main_redo(void);
 
 void doNothing(void);
 
+int load_settings(void);
+int save_settings(void);
+
+void comboBoxScrollBarWidgetCurrentIndexChanged(int);
+
 EmbVector unit_vector(float angle);
 EmbVector rotate_vector(EmbVector a, float angle);
 EmbVector scale_vector(EmbVector a, float scale);
@@ -1502,6 +1516,7 @@ public:
 
     void stub_testing();
 
+    void fill_menu(int menu_id);
     void newFile();
     void openFile(bool recent = false, const QString& recentFile = "");
     void openFilesSelected(const QStringList&);
@@ -1751,7 +1766,6 @@ private slots:
     void checkBoxRenderHintHighAAStateChanged(int);
     void checkBoxRenderHintNonCosmeticStateChanged(int);
     void checkBoxShowScrollBarsStateChanged(int);
-    void comboBoxScrollBarWidgetCurrentIndexChanged(int);
     void spinBoxZoomScaleInValueChanged(double);
     void spinBoxZoomScaleOutValueChanged(double);
     void checkBoxDisableBGStateChanged(int);

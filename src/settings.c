@@ -10,6 +10,9 @@
 
 #include "embroidermodder.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 extern settings_wrapper settings;
 
 char assets_dir[1000];
@@ -23,6 +26,11 @@ int find_ini_value(char *key, char *out);
 int get_ini_int(char *key, int default_value);
 float get_ini_float(char *key, float default_value);
 int embClamp(int lower, int x, int upper);
+
+unsigned int rgb(unsigned char red, unsigned char green, unsigned char blue)
+{
+    return blue + green*256 + blue*256*256;
+}
 
 int find_ini_value(char *key, char *out)
 {
@@ -75,11 +83,6 @@ char * get_ini_str(char *key, char *default_value)
     return default_value;
 }
 
-char * to_c_str(QString s)
-{
-    return (char *)s.toLocal8Bit().constData();
-}
-
 int load_settings(void)
 {
     FILE *f;
@@ -120,9 +123,12 @@ int load_settings(void)
     settings.general_mdi_bg_use_logo = get_ini_int("MdiBGUseLogo", 1);
     settings.general_mdi_bg_use_texture = get_ini_int("MdiBGUseTexture", 1);
     settings.general_mdi_bg_use_color = get_ini_int("MdiBGUseColor", 1);
-    strcpy(settings.general_mdi_bg_logo, get_ini_str("MdiBGLogo", to_c_str(QString(assets_dir) + "_images_logo-spirals.png")));
-    strcpy(settings.general_mdi_bg_texture, get_ini_str("MdiBGTexture", to_c_str(QString(assets_dir) + "_images_texture-spirals.png")));
-    settings.general_mdi_bg_color = get_ini_int("MdiBGColor", qRgb(192,192,192));
+    char default_str[200];
+    sprintf(default_str, "%s/images/logo-spirals.png", assets_dir);
+    strcpy(settings.general_mdi_bg_logo, get_ini_str("MdiBGLogo", default_str));
+    sprintf(default_str, "%s/images/texture-spirals.png", assets_dir);
+    strcpy(settings.general_mdi_bg_texture, get_ini_str("MdiBGTexture", default_str));
+    settings.general_mdi_bg_color = get_ini_int("MdiBGColor", rgb(192,192,192));
     settings.general_tip_of_the_day = get_ini_int("TipOfTheDay", 1);
     settings.general_current_tip =  get_ini_int("CurrentTip", 0);
     settings.general_system_help_browser = get_ini_int("SystemHelpBrowser", 1);
@@ -136,12 +142,12 @@ int load_settings(void)
     settings.display_renderhint_noncosmetic = get_ini_int("Display_RenderHintNonCosmetic", 0);
     settings.display_show_scrollbars = get_ini_int("Display_ShowScrollBars", 1);
     settings.display_scrollbar_widget_num = get_ini_int("Display_ScrollBarWidgetNum", 0);
-    settings.display_crosshair_color = get_ini_int("Display_CrossHairColor", qRgb(  0, 0, 0));
-    settings.display_bg_color = get_ini_int("Display_BackgroundColor", qRgb(235,235,235));
-    settings.display_selectbox_left_color = get_ini_int("Display_SelectBoxLeftColor", qRgb(  0,128, 0));
-    settings.display_selectbox_left_fill = get_ini_int("Display_SelectBoxLeftFill", qRgb(  0,255, 0));
-    settings.display_selectbox_right_color = get_ini_int("Display_SelectBoxRightColor", qRgb(  0, 0,128));
-    settings.display_selectbox_right_fill = get_ini_int("Display_SelectBoxRightFill", qRgb(  0, 0,255));
+    settings.display_crosshair_color = get_ini_int("Display_CrossHairColor", rgb(  0, 0, 0));
+    settings.display_bg_color = get_ini_int("Display_BackgroundColor", rgb(235,235,235));
+    settings.display_selectbox_left_color = get_ini_int("Display_SelectBoxLeftColor", rgb(  0,128, 0));
+    settings.display_selectbox_left_fill = get_ini_int("Display_SelectBoxLeftFill", rgb(  0,255, 0));
+    settings.display_selectbox_right_color = get_ini_int("Display_SelectBoxRightColor", rgb(  0, 0,128));
+    settings.display_selectbox_right_fill = get_ini_int("Display_SelectBoxRightFill", rgb(  0, 0,255));
     settings.display_selectbox_alpha = get_ini_int("Display_SelectBoxAlpha", 32);
     settings.display_zoomscale_in = get_ini_float("Display_ZoomScaleIn", 2.0);
     settings.display_zoomscale_out = get_ini_float("Display_ZoomScaleOut", 0.5);
@@ -149,7 +155,7 @@ int load_settings(void)
     strcpy(settings.display_units, get_ini_str("Display_Units", "mm"));
 
     /* OpenSave */
-    opensave_custom_filter = QString(get_ini_str("OpenSave_CustomFilter", "supported"));
+    /* opensave_custom_filter = QString(get_ini_str("OpenSave_CustomFilter", "supported")); */
     strcpy(settings.opensave_open_format, get_ini_str("OpenSave_OpenFormat", "*.*"));
     settings.opensave_open_thumbnail = get_ini_int("OpenSave_OpenThumbnail", 0);
     strcpy(settings.opensave_save_format, get_ini_str("OpenSave_SaveFormat", "*.*"));
@@ -158,7 +164,8 @@ int load_settings(void)
     /* Recent */
     settings.opensave_recent_max_files = get_ini_int("OpenSave_RecentMax", 10);
     /* opensave_recent_list_of_files = get_ini_str("OpenSave_RecentFiles", ""); */
-    strcpy(settings.opensave_recent_directory, get_ini_str("OpenSave_RecentDirectory", to_c_str(QString(assets_dir) + "_samples")));
+    sprintf(default_str, "%s/samples", assets_dir);
+    strcpy(settings.opensave_recent_directory, get_ini_str("OpenSave_RecentDirectory", default_str));
 
     /* Trimming */
     settings.opensave_trim_dst_num_jumps = get_ini_int("OpenSave_TrimDstNumJumps", 5);
@@ -171,7 +178,7 @@ int load_settings(void)
     settings.grid_show_on_load = get_ini_int("Grid_ShowOnLoad", 1);
     settings.grid_show_origin = get_ini_int("Grid_ShowOrigin", 1);
     settings.grid_color_match_crosshair = get_ini_int("Grid_ColorMatchCrossHair", 1);
-    settings.grid_color = get_ini_int("Grid_Color", qRgb(0, 0, 0));
+    settings.grid_color = get_ini_int("Grid_Color", rgb(0, 0, 0));
     settings.grid_load_from_file = get_ini_int("Grid_LoadFromFile", 1);
     strcpy(settings.grid_type, get_ini_str("Grid_Type", "Rectangular"));
     settings.grid_center_on_origin = get_ini_int("Grid_CenterOnOrigin", 1);
@@ -188,12 +195,12 @@ int load_settings(void)
     /* Ruler */
     settings.ruler_show_on_load = get_ini_int("Ruler_ShowOnLoad", 1);
     settings.ruler_metric = get_ini_int("Ruler_Metric", 1);
-    settings.ruler_color = get_ini_int("Ruler_Color", qRgb(210,210, 50));
+    settings.ruler_color = get_ini_int("Ruler_Color", rgb(210,210, 50));
     settings.ruler_pixel_size = get_ini_int("Ruler_PixelSize", 20);
 
     /* Quick Snap */
     settings.qsnap_enabled = get_ini_int("QuickSnap_Enabled", 1);
-    settings.qsnap_locator_color = get_ini_int("QuickSnap_LocatorColor", qRgb(255,255, 0));
+    settings.qsnap_locator_color = get_ini_int("QuickSnap_LocatorColor", rgb(255,255, 0));
     settings.qsnap_locator_size = get_ini_int("QuickSnap_LocatorSize", 4);
     settings.qsnap_aperture_size = get_ini_int("QuickSnap_ApertureSize", 10);
     settings.qsnap_endpoint = get_ini_int("QuickSnap_EndPoint", 1);
@@ -210,21 +217,21 @@ int load_settings(void)
     settings.qsnap_apparent = get_ini_int("QuickSnap_Apparent", 0);
     settings.qsnap_parallel = get_ini_int("QuickSnap_Parallel", 0);
 
-    //LineWeight
+    /* LineWeight */
     settings.lwt_show_lwt = get_ini_int("LineWeight_ShowLineWeight", 0);
     settings.lwt_real_render = get_ini_int("LineWeight_RealRender", 1);
     settings.lwt_default_lwt = get_ini_int("LineWeight_DefaultLineWeight", 0);
 
-    //Selection
+    /* Selection */
     settings.selection_mode_pickfirst = get_ini_int("Selection_PickFirst", 1);
     settings.selection_mode_pickadd = get_ini_int("Selection_PickAdd", 1);
     settings.selection_mode_pickdrag = get_ini_int("Selection_PickDrag", 0);
-    settings.selection_coolgrip_color = get_ini_int("Selection_CoolGripColor", qRgb(  0, 0,255));
-    settings.selection_hotgrip_color = get_ini_int("Selection_HotGripColor", qRgb(255, 0, 0));
+    settings.selection_coolgrip_color = get_ini_int("Selection_CoolGripColor", rgb(  0, 0,255));
+    settings.selection_hotgrip_color = get_ini_int("Selection_HotGripColor", rgb(255, 0, 0));
     settings.selection_grip_size = get_ini_int("Selection_GripSize", 4);
     settings.selection_pickbox_size = get_ini_int("Selection_PickBoxSize", 4);
 
-    //Text
+    /* Text */
     strcpy(settings.text_font, get_ini_str("Text_Font", "Arial"));
     settings.text_style.size = get_ini_int("Text_Size", 12);
     settings.text_style.angle = get_ini_int("Text_Angle", 0);
@@ -251,21 +258,21 @@ int save_settings(void)
         return 1;
     }
     
-    fprintf(f, "Window_PositionX=%d\r\n", _mainWin->pos().x());
-    fprintf(f, "Window_PositionY=%d\r\n", _mainWin->pos().y());
-    fprintf(f, "Window_Width=%d\r\n", _mainWin->size().width());
-    fprintf(f, "Window_Height=%d\r\n", _mainWin->size().height());
+    fprintf(f, "Window_PositionX=%d\r\n", settings.window_x);
+    fprintf(f, "Window_PositionY=%d\r\n", settings.window_y);
+    fprintf(f, "Window_Width=%d\r\n", settings.window_width);
+    fprintf(f, "Window_Height=%d\r\n", settings.window_height);
 
     /* General */
-    fprintf(f, "LayoutState=%s\r\n", to_c_str(_mainWin->layoutState));
+    /* fprintf(f, "LayoutState=%s\r\n", to_c_str(_mainWin->layoutState)); */
     fprintf(f, "Language=%s\r\n", settings.general_language);
     fprintf(f, "IconTheme=%s\r\n", settings.general_icon_theme);
     fprintf(f, "IconSize=%d\r\n", settings.general_icon_size);
     fprintf(f, "MdiBGUseLogo=%d\r\n", settings.general_mdi_bg_use_logo);
     fprintf(f, "MdiBGUseTexture=%d\r\n", settings.general_mdi_bg_use_texture);
     fprintf(f, "MdiBGUseColor=%d\r\n", settings.general_mdi_bg_use_color);
-    fprintf(f, "MdiBGLogo=%d\r\n", settings.general_mdi_bg_logo);
-    fprintf(f, "MdiBGTexture=%d\r\n", settings.general_mdi_bg_texture);
+    fprintf(f, "MdiBGLogo=%s\r\n", settings.general_mdi_bg_logo);
+    fprintf(f, "MdiBGTexture=%s\r\n", settings.general_mdi_bg_texture);
     fprintf(f, "MdiBGColor=%d\r\n", settings.general_mdi_bg_color);
     fprintf(f, "TipOfTheDay=%d\r\n", settings.general_tip_of_the_day);
     fprintf(f, "CurrentTip=%d\r\n", settings.general_current_tip + 1);
@@ -287,25 +294,24 @@ int save_settings(void)
     fprintf(f, "Display_SelectBoxRightColor=%d\r\n", settings.display_selectbox_right_color);
     fprintf(f, "Display_SelectBoxRightFill=%d\r\n", settings.display_selectbox_right_fill);
     fprintf(f, "Display_SelectBoxAlpha=%d\r\n", settings.display_selectbox_alpha);
-    fprintf(f, "Display_ZoomScaleIn=%d\r\n", settings.display_zoomscale_in);
-    fprintf(f, "Display_ZoomScaleOut=%d\r\n", settings.display_zoomscale_out);
+    fprintf(f, "Display_ZoomScaleIn=%f\r\n", settings.display_zoomscale_in);
+    fprintf(f, "Display_ZoomScaleOut=%f\r\n", settings.display_zoomscale_out);
     fprintf(f, "Display_CrossHairPercent=%d\r\n", settings.display_crosshair_percent);
-    fprintf(f, "Display_Units=%d\r\n", settings.display_units);
-    //Prompt
-    //OpenSave
-    fprintf(f, "OpenSave_CustomFilter=%s\r\n", to_c_str(opensave_custom_filter));
-    fprintf(f, "OpenSave_OpenFormat=%d\r\n", settings.opensave_open_format);
+    fprintf(f, "Display_Units=%s\r\n", settings.display_units);
+    /* OpenSave
+    fprintf(f, "OpenSave_CustomFilter=%s\r\n", to_c_str(opensave_custom_filter)); */
+    fprintf(f, "OpenSave_OpenFormat=%s\r\n", settings.opensave_open_format);
     fprintf(f, "OpenSave_OpenThumbnail=%d\r\n", settings.opensave_open_thumbnail);
-    fprintf(f, "OpenSave_SaveFormat=%d\r\n", settings.opensave_save_format);
+    fprintf(f, "OpenSave_SaveFormat=%s\r\n", settings.opensave_save_format);
     fprintf(f, "OpenSave_SaveThumbnail=%d\r\n", settings.opensave_save_thumbnail);
     //Recent
     fprintf(f, "OpenSave_RecentMax=%d\r\n", settings.opensave_recent_max_files);
-    fprintf(f, "OpenSave_RecentFiles=%d\r\n", opensave_recent_list_of_files);
-    fprintf(f, "OpenSave_RecentDirectory=%d\r\n", settings.opensave_recent_directory);
+    /* fprintf(f, "OpenSave_RecentFiles=%d\r\n", opensave_recent_list_of_files); */
+    fprintf(f, "OpenSave_RecentDirectory=%s\r\n", settings.opensave_recent_directory);
     /* Trimming */
     fprintf(f, "OpenSave_TrimDstNumJumps=%d\r\n", settings.opensave_trim_dst_num_jumps);
     /* Printing */
-    fprintf(f, "Printing_DefaultDevice=%d\r\n", settings.printing_default_device);
+    fprintf(f, "Printing_DefaultDevice=%s\r\n", settings.printing_default_device);
     fprintf(f, "Printing_UseLastDevice=%d\r\n", settings.printing_use_last_device);
     fprintf(f, "Printing_DisableBG=%d\r\n", settings.printing_disable_bg);
     /* Grid */
@@ -314,7 +320,7 @@ int save_settings(void)
     fprintf(f, "Grid_ColorMatchCrossHair=%d\r\n", settings.grid_color_match_crosshair);
     fprintf(f, "Grid_Color=%d\r\n", settings.grid_color);
     fprintf(f, "Grid_LoadFromFile=%d\r\n", settings.grid_load_from_file);
-    fprintf(f, "Grid_Type=%d\r\n", settings.grid_type);
+    fprintf(f, "Grid_Type=%s\r\n", settings.grid_type);
     fprintf(f, "Grid_CenterOnOrigin=%d\r\n", settings.grid_center_on_origin);
     fprintf(f, "Grid_CenterX=%f\r\n", settings.grid_center.x);
     fprintf(f, "Grid_CenterY=%f\r\n", settings.grid_center.y);
@@ -351,7 +357,7 @@ int save_settings(void)
     //LineWeight
     fprintf(f, "LineWeight_ShowLineWeight=%d\r\n", settings.lwt_show_lwt);
     fprintf(f, "LineWeight_RealRender=%d\r\n", settings.lwt_real_render);
-    fprintf(f, "LineWeight_DefaultLineWeight=%d\r\n", settings.lwt_default_lwt);
+    fprintf(f, "LineWeight_DefaultLineWeight=%f\r\n", settings.lwt_default_lwt);
 
     /* Selection */
     fprintf(f, "Selection_PickFirst=%d\r\n", settings.selection_mode_pickfirst);
@@ -364,8 +370,8 @@ int save_settings(void)
 
     /* Text */
     fprintf(f, "Text_Font=%s\r\n", settings.text_font);
-    fprintf(f, "Text_Size=%d\r\n", settings.text_style.size);
-    fprintf(f, "Text_Angle=%d\r\n", settings.text_style.angle);
+    fprintf(f, "Text_Size=%f\r\n", settings.text_style.size);
+    fprintf(f, "Text_Angle=%f\r\n", settings.text_style.angle);
     fprintf(f, "Text_StyleBold=%d\r\n", settings.text_style.bold);
     fprintf(f, "Text_StyleItalic=%d\r\n", settings.text_style.italic);
     fprintf(f, "Text_StyleUnderline=%d\r\n", settings.text_style.underline);
@@ -373,6 +379,7 @@ int save_settings(void)
     fprintf(f, "Text_StyleOverline=%d\r\n", settings.text_style.overline);
 
     fclose(f);
+    return 0;
 }
 
 int embClamp(int lower, int x, int upper)
@@ -382,43 +389,4 @@ int embClamp(int lower, int x, int upper)
     return x;
 }
 
-void MainWindow::readSettings()
-{
-    debug_message("Reading Settings...");
-
-    /* This file needs to be read from the users home directory to ensure it is writable. */
-    app_dir(assets_dir, 0);
-    strcpy(settings_fname, assets_dir);
-    strcat(settings_fname, "settings.ini");
-
-    QPoint pos(settings.window_x, settings.window_y);
-    QSize size(settings.window_width, settings.window_height);
-
-    /*
-    layoutState = settings_file.value("LayoutState").toByteArray();
-    if(!restoreState(layoutState))
-    {
-        debug_message("LayoutState NOT restored! Setting Default Layout...");
-        //someToolBar->setVisible(1);
-    }
-    */
-
-    load_settings();
-
-    move(pos);
-    resize(size);
-}
-
-void MainWindow::writeSettings()
-{
-    debug_message("Writing Settings...");
-
-    save_settings();
-}
-
-void MainWindow::settingsDialog(const QString& showTab)
-{
-    Settings_Dialog dialog_(this, showTab, this);
-    dialog_.exec();
-}
 

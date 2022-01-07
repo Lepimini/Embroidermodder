@@ -187,8 +187,8 @@ ENDIF()
 
 add_executable(embroidermodder
 	src/main.cpp
-	src/settings.cpp
 	src/actions.cpp
+	src/settings.c
 	src/gui.c
 	src/icons.c
 	src/config.c

@@ -263,15 +263,19 @@ int zoom_menu[] = {
     -2
 };
 
-int layer_menu[] = {
+int settings_menu[] = {
+    ACTION_settingsdialog,
+    -1,
     -2
 };
 
-int text_menu[] = {
+int recent_menu[] = {
+    -1,
     -2
 };
 
-int properties_menu[] = {
+int window_menu[] = {
+    -1,
     -2
 };
 
@@ -279,13 +283,12 @@ int *menus[] = {
     file_menu,
     edit_menu,
     view_menu,
-    zoom_menu,
-    pan_menu,
-    icon_menu,
+    settings_menu,
+    window_menu,
     help_menu,
-    layer_menu,
-    text_menu,
-    properties_menu
+    recent_menu,
+    zoom_menu,
+    pan_menu
 };
 
 char *toolbar_label[] = {
@@ -302,16 +305,26 @@ char *toolbar_label[] = {
 };
 
 char *menu_label[] = {
-    "File",
-    "Edit",
-    "View",
-    "Zoom",
-    "Pan",
-    "Icon",
-    "Help",
-    "Layer",
-    "Text",
-    "Properties"
+    "&File",
+    "&Edit",
+    "&View",
+    "&Settings",
+    "&Window",
+    "&Help",
+    "Open &Recent",
+    "&Zoom",
+    "&Pan"
+};
+
+char *status_bar_labels[] = {
+    "SNAP",
+    "GRID",
+    "RULER",
+    "ORTHO",
+    "POLAR",
+    "QSNAP",
+    "QTRACK",
+    "LWT"
 };
 
 char *folders[] = {
@@ -325,7 +338,7 @@ char *folders[] = {
 };
 
 int n_toolbars = 10;
-int n_menus = 10;
+int n_menus = 8;
 
 path_symbol icon_zero[] = {
     /* path.addEllipse(QPointF(x+0.25*xScale, y-0.50*yScale), 0.25*xScale, 0.50*yScale);*/
@@ -1595,28 +1608,30 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolygon()
 {
     groupBoxGeometryPolygon = new QGroupBox(tr("Geometry"), this);
 
-    toolButtonPolygonCenterX = createToolButton("blank", tr("Center X"));
-    toolButtonPolygonCenterY = createToolButton("blank", tr("Center Y"));
-    toolButtonPolygonRadiusVertex = createToolButton("blank", tr("Vertex Radius"));
+    {
+        OBJ_TYPE_POLYGON, POLYGON_CENTER_X,
+        "double", 0, "blank", "Center X", LINE_EDIT_MODE, "lineEditPolygonCenterX"
+    },
+    {
+        OBJ_TYPE_POLYGON, POLYGON_CENTER_Y,
+        "double", 0, "blank", "Center Y", LINE_EDIT_MODE, "lineEditPolygonCenterY"
+    },
+    {
+        OBJ_TYPE_POLYGON, POLYGON_VERTEX_RADIUS,
+        "double", 0, "blank", "Vertex Radius", LINE_EDIT_MODE, "lineEditPolygonVertexRadius"
+    }
+
     toolButtonPolygonRadiusSide = createToolButton("blank", tr("Side Radius"));
     toolButtonPolygonDiameterVertex = createToolButton("blank", tr("Vertex Diameter"));
     toolButtonPolygonDiameterSide = createToolButton("blank", tr("Side Diameter"));
     toolButtonPolygonInteriorAngle = createToolButton("blank", tr("Interior Angle"));
 
-    lineEditPolygonCenterX = createLineEdit("double", 0);
-    lineEditPolygonCenterY = createLineEdit("double", 0);
-    lineEditPolygonRadiusVertex = createLineEdit("double", 0);
     lineEditPolygonRadiusSide = createLineEdit("double", 0);
     lineEditPolygonDiameterVertex = createLineEdit("double", 0);
     lineEditPolygonDiameterSide = createLineEdit("double", 0);
     lineEditPolygonInteriorAngle = createLineEdit("double", 1);
 
-    //TODO: mapSignal for polygons
-
     QFormLayout* formLayout = new QFormLayout(this);
-    formLayout->addRow(toolButtonPolygonCenterX, lineEditPolygonCenterX);
-    formLayout->addRow(toolButtonPolygonCenterY, lineEditPolygonCenterY);
-    formLayout->addRow(toolButtonPolygonRadiusVertex, lineEditPolygonRadiusVertex);
     formLayout->addRow(toolButtonPolygonRadiusSide, lineEditPolygonRadiusSide);
     formLayout->addRow(toolButtonPolygonDiameterVertex, lineEditPolygonDiameterVertex);
     formLayout->addRow(toolButtonPolygonDiameterSide, lineEditPolygonDiameterSide);
@@ -1812,53 +1827,37 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
     {
         /* 8 */
         OBJ_TYPE_ARC, ARC_END_Y,
-        "double",
-        1, "blank",
-        "End Y", LINE_EDIT_TYPE,
-        "lineEditArcEndY"
+        "double", 1, "blank", "End Y", LINE_EDIT_TYPE, "lineEditArcEndY"
     },
     {
         /* 9 */
-        OBJ_TYPE_ELLIPSE,
-        ELLIPSE_CENTER_X,
-        "double", 0, "blank",
-        "Center X", LINE_EDIT_TYPE,
-        "lineEditEllipseCenterX"
+        OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_X,
+        "double", 0, "blank", "Center X", LINE_EDIT_TYPE, "lineEditEllipseCenterX"
     },
     {
         /* 10 */
-        OBJ_TYPE_ELLIPSE,
-        ELLIPSE_CENTER_Y,
-        "double", 0, "blank",
-        "Center Y", LINE_EDIT_TYPE,
-        "lineEditEllipseCenterY"
+        OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_Y,
+        "double", 0, "blank", "Center Y", LINE_EDIT_TYPE, "lineEditEllipseCenterY"
     },
     {
         /* 11 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MAJOR,
-        "double", 0, "blank", "Radius Major", LINE_EDIT_TYPE,
-        "lineEditEllipseRadiusMajor"
+        "double", 0, "blank", "Radius Major", LINE_EDIT_TYPE, "lineEditEllipseRadiusMajor"
     },
     {
         /* 12 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MINOR,
-        "double", 0, "blank", "Radius Minor", LINE_EDIT_TYPE,
-        "lineEditEllipseRadiusMinor"
+        "double", 0, "blank", "Radius Minor", LINE_EDIT_TYPE, "lineEditEllipseRadiusMinor"
     },
     {
         /* 13 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MAJOR,
-        "double", 0, "blank",
-        "Diameter Major", LINE_EDIT_TYPE,
-        "lineEditEllipseDiameterMajor"
+        "double", 0, "blank", "Diameter Major", LINE_EDIT_TYPE, "lineEditEllipseDiameterMajor"
     },
     {
         /* 14 */
-        OBJ_TYPE_ELLIPSE,
-        ELLIPSE_DIAMETER_MINOR,
-        "double", 0, "blank",
-        "Diameter Minor", LINE_EDIT_TYPE,
-        "lineEditEllipseDiameterMinor"
+        OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MINOR,
+        "double", 0, "blank", "Diameter Minor", LINE_EDIT_TYPE, "lineEditEllipseDiameterMinor"
     },
     {
         /* 15 */
@@ -1872,42 +1871,28 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
     },
     {
         /* 17 */
-        OBJ_TYPE_POINT,
-        POINT_X,
-        "double", 0, "blank",
-        "Position X", LINE_EDIT_TYPE,
-        "lineEditPointX"
+        OBJ_TYPE_POINT, POINT_X,
+        "double", 0, "blank", "Position X", LINE_EDIT_TYPE, "lineEditPointX"
     },
     {
         /* 18 */
-        OBJ_TYPE_POINT,
-        POINT_Y,
-        "double", 0, "blank",
-        "Position Y", LINE_EDIT_TYPE,
-        "lineEditPointY"
+        OBJ_TYPE_POINT, POINT_Y,
+        "double", 0, "blank", "Position Y", LINE_EDIT_TYPE, "lineEditPointY"
     },
     {
         /* 19 */
-        OBJ_TYPE_RECTANGLE,
-        RECT_CORNER_X1,
-        "double", 0, "blank",
-        "Corner 1 X", LINE_EDIT_TYPE,
-        "lineEditRectangleCorner1X"
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_X1,
+        "double", 0, "blank", "Corner 1 X", LINE_EDIT_TYPE, "lineEditRectangleCorner1X"
     },
     {
         /* 20 */
-        OBJ_TYPE_RECTANGLE,
-        RECT_CORNER_Y1,
-        "double", 0, "blank",
-        "Corner 1 Y", LINE_EDIT_TYPE,
-        "lineEditRectangleCorner1Y"
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y1,
+        "double", 0, "blank", "Corner 1 Y", LINE_EDIT_TYPE, "lineEditRectangleCorner1Y"
     },
     {
         /* 21 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_X2,
-        "double", 0, "blank",
-        "Corner 2 X", LINE_EDIT_TYPE,
-        "lineEditRectangleCorner2X"
+        "double", 0, "blank", "Corner 2 X", LINE_EDIT_TYPE, "lineEditRectangleCorner2X"
     },
     {
         /* 22 */

@@ -74,8 +74,7 @@ QLineEdit*   lineEditPolygonDiameterVertex;
 QLineEdit*   lineEditPolygonDiameterSide;
 QLineEdit*   lineEditPolygonInteriorAngle;
 
-QPointF pasteDelta;
-
+EmbVector pasteDelta;
 QPointF scenePressPoint;
 QPoint pressPoint;
 QPointF sceneMovePoint;
@@ -92,6 +91,8 @@ unsigned int qsnapLocatorColor;
 unsigned int gripColorCool;
 unsigned int gripColorHot;
 unsigned int crosshairColor;
+int precisionAngle;
+int precisionLength;
 
 StatusBarButton* statusBarSnapButton;
 StatusBarButton* statusBarGridButton;
@@ -117,21 +118,6 @@ QLineEdit*   lineEditInfiniteLineY2;
 QLineEdit*   lineEditInfiniteLineVectorX;
 QLineEdit*   lineEditInfiniteLineVectorY;
 
-    ArcObject*  tempArcObj;
-    CircleObject*   tempCircleObj;
-    EllipseObject*  tempEllipseObj;
-    ImageObject*    tempImageObj;
-    LineObject* tempLineObj;
-    PathObject* tempPathObj;
-    PointObject*    tempPointObj;
-    PolygonObject*  tempPolygonObj;
-    PolylineObject* tempPolylineObj;
-    RectObject* tempRectObj;
-    TextSingleObject*   tempTextSingleObj;
-
-    int precisionAngle;
-    int precisionLength;
-
 //Used when checking if fields vary
 QString fieldOldText;
 QString fieldNewText;
@@ -144,34 +130,12 @@ QString fieldOffText;
 QToolButton* toolButtonArcClockwise;
 QComboBox* comboBoxArcClockwise;
 
+QGroupBox* groupBoxGeometry[32];
 QGroupBox* groupBoxGeneral;
-QGroupBox* groupBoxGeometryArc;
 QGroupBox* groupBoxMiscArc;
-QGroupBox* groupBoxGeometryBlock;
-QGroupBox* groupBoxGeometryCircle;
-QGroupBox* groupBoxGeometryDimAligned;
-QGroupBox* groupBoxGeometryDimAngular;
-QGroupBox* groupBoxGeometryDimArcLength;
-QGroupBox* groupBoxGeometryDimDiameter;
-QGroupBox* groupBoxGeometryDimLeader;
-QGroupBox* groupBoxGeometryDimLinear;
-QGroupBox* groupBoxGeometryDimOrdinate;
-QGroupBox* groupBoxGeometryDimRadius;
-QGroupBox* groupBoxGeometryEllipse;
-QGroupBox* groupBoxGeometryImage;
-QGroupBox* groupBoxGeometryInfiniteLine;
-QGroupBox* groupBoxGeometryLine;
-QGroupBox* groupBoxGeometryPath;
 QGroupBox* groupBoxMiscPath;
-QGroupBox* groupBoxGeometryPoint;
-QGroupBox* groupBoxGeometryPolygon;
-QGroupBox* groupBoxGeometryPolyline;
 QGroupBox* groupBoxMiscPolyline;
-QGroupBox* groupBoxGeometryRay;
-QGroupBox* groupBoxGeometryRectangle;
-QGroupBox* groupBoxGeometryTextMulti;
 QGroupBox* groupBoxTextTextSingle;
-QGroupBox* groupBoxGeometryTextSingle;
 QGroupBox* groupBoxMiscTextSingle;
 
 QToolButton* toolButtonBlockX;
@@ -195,12 +159,6 @@ QLineEdit* lineEditPathLength;
 QToolButton* toolButtonPathClosed;
 
 QComboBox*   comboBoxPathClosed;
-
-QToolButton* toolButtonPointX;
-QToolButton* toolButtonPointY;
-
-QLineEdit*   lineEditPointX;
-QLineEdit*   lineEditPointY;
 
 QToolButton* toolButtonPolylineVertexNum;
 QToolButton* toolButtonPolylineVertexX;
@@ -260,6 +218,47 @@ MainWindow* _mainWin = 0;
  * All movement has to be handled explicitly by us, not by the scene.
  */
 
+
+void MainWindow::readSettings()
+{
+    debug_message("Reading Settings...");
+
+    /* This file needs to be read from the users home directory to ensure it is writable. */
+    QPoint pos(settings.window_x, settings.window_y);
+    QSize size(settings.window_width, settings.window_height);
+
+    /*
+    layoutState = settings_file.value("LayoutState").toByteArray();
+    if(!restoreState(layoutState))
+    {
+        debug_message("LayoutState NOT restored! Setting Default Layout...");
+        //someToolBar->setVisible(1);
+    }
+    */
+
+    load_settings();
+
+    move(pos);
+    resize(size);
+}
+
+void MainWindow::writeSettings()
+{
+    debug_message("Writing Settings...");
+
+    settings.window_x = _mainWin->pos().x();
+    settings.window_y = _mainWin->pos().y();
+    settings.window_width = _mainWin->size().width();
+    settings.window_height = _mainWin->size().height();
+
+    save_settings();
+}
+
+void MainWindow::settingsDialog(const QString& showTab)
+{
+    Settings_Dialog dialog_(this, showTab, this);
+    dialog_.exec();
+}
 
 View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphicsView(theScene, parent)
 {
@@ -662,8 +661,8 @@ void View::createGridIso()
     float ySpacing = settings.grid_spacing_y;
 
     /* Ensure the loop will work correctly with negative numbers */
-    float isoW = qAbs(settings.grid_size_x);
-    float isoH = qAbs(settings.grid_size_y);
+    float isoW = fabs(settings.grid_size_x);
+    float isoH = fabs(settings.grid_size_y);
 
     QPointF p1 = QPointF(0,0);
     QPointF p2 = QLineF::fromPolar(isoW, 30).p2();
@@ -1764,7 +1763,9 @@ void View::mouseMoveEvent(QMouseEvent* event)
         }
     }
     if (settings.pastingActive) {
-        pasteObjectItemGroup->setPos(to_qpointf(sceneMousePoint) - pasteDelta);
+        EmbVector v;
+        embVector_subtract(sceneMousePoint, pasteDelta, &v);
+        pasteObjectItemGroup->setPos(to_qpointf(v));
     }
     if (settings.movingActive) {
         //Ensure that the preview is only shown if the mouse has moved.
@@ -1889,7 +1890,9 @@ void View::zoomToPoint(const QPoint& mousePoint, int zoomDir)
 
     updateMouseCoords(mousePoint.x(), mousePoint.y());
     if (settings.pastingActive) {
-        pasteObjectItemGroup->setPos(to_qpointf(sceneMousePoint) - pasteDelta);
+        EmbVector v;
+        embVector_subtract(sceneMousePoint, pasteDelta, &v);
+        pasteObjectItemGroup->setPos(to_qpointf(v));
     }
     if (settings.selectingActive) {
         selectBox->setGeometry(QRect(mapFromScene(scenePressPoint), mousePoint).normalized());
@@ -2086,8 +2089,10 @@ void View::paste()
     }
 
     pasteObjectItemGroup = gscene->createItemGroup(mainWin->cutCopyObjectList);
-    pasteDelta = pasteObjectItemGroup->boundingRect().bottomLeft();
-    pasteObjectItemGroup->setPos(to_qpointf(sceneMousePoint) - pasteDelta);
+    pasteDelta = to_emb_vector(pasteObjectItemGroup->boundingRect().bottomLeft());
+    EmbVector v;
+    embVector_subtract(sceneMousePoint, pasteDelta, &v);
+    pasteObjectItemGroup->setPos(to_qpointf(v));
     settings.pastingActive = 1;
 
     /* Re-create the list in case of multiple pastes */
@@ -3699,7 +3704,7 @@ void Settings_Dialog::currentGeneralMdiBackgroundColorChanged(const QColor& colo
     mainWin->mdiArea->setBackgroundColor(QColor(preview.general_mdi_bg_color));
 }
 
-#define settings_checkbox_function(f, x) \
+#define check_func(f, x) \
     void Settings_Dialog::f(int checked) \
     { \
         dialog.x = checked; \
@@ -3711,25 +3716,13 @@ void Settings_Dialog::currentGeneralMdiBackgroundColorChanged(const QColor& colo
         dialog.x = value; \
     }
 
-settings_checkbox_function(checkBoxTipOfTheDayStateChanged, general_tip_of_the_day)
-settings_checkbox_function(checkBoxUseOpenGLStateChanged, display_use_opengl)
-settings_checkbox_function(checkBoxRenderHintAAStateChanged, display_renderhint_aa)
-settings_checkbox_function(checkBoxRenderHintTextAAStateChanged, display_renderhint_text_aa)
-
-void Settings_Dialog::checkBoxRenderHintSmoothPixStateChanged(int checked)
-{
-    dialog.display_renderhint_smooth_pix = checked;
-}
-
-void Settings_Dialog::checkBoxRenderHintHighAAStateChanged(int checked)
-{
-    dialog.display_renderhint_high_aa = checked;
-}
-
-void Settings_Dialog::checkBoxRenderHintNonCosmeticStateChanged(int checked)
-{
-    dialog.display_renderhint_noncosmetic = checked;
-}
+check_func(checkBoxTipOfTheDayStateChanged, general_tip_of_the_day)
+check_func(checkBoxUseOpenGLStateChanged, display_use_opengl)
+check_func(checkBoxRenderHintAAStateChanged, display_renderhint_aa)
+check_func(checkBoxRenderHintTextAAStateChanged, display_renderhint_text_aa)
+check_func(checkBoxRenderHintSmoothPixStateChanged, display_renderhint_smooth_pix)
+check_func(checkBoxRenderHintHighAAStateChanged, display_renderhint_high_aa)
+check_func(checkBoxRenderHintNonCosmeticStateChanged, display_renderhint_noncosmetic)
 
 void Settings_Dialog::checkBoxShowScrollBarsStateChanged(int checked)
 {
@@ -3737,7 +3730,7 @@ void Settings_Dialog::checkBoxShowScrollBarsStateChanged(int checked)
     mainWin->updateAllViewScrollBars(preview.display_show_scrollbars);
 }
 
-void Settings_Dialog::comboBoxScrollBarWidgetCurrentIndexChanged(int index)
+void comboBoxScrollBarWidgetCurrentIndexChanged(int index)
 {
     dialog.display_scrollbar_widget_num = index;
 }
@@ -4683,6 +4676,7 @@ void Settings_Dialog::rejectChanges()
 
 PropertyEditor::PropertyEditor(const QString& iconDirectory, bool pickAddMode, QWidget* widgetToFocus, QWidget* parent, Qt::WindowFlags flags) : QDockWidget(parent, flags)
 {
+    int i;
     iconDir = iconDirectory;
     iconSize = 16;
     propertyEditorButtonStyle = Qt::ToolButtonTextBesideIcon; //TODO: Make customizable
@@ -4712,62 +4706,22 @@ PropertyEditor::PropertyEditor(const QString& iconDirectory, bool pickAddMode, Q
     hboxLayoutSelection->addWidget(createToolButtonPickAdd());
     widgetSelection->setLayout(hboxLayoutSelection);
 
-    groupBoxGeometryArc = createGroupBoxGeometry(OBJ_TYPE_ARC);
-    groupBoxGeometryBlock = createGroupBoxGeometry(OBJ_TYPE_BLOCK);
-    groupBoxGeometryCircle = createGroupBoxGeometry(OBJ_TYPE_CIRCLE);
-    groupBoxGeometryDimAligned = createGroupBoxGeometry(OBJ_TYPE_DIMALIGNED);
-    groupBoxGeometryDimAngular = createGroupBoxGeometry(OBJ_TYPE_DIMANGULAR);
-    groupBoxGeometryDimArcLength = createGroupBoxGeometry(OBJ_TYPE_DIMARCLENGTH);
-    groupBoxGeometryDimDiameter = createGroupBoxGeometry(OBJ_TYPE_DIMDIAMETER);
-    groupBoxGeometryDimLeader = createGroupBoxGeometry(OBJ_TYPE_DIMLEADER);
-    groupBoxGeometryDimLinear = createGroupBoxGeometry(OBJ_TYPE_DIMLINEAR);
-    groupBoxGeometryDimOrdinate = createGroupBoxGeometry(OBJ_TYPE_DIMORDINATE);
-    groupBoxGeometryDimRadius = createGroupBoxGeometry(OBJ_TYPE_DIMRADIUS);
-    groupBoxGeometryEllipse = createGroupBoxGeometry(OBJ_TYPE_ELLIPSE);
-    groupBoxGeometryImage = createGroupBoxGeometry(OBJ_TYPE_IMAGE);
-    groupBoxGeometryInfiniteLine = createGroupBoxGeometry(OBJ_TYPE_INFINITELINE);
-    groupBoxGeometryLine = createGroupBoxGeometry(OBJ_TYPE_LINE);
-    groupBoxGeometryPath = createGroupBoxGeometry(OBJ_TYPE_PATH);
-    groupBoxGeometryPoint = createGroupBoxGeometry(OBJ_TYPE_POINT);
-    groupBoxGeometryPolygon = createGroupBoxGeometry(OBJ_TYPE_POLYGON);
-    groupBoxGeometryPolyline = createGroupBoxGeometry(OBJ_TYPE_POLYLINE);
-    groupBoxGeometryRay = createGroupBoxGeometry(OBJ_TYPE_RAY);
-    groupBoxGeometryRectangle = createGroupBoxGeometry(OBJ_TYPE_RECTANGLE);
-    groupBoxGeometryTextMulti = createGroupBoxGeometry(OBJ_TYPE_TEXTMULTI);
-    groupBoxGeometryTextSingle = createGroupBoxGeometry(OBJ_TYPE_TEXTSINGLE);
+    for (i=1; i<OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE; i++) {
+        groupBoxGeometry[i] = createGroupBoxGeometry(i+OBJ_TYPE_BASE);
+    }
 
     QScrollArea* scrollProperties = new QScrollArea(this);
     QWidget* widgetProperties = new QWidget(this);
     QVBoxLayout* vboxLayoutProperties = new QVBoxLayout(this);
     vboxLayoutProperties->addWidget(createGroupBoxGeneral());
-    vboxLayoutProperties->addWidget(groupBoxGeometryArc);
+    for (i=1; i<OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE; i++) {
+        vboxLayoutProperties->addWidget(groupBoxGeometry[i+OBJ_TYPE_BASE]);
+    }
     vboxLayoutProperties->addWidget(createGroupBoxMiscArc());
-    vboxLayoutProperties->addWidget(groupBoxGeometryBlock);
-    vboxLayoutProperties->addWidget(groupBoxGeometryCircle);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimAligned);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimAngular);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimArcLength);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimDiameter);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimLeader);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimLinear);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimOrdinate);
-    vboxLayoutProperties->addWidget(groupBoxGeometryDimRadius);
-    vboxLayoutProperties->addWidget(groupBoxGeometryEllipse);
-    vboxLayoutProperties->addWidget(groupBoxGeometryImage);
     vboxLayoutProperties->addWidget(createGroupBoxMiscImage());
-    vboxLayoutProperties->addWidget(groupBoxGeometryInfiniteLine);
-    vboxLayoutProperties->addWidget(groupBoxGeometryLine);
-    vboxLayoutProperties->addWidget(groupBoxGeometryPath);
     vboxLayoutProperties->addWidget(createGroupBoxMiscPath());
-    vboxLayoutProperties->addWidget(groupBoxGeometryPoint);
-    vboxLayoutProperties->addWidget(groupBoxGeometryPolygon);
-    vboxLayoutProperties->addWidget(groupBoxGeometryPolyline);
     vboxLayoutProperties->addWidget(createGroupBoxMiscPolyline());
-    vboxLayoutProperties->addWidget(groupBoxGeometryRay);
-    vboxLayoutProperties->addWidget(groupBoxGeometryRectangle);
-    vboxLayoutProperties->addWidget(groupBoxGeometryTextMulti);
     vboxLayoutProperties->addWidget(createGroupBoxTextTextSingle());
-    vboxLayoutProperties->addWidget(groupBoxGeometryTextSingle);
     vboxLayoutProperties->addWidget(createGroupBoxMiscTextSingle());
     vboxLayoutProperties->addStretch(1);
     widgetProperties->setLayout(vboxLayoutProperties);
@@ -5248,44 +5202,25 @@ void PropertyEditor::updateComboBoxBoolIfVaries(QComboBox* comboBox, bool val, b
 
 void PropertyEditor::showGroups(int objType)
 {
+    if (objType>=OBJ_TYPE_BASE && objType<OBJ_TYPE_UNKNOWN) {
+        groupBoxGeometry[objType-OBJ_TYPE_BASE]->show();
+    }
     if (objType == OBJ_TYPE_ARC) {
-        groupBoxGeometryArc->show();
         groupBoxMiscArc->show();
     }
-    else if(objType == OBJ_TYPE_BLOCK) {
-        groupBoxGeometryBlock->show();
+    else if(objType == OBJ_TYPE_IMAGE) {
+        groupBoxMiscImage->show();
     }
-    else if(objType == OBJ_TYPE_CIRCLE) {
-        groupBoxGeometryCircle->show();
+    else if(objType == OBJ_TYPE_PATH) {
+        groupBoxMiscPath->show();
     }
-    else if(objType == OBJ_TYPE_DIMALIGNED) {
-        groupBoxGeometryDimAligned->show();
+    else if(objType == OBJ_TYPE_POLYLINE) {
+        groupBoxMiscPolyline->show();
     }
-    else if(objType == OBJ_TYPE_DIMANGULAR) {
-        groupBoxGeometryDimAngular->show();
+    else if(objType == OBJ_TYPE_TEXTSINGLE) {
+        groupBoxTextTextSingle->show();
+        groupBoxMiscTextSingle->show();
     }
-    else if(objType == OBJ_TYPE_DIMARCLENGTH) {
-        groupBoxGeometryDimArcLength->show();
-    }
-    else if(objType == OBJ_TYPE_DIMDIAMETER) {
-        groupBoxGeometryDimDiameter->show();
-    }
-    else if(objType == OBJ_TYPE_DIMLEADER)    { groupBoxGeometryDimLeader->show(); }
-    else if(objType == OBJ_TYPE_DIMLINEAR)    { groupBoxGeometryDimLinear->show(); }
-    else if(objType == OBJ_TYPE_DIMORDINATE)  { groupBoxGeometryDimOrdinate->show(); }
-    else if(objType == OBJ_TYPE_DIMRADIUS)    { groupBoxGeometryDimRadius->show(); }
-    else if(objType == OBJ_TYPE_ELLIPSE)      { groupBoxGeometryEllipse->show(); }
-    else if(objType == OBJ_TYPE_IMAGE)        { groupBoxGeometryImage->show(); groupBoxMiscImage->show(); }
-    else if(objType == OBJ_TYPE_INFINITELINE) { groupBoxGeometryInfiniteLine->show(); }
-    else if(objType == OBJ_TYPE_LINE)         { groupBoxGeometryLine->show(); }
-    else if(objType == OBJ_TYPE_PATH)         { groupBoxGeometryPath->show(); groupBoxMiscPath->show(); }
-    else if(objType == OBJ_TYPE_POINT)        { groupBoxGeometryPoint->show(); }
-    else if(objType == OBJ_TYPE_POLYGON)      { groupBoxGeometryPolygon->show(); }
-    else if(objType == OBJ_TYPE_POLYLINE)     { groupBoxGeometryPolyline->show(); groupBoxMiscPolyline->show(); }
-    else if(objType == OBJ_TYPE_RAY)          { groupBoxGeometryRay->show(); }
-    else if(objType == OBJ_TYPE_RECTANGLE)    { groupBoxGeometryRectangle->show(); }
-    else if(objType == OBJ_TYPE_TEXTMULTI)    { groupBoxGeometryTextMulti->show(); }
-    else if(objType == OBJ_TYPE_TEXTSINGLE)   { groupBoxTextTextSingle->show(); groupBoxGeometryTextSingle->show(); groupBoxMiscTextSingle->show(); }
 }
 
 void PropertyEditor::showOneType(int index)
@@ -5296,35 +5231,16 @@ void PropertyEditor::showOneType(int index)
 
 void PropertyEditor::hideAllGroups()
 {
+    int i;
     /* NOTE: General group will never be hidden */
-    groupBoxGeometryArc->hide();
+    for (i=1; i<OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE; i++) {
+        groupBoxGeometry[i]->hide();
+    }
     groupBoxMiscArc->hide();
-    groupBoxGeometryBlock->hide();
-    groupBoxGeometryCircle->hide();
-    groupBoxGeometryDimAligned->hide();
-    groupBoxGeometryDimAngular->hide();
-    groupBoxGeometryDimArcLength->hide();
-    groupBoxGeometryDimDiameter->hide();
-    groupBoxGeometryDimLeader->hide();
-    groupBoxGeometryDimLinear->hide();
-    groupBoxGeometryDimOrdinate->hide();
-    groupBoxGeometryDimRadius->hide();
-    groupBoxGeometryEllipse->hide();
-    groupBoxGeometryImage->hide();
     groupBoxMiscImage->hide();
-    groupBoxGeometryInfiniteLine->hide();
-    groupBoxGeometryLine->hide();
-    groupBoxGeometryPath->hide();
     groupBoxMiscPath->hide();
-    groupBoxGeometryPoint->hide();
-    groupBoxGeometryPolygon->hide();
-    groupBoxGeometryPolyline->hide();
     groupBoxMiscPolyline->hide();
-    groupBoxGeometryRay->hide();
-    groupBoxGeometryRectangle->hide();
-    groupBoxGeometryTextMulti->hide();
     groupBoxTextTextSingle->hide();
-    groupBoxGeometryTextSingle->hide();
     groupBoxMiscTextSingle->hide();
 }
 
@@ -5565,6 +5481,18 @@ void PropertyEditor::mapSignal(QObject* fieldObj, const QString& name, QVariant 
 
 void PropertyEditor::fieldEdited(QObject* fieldObj)
 {
+    ArcObject*  tempArcObj;
+    CircleObject*   tempCircleObj;
+    EllipseObject*  tempEllipseObj;
+    ImageObject*    tempImageObj;
+    LineObject* tempLineObj;
+    PathObject* tempPathObj;
+    PointObject*    tempPointObj;
+    PolygonObject*  tempPolygonObj;
+    PolylineObject* tempPolylineObj;
+    RectObject* tempRectObj;
+    TextSingleObject*   tempTextSingleObj;
+
     static bool blockSignals = 0;
     if(blockSignals) return;
 
@@ -9383,6 +9311,21 @@ float MainWindow::nativeCalculateDistance(float x1, float y1, float x2, float y2
     return QLineF(x1, y1, x2, y2).length();
 }
 
+void MainWindow::fill_menu(int menu_id)
+{
+    int i;
+    debug_message("MainWindow creating %s", menu_label[menu_id]);
+    menuBar()->addMenu(menu[menu_id]);
+    for (i=0; menus[menu_id][i]>=-1; i++) {
+        if (menus[menu_id][i] >= 0) {
+            menu[menu_id]->addAction(actionHash.value(menus[menu_id][i]));
+        }
+        else {
+            menu[menu_id]->addSeparator();
+        }
+    }
+}
+
 /* nativePerpendicularDistance
     This is currently causing a bug and is going to be replaced with a libembroidery function.
     QLineF line(x1, y1, x2, y2);
@@ -9433,18 +9376,9 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     //Init
     mainWin = this;
-    //Menus
-    menu[FILE_MENU] = new QMenu(tr("&File"), this);
-    menu[EDIT_MENU] = new QMenu(tr("&Edit"), this);
-    menu[VIEW_MENU] = new QMenu(tr("&View"), this);
-    menu[SETTINGS_MENU] = new QMenu(tr("&Settings"), this);
-    menu[WINDOW_MENU] = new QMenu(tr("&Window"), this);
-    menu[HELP_MENU] = new QMenu(tr("&Help"), this);
-    //SubMenus
-    menu[RECENT_MENU] = new QMenu(tr("Open &Recent"), this);
-    menu[ZOOM_MENU] = new QMenu(tr("&Zoom"), this);
-    menu[PAN_MENU] = new QMenu(tr("&Pan"), this);
-    //Toolbars
+    for (i=0; i<n_menus+1; i++) {
+        menu[i] = new QMenu(tr(menu_label[i]), this);
+    }
     for (i=0; i<n_toolbars; i++) {
         toolbar[i] = addToolBar(tr(toolbar_label[i]));
     }
@@ -11731,8 +11665,10 @@ void StatusBarButton::toggleQSnap(bool on)
 void StatusBarButton::toggleQTrack(bool on)
 {
     debug_message("StatusBarButton toggleQTrack()");
-    View* gview = mainWin->activeView();
-    if(gview) { gview->toggleQTrack(on); }
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->toggleQTrack(on);
+    }
 }
 
 void StatusBarButton::toggleLwt(bool on)
