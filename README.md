@@ -39,17 +39,10 @@ We're currently working on a "nightly" build see:
 
 To build Embroidermodder 2 from source run:
 
-On most systems:
-
     ./build.sh --get-dependencies
 
-If you have a more unusual package installer, try:
-
-    ./build.sh --build-dependencies
-
-On Windows:
-
-    .\build.bat --build-dependencies
+Windows supports Bash out of the box now, but if you don't have it turned on
+there is a batch file with the same commands.
 
 ### Building
 
@@ -57,17 +50,9 @@ Assuming you have the above dependancies these commands should build `embroiderm
 
     ./build.sh
 
-or (on Windows)
-
-    .\build.bat
-
 with the install argument it will also install the program to user space
 
     ./build.sh --install
-
-or (on Windows)
-
-    .\build.bat --install
 
 ## Documentation
 
@@ -345,7 +330,7 @@ Originally Embroidermodder had a terminal widget, this is why we removed it.
 
 1. Check for memory leaks
 2. Clear compiler warnings on `-Wall -ansi -pedantic` for C.
-3. 
+3. Get Embroidermodder onto the current version of libembroidery.
 
 
 ### Developing for Android
