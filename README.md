@@ -51,18 +51,6 @@ On Windows:
 
     .\build.bat --build-dependencies
 
-### FreeGLUT 3
-
-We're working on an FreeGLUT 3 version of the library that will require no
-non-standard dependencies not included in the source.
-
-On systems where you use `--build-dependencies` the system will
-build and install the libraries if they are not already present
-from the versions in `extern/`. This way a copy of
-the Embroidermodder 2 source code
-on a machine with a build environment can be built without a connection
-to the internet access and insures against FreeGLUT 3 going out of support.
-
 ### Building
 
 Assuming you have the above dependancies these commands should build `embroidermodder`
@@ -92,7 +80,71 @@ directory) and the printed docs in the three files:
 
 ## Development
 
-Current work:
+If you wish to develop with us you can chat via the contact email
+on the [website](embroidermodder.org) or in the issues tab on the
+[github page](https://github.com/Embroidermodder/Embroidermodder/issues).
+People have been polite and friendly in these conversations and I (Robin)
+have really enjoyed them.
+If we do have any arguments please note we have a
+[Code of Conduct](CODE_OF_CONDUCT.md) so there is a consistent policy to
+enforce when dealing with these arguments.
+
+### The Actions System
+
+In order to simplify the development of a GUI that is flexible and
+easy to understand to new developers we have a custom action system that all
+user actions will go via.
+
+The C `action_hash_data` struct will contain: the icon used, the labels for the
+menus and tooltips and the function pointer for that action.
+There will be an accompanying argument for this function call, currently being
+drafted as `action_call`. So when the user makes a function call it should
+contain information like the mouse position, whether special key is pressed
+etc.
+
+So there should be a way of getting the callbacks like:
+
+```
+void spinBoxGridSizeXValueChanged(double);
+void spinBoxGridSizeYValueChanged(double);
+void spinBoxGridSpacingXValueChanged(double);
+void spinBoxGridSpacingYValueChanged(double);
+```
+
+to go through the same system. Also the statusbar buttons with callbacks like:
+
+```
+void toggleSnap(bool on);
+void toggleGrid(bool on);
+```
+
+### Accessibility
+
+Software can be more or less friendly to people with dylexia, partial sightedness,
+reduced mobility and those who don't speak English.
+Embroidermodder 2 has, in its design, the following features to help:
+
+* icons for everything to reduce the amount of reading required
+* the system font is configurable: if you have a dyslexia-friendly font you can load it
+* the interface rescales to help with partial-sightedness
+* the system language is configurable, unfortunately the docs will only be in English but we can try to supply lots of images of the interface to make it easier to understand as a second language
+* buttons are remappable: XBox controllers are known for being good for people with reduced mobility so remapping the buttons to whatever setup you have should help
+
+Note that most of these features will be released with version 2.1, which is planned for around early 2023.
+
+### FreeGLUT 3
+
+We're working on an FreeGLUT 3 version of the library that will require no
+non-standard dependencies not included in the source.
+
+On systems where you use `--build-dependencies` the system will
+build and install the libraries if they are not already present
+from the versions in `extern/`. This way a copy of
+the Embroidermodder 2 source code
+on a machine with a build environment can be built without a connection
+to the internet access and insures against FreeGLUT 3 going out of support.
+
+### Current work
 
 1. Converting C++ to C throughout.
     1. All comments to multiline `/* C-style comments */`.
