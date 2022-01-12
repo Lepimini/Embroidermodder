@@ -613,7 +613,6 @@ void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& 
     embPattern_addPolylineObjectAbs(pattern, polyObject);
 }
 
-
 void settingsSnap()
 {
     _mainWin->settingsDialog("Snap");

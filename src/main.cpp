@@ -58,6 +58,22 @@ QToolButton* toolButtonImagePath;
 QLineEdit*   lineEditImageName;
 QLineEdit*   lineEditImagePath;
 
+QToolButton* toolButtonPolygonCenterX;
+QToolButton* toolButtonPolygonCenterY;
+QToolButton* toolButtonPolygonRadiusVertex;
+QToolButton* toolButtonPolygonRadiusSide;
+QToolButton* toolButtonPolygonDiameterVertex;
+QToolButton* toolButtonPolygonDiameterSide;
+QToolButton* toolButtonPolygonInteriorAngle;
+
+QLineEdit* lineEditPolygonCenterX;
+QLineEdit*   lineEditPolygonCenterY;
+QLineEdit*   lineEditPolygonRadiusVertex;
+QLineEdit*   lineEditPolygonRadiusSide;
+QLineEdit*   lineEditPolygonDiameterVertex;
+QLineEdit*   lineEditPolygonDiameterSide;
+QLineEdit*   lineEditPolygonInteriorAngle;
+
 EmbVector pasteDelta;
 QPointF scenePressPoint;
 QPoint pressPoint;
@@ -3656,10 +3672,36 @@ void Settings_Dialog::currentGeneralMdiBackgroundColorChanged(const QColor& colo
     mainWin->mdiArea->setBackgroundColor(QColor(preview.general_mdi_bg_color));
 }
 
+
+/*
+check_func(checkBoxTipOfTheDayStateChanged, general_tip_of_the_day)
+check_func(checkBoxUseOpenGLStateChanged, display_use_opengl)
+check_func(checkBoxRenderHintAAStateChanged, display_renderhint_aa)
+check_func(checkBoxRenderHintTextAAStateChanged, display_renderhint_text_aa)
+check_func(checkBoxRenderHintSmoothPixStateChanged, display_renderhint_smooth_pix)
+check_func(checkBoxRenderHintHighAAStateChanged, display_renderhint_high_aa)
+check_func(checkBoxRenderHintNonCosmeticStateChanged, display_renderhint_noncosmetic)
+*/
+
 void Settings_Dialog::checkBoxShowScrollBarsStateChanged(int checked)
 {
     preview.display_show_scrollbars = checked;
     mainWin->updateAllViewScrollBars(preview.display_show_scrollbars);
+}
+
+void Settings_Dialog::spinBoxZoomScaleInValueChanged(double value)
+{
+    dialog.display_zoomscale_in = value;
+}
+
+void Settings_Dialog::spinBoxZoomScaleOutValueChanged(double value)
+{
+    dialog.display_zoomscale_out = value;
+}
+
+void Settings_Dialog::checkBoxDisableBGStateChanged(int checked)
+{
+    dialog.printing_disable_bg = checked;
 }
 
 void Settings_Dialog::chooseDisplayCrossHairColor()
@@ -10772,7 +10814,7 @@ bool MdiWindow::saveFile(const QString &fileName)
         if(formatType == EMBFORMAT_STITCHONLY)
             embPattern_movePolylinesToStitchList(pattern); //TODO: handle all objects like this
 
-        writeSuccessful = formatTable[writer].writer(pattern, qPrintable(fileName));
+        writeSuccessful = embPattern_writeAuto(pattern, qPrintable(fileName));
         if(!writeSuccessful) { debug_message("Writing file %s was unsuccessful", qPrintable(fileName)); }
     }
 
@@ -10809,25 +10851,12 @@ bool MdiWindow::loadFile(const QString &fileName)
         printf("Could not allocate memory for embroidery pattern\n");
         exit(1);
     }
-    int readSuccessful = 0;
-    QString readError;
-    int reader = emb_identify_format((char*)qPrintable(fileName));
-    if (reader < 0) {
-        readSuccessful = 0;
-        readError = "Unsupported read file type: " + fileName;
-        debug_message("Unsupported read file type: %s\n", qPrintable(fileName));
-    } else {
-        readSuccessful = formatTable[reader].reader(p, qPrintable(fileName));
-        if (!readSuccessful) {
-            readError = "Reading file was unsuccessful: " + fileName;
-            debug_message("Reading file was unsuccessful: %s\n", qPrintable(fileName));
-        }
+    if (!embPattern_readAuto(p, qPrintable(fileName))) {
+        debug_message("Reading file was unsuccessful: %s\n", qPrintable(fileName));
+        QApplication::restoreOverrideCursor();
+        QMessageBox::warning(this, tr("Error reading pattern"), tr("Reading file was unsuccessful: ") + fileName);
     }
-    if (!readSuccessful) {
-        QMessageBox::warning(this, tr("Error reading pattern"), tr(qPrintable(readError)));
-    }
-
-    if (readSuccessful) {
+    else {
         embPattern_moveStitchListToPolylines(p); //TODO: Test more
         int stitchCount = p->stitchList->count;
         QPainterPath path;
@@ -10866,11 +10895,11 @@ bool MdiWindow::loadFile(const QString &fileName)
                 QPainterPath pathPath;
                 EmbColor thisColor = p->paths->path[i]->color;
                 if (curPointList->count > 0) {
-                    EmbPoint pp = curPointList[0].point->point;
+                    EmbVector pp = curPointList[0].point->point;
                     pathPath.moveTo(pp.x, -pp.y); //NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                 }
                 for (int j = 1; j < curPointList->count; j++) {
-                    EmbPoint pp = curPointList[j].point->point;
+                    EmbVector pp = curPointList[j].point->point;
                     pathPath.lineTo(pp.x, -pp.y); //NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                 }
                 QPen loadPen(qRgb(thisColor.r, thisColor.g, thisColor.b));
@@ -10885,7 +10914,7 @@ bool MdiWindow::loadFile(const QString &fileName)
         }
         if (p->points) {
             for (int i = 0; i < p->points->count; i++) {
-                EmbPoint po = p->points->point[i].point;
+                EmbVector po = p->points->point[i].point;
                 EmbColor thisColor = p->points->point[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 // NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
@@ -10902,7 +10931,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                 EmbColor thisColor = p->polygons->polygon[i]->color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 for (int j=0; j<curPointList->count; j++) {
-                    EmbPoint pp = curPointList->point[j].point;
+                    EmbVector pp = curPointList->point[j].point;
                     x = pp.x;
                     y = -pp.y; //NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
 
@@ -10930,7 +10959,7 @@ bool MdiWindow::loadFile(const QString &fileName)
                 EmbColor thisColor = p->polylines->polyline[i]->color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 for (int j=0; j<curPointList->count; j++) {
-                    EmbPoint pp = curPointList->point[j].point;
+                    EmbVector pp = curPointList->point[j].point;
                     x = pp.x;
                     y = -pp.y; //NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                     if (firstPoint) {
@@ -10965,9 +10994,6 @@ bool MdiWindow::loadFile(const QString &fileName)
             //TODO: Josh, provide me a hoop size and/or grid spacing from the pattern.
         }
         QApplication::restoreOverrideCursor();
-    } else {
-        QApplication::restoreOverrideCursor();
-        QMessageBox::warning(this, tr("Error reading pattern"), tr("Cannot read pattern"));
     }
     embPattern_free(p);
 
@@ -10975,8 +11001,7 @@ bool MdiWindow::loadFile(const QString &fileName)
     undo_history_length = 0;
 
     setCurrentColor(tmpColor);
-    fileWasLoaded = 1;
-    return fileWasLoaded;
+    return 1;
 }
 
 void MdiWindow::print()
@@ -11267,14 +11292,12 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
         connect(settingsRulerAction, SIGNAL(triggered()), this, SLOT(settingsRuler()));
         menu_.addAction(settingsRulerAction);
     }
-    else if(objectName() == "StatusBarButtonORTHO")
-    {
+    else if (objectName() == "StatusBarButtonORTHO") {
         QAction* settingsOrthoAction = new QAction(QIcon("icons/orthosettings.png"), "&Settings...", &menu_);
         connect(settingsOrthoAction, SIGNAL(triggered()), this, SLOT(settingsOrtho()));
         menu_.addAction(settingsOrthoAction);
     }
-    else if(objectName() == "StatusBarButtonPOLAR")
-    {
+    else if (objectName() == "StatusBarButtonPOLAR") {
         QAction* settingsPolarAction = new QAction(QIcon("icons/polarsettings.png"), "&Settings...", &menu_);
         connect(settingsPolarAction, SIGNAL(triggered()), this, SLOT(settingsPolar()));
         menu_.addAction(settingsPolarAction);
@@ -11291,8 +11314,7 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
         connect(settingsQTrackAction, SIGNAL(triggered()), this, SLOT(settingsQTrack()));
         menu_.addAction(settingsQTrackAction);
     }
-    else if(objectName() == "StatusBarButtonLWT")
-    {
+    else if(objectName() == "StatusBarButtonLWT") {
         View* gview = _mainWin->activeView();
         if (gview) {
             QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu_);

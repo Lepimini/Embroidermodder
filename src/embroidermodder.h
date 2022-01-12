@@ -56,6 +56,15 @@ extern "C" {
 #define TAB_QTRACK                    6
 #define TAB_LWT                       7
 
+#define STATUS_SNAP                   0
+#define STATUS_GRID                   1
+#define STATUS_RULER                  2
+#define STATUS_ORTHO                  3
+#define STATUS_POLAR                  4
+#define STATUS_QSNAP                  5
+#define STATUS_QTRACK                 6
+#define STATUS_LWT                    7
+
 #define SYMBOL_zero                   0
 #define SYMBOL_one                    1
 #define SYMBOL_two                    2
@@ -1811,6 +1820,9 @@ private slots:
     void chooseGeneralMdiBackgroundColor();
     void currentGeneralMdiBackgroundColorChanged(const QColor&);
     void checkBoxShowScrollBarsStateChanged(int);
+    void spinBoxZoomScaleInValueChanged(double);
+    void spinBoxZoomScaleOutValueChanged(double);
+    void checkBoxDisableBGStateChanged(int);
     void chooseDisplayCrossHairColor();
     void currentDisplayCrossHairColorChanged(const QColor&);
     void chooseDisplayBackgroundColor();
