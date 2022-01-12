@@ -191,54 +191,58 @@ These are key bits of reasoning behind why the software is built the way it is.
 
 ### CAD command review
 
-1. scale
-2. circle
-3. offset
-4. extend
-5. trim
-6. BreakAtPoint
-7. Break2Points
-8. Fillet
-9. star
-10. singlelinetext
-11. Chamfer
-12. split
-13. area
-14. time
-15. pickadd
-16. zoomfactor
-17. product
-18. program
-19. zoomwindow
-20. divide
-21. find
-22. record
-23. playback
-24. rotate
-25. rgb
-26. move
-27. grid
-28. griphot
-29. gripcolor
-30. gripcool
-31. gripsize
-32. highlight
-33. units
-34. locatepoint
-35. distance
-36. arc
-37. ellipse
-38. array
-39. point
-40. polyline
-41. polygon
-42. rectangle
-43. line
-44. arc (rt)
-45. dolphin
-46. heart
+| ID | Name | Arguments | Description |
+|---|---|---|---|
+| 0 | newfile | none | Create a new EmbPattern with a new tab in the GUI. |
+| 1 | openfile | `char *fname;` | Open an EmbPattern with the supplied filename `fname`. |
+| 2 | savefile | `char *fname;` | Save the current loaded EmbPattern to the supplied filname `fname`. |
+| 1 | scale | selected objects, 1 float | Scale all selected objects by the number supplied, without selection scales the entire design |
+| 2 | circle | mouse co-ords | Adds a circle to the design based on the supplied numbers, converts to stitches on save for stitch only formats. |
+| 3 | offset | mouse co-ords | Shifts the selected objects by the amount given by the mouse co-ordinates. |
+| 4 | extend | | |
+| 5 | trim | | |
+| 6 | BreakAtPoint | | |
+| 7 | Break2Points | | |
+| 8 | Fillet | | |
+| 9 | star | | |
+| 10 | singlelinetext | | |
+| 11 | Chamfer | | |
+| 12 | split | | |
+| 13 | area | | |
+| 14 | time | | |
+| 15 | pickadd | | |
+| 16 | zoomfactor | | |
+| 17 | product | | |
+| 18 | program | | |
+| 19 | zoomwindow | | |
+| 20 | divide | | |
+| 21 | find | | |
+| 22 | record | | |
+| 23 | playback | | |
+| 24 | rotate | | |
+| 25 | rgb | | |
+| 26 | move | | |
+| 27 | grid | | |
+| 28 | griphot | | |
+| 29 | gripcolor | | |
+| 30 | gripcool | | |
+| 31 | gripsize | | |
+| 32 | highlight | | |
+| 33 | units | | |
+| 34 | locatepoint | | |
+| 35 | distance | | |
+| 36 | arc | | |
+| 37 | ellipse | | |
+| 38 | array | | |
+| 39 | point | | |
+| 40 | polyline | | |
+| 41 | polygon | | |
+| 42 | rectangle | | |
+| 43 | line | | |
+| 44 | arc (rt) | | |
+| 45 | dolphin | | |
+| 46 | heart | | |
 
-So, it means weighing up some simplifications.
 
 ### Removed Elements
 
