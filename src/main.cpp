@@ -9180,7 +9180,6 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     settings.shiftKeyPressedState = 0;
 
-    app_dir(current_path, icons_folder);
     setWindowIcon(loadIcon(icon_app));
     setMinimumSize(800, 480); //Require Minimum WVGA
 
@@ -9205,7 +9204,6 @@ MainWindow::MainWindow() : QMainWindow(0)
     layout->addWidget(mdiArea);
     setCentralWidget(vbox);
 
-    app_dir(current_path, icons_folder);
     //setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::VerticalTabs);
     /* TODO: Load these from settings */
     /* tabifyDockWidget(dockPropEdit, dockUndoEdit); */
@@ -9492,7 +9490,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     lineweightSelector->addItem(loadIcon(icon_lineweight21), "1.05 mm", 1.05);
     lineweightSelector->addItem(loadIcon(icon_lineweight22), "1.10 mm", 1.10);
     lineweightSelector->addItem(loadIcon(icon_lineweight23), "1.15 mm", 1.15);
-    lineweightSelector->addItem(QIcon(QPixmap(icon_lineweight24)), "1.20 mm", 1.20);
+    lineweightSelector->addItem(loadIcon(icon_lineweight24), "1.20 mm", 1.20);
     lineweightSelector->setMinimumContentsLength(8);
     /* Prevent dropdown text readability being squish...d. */
     toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector);

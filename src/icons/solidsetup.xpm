@@ -1,9 +1,7 @@
 /* XPM */
-char *icon_solidsetup[] = {
-/* columns rows colors chars-per-pixel */
-"128 128 1 1 ",
-"  c #968725",
-/* pixels */
+char * solidsetup_xpm[] = {
+"128 128 1 1",
+" 	c #968725",
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
@@ -131,5 +129,4 @@ char *icon_solidsetup[] = {
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
-"                                                                                                                                "
-};
+"                                                                                                                                "};

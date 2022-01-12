@@ -1,9 +1,7 @@
 /* XPM */
-char *icon_stub[] = {
-/* columns rows colors chars-per-pixel */
-"128 128 1 1 ",
-"  c #80FF80",
-/* pixels */
+char * stub_xpm[] = {
+"128 128 1 1",
+" 	c #80FF80",
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
@@ -131,5 +129,4 @@ char *icon_stub[] = {
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
-"                                                                                                                                "
-};
+"                                                                                                                                "};

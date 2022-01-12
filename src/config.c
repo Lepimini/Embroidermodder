@@ -10,9 +10,753 @@
 
 #include "embroidermodder.h"
 
+#include "icons/3dviews.xpm"
+#include "icons/about.xpm"
+#include "icons/aligneddimension.xpm"
+#include "icons/aligntextangle.xpm"
+#include "icons/aligntextcenter.xpm"
+#include "icons/aligntexthome.xpm"
+#include "icons/aligntextleft.xpm"
+#include "icons/aligntextright.xpm"
+#include "icons/aligntext.xpm"
+#include "icons/angulardimension.xpm"
+#include "icons/app.xpm"
+#include "icons/arc3points.xpm"
+#include "icons/arccenterstartangle.xpm"
+#include "icons/arccenterstartend.xpm"
+#include "icons/arccenterstartlength.xpm"
+#include "icons/arccontinue.xpm"
+#include "icons/arcstartcenterangle.xpm"
+#include "icons/arcstartcenterend.xpm"
+#include "icons/arcstartcenterlength.xpm"
+#include "icons/arcstartendangle.xpm"
+#include "icons/arcstartenddirection.xpm"
+#include "icons/arcstartendradius.xpm"
+#include "icons/arc.xpm"
+#include "icons/area.xpm"
+#include "icons/array.xpm"
+#include "icons/backview.xpm"
+#include "icons/baselinedimension.xpm"
+#include "icons/bean.xpm"
+#include "icons/blank.xpm"
+#include "icons/bottomview.xpm"
+#include "icons/boundary.xpm"
+#include "icons/break2points.xpm"
+#include "icons/breakatpoint.xpm"
+#include "icons/browser.xpm"
+#include "icons/camera.xpm"
+#include "icons/centermark.xpm"
+#include "icons/chamfer.xpm"
+#include "icons/changelog.xpm"
+#include "icons/check.xpm"
+#include "icons/circle2points.xpm"
+#include "icons/circle3points.xpm"
+#include "icons/circlecenterdiameter.xpm"
+#include "icons/circlecenterradius.xpm"
+#include "icons/circletantanradius.xpm"
+#include "icons/circletantantan.xpm"
+#include "icons/circle.xpm"
+#include "icons/cloud-2.xpm"
+#include "icons/cloud.xpm"
+#include "icons/colorblue.xpm"
+#include "icons/colorbyblock.xpm"
+#include "icons/colorbylayer.xpm"
+#include "icons/colorcyan.xpm"
+#include "icons/colorgreen.xpm"
+#include "icons/colormagenta.xpm"
+#include "icons/colorother.xpm"
+#include "icons/colorred.xpm"
+#include "icons/colorselector.xpm"
+#include "icons/colorwhite.xpm"
+#include "icons/coloryellow.xpm"
+#include "icons/constructionline.xpm"
+#include "icons/continuedimension.xpm"
+#include "icons/copyobject.xpm"
+#include "icons/copy.xpm"
+#include "icons/customizekeyboard.xpm"
+#include "icons/customizemenus.xpm"
+#include "icons/customizetoolbars.xpm"
+#include "icons/customize.xpm"
+#include "icons/cut.xpm"
+#include "icons/date.xpm"
+#include "icons/day.xpm"
+#include "icons/designdetails.xpm"
+#include "icons/diameterdimension.xpm"
+#include "icons/dimensionedit.xpm"
+#include "icons/dimensionstyle.xpm"
+#include "icons/dimensiontextedit.xpm"
+#include "icons/dimensionupdate.xpm"
+#include "icons/distance.xpm"
+#include "icons/dolphin.xpm"
+#include "icons/donothing.xpm"
+#include "icons/donut-2.xpm"
+#include "icons/donut.xpm"
+#include "icons/drawing2.xpm"
+#include "icons/drawing.xpm"
+#include "icons/ellipsearc.xpm"
+#include "icons/ellipseaxisend.xpm"
+#include "icons/ellipsecenter.xpm"
+#include "icons/ellipse.xpm"
+#include "icons/erase.xpm"
+#include "icons/escape.xpm"
+#include "icons/exit.xpm"
+#include "icons/explode.xpm"
+#include "icons/extend.xpm"
+#include "icons/fillet.xpm"
+#include "icons/findandreplace.xpm"
+#include "icons/freezealllayers.xpm"
+#include "icons/frontview.xpm"
+#include "icons/gridsettings.xpm"
+#include "icons/gridsnapsettings.xpm"
+#include "icons/hatch.xpm"
+#include "icons/heart-2.xpm"
+#include "icons/heart.xpm"
+#include "icons/help-2.xpm"
+#include "icons/help.xpm"
+#include "icons/hex.xpm"
+#include "icons/hidealllayers.xpm"
+#include "icons/histogram.xpm"
+#include "icons/icon128.xpm"
+#include "icons/icon16.xpm"
+#include "icons/icon24.xpm"
+#include "icons/icon32.xpm"
+#include "icons/icon48.xpm"
+#include "icons/icon64.xpm"
+#include "icons/inquiry.xpm"
+#include "icons/insertblock.xpm"
+#include "icons/join.xpm"
+#include "icons/justifytext.xpm"
+#include "icons/layerprevious.xpm"
+#include "icons/layerselector.xpm"
+#include "icons/layers.xpm"
+#include "icons/layertranslate.xpm"
+#include "icons/leftview.xpm"
+#include "icons/lengthen.xpm"
+#include "icons/lineardimension.xpm"
+#include "icons/linetypebyblock.xpm"
+#include "icons/linetypebylayer.xpm"
+#include "icons/linetypecenter.xpm"
+#include "icons/linetypecontinuous.xpm"
+#include "icons/linetypehidden.xpm"
+#include "icons/linetypeother.xpm"
+#include "icons/linetypeselector.xpm"
+#include "icons/lineweight01.xpm"
+#include "icons/lineweight02.xpm"
+#include "icons/lineweight03.xpm"
+#include "icons/lineweight04.xpm"
+#include "icons/lineweight05.xpm"
+#include "icons/lineweight06.xpm"
+#include "icons/lineweight07.xpm"
+#include "icons/lineweight08.xpm"
+#include "icons/lineweight09.xpm"
+#include "icons/lineweight10.xpm"
+#include "icons/lineweight11.xpm"
+#include "icons/lineweight12.xpm"
+#include "icons/lineweight13.xpm"
+#include "icons/lineweight14.xpm"
+#include "icons/lineweight15.xpm"
+#include "icons/lineweight16.xpm"
+#include "icons/lineweight17.xpm"
+#include "icons/lineweight18.xpm"
+#include "icons/lineweight19.xpm"
+#include "icons/lineweight20.xpm"
+#include "icons/lineweight21.xpm"
+#include "icons/lineweight22.xpm"
+#include "icons/lineweight23.xpm"
+#include "icons/lineweight24.xpm"
+#include "icons/lineweightbyblock.xpm"
+#include "icons/lineweightbylayer.xpm"
+#include "icons/lineweightdefault.xpm"
+#include "icons/lineweightselector.xpm"
+#include "icons/lineweightsettings.xpm"
+#include "icons/line.xpm"
+#include "icons/list.xpm"
+#include "icons/locatepoint.xpm"
+#include "icons/locator-snaptoapparentintersection.xpm"
+#include "icons/locator-snaptocenter.xpm"
+#include "icons/locator-snaptoendpoint.xpm"
+#include "icons/locator-snaptoextension.xpm"
+#include "icons/locator-snaptoinsert.xpm"
+#include "icons/locator-snaptointersection.xpm"
+#include "icons/locator-snaptomidpoint.xpm"
+#include "icons/locator-snaptonearest.xpm"
+#include "icons/locator-snaptonode.xpm"
+#include "icons/locator-snaptoparallel.xpm"
+#include "icons/locator-snaptoperpendicular.xpm"
+#include "icons/locator-snaptoquadrant.xpm"
+#include "icons/locator-snaptotangent.xpm"
+#include "icons/lockalllayers.xpm"
+#include "icons/makeblock.xpm"
+#include "icons/makelayercurrent.xpm"
+#include "icons/mass.xpm"
+#include "icons/mirror.xpm"
+#include "icons/move.xpm"
+#include "icons/multilinetext.xpm"
+#include "icons/multiline.xpm"
+#include "icons/namedviews.xpm"
+#include "icons/neisometricview.xpm"
+#include "icons/new.xpm"
+#include "icons/night.xpm"
+#include "icons/nopreview.xpm"
+#include "icons/nwisometricview.xpm"
+#include "icons/obliquedimensions.xpm"
+#include "icons/offset.xpm"
+#include "icons/open.xpm"
+#include "icons/ordinatedimension.xpm"
+#include "icons/orthosettings.xpm"
+#include "icons/pandown.xpm"
+#include "icons/panleft.xpm"
+#include "icons/panpoint.xpm"
+#include "icons/panrealtime.xpm"
+#include "icons/panright.xpm"
+#include "icons/panup.xpm"
+#include "icons/pan.xpm"
+#include "icons/paste.xpm"
+#include "icons/path.xpm"
+#include "icons/pickadd.xpm"
+#include "icons/picknew.xpm"
+#include "icons/plugin.xpm"
+#include "icons/pointdivide.xpm"
+#include "icons/pointmeasure.xpm"
+#include "icons/pointmultiple.xpm"
+#include "icons/pointsingle.xpm"
+#include "icons/point.xpm"
+#include "icons/polarsettings.xpm"
+#include "icons/polygon.xpm"
+#include "icons/polyline.xpm"
+#include "icons/print.xpm"
+#include "icons/pyscript.xpm"
+#include "icons/qsnapsettings.xpm"
+#include "icons/qtracksettings.xpm"
+#include "icons/quickdimension.xpm"
+#include "icons/quickleader.xpm"
+#include "icons/quickselect.xpm"
+#include "icons/radiusdimension.xpm"
+#include "icons/ray.xpm"
+#include "icons/rectangle.xpm"
+#include "icons/redo.xpm"
+#include "icons/region.xpm"
+#include "icons/render.xpm"
+#include "icons/rgb.xpm"
+#include "icons/rightview.xpm"
+#include "icons/rotate.xpm"
+#include "icons/rulersettings.xpm"
+#include "icons/sandbox.xpm"
+#include "icons/satin.xpm"
+#include "icons/saveas.xpm"
+#include "icons/save.xpm"
+#include "icons/scale.xpm"
+#include "icons/seisometricview.xpm"
+#include "icons/settingsdialog-2.xpm"
+#include "icons/settingsdialog.xpm"
+#include "icons/shade2dwireframe.xpm"
+#include "icons/shade3dwireframe.xpm"
+#include "icons/shadeflatedges.xpm"
+#include "icons/shadeflat.xpm"
+#include "icons/shadehidden.xpm"
+#include "icons/shadesmoothedges.xpm"
+#include "icons/shadesmooth.xpm"
+#include "icons/shade.xpm"
+#include "icons/showalllayers.xpm"
+#include "icons/singlelinetext.xpm"
+#include "icons/sketch-2.xpm"
+#include "icons/sketch.xpm"
+#include "icons/snapfrom.xpm"
+#include "icons/snaptoapparentintersection.xpm"
+#include "icons/snaptocenter.xpm"
+#include "icons/snaptoendpoint.xpm"
+#include "icons/snaptoextension.xpm"
+#include "icons/snaptoinsert.xpm"
+#include "icons/snaptointersection.xpm"
+#include "icons/snaptomidpoint.xpm"
+#include "icons/snaptonearest.xpm"
+#include "icons/snaptonode.xpm"
+#include "icons/snaptonone.xpm"
+#include "icons/snaptoparallel.xpm"
+#include "icons/snaptoperpendicular.xpm"
+#include "icons/snaptoquadrant.xpm"
+#include "icons/snaptotangent.xpm"
+#include "icons/snowflake-2.xpm"
+#include "icons/snowflake.xpm"
+#include "icons/solidbox.xpm"
+#include "icons/solidcheck.xpm"
+#include "icons/solidclean.xpm"
+#include "icons/solidcoloredges.xpm"
+#include "icons/solidcolorfaces.xpm"
+#include "icons/solidcone.xpm"
+#include "icons/solidcopyedges.xpm"
+#include "icons/solidcopyfaces.xpm"
+#include "icons/solidcylinder.xpm"
+#include "icons/soliddeletefaces.xpm"
+#include "icons/solidextrudefaces.xpm"
+#include "icons/solidextrude.xpm"
+#include "icons/solidimprint.xpm"
+#include "icons/solidinterfere.xpm"
+#include "icons/solidintersect.xpm"
+#include "icons/solidmovefaces.xpm"
+#include "icons/solidoffsetfaces.xpm"
+#include "icons/solidrevolve.xpm"
+#include "icons/solidrotatefaces.xpm"
+#include "icons/solidsection.xpm"
+#include "icons/solidsediting.xpm"
+#include "icons/solidseparate.xpm"
+#include "icons/solidsetupdrawing.xpm"
+#include "icons/solidsetupprofile.xpm"
+#include "icons/solidsetupview.xpm"
+#include "icons/solidsetup.xpm"
+#include "icons/solidshell.xpm"
+#include "icons/solidslice.xpm"
+#include "icons/solidsphere.xpm"
+#include "icons/solidsubtract.xpm"
+#include "icons/solids.xpm"
+#include "icons/solidtaperfaces.xpm"
+#include "icons/solidtorus.xpm"
+#include "icons/solidunion.xpm"
+#include "icons/solidwedge.xpm"
+#include "icons/spline.xpm"
+#include "icons/star.xpm"
+#include "icons/stretch.xpm"
+#include "icons/stub.xpm"
+#include "icons/surface2dsolid.xpm"
+#include "icons/surface3dface.xpm"
+#include "icons/surface3dmesh.xpm"
+#include "icons/surfacebox.xpm"
+#include "icons/surfacecone.xpm"
+#include "icons/surfacecylinder.xpm"
+#include "icons/surfacedish.xpm"
+#include "icons/surfacedome.xpm"
+#include "icons/surfaceedgesurface.xpm"
+#include "icons/surfaceedge.xpm"
+#include "icons/surfacepyramid.xpm"
+#include "icons/surfacerevolvedsurface.xpm"
+#include "icons/surfaceruledsurface.xpm"
+#include "icons/surfacesphere.xpm"
+#include "icons/surfaces.xpm"
+#include "icons/surfacetabulatedsurface.xpm"
+#include "icons/surfacetorus.xpm"
+#include "icons/surfacewedge.xpm"
+#include "icons/swisometricview.xpm"
+#include "icons/temptrackingpoint.xpm"
+#include "icons/textbold.xpm"
+#include "icons/textitalic.xpm"
+#include "icons/textoverline.xpm"
+#include "icons/textstrikeout.xpm"
+#include "icons/textunderline.xpm"
+#include "icons/text.xpm"
+#include "icons/thawalllayers.xpm"
+#include "icons/theme.xpm"
+#include "icons/tipoftheday-2.xpm"
+#include "icons/tipoftheday.xpm"
+#include "icons/tolerance.xpm"
+#include "icons/topview.xpm"
+#include "icons/trim.xpm"
+#include "icons/undo.xpm"
+#include "icons/units.xpm"
+#include "icons/unlockalllayers.xpm"
+#include "icons/view.xpm"
+#include "icons/whatsthis.xpm"
+#include "icons/wideflange.xpm"
+#include "icons/windowcascade.xpm"
+#include "icons/windowcloseall.xpm"
+#include "icons/windowclose.xpm"
+#include "icons/windownext.xpm"
+#include "icons/windowprevious.xpm"
+#include "icons/windowtile.xpm"
+#include "icons/world.xpm"
+#include "icons/zoomall.xpm"
+#include "icons/zoomcenter.xpm"
+#include "icons/zoomdynamic.xpm"
+#include "icons/zoomextents.xpm"
+#include "icons/zoomin.xpm"
+#include "icons/zoomout.xpm"
+#include "icons/zoomprevious.xpm"
+#include "icons/zoomrealtime.xpm"
+#include "icons/zoomscale.xpm"
+#include "icons/zoomselected.xpm"
+#include "icons/zoomwindow.xpm"
+#include "icons/zoom.xpm"
+
 const char* _appName_ = "Embroidermodder";
 const char* _appVer_ = "v2.0 alpha";
 int exitApp = 0;
+
+char **icons[] = {
+    _3dviews_xpm,
+    about_xpm,
+    aligneddimension_xpm,
+    aligntextangle_xpm,
+    aligntextcenter_xpm,
+    aligntexthome_xpm,
+    aligntextleft_xpm,
+    aligntextright_xpm,
+    aligntext_xpm,
+    angulardimension_xpm,
+    app_xpm,
+    arc3points_xpm,
+    arccenterstartangle_xpm,
+    arccenterstartend_xpm,
+    arccenterstartlength_xpm,
+    arccontinue_xpm,
+    arcstartcenterangle_xpm,
+    arcstartcenterend_xpm,
+    arcstartcenterlength_xpm,
+    arcstartendangle_xpm,
+    arcstartenddirection_xpm,
+    arcstartendradius_xpm,
+    arc_xpm,
+    area_xpm,
+    array_xpm,
+    backview_xpm,
+    baselinedimension_xpm,
+    bean_xpm,
+    blank_xpm,
+    bottomview_xpm,
+    boundary_xpm,
+    break2points_xpm,
+    breakatpoint_xpm,
+    browser_xpm,
+    camera_xpm,
+    centermark_xpm,
+    chamfer_xpm,
+    changelog_xpm,
+    check_xpm,
+    circle2points_xpm,
+    circle3points_xpm,
+    circlecenterdiameter_xpm,
+    circlecenterradius_xpm,
+    circletantanradius_xpm,
+    circletantantan_xpm,
+    circle_xpm,
+    cloud_2_xpm,
+    cloud_xpm,
+    colorblue_xpm,
+    colorbyblock_xpm,
+    colorbylayer_xpm,
+    colorcyan_xpm,
+    colorgreen_xpm,
+    colormagenta_xpm,
+    colorother_xpm,
+    colorred_xpm,
+    colorselector_xpm,
+    colorwhite_xpm,
+    coloryellow_xpm,
+    constructionline_xpm,
+    continuedimension_xpm,
+    copyobject_xpm,
+    copy_xpm,
+    customizekeyboard_xpm,
+    customizemenus_xpm,
+    customizetoolbars_xpm,
+    customize_xpm,
+    cut_xpm,
+    date_xpm,
+    day_xpm,
+    designdetails_xpm,
+    diameterdimension_xpm,
+    dimensionedit_xpm,
+    dimensionstyle_xpm,
+    dimensiontextedit_xpm,
+    dimensionupdate_xpm,
+    distance_xpm,
+    dolphin_xpm,
+    donothing_xpm,
+    donut_2_xpm,
+    donut_xpm,
+    drawing2_xpm,
+    drawing_xpm,
+    ellipsearc_xpm,
+    ellipseaxisend_xpm,
+    ellipsecenter_xpm,
+    ellipse_xpm,
+    erase_xpm,
+    escape_xpm,
+    exit_xpm,
+    explode_xpm,
+    extend_xpm,
+    fillet_xpm,
+    findandreplace_xpm,
+    freezealllayers_xpm,
+    frontview_xpm,
+    gridsettings_xpm,
+    gridsnapsettings_xpm,
+    hatch_xpm,
+    heart_2_xpm,
+    heart_xpm,
+    help_2_xpm,
+    help_xpm,
+    hex_xpm,
+    hidealllayers_xpm,
+    histogram_xpm,
+    icon128_xpm,
+    icon16_xpm,
+    icon24_xpm,
+    icon32_xpm,
+    icon48_xpm,
+    icon64_xpm,
+    inquiry_xpm,
+    insertblock_xpm,
+    join_xpm,
+    justifytext_xpm,
+    layerprevious_xpm,
+    layerselector_xpm,
+    layers_xpm,
+    layertranslate_xpm,
+    leftview_xpm,
+    lengthen_xpm,
+    lineardimension_xpm,
+    linetypebyblock_xpm,
+    linetypebylayer_xpm,
+    linetypecenter_xpm,
+    linetypecontinuous_xpm,
+    linetypehidden_xpm,
+    linetypeother_xpm,
+    linetypeselector_xpm,
+    lineweight01_xpm,
+    lineweight02_xpm,
+    lineweight03_xpm,
+    lineweight04_xpm,
+    lineweight05_xpm,
+    lineweight06_xpm,
+    lineweight07_xpm,
+    lineweight08_xpm,
+    lineweight09_xpm,
+    lineweight10_xpm,
+    lineweight11_xpm,
+    lineweight12_xpm,
+    lineweight13_xpm,
+    lineweight14_xpm,
+    lineweight15_xpm,
+    lineweight16_xpm,
+    lineweight17_xpm,
+    lineweight18_xpm,
+    lineweight19_xpm,
+    lineweight20_xpm,
+    lineweight21_xpm,
+    lineweight22_xpm,
+    lineweight23_xpm,
+    lineweight24_xpm,
+    lineweightbyblock_xpm,
+    lineweightbylayer_xpm,
+    lineweightdefault_xpm,
+    lineweightselector_xpm,
+    lineweightsettings_xpm,
+    line_xpm,
+    list_xpm,
+    locatepoint_xpm,
+    locator_snaptoapparentintersection_xpm,
+    locator_snaptocenter_xpm,
+    locator_snaptoendpoint_xpm,
+    locator_snaptoextension_xpm,
+    locator_snaptoinsert_xpm,
+    locator_snaptointersection_xpm,
+    locator_snaptomidpoint_xpm,
+    locator_snaptonearest_xpm,
+    locator_snaptonode_xpm,
+    locator_snaptoparallel_xpm,
+    locator_snaptoperpendicular_xpm,
+    locator_snaptoquadrant_xpm,
+    locator_snaptotangent_xpm,
+    lockalllayers_xpm,
+    makeblock_xpm,
+    makelayercurrent_xpm,
+    mass_xpm,
+    mirror_xpm,
+    move_xpm,
+    multilinetext_xpm,
+    multiline_xpm,
+    namedviews_xpm,
+    neisometricview_xpm,
+    new_xpm,
+    night_xpm,
+    nopreview_xpm,
+    nwisometricview_xpm,
+    obliquedimensions_xpm,
+    offset_xpm,
+    open_xpm,
+    ordinatedimension_xpm,
+    orthosettings_xpm,
+    pandown_xpm,
+    panleft_xpm,
+    panpoint_xpm,
+    panrealtime_xpm,
+    panright_xpm,
+    panup_xpm,
+    pan_xpm,
+    paste_xpm,
+    path_xpm,
+    pickadd_xpm,
+    picknew_xpm,
+    plugin_xpm,
+    pointdivide_xpm,
+    pointmeasure_xpm,
+    pointmultiple_xpm,
+    pointsingle_xpm,
+    point_xpm,
+    polarsettings_xpm,
+    polygon_xpm,
+    polyline_xpm,
+    print_xpm,
+    pyscript_xpm,
+    qsnapsettings_xpm,
+    qtracksettings_xpm,
+    quickdimension_xpm,
+    quickleader_xpm,
+    quickselect_xpm,
+    radiusdimension_xpm,
+    ray_xpm,
+    rectangle_xpm,
+    redo_xpm,
+    region_xpm,
+    render_xpm,
+    rgb_xpm,
+    rightview_xpm,
+    rotate_xpm,
+    rulersettings_xpm,
+    sandbox_xpm,
+    satin_xpm,
+    saveas_xpm,
+    save_xpm,
+    scale_xpm,
+    seisometricview_xpm,
+    settingsdialog_2_xpm,
+    settingsdialog_xpm,
+    shade2dwireframe_xpm,
+    shade3dwireframe_xpm,
+    shadeflatedges_xpm,
+    shadeflat_xpm,
+    shadehidden_xpm,
+    shadesmoothedges_xpm,
+    shadesmooth_xpm,
+    shade_xpm,
+    showalllayers_xpm,
+    singlelinetext_xpm,
+    sketch_2_xpm,
+    sketch_xpm,
+    snapfrom_xpm,
+    snaptoapparentintersection_xpm,
+    snaptocenter_xpm,
+    snaptoendpoint_xpm,
+    snaptoextension_xpm,
+    snaptoinsert_xpm,
+    snaptointersection_xpm,
+    snaptomidpoint_xpm,
+    snaptonearest_xpm,
+    snaptonode_xpm,
+    snaptonone_xpm,
+    snaptoparallel_xpm,
+    snaptoperpendicular_xpm,
+    snaptoquadrant_xpm,
+    snaptotangent_xpm,
+    snowflake_2_xpm,
+    snowflake_xpm,
+    solidbox_xpm,
+    solidcheck_xpm,
+    solidclean_xpm,
+    solidcoloredges_xpm,
+    solidcolorfaces_xpm,
+    solidcone_xpm,
+    solidcopyedges_xpm,
+    solidcopyfaces_xpm,
+    solidcylinder_xpm,
+    soliddeletefaces_xpm,
+    solidextrudefaces_xpm,
+    solidextrude_xpm,
+    solidimprint_xpm,
+    solidinterfere_xpm,
+    solidintersect_xpm,
+    solidmovefaces_xpm,
+    solidoffsetfaces_xpm,
+    solidrevolve_xpm,
+    solidrotatefaces_xpm,
+    solidsection_xpm,
+    solidsediting_xpm,
+    solidseparate_xpm,
+    solidsetupdrawing_xpm,
+    solidsetupprofile_xpm,
+    solidsetupview_xpm,
+    solidsetup_xpm,
+    solidshell_xpm,
+    solidslice_xpm,
+    solidsphere_xpm,
+    solidsubtract_xpm,
+    solids_xpm,
+    solidtaperfaces_xpm,
+    solidtorus_xpm,
+    solidunion_xpm,
+    solidwedge_xpm,
+    spline_xpm,
+    star_xpm,
+    stretch_xpm,
+    stub_xpm,
+    surface2dsolid_xpm,
+    surface3dface_xpm,
+    surface3dmesh_xpm,
+    surfacebox_xpm,
+    surfacecone_xpm,
+    surfacecylinder_xpm,
+    surfacedish_xpm,
+    surfacedome_xpm,
+    surfaceedgesurface_xpm,
+    surfaceedge_xpm,
+    surfacepyramid_xpm,
+    surfacerevolvedsurface_xpm,
+    surfaceruledsurface_xpm,
+    surfacesphere_xpm,
+    surfaces_xpm,
+    surfacetabulatedsurface_xpm,
+    surfacetorus_xpm,
+    surfacewedge_xpm,
+    swisometricview_xpm,
+    temptrackingpoint_xpm,
+    textbold_xpm,
+    textitalic_xpm,
+    textoverline_xpm,
+    textstrikeout_xpm,
+    textunderline_xpm,
+    text_xpm,
+    thawalllayers_xpm,
+    theme_xpm,
+    tipoftheday_2_xpm,
+    tipoftheday_xpm,
+    tolerance_xpm,
+    topview_xpm,
+    trim_xpm,
+    undo_xpm,
+    units_xpm,
+    unlockalllayers_xpm,
+    view_xpm,
+    whatsthis_xpm,
+    wideflange_xpm,
+    windowcascade_xpm,
+    windowcloseall_xpm,
+    windowclose_xpm,
+    windownext_xpm,
+    windowprevious_xpm,
+    windowtile_xpm,
+    world_xpm,
+    zoomall_xpm,
+    zoomcenter_xpm,
+    zoomdynamic_xpm,
+    zoomextents_xpm,
+    zoomin_xpm,
+    zoomout_xpm,
+    zoomprevious_xpm,
+    zoomrealtime_xpm,
+    zoomscale_xpm,
+    zoomselected_xpm,
+    zoomwindow_xpm,
+    zoom_xpm
+};
+
+quad quad_list1[] = {
+    {1, -1.0, 1.0, -0.1, 0.1, 0.0, 0.0, 0.0},
+    {0, -1.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0}
+};
+quad quad_list2[] = {
+    {1, -1.0, 1.0, -0.4, 0.4, 0.0, 0.0, 0.0},
+    {0, -1.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0}
+};
+
 
 char *tips[] = {
     "we need more tips?",
@@ -493,7 +1237,6 @@ int n_actions = 68;
 action_hash_data action_list[] = {
     {
         /* 0 */
-        ACTION_donothing,
         icon_donothing,
         "donothing",
         "&Do Nothing",
@@ -503,8 +1246,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 1 */
-        ACTION_new,
-        icon__new,
+        icon_new,
         "new",
         "&New",
         "Create a new file.",
@@ -513,7 +1255,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 2 */
-        ACTION_open,
         icon_open,
         "open",
         "&Open",
@@ -523,7 +1264,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 3 */
-        ACTION_save,
         icon_save,
         "save",
         "&Save",
@@ -533,7 +1273,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 4 */
-        ACTION_saveas,
         icon_saveas,
         "saveas",
         "Save &As",
@@ -543,7 +1282,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 5 */
-        ACTION_print,
         icon_print,
         "print",
         "&Print",
@@ -553,7 +1291,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 6 */
-        ACTION_designdetails,
         icon_designdetails,
         "designdetails",
         "&Details",
@@ -563,7 +1300,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 7 */
-        ACTION_exit,
         icon_exit,
         "exit",
         "E&xit",
@@ -573,7 +1309,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 8 */
-        ACTION_cut,
         icon_cut,
         "cut",
         "Cu&t",
@@ -583,7 +1318,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 9 */
-        ACTION_copy,
         icon_copy,
         "copy",
         "&Copy",
@@ -593,7 +1327,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 10 */
-        ACTION_paste,
         icon_paste,
         "paste",
         "&Paste",
@@ -603,7 +1336,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 11 */
-        ACTION_undo,
         icon_undo,
         "undo",
         "&Undo",
@@ -613,7 +1345,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 12 */
-        ACTION_redo,
         icon_redo,
         "redo",
         "&Redo",
@@ -623,7 +1354,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 13 */
-        ACTION_windowclose,
         icon_windowclose,
         "windowclose",
         "Cl&ose",
@@ -633,7 +1363,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 14 */
-        ACTION_windowcloseall,
         icon_windowcloseall,
         "windowcloseall",
         "Close &All",
@@ -643,7 +1372,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 15 */
-        ACTION_windowcascade,
         icon_windowcascade,
         "windowcascade",
         "&Cascade",
@@ -653,7 +1381,6 @@ action_hash_data action_list[] = {
     },
     {
         /* 16 */
-        ACTION_windowtile,
         icon_windowtile,
         "windowtile",
         "&Tile",
@@ -662,7 +1389,6 @@ action_hash_data action_list[] = {
         windowTile
     },
     {
-        ACTION_windownext,
         icon_windownext,
         "windownext",
         "Ne&xt",
@@ -671,7 +1397,6 @@ action_hash_data action_list[] = {
         windowNext
     },
     {
-        ACTION_windowprevious,
         icon_windowprevious,
         "windowprevious",
         "Pre&vious",
@@ -680,7 +1405,6 @@ action_hash_data action_list[] = {
         windowPrevious
     },
     {
-        ACTION_help,
         icon_help,
         "help",
         "&Help",
@@ -689,7 +1413,6 @@ action_hash_data action_list[] = {
         main_help
     },
     {
-        ACTION_changelog,
         icon_changelog,
         "changelog",
         "&Changelog",
@@ -698,7 +1421,6 @@ action_hash_data action_list[] = {
         changelog
     },
     {
-        ACTION_tipoftheday,
         icon_tipoftheday,
         "tipoftheday",
         "&Tip Of The Day",
@@ -707,7 +1429,6 @@ action_hash_data action_list[] = {
         tipOfTheDay
     },
     {
-        ACTION_about,
         icon_about,
         "about",
         "&About Embroidermodder 2",
@@ -716,7 +1437,6 @@ action_hash_data action_list[] = {
         main_about
     },
     {
-        ACTION_whatsthis,
         icon_whatsthis,
         "whatsthis",
         "&What's This?",
@@ -725,7 +1445,6 @@ action_hash_data action_list[] = {
         whatsthisContextHelp
     },
     {
-        ACTION_icon16,
         icon_icon16,
         "icon16",
         "Icon&16",
@@ -734,7 +1453,6 @@ action_hash_data action_list[] = {
         icon16
     },
     {
-        ACTION_icon24,
         icon_icon24,
         "icon24",
         "Icon&24",
@@ -743,7 +1461,6 @@ action_hash_data action_list[] = {
         icon24
     },
     {
-        ACTION_icon32,
         icon_icon32,
         "icon32",
         "Icon&32",
@@ -752,7 +1469,6 @@ action_hash_data action_list[] = {
         icon32
     },
     {
-        ACTION_icon48,
         icon_icon48,
         "icon48",
         "Icon&48",
@@ -761,7 +1477,6 @@ action_hash_data action_list[] = {
         icon48
     },
     {
-        ACTION_icon64,
         icon_icon64,
         "icon64",
         "Icon&64",
@@ -770,7 +1485,6 @@ action_hash_data action_list[] = {
         icon64
     },
     {
-        ACTION_icon128,
         icon_icon128,
         "icon128",
         "Icon12&8",
@@ -779,7 +1493,6 @@ action_hash_data action_list[] = {
         icon128
     },
     {
-        ACTION_settingsdialog,
         icon_settingsdialog,
         "settingsdialog",
         "&Settings",
@@ -788,7 +1501,6 @@ action_hash_data action_list[] = {
         settingsDialog
     },
     {
-       ACTION_makelayercurrent,
        icon_makelayercurrent,
        "makelayercurrent",
        "&Make Layer Active",
@@ -797,7 +1509,6 @@ action_hash_data action_list[] = {
         makeLayerCurrent
     },
     {
-        ACTION_layers,
         icon_layers,
         "layers",
         "&Layers",
@@ -806,7 +1517,6 @@ action_hash_data action_list[] = {
         layerManager
     },
     {
-        ACTION_layerselector,
         icon_layerselector,
         "layerselector",
         "&Layer Selector",
@@ -815,7 +1525,6 @@ action_hash_data action_list[] = {
         layerSelector
     },
     {
-        ACTION_layerprevious,
         icon_layerprevious,
         "layerprevious",
         "&Layer Previous",
@@ -824,7 +1533,6 @@ action_hash_data action_list[] = {
         layerPrevious
     },
     {
-        ACTION_colorselector,
         icon_colorselector,
         "colorselector",
         "&Color Selector",
@@ -833,7 +1541,6 @@ action_hash_data action_list[] = {
         colorSelector
     },
     {
-        ACTION_linetypeselector,
         icon_linetypeselector,
         "linetypeselector",
         "&Stitchtype Selector",
@@ -842,7 +1549,6 @@ action_hash_data action_list[] = {
         lineTypeSelector
     },
     {
-        ACTION_lineweightselector,
         icon_lineweightselector,
         "lineweightselector",
         "&Threadweight Selector",
@@ -851,7 +1557,6 @@ action_hash_data action_list[] = {
         lineWeightSelector
     },
     {
-        ACTION_hidealllayers,
         icon_hidealllayers,
         "hidealllayers",
         "&Hide All Layers",
@@ -860,7 +1565,6 @@ action_hash_data action_list[] = {
         hideAllLayers
     },
     {
-        ACTION_showalllayers,
         icon_showalllayers,
         "showalllayers",
         "&Show All Layers",
@@ -869,7 +1573,6 @@ action_hash_data action_list[] = {
         showAllLayers
     },
     {
-        ACTION_freezealllayers,
         icon_freezealllayers,
         "freezealllayers",
         "&Freeze All Layers",
@@ -878,7 +1581,6 @@ action_hash_data action_list[] = {
         freezeAllLayers
     },
     {
-        ACTION_thawalllayers,
         icon_thawalllayers,
         "thawalllayers",
         "&Thaw All Layers",
@@ -887,7 +1589,6 @@ action_hash_data action_list[] = {
         thawAllLayers
     },
     {
-        ACTION_lockalllayers,
         icon_lockalllayers,
         "lockalllayers",
         "&Lock All Layers",
@@ -896,7 +1597,6 @@ action_hash_data action_list[] = {
         lockAllLayers
     },
     {
-        ACTION_unlockalllayers,
         icon_unlockalllayers,
         "unlockalllayers",
         "&Unlock All Layers",
@@ -905,7 +1605,6 @@ action_hash_data action_list[] = {
         unlockAllLayers
     },
     {
-        ACTION_textbold,
         icon_textbold,
         "textbold",
         "&Bold Text",
@@ -914,7 +1613,6 @@ action_hash_data action_list[] = {
         textBold
     },
     {
-        ACTION_textitalic,
         icon_textitalic,
         "textitalic",
         "&Italic Text",
@@ -923,7 +1621,6 @@ action_hash_data action_list[] = {
         textItalic
     },
     {
-        ACTION_textoverline,
         icon_textoverline,
         "textunderline",
         "&Underline Text",
@@ -932,7 +1629,6 @@ action_hash_data action_list[] = {
         textOverline
     },
     {
-        ACTION_textstrikeout,
         icon_textstrikeout,
         "textstrikeout",
         "&StrikeOut Text",
@@ -941,7 +1637,6 @@ action_hash_data action_list[] = {
         textStrikeout
     },
     {
-        ACTION_textoverline,
         icon_textoverline,
         "textoverline",
         "&Overline Text",
@@ -950,7 +1645,6 @@ action_hash_data action_list[] = {
         textOverline
     },
     {
-        ACTION_zoomrealtime,
         icon_zoomrealtime,
         "zoomrealtime",
         "Zoom &Realtime",
@@ -959,7 +1653,6 @@ action_hash_data action_list[] = {
         zoomRealtime
     },
     {
-        ACTION_zoomprevious,
         icon_zoomprevious,
         "zoomprevious",
         "Zoom &Previous",
@@ -968,7 +1661,6 @@ action_hash_data action_list[] = {
         zoomPrevious
     },
     {
-        ACTION_zoomwindow,
         icon_zoomwindow,
         "zoomwindow",
         "Zoom &Window",
@@ -977,7 +1669,6 @@ action_hash_data action_list[] = {
         zoomWindow
     },
     {
-        ACTION_zoomdynamic,
         icon_zoomdynamic,
         "zoomdynamic",
         "Zoom &Dynamic",
@@ -986,7 +1677,6 @@ action_hash_data action_list[] = {
         zoomDynamic
     },
     {
-        ACTION_zoomscale,
         icon_zoomscale,
         "zoomscale",
         "Zoom &Scale",
@@ -995,7 +1685,6 @@ action_hash_data action_list[] = {
         zoomScale
     },
     {
-        ACTION_zoomcenter,
         icon_zoomcenter,
         "zoomcenter",
         "Zoom &Center",
@@ -1004,7 +1693,6 @@ action_hash_data action_list[] = {
         zoomCenter
     },
     {
-        ACTION_zoomin,
         icon_zoomin,
         "zoomin",
         "Zoom &In",
@@ -1013,7 +1701,6 @@ action_hash_data action_list[] = {
         zoomIn
     },
     {
-        ACTION_zoomout,
         icon_zoomout,
         "zoomout",
         "Zoom &Out",
@@ -1022,7 +1709,6 @@ action_hash_data action_list[] = {
         zoomOut
     },
     {
-        ACTION_zoomselected,
         icon_zoomselected,
         "zoomselected",
         "Zoom Selec&ted",
@@ -1031,7 +1717,6 @@ action_hash_data action_list[] = {
         zoomSelected
     },
     {
-        ACTION_zoomall,
         icon_zoomall,
         "zoomall",
         "Zoom &All",
@@ -1040,7 +1725,6 @@ action_hash_data action_list[] = {
         zoomAll
     },
     {
-        ACTION_zoomextents,
         icon_zoomextents,
         "zoomextents",
         "Zoom &Extents",
@@ -1049,7 +1733,6 @@ action_hash_data action_list[] = {
         zoomExtents
     },
     {
-        ACTION_panrealtime,
         icon_panrealtime,
         "panrealtime",
         "&Pan Realtime",
@@ -1058,7 +1741,6 @@ action_hash_data action_list[] = {
         panrealtime
     },
     {
-        ACTION_panpoint,
         icon_panpoint,
         "panpoint",
         "&Pan Point",
@@ -1067,7 +1749,6 @@ action_hash_data action_list[] = {
         panpoint
     },
     {
-        ACTION_panleft,
         icon_panleft,
         "panleft",
         "&Pan Left",
@@ -1076,7 +1757,6 @@ action_hash_data action_list[] = {
         panLeft
     },
     {
-        ACTION_panright,
         icon_panright,
         "panright",
         "&Pan Right",
@@ -1085,7 +1765,6 @@ action_hash_data action_list[] = {
         panRight
     },
     {
-        ACTION_panup,
         icon_panup,
         "panup",
         "&Pan Up",
@@ -1094,7 +1773,6 @@ action_hash_data action_list[] = {
         panUp
     },
     {
-        ACTION_pandown,
         icon_pandown,
         "pandown",
         "&Pan Down",
@@ -1103,7 +1781,6 @@ action_hash_data action_list[] = {
         panDown
     },
     {
-        ACTION_day,
         icon_day,
         "day",
         "&Day",
@@ -1112,7 +1789,6 @@ action_hash_data action_list[] = {
         dayVision
     },
     {
-        ACTION_night,
         icon_night,
         "night",
         "&Night",
@@ -1121,7 +1797,7 @@ action_hash_data action_list[] = {
         nightVision
     },
     {
-        ACTION_night,
+        /* end symbol */
         icon_night,
         "\0",
         "\0",
@@ -1135,8 +1811,7 @@ action_hash_data action_list[] = {
 New for toolbars: modify and draw. Inquiry toolbar?
 
     {
-        ACTION_circle,
-        icon_circle,
+        circle,
         "circle",
         "&Circle",
         "Creates a circle:  CIRCLE",
@@ -1144,8 +1819,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
         doNothing
     },
     {
-        ACTION_line,
-        icon_line,
+        line,
         "line",
         "&Line",
         "Creates straight line segments:  LINE",
@@ -1153,8 +1827,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
         doNothing
     },
     {
-        ACTION_distance,
-        icon_distance,
+        distance,
         "distance",
         "&Distance",
         "Measures the distance and angle between two points:  DIST",
@@ -1162,8 +1835,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
         doNothing
     },
     {
-        ACTION_dolphin,
-        icon_dolphin,
+        dolphin,
         "dolphin",
         "&Dolphin",
         "Creates a dolphin:  DOLPHIN",
@@ -1172,7 +1844,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_ellipse,
-        icon_ellipse,
+        ellipse,
         "ellipse",
         "&Ellipse",
         "Creates a ellipse:  ELLIPSE",
@@ -1181,7 +1853,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_delete,
-        icon_erase,
+        erase,
         "delete",
         "D&elete",
         "Removes objects from a drawing:  DELETE",
@@ -1190,7 +1862,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_heart,
-        icon_heart,
+        heart,
         "&Heart",
         "Creates a heart:  HEART",
         "\0",
@@ -1198,7 +1870,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_locatepoint,
-        icon_locatepoint,
+        locatepoint,
         "&Locate Point",
         "Displays the coordinate values of a location:  ID",
         "\0",
@@ -1206,7 +1878,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_trebleclef,
-        icon_trebleclef,
+        trebleclef,
         "TrebleClef",
         "Creates a treble clef:  TREBLECLEF",
         "\0",
@@ -1214,7 +1886,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_path,
-        icon_path,
+        path,
         "&Path",
         "Creates a 2D path:  PATH",
         "\0",
@@ -1222,7 +1894,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_platform,
-        icon_platform,
+        platform,
         "&Platform",
         "List which platform is in use:  PLATFORM",
         "\0",
@@ -1230,7 +1902,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_point,
-        icon_point,
+        point,
         "&Point",
         "Creates multiple points:  POINT",
         "\0",
@@ -1238,7 +1910,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_polygon,
-        icon_polygon,
+        polygon,
         "Pol&ygon",
         "Creates a regular polygon:  POLYGON",
         "\0",
@@ -1246,7 +1918,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_polyline,
-        icon_polyline,
+        polyline,
         "&Polyline",
         "Creates a 2D polyline:  PLINE",
         "\0",
@@ -1254,7 +1926,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_quickleader,
-        icon_quickleader,
+        quickleader,
         "&QuickLeader",
         "Creates a leader and annotation:  QUICKLEADER",
         "\0",
@@ -1262,7 +1934,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_rectangle,
-        icon_rectangle,
+        rectangle,
         "&Rectangle",
         "Creates a rectangular polyline: RECTANGLE",
         "\0",
@@ -1270,7 +1942,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_rgb,
-        icon_rgb,
+        rgb,
         "&RGB",
         "Updates the current view colors:  RGB",
         "\0",
@@ -1278,7 +1950,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_move,
-        icon_move,
+        move,
         "&Move",
         "Displaces objects a specified distance in a specified direction: MOVE",
         "\0",
@@ -1286,7 +1958,7 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_rotate,
-        icon_rotate,
+        rotate,
         "&Rotate",
         "Rotates objects about a base point:  ROTATE",
         "\0",
@@ -1294,47 +1966,42 @@ New for toolbars: modify and draw. Inquiry toolbar?
     },
     {
         ACTION_sandbox,
-        icon_sandbox,
+        sandbox,
         "Sandbox",
         "A sandbox to play in:  SANDBOX",
         "\0",
         doNothing
     },
     {
-        ACTION_scale,
-        icon_scale,
+        scale,
         "Sca&le",
         "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE",
         "\0",
         doNothing
     },
     {
-        ACTION_selectall,
-        icon_selectall,
+        selectall,
         "&Select All",
         "Selects all objects:  SELECTALL",
         "\0",
         doNothing
     },
     {
-        ACTION_singlelinetext,
-        icon_singlelinetext,
+        singlelinetext,
         "&Single Line Text",
         "Creates single-line text objects:  TEXT",
         "\0",
         doNothing
     },
     {
-        ACTION_snowflake,
-        icon_snowflake,
+        snowflake,
         "&Snowflake",
         "Creates a snowflake:  SNOWFLAKE",
         "\0",
         doNothing
     },
     {
-        ACTION_star,
-        icon_star,
+        star,
         "&Star",
         "Creates a star:  STAR",
         "\0",

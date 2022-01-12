@@ -538,9 +538,9 @@ EmbColor to_emb_color(QColor c)
 
 /* --------------------------------------------------------------- */
 
-QIcon loadIcon(char **s)
+QIcon loadIcon(int icon_id)
 {
-    return QIcon(QPixmap(s));
+    return QIcon(QPixmap(icons[icon_id]));
 }
 
 void add_to_path(

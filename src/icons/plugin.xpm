@@ -1,9 +1,7 @@
 /* XPM */
-char *icon_plugin[] = {
-/* columns rows colors chars-per-pixel */
-"128 128 1 1 ",
-"  c #008000",
-/* pixels */
+char * plugin_xpm[] = {
+"128 128 1 1",
+" 	c #008000",
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
@@ -131,5 +129,4 @@ char *icon_plugin[] = {
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
-"                                                                                                                                "
-};
+"                                                                                                                                "};

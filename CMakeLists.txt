@@ -190,7 +190,6 @@ add_executable(embroidermodder
 	src/actions.cpp
 	src/settings.c
 	src/gui.c
-	src/icons.c
 	src/config.c
 	src/embroidermodder.h
 	${FREEGLUT_SRCS}

@@ -1,9 +1,8 @@
 /* XPM */
-char *icon_donothing[] = {
-/* columns rows colors chars-per-pixel */
-"128 128 1 1 ",
-"  c None",
-/* pixels */
+char * donothing_xpm[] = {
+"128 128 2 1",
+" 	c None",
+".	c #000000",
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
@@ -131,5 +130,4 @@ char *icon_donothing[] = {
 "                                                                                                                                ",
 "                                                                                                                                ",
 "                                                                                                                                ",
-"                                                                                                                                "
-};
+"                                                                                                                                "};
