@@ -748,17 +748,7 @@ char **icons[] = {
     zoom_xpm
 };
 
-quad quad_list1[] = {
-    {1, -1.0, 1.0, -0.1, 0.1, 0.0, 0.0, 0.0},
-    {0, -1.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0}
-};
-quad quad_list2[] = {
-    {1, -1.0, 1.0, -0.4, 0.4, 0.0, 0.0, 0.0},
-    {0, -1.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0}
-};
-
-
-char *tips[] = {
+const char *tips[] = {
     "we need more tips?",
     "you can change the color of the display through settings?",
     "you can hide the scrollbars to increase the viewable area through settings?",
@@ -777,7 +767,7 @@ char *tips[] = {
     "\0"
 };
 
-char *details_label_text[] = {
+const char *details_label_text[] = {
     "Total Stitches:",
     "Real Stitches:",
     "Jump Stitches:",
@@ -792,7 +782,7 @@ char *details_label_text[] = {
     "Height:"
 };
 
-char *obj_names[] = {
+const char *obj_names[] = {
     "Unknown",
     "Base",
     "Arc",
@@ -1035,7 +1025,7 @@ int *menus[] = {
     pan_menu
 };
 
-char *toolbar_label[] = {
+const char *toolbar_label[] = {
     "File",
     "Edit",
     "View",
@@ -1048,7 +1038,7 @@ char *toolbar_label[] = {
     "Properties"
 };
 
-char *menu_label[] = {
+const char *menu_label[] = {
     "&File",
     "&Edit",
     "&View",
@@ -1060,7 +1050,7 @@ char *menu_label[] = {
     "&Pan"
 };
 
-char *status_bar_label[] = {
+const char *status_bar_label[] = {
     "SNAP",
     "GRID",
     "RULER",
@@ -1071,7 +1061,7 @@ char *status_bar_label[] = {
     "LWT"
 };
 
-char *folders[] = {
+const char *folders[] = {
     "",
     "commands",
     "help",
@@ -1081,7 +1071,7 @@ char *folders[] = {
     "translations"
 };
 
-char *settings_tab_label[] = {
+const char *settings_tab_label[] = {
     "General",
     "Files/Path",
     "Display",
@@ -1096,143 +1086,82 @@ char *settings_tab_label[] = {
     "Selection"
 };
 
-int n_toolbars = 10;
-int n_menus = 8;
+float symbol_scale = 0.01;
 
-path_symbol icon_zero[] = {
-    /* path.addEllipse(QPointF(x+0.25*xScale, y-0.50*yScale), 0.25*xScale, 0.50*yScale);*/
-    {PATHS_MOVETO, {0.0, -0.75}},
-    {PATHS_LINETO, {0.0, -0.25}},
-    {PATHS_ARCTO, {0.0, -0.5, 0.5, 0.5, 180.0, 180.0}},
-    {PATHS_LINETO, {0.5, -0.75}},
-    {PATHS_ARCTO, {0.0, -1.0, 0.5, 0.5, 0.0, 180.0}},
-    {PATHS_END, {0.0, 0.0}}
+/* Symbols use the SVG path syntax.
+ *
+ * In theory, we could combine the icons and symbols systems,
+ * since they could be rendered once and stored as icons in Qt.
+ * (Or as textures in FreeGLUT.)
+ *
+ * Also we want to render the patterns themselves using SVG
+ * syntax, so it would save on repeated work overall.
+ */
+char *symbol_list[] = {
+    /* 0 */ "icon 0",
+    /* 1 */ "M 5 100 L 45 100 M 0 25 L 25 0 L 25 100",
+    /* 2 */ "icon 2",
+    /* 3 */ "icon 3",
+    /* 4 */ "M 50 100 L 50 0 L 0 50 L 50 50",
+    /* 5 */ "icon 5",
+    /* 6 */ "icon 6",
+    /* 7 */ "M 0 0 L 50 0 L 25 75 L 25 100",
+    /* 8 */ "icon 8",
+    /* 9 */ "icon 9",
+    /* - */ "M 0 50 L 50 50",
+    /* ' */ "M 25 100 L 25 25",
+    /* " */ "M 10 0 L 10 25 M 40 0 L 40 25"
 };
 
-path_symbol icon_one[] = {
-    {PATHS_MOVETO, {0.05, 0.00}},
-    {PATHS_LINETO, {0.45, 0.00}},
-    {PATHS_MOVETO, {0.0, -0.75}},
-    {PATHS_LINETO, {0.25, -1.00}},
-    {PATHS_LINETO, {0.25, 0.00}},
-    {PATHS_END, {0.0, 0.0}}
+#if 0
+path_symbol icon_zero[] = {
+    /* path.addEllipse(QPointF(x+0.25*xScale, y-0.50*yScale), 0.25*xScale, 0.50*yScale);*/
+    M 0 -0.75
+    L 0 -0.25
+    A 0 -0.5, 0.5, 0.5, 180.0, 180.0
+    L {0.5, -0.75
+    A 0 -1.0, 0.5, 0.5, 0.0, 180.0
+    {PATHS_END, 0 0.0}}
 };
 
 path_symbol icon_two[] = {
-    {PATHS_MOVETO, {0.0, -0.75}},
-    {PATHS_ARCTO, {0.45, 1.00, 0.50, 180.00, -216.87}},
-    {PATHS_LINETO, {0.0, 0.0}},
-    {PATHS_LINETO, {0.50, 0.0}},
-    {PATHS_END, {0.0, 0.0}}
+    {PATHS_MOVETO, 0 -0.75
+    A {0.45, 1.00, 0.50, 180.00, -216.87
+    L 0 0.0
+    L {0.50, 0.0
+    {PATHS_END, 0 0.0}}
 };
 
 path_symbol icon_three[] = {
-    {PATHS_ARCMOVETO, {0.0, -0.50, 0.50, 0.50, 195.00}},
-    {PATHS_ARCTO, {0.0, -0.50, 0.50, 195.00, 255.00}},
-    {PATHS_ARCTO, {0.0, -0.50, 0.50, 270.00, 255.00}},
-    {PATHS_END, {0.0, 0.0}}
-};
-
-path_symbol icon_four[] = {
-    {PATHS_MOVETO, {0.50, 0.0}},
-    {PATHS_LINETO, {0.50, -1.00}},
-    {PATHS_LINETO, {0.0, -0.50}},
-    {PATHS_LINETO, {0.50, -0.50}},
-    {PATHS_END, {0.0, 0.0}}
+    {PATHS_ARCMOVETO, 0 -0.50, 0.50, 0.50, 195.00
+    A 0 -0.50, 0.50, 195.00, 255.00
+    A 0 -0.50, 0.50, 270.00, 255.00
+    {PATHS_END, 0 0.0}}
 };
 
 path_symbol icon_five[] = {
-    {PATHS_MOVETO, {0.50, -1.0}},
-    {PATHS_LINETO, {0.0, -1.00}},
-    {PATHS_LINETO, {0.0, -0.50}},
-    {PATHS_LINETO, {0.25, -0.50}},
-    {PATHS_LINETO, {0.0, -0.5, 0.5, 0.5, 90.0, -180.0}},
-    {PATHS_LINETO, {0.0, 0.0}},
-    {PATHS_END, {0.0, 0.0}}
+    M 50 0 L 0 0 L 0 50 L 25 50 A 0.0, -0.5 0.5 0.5 90.0 -180.0 L 0 0
 };
 
 path_symbol icon_six[] = {
-    /*
     path.addEllipse(QPointF(x+0.25*xScale, y-0.25*yScale), 0.25*xScale, 0.25*yScale);
-    path.moveTo(x+0.00*xScale, y-0.25*yScale);
-    path.lineTo(x+0.00*xScale, y-0.75*yScale);
+    M 0 75 L 0 25
     path.arcTo(x+0.00*xScale, y-1.00*yScale, 0.50*xScale, 0.50*yScale, 180.00, -140.00);
-    */
-    {PATHS_END, {0.0, 0.0}}
-};
-
-path_symbol icon_seven[] = {
-    {PATHS_MOVETO, {0.0, -1.0}},
-    /*
-    path.moveTo(x+0.00*xScale, y-1.00*yScale);
-    path.lineTo(x+0.50*xScale, y-1.00*yScale);
-    path.lineTo(x+0.25*xScale, y-0.25*yScale);
-    path.lineTo(x+0.25*xScale, y-0.00*yScale);
-    */
-    {PATHS_END, {0.0, 0.0}}
 };
 
 path_symbol icon_eight[] = {
-    /*
     path.addEllipse(QPointF(x+0.25*xScale, y-0.25*yScale), 0.25*xScale, 0.25*yScale);
     path.addEllipse(QPointF(x+0.25*xScale, y-0.75*yScale), 0.25*xScale, 0.25*yScale);
-    */
-    {PATHS_END, {0.0, 0.0}}
 };
 
 path_symbol icon_nine[] = {
-    /*
     path.addEllipse(QPointF(x+0.25*xScale, y-0.75*yScale), 0.25*xScale, 0.25*yScale);
-    path.moveTo(x+0.50*xScale, y-0.75*yScale);
-    path.lineTo(x+0.50*xScale, y-0.25*yScale);
+    M 0.50*xScale, y-0.75*yScale);
+    L x+0.50*xScale, y-0.25*yScale);
     path.arcTo(x+0.00*xScale, y-0.50*yScale, 0.50*xScale, 0.50*yScale, 0.00, -140.00);
-    */
-    {PATHS_END, {0.0, 0.0}}
 };
 
-path_symbol icon_minus[] = {
-    /*
-    path.moveTo(x+0.00*xScale, y-0.50*yScale);
-    path.lineTo(x+0.50*xScale, y-0.50*yScale);
-    */
-    {PATHS_END, {0.0, 0.0}}
-};
-
-path_symbol icon_apostrophe[] = {
-    /*
-    path.moveTo(x+0.25*xScale, y-1.00*yScale);
-    path.lineTo(x+0.25*xScale, y-0.75*yScale);
-    */
-    {PATHS_END, {0.0, 0.0}}
-};
-
-path_symbol icon_quote[] = {
-    /*
-    path.moveTo(x+0.10*xScale, y-1.00*yScale);
-    path.lineTo(x+0.10*xScale, y-0.75*yScale);
-    path.moveTo(x+0.40*xScale, y-1.00*yScale);
-    path.lineTo(x+0.40*xScale, y-0.75*yScale);
-    */
-    {PATHS_END, {0.0, 0.0}}
-};
-
-path_symbol *symbol_list[] = {
-    icon_zero,
-    icon_one,
-    icon_two,
-    icon_three,
-    icon_four,
-    icon_five,
-    icon_six,
-    icon_seven,
-    icon_eight,
-    icon_nine,
-    icon_minus,
-    icon_apostrophe,
-    icon_quote
-};
-
-int n_actions = 68;
+#endif
 
 action_hash_data action_list[] = {
     {
@@ -1797,8 +1726,208 @@ action_hash_data action_list[] = {
         nightVision
     },
     {
+        icon_circle,
+        "circle",
+        "&Circle",
+        "Creates a circle:  CIRCLE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_line,
+        "line",
+        "&Line",
+        "Creates straight line segments:  LINE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_distance,
+        "distance",
+        "&Distance",
+        "Measures the distance and angle between two points:  DIST",
+        "\0",
+        doNothing
+    },
+    {
+        icon_dolphin,
+        "dolphin",
+        "&Dolphin",
+        "Creates a dolphin:  DOLPHIN",
+        "\0",
+        doNothing
+    },
+    {
+        icon_ellipse,
+        "ellipse",
+        "&Ellipse",
+        "Creates a ellipse:  ELLIPSE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_erase,
+        "delete",
+        "D&elete",
+        "Removes objects from a drawing:  DELETE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_heart,
+        "heart",
+        "&Heart",
+        "Creates a heart:  HEART",
+        "\0",
+        doNothing
+    },
+    {
+        icon_locatepoint,
+        "locatepoint",
+        "&Locate Point",
+        "Displays the coordinate values of a location:  ID",
+        "\0",
+        doNothing
+    },
+    {
+        icon_donothing,
+        "trebleclef",
+        "TrebleClef",
+        "Creates a treble clef:  TREBLECLEF",
+        "\0",
+        doNothing
+    },
+    {
+        icon_path,
+        "path",
+        "&Path",
+        "Creates a 2D path:  PATH",
+        "\0",
+        doNothing
+    },
+    {
+        icon_donothing,
+        "platform",
+        "&Platform",
+        "List which platform is in use:  PLATFORM",
+        "\0",
+        doNothing
+    },
+    {
+        icon_point,
+        "point",
+        "&Point",
+        "Creates multiple points:  POINT",
+        "\0",
+        doNothing
+    },
+    {
+        icon_polygon,
+        "polygon",
+        "Pol&ygon",
+        "Creates a regular polygon:  POLYGON",
+        "\0",
+        doNothing
+    },
+    {
+        icon_polyline,
+        "polyline",
+        "&Polyline",
+        "Creates a 2D polyline:  PLINE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_quickleader,
+        "quickleader",
+        "&QuickLeader",
+        "Creates a leader and annotation:  QUICKLEADER",
+        "\0",
+        doNothing
+    },
+    {
+        icon_rectangle,
+        "rectangle",
+        "&Rectangle",
+        "Creates a rectangular polyline: RECTANGLE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_rgb,
+        "rgb",
+        "&RGB",
+        "Updates the current view colors:  RGB",
+        "\0",
+        doNothing
+    },
+    {
+        icon_move,
+        "move",
+        "&Move",
+        "Displaces objects a specified distance in a specified direction: MOVE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_rotate,
+        "rotate",
+        "&Rotate",
+        "Rotates objects about a base point:  ROTATE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_sandbox,
+        "sandbox",
+        "Sandbox",
+        "A sandbox to play in:  SANDBOX",
+        "\0",
+        doNothing
+    },
+    {
+        icon_scale,
+        "scale",
+        "Sca&le",
+        "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_donothing,
+        "selectall",
+        "&Select All",
+        "Selects all objects:  SELECTALL",
+        "\0",
+        doNothing
+    },
+    {
+        icon_singlelinetext,
+        "singlelinetext",
+        "&Single Line Text",
+        "Creates single-line text objects:  TEXT",
+        "\0",
+        doNothing
+    },
+    {
+        icon_snowflake,
+        "snowflake",
+        "&Snowflake",
+        "Creates a snowflake:  SNOWFLAKE",
+        "\0",
+        doNothing
+    },
+    {
+        icon_star,
+        "star",
+        "&Star",
+        "Creates a star:  STAR",
+        "\0",
+        doNothing
+    },
+    {
         /* end symbol */
-        icon_night,
+        icon_donothing,
         "\0",
         "\0",
         "\0",
@@ -1807,222 +1936,14 @@ action_hash_data action_list[] = {
     }
 };
 
-#if 0
-New for toolbars: modify and draw. Inquiry toolbar?
-
-    {
-        circle,
-        "circle",
-        "&Circle",
-        "Creates a circle:  CIRCLE",
-        "\0",
-        doNothing
-    },
-    {
-        line,
-        "line",
-        "&Line",
-        "Creates straight line segments:  LINE",
-        "\0",
-        doNothing
-    },
-    {
-        distance,
-        "distance",
-        "&Distance",
-        "Measures the distance and angle between two points:  DIST",
-        "\0",
-        doNothing
-    },
-    {
-        dolphin,
-        "dolphin",
-        "&Dolphin",
-        "Creates a dolphin:  DOLPHIN",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_ellipse,
-        ellipse,
-        "ellipse",
-        "&Ellipse",
-        "Creates a ellipse:  ELLIPSE",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_delete,
-        erase,
-        "delete",
-        "D&elete",
-        "Removes objects from a drawing:  DELETE",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_heart,
-        heart,
-        "&Heart",
-        "Creates a heart:  HEART",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_locatepoint,
-        locatepoint,
-        "&Locate Point",
-        "Displays the coordinate values of a location:  ID",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_trebleclef,
-        trebleclef,
-        "TrebleClef",
-        "Creates a treble clef:  TREBLECLEF",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_path,
-        path,
-        "&Path",
-        "Creates a 2D path:  PATH",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_platform,
-        platform,
-        "&Platform",
-        "List which platform is in use:  PLATFORM",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_point,
-        point,
-        "&Point",
-        "Creates multiple points:  POINT",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_polygon,
-        polygon,
-        "Pol&ygon",
-        "Creates a regular polygon:  POLYGON",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_polyline,
-        polyline,
-        "&Polyline",
-        "Creates a 2D polyline:  PLINE",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_quickleader,
-        quickleader,
-        "&QuickLeader",
-        "Creates a leader and annotation:  QUICKLEADER",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_rectangle,
-        rectangle,
-        "&Rectangle",
-        "Creates a rectangular polyline: RECTANGLE",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_rgb,
-        rgb,
-        "&RGB",
-        "Updates the current view colors:  RGB",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_move,
-        move,
-        "&Move",
-        "Displaces objects a specified distance in a specified direction: MOVE",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_rotate,
-        rotate,
-        "&Rotate",
-        "Rotates objects about a base point:  ROTATE",
-        "\0",
-        doNothing
-    },
-    {
-        ACTION_sandbox,
-        sandbox,
-        "Sandbox",
-        "A sandbox to play in:  SANDBOX",
-        "\0",
-        doNothing
-    },
-    {
-        scale,
-        "Sca&le",
-        "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE",
-        "\0",
-        doNothing
-    },
-    {
-        selectall,
-        "&Select All",
-        "Selects all objects:  SELECTALL",
-        "\0",
-        doNothing
-    },
-    {
-        singlelinetext,
-        "&Single Line Text",
-        "Creates single-line text objects:  TEXT",
-        "\0",
-        doNothing
-    },
-    {
-        snowflake,
-        "&Snowflake",
-        "Creates a snowflake:  SNOWFLAKE",
-        "\0",
-        doNothing
-    },
-    {
-        star,
-        "&Star",
-        "Creates a star:  STAR",
-        "\0",
-        doNothing
-    },
-#endif
-
-/* TODO: associate the property editor with the function callbacks using
+/* New for toolbars: modify and draw. Inquiry toolbar?
+ *
+ * TODO: associate the property editor with the function callbacks using
  * a function pointer.
  */
 
 property_editor_row property_editors[] = {
 /*
-    create_lineedit_row(formLayout, ARC_AREA, "double", true, "blank", "Area");
-    create_lineedit_row(formLayout, ARC_LENGTH, "double", true, "blank", "Length");
-    create_lineedit_row(formLayout, ARC_CHORD, "double", true, "blank", "Chord");
-    create_lineedit_row(formLayout, ARC_INC_ANGLE, "double", true, "blank", "Included Angle");
-    ARC_CLOCKWISE, "int", true, "blank", "Clockwise", 
-
-
-
 QGroupBox* PropertyEditor::createGroupBoxGeometryCircle()
 {
     groupBoxGeometryCircle = new QGroupBox(tr("Geometry"), this);
@@ -2058,78 +1979,6 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryCircle()
     groupBoxGeometryCircle->setLayout(formLayout);
 
     return groupBoxGeometryCircle;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimAligned()
-{
-    groupBoxGeometryDimAligned = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimAligned
-
-    return groupBoxGeometryDimAligned;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimAngular()
-{
-    groupBoxGeometryDimAngular = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimAngular
-
-    return groupBoxGeometryDimAngular;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimArcLength()
-{
-    groupBoxGeometryDimArcLength = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimArcLength
-
-    return groupBoxGeometryDimArcLength;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimDiameter()
-{
-    groupBoxGeometryDimDiameter = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimDiameter
-
-    return groupBoxGeometryDimDiameter;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimLeader()
-{
-    groupBoxGeometryDimLeader = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimLeader
-
-    return groupBoxGeometryDimLeader;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimLinear()
-{
-    groupBoxGeometryDimLinear = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimLinear
-
-    return groupBoxGeometryDimLinear;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimOrdinate()
-{
-    groupBoxGeometryDimOrdinate = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimOrdinate
-
-    return groupBoxGeometryDimOrdinate;
-}
-
-QGroupBox* PropertyEditor::createGroupBoxGeometryDimRadius()
-{
-    groupBoxGeometryDimRadius = new QGroupBox(tr("Geometry"), this);
-
-    //TODO: toolButtons and lineEdits for DimRadius
-
-    return groupBoxGeometryDimRadius;
 }
 
 QGroupBox* PropertyEditor::createGroupBoxGeometryImage()
@@ -2519,6 +2368,15 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
         OBJ_TYPE_ARC, ARC_END_Y,
         "double", 1, "blank", "End Y", LINE_EDIT_TYPE, "lineEditArcEndY"
     },
+    {
+        /* 9 */
+        OBJ_TYPE_ARC, ARC_AREA,
+        "double", 1, "blank", "Area", LINE_EDIT_TYPE, "lineEditArcArea"
+    },
+/*        ARC_LENGTH, "double", 1, "blank", "ArcLength");
+    create_lineedit_row(formLayout, ARC_CHORD, "double", 1, "blank", "ArcChord");
+    create_lineedit_row(formLayout, ARC_INC_ANGLE, "double", 1, "blank", "ArcIncludedAngle");
+    ARC_CLOCKWISE, "int", 1, "blank", "Clockwise", */
     {
         /* 9 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_X,

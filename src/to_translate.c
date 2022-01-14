@@ -12,6 +12,31 @@
 
 #include <math.h>
 
+typedef struct circle_args_ {
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    float x3;
+    float y3;
+    float rad;
+    float dia;
+    float cx;
+    float cy;
+    int mode;
+} circle_args;
+
+typedef struct Quad {
+    int flag;
+    float left;
+    float right;
+    float top;
+    float bottom;
+    float red;
+    float green;
+    float blue;
+} quad;
+
 /* Command: Circle */
 int command_circle_init(circle_args *args)
 {

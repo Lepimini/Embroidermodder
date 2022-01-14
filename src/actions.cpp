@@ -9,6 +9,8 @@
 
 #include "embroidermodder.h"
 
+#include <string.h>
+
 void settings_actuator(void)
 {
     
@@ -498,7 +500,7 @@ void actuator(void)
     /* an action has been taken, we are at the current head of the stack */
     undo_history_length = undo_history_position;
     memcpy(undo_history+undo_history_position, &action, sizeof(action_call));
-    if (action.id >= 0 && action.id < n_actions) {
+    if (action.id >= 0 && action.id < N_ACTIONS) {
         action_list[action.id].function();
     }
 }
@@ -543,46 +545,52 @@ QIcon loadIcon(int icon_id)
     return QIcon(QPixmap(icons[icon_id]));
 }
 
-void add_to_path(
-    QPainterPath *path, path_symbol icon[],
-    float pos[2], float scale[2]
-)
+void get_n_floats(char *command, float *out, int n)
+{
+    int i;
+    char modifyable[100];
+    strcpy(modifyable, command);
+    char *rest = (char*)modifyable;
+    for (i=0; i<n; i++) {
+        char *tok = strtok_r(rest, " ", &rest);
+        out[i] = atof(tok);
+        printf("%f\n", out[i]);
+    }
+}
+
+void add_to_path(QPainterPath *path, char *command, float pos[2], float scale[2])
 {
     int j;
-    for (j=0; icon[j].type != PATHS_END; j++) {
-        switch (icon[j].type) {
-        case PATHS_MOVETO:
-            path->moveTo(pos[0]+icon[j].values[0]*scale[0],
-                         pos[1]+icon[j].values[1]*scale[1]);
+    float out[10];
+    printf("%s\n", command);
+    for (j=0; j<strlen(command); j++) {
+        switch (command[j]) {
+        case 'M':
+            printf("%s\n", command+j+2);
+            get_n_floats(command+j+2, out, 2);
+            path->moveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1]);
             break;
-        case PATHS_LINETO:
-            path->lineTo(pos[0]+icon[j].values[0]*scale[0],
-                         pos[1]+icon[j].values[1]*scale[1]);
+        case 'L':
+            printf("%s\n", command+j+2);
+            get_n_floats(command+j+2, out, 2);
+            path->lineTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1]);
             break;
-        case PATHS_ARCTO:
-            path->arcTo(pos[0]+icon[j].values[0]*scale[0],
-                        pos[1]+icon[j].values[1]*scale[1],
-                        icon[j].values[2],
-                        icon[j].values[3],
-                        icon[j].values[4],
-                        icon[j].values[5]
-                        );
+        case 'A':
+            get_n_floats(command+j+2, out, 6);
+            path->arcTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
+                        out[2], out[3], out[4], out[5]);
             break;
-        case PATHS_ARCMOVETO:
-            path->arcMoveTo(pos[0]+icon[j].values[0]*scale[0],
-                        pos[1]+icon[j].values[1]*scale[1],
-                        icon[j].values[2]*scale[0],
-                        icon[j].values[3]*scale[1],
-                        icon[j].values[4]);
+        case 'a':
+            get_n_floats(command+j+2, out, 5);
+            path->arcMoveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
+                        out[2]*scale[0], out[3]*scale[1],
+                        out[4]);
             break;
-        case PATHS_ELLIPSE:
+        case 'E':
+            get_n_floats(command+j+2, out, 4);
             path->addEllipse(
-                QPointF(
-                    pos[0]+icon[j].values[0]*scale[0],
-                    pos[1]+icon[j].values[1]*scale[1]
-                ),
-                icon[j].values[2]*scale[0],
-                icon[j].values[3]*scale[1]);
+                QPointF(pos[0]+out[0]*scale[0],  pos[1]+out[1]*scale[1]),
+                out[2]*scale[0], out[3]*scale[1]);
             break;
         default:
             break;

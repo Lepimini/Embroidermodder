@@ -25,6 +25,12 @@
 
 #include "embroidermodder.h"
 
+typedef struct Texture_t {
+    float corners[8];
+    int width;
+    int height;
+} texture_t;
+
 /* DATA SECTION */
 texture_t tex[N_TEXTURES];
 GLuint texture[N_TEXTURES];
@@ -225,6 +231,7 @@ int file_exists(char *fname)
     return !stat(fname, &stats);
 }
 
+/*
 void render_quadlist(quad *qlist)
 {
     int i;
@@ -242,6 +249,7 @@ void render_quadlist(quad *qlist)
         glEnd();
     }
 }
+*/
 
 void menu___(int key)
 {

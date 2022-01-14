@@ -437,7 +437,7 @@ void View::disableMoveRapidFire()
     settings.rapidMoveActive = 0;
 }
 
-bool View::allowRubber()
+int View::allowRubber()
 {
     //if(!rubberRoomList.size()) //TODO: this check should be removed later
         return 1;
@@ -694,7 +694,7 @@ void View::createGridIso()
     }
 }
 
-void View::toggleSnap(bool on)
+void View::toggleSnap(int on)
 {
     debug_message("View toggleSnap()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -704,7 +704,7 @@ void View::toggleSnap(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::toggleGrid(bool on)
+void View::toggleGrid(int on)
 {
     debug_message("View toggleGrid()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -713,7 +713,7 @@ void View::toggleGrid(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::toggleRuler(bool on)
+void View::toggleRuler(int on)
 {
     debug_message("View toggleRuler()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -725,7 +725,7 @@ void View::toggleRuler(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::toggleOrtho(bool on)
+void View::toggleOrtho(int on)
 {
     debug_message("View toggleOrtho()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -735,7 +735,7 @@ void View::toggleOrtho(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::togglePolar(bool on)
+void View::togglePolar(int on)
 {
     debug_message("View togglePolar()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -745,7 +745,7 @@ void View::togglePolar(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::toggleQSnap(bool on)
+void View::toggleQSnap(int on)
 {
     debug_message("View toggleQSnap()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -755,7 +755,7 @@ void View::toggleQSnap(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::toggleQTrack(bool on)
+void View::toggleQTrack(int on)
 {
     debug_message("View toggleQTrack()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -765,7 +765,7 @@ void View::toggleQTrack(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::toggleLwt(bool on)
+void View::toggleLwt(int on)
 {
     debug_message("View toggleLwt()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -774,7 +774,7 @@ void View::toggleLwt(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-void View::toggleReal(bool on)
+void View::toggleReal(int on)
 {
     debug_message("View toggleReal()");
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -783,12 +783,12 @@ void View::toggleReal(bool on)
     QApplication::restoreOverrideCursor();
 }
 
-bool View::isLwtEnabled()
+int View::isLwtEnabled()
 {
     return gscene->property("ENABLE_LWT").toBool();
 }
 
-bool View::isRealEnabled()
+int View::isRealEnabled()
 {
     return gscene->property("ENABLE_REAL").toBool();
 }
@@ -797,8 +797,8 @@ void View::drawBackground(QPainter* painter, const QRectF& rect)
 {
     painter->fillRect(rect, backgroundBrush());
 
-    /* HACK bool a = rect.intersects(gridPath.controlPointRect(); */
-    bool a = 1;
+    /* HACK int a = rect.intersects(gridPath.controlPointRect(); */
+    int a = 1;
     if (gscene->property("ENABLE_GRID").toBool() && a)
     {
         QPen gridPen(gridColor);
@@ -897,7 +897,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
      * ================================================== */
 
     if (gscene->property("ENABLE_RULER").toBool()) {
-        bool proceed = 1;
+        int proceed = 1;
 
         int vw = width();  //View Width
         int vh = height(); //View Height
@@ -951,7 +951,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
                 }
                 int unit = distStr.toInt();
                 float fraction;
-                bool feet = 1;
+                int feet = 1;
                 if (settings.rulerMetric) {
                     if(unit < 10) unit = 10;
                     fraction = unit/10;
@@ -1145,7 +1145,7 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
     }
 }
 
-bool View::willUnderflowInt32(int a, int b)
+int View::willUnderflowInt32(int a, int b)
 {
     int c;
     Q_ASSERT(LLONG_MAX>INT_MAX);
@@ -1153,7 +1153,7 @@ bool View::willUnderflowInt32(int a, int b)
     return (c < INT_MIN || c > INT_MAX);
 }
 
-bool View::willOverflowInt32(int a, int b)
+int View::willOverflowInt32(int a, int b)
 {
     int c;
     Q_ASSERT(LLONG_MAX>INT_MAX);
@@ -1172,21 +1172,13 @@ QPainterPath View::createRulerTextPath(float x, float y, QString str, float heig
     float pos[2];
     pos[0] = x;
     pos[1] = y;
-    scale[0] = xScale;
-    scale[1] = yScale;
+    scale[0] = 0.01*height;
+    scale[1] = 0.01*height;
 
     int len = str.length();
     for (int i = 0; i < len; ++i) {
         if (str[i] == QChar('1')) {
-            /*
-            CAUSING SEGFAULTS.
-            add_to_path(&path, settings.symbol_list[SYMBOL_one], pos, scale);
-            HACK 2 for 1:
-            */
-            path.moveTo(x+0.00*xScale, y-0.75*yScale);
-            path.arcTo(x+0.00*xScale, y-1.00*yScale, 0.50*xScale, 0.50*yScale, 180.00, -216.87);
-            path.lineTo(x+0.00*xScale, y-0.00*yScale);
-            path.lineTo(x+0.50*xScale, y-0.00*yScale);
+            add_to_path(&path, symbol_list[SYMBOL_one], pos, scale);
         }
         else if(str[i] == QChar('2')) {
             path.moveTo(x+0.00*xScale, y-0.75*yScale);
@@ -1277,7 +1269,7 @@ QPainterPath View::createRulerTextPath(float x, float y, QString str, float heig
     return path;
 }
 
-int View::roundToMultiple(bool roundUp, int numToRound, int multiple)
+int View::roundToMultiple(int roundUp, int numToRound, int multiple)
 {
     if(multiple == 0)
         return numToRound;
@@ -1487,15 +1479,15 @@ void View::mousePressEvent(QMouseEvent* event)
         QList<QGraphicsItem*> pickList = gscene->items(QRectF(mapToScene(viewMousePoint.x()-settings.pickBoxSize, viewMousePoint.y()-settings.pickBoxSize),
                                                               mapToScene(viewMousePoint.x()+settings.pickBoxSize, viewMousePoint.y()+settings.pickBoxSize)));
 
-        bool itemsInPickBox = pickList.size();
+        int itemsInPickBox = pickList.size();
         if(itemsInPickBox && !settings.selectingActive && !settings.grippingActive)
         {
-            bool itemsAlreadySelected = pickList.at(0)->isSelected();
+            int itemsAlreadySelected = pickList.at(0)->isSelected();
             if (!itemsAlreadySelected) {
                 pickList.at(0)->setSelected(1);
             }
             else {
-                bool foundGrip = 0;
+                int foundGrip = 0;
                 BaseObject* base = static_cast<BaseObject*>(pickList.at(0)); //TODO: Allow multiple objects to be gripped at once
                 if(!base) return;
 
@@ -1812,7 +1804,7 @@ void View::mouseReleaseEvent(QMouseEvent* event)
     gscene->update();
 }
 
-bool View::allowZoomIn()
+int View::allowZoomIn()
 {
     QPointF origin = mapToScene(0,0);
     QPointF corner = mapToScene(width(), height());
@@ -1829,7 +1821,7 @@ bool View::allowZoomIn()
     return 1;
 }
 
-bool View::allowZoomOut()
+int View::allowZoomOut()
 {
     QPointF origin = mapToScene(0,0);
     QPointF corner = mapToScene(width(), height());
@@ -1895,7 +1887,7 @@ void View::contextMenuEvent(QContextMenuEvent* event)
 
     QMenu menu;
     QList<QGraphicsItem*> itemList = gscene->selectedItems();
-    bool selectionEmpty = itemList.isEmpty();
+    int selectionEmpty = itemList.isEmpty();
 
     for (int i = 0; i < itemList.size(); i++) {
         if (itemList.at(i)->data(OBJ_TYPE) != OBJ_TYPE_NULL) {
@@ -1992,7 +1984,7 @@ void View::startGripping(BaseObject* obj)
     gripBaseObj->setObjectRubberMode(OBJ_RUBBER_GRIP);
 }
 
-void View::stopGripping(bool accept)
+void View::stopGripping(int accept)
 {
     settings.grippingActive = 0;
     if(gripBaseObj)
@@ -2336,7 +2328,7 @@ int View::numSelected()
     return gscene->selectedItems().size();
 }
 
-void View::showScrollBars(bool val)
+void View::showScrollBars(int val)
 {
     if(val)
     {
@@ -2495,7 +2487,7 @@ QWidget* Settings_Dialog::createTabGeneral()
     strcpy(dialog.general_mdi_bg_logo, settings.general_mdi_bg_logo);
     strcpy(accept_.general_mdi_bg_logo, dialog.general_mdi_bg_logo);
     connect(buttonMdiBGLogo, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundLogo()));
-    connect(checkBoxMdiBGUseLogo, SIGNAL(toggled(bool)), buttonMdiBGLogo, SLOT(setEnabled(bool)));
+    connect(checkBoxMdiBGUseLogo, SIGNAL(toggled(int)), buttonMdiBGLogo, SLOT(setEnabled(int)));
 
     QCheckBox* checkBoxMdiBGUseTexture = new QCheckBox(tr("Use Texture"), groupBoxMdiBG);
     dialog.general_mdi_bg_use_texture = settings.general_mdi_bg_use_texture;
@@ -2508,7 +2500,7 @@ QWidget* Settings_Dialog::createTabGeneral()
     strcpy(dialog.general_mdi_bg_texture, settings.general_mdi_bg_texture);
     strcpy(accept_.general_mdi_bg_texture, dialog.general_mdi_bg_texture);
     connect(buttonMdiBGTexture, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundTexture()));
-    connect(checkBoxMdiBGUseTexture, SIGNAL(toggled(bool)), buttonMdiBGTexture, SLOT(setEnabled(bool)));
+    connect(checkBoxMdiBGUseTexture, SIGNAL(toggled(int)), buttonMdiBGTexture, SLOT(setEnabled(int)));
 
     QCheckBox* checkBoxMdiBGUseColor = new QCheckBox(tr("Use Color"), groupBoxMdiBG);
     dialog.general_mdi_bg_use_color = settings.general_mdi_bg_use_color;
@@ -2525,7 +2517,7 @@ QWidget* Settings_Dialog::createTabGeneral()
     mdiBGPix.fill(QColor(preview.general_mdi_bg_color));
     buttonMdiBGColor->setIcon(QIcon(mdiBGPix));
     connect(buttonMdiBGColor, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundColor()));
-    connect(checkBoxMdiBGUseColor, SIGNAL(toggled(bool)), buttonMdiBGColor, SLOT(setEnabled(bool)));
+    connect(checkBoxMdiBGUseColor, SIGNAL(toggled(int)), buttonMdiBGColor, SLOT(setEnabled(int)));
 
     QGridLayout* gridLayoutMdiBG = new QGridLayout(widget);
     gridLayoutMdiBG->addWidget(checkBoxMdiBGUseLogo, 0, 0, Qt::AlignLeft);
@@ -2813,8 +2805,8 @@ QWidget* Settings_Dialog::createTabOpenSave()
         QCheckBox* c = new QCheckBox(formatTable[i].extension, groupBoxCustomFilter);
         c->setChecked(opensave_custom_filter.contains(QString("*") + formatTable[i].extension, Qt::CaseInsensitive));
         connect(c, SIGNAL(stateChanged(int)), this, SLOT(checkBoxCustomFilterStateChanged(int)));
-        connect(this, SIGNAL(buttonCustomFilterSelectAll(bool)), c, SLOT(setChecked(bool)));
-        connect(this, SIGNAL(buttonCustomFilterClearAll(bool)), c, SLOT(setChecked(bool)));
+        connect(this, SIGNAL(buttonCustomFilterSelectAll(int)), c, SLOT(setChecked(int)));
+        connect(this, SIGNAL(buttonCustomFilterClearAll(int)), c, SLOT(setChecked(int)));
         gridLayoutCustomFilter->addWidget(c, i%10, i/10, Qt::AlignLeft);
     }
 
@@ -3159,7 +3151,7 @@ QWidget* Settings_Dialog::createTabGridRuler()
     labelGridSpacingAngle->setEnabled(!dialog.grid_load_from_file);
     spinBoxGridSpacingAngle->setEnabled(!dialog.grid_load_from_file);
 
-    bool visibility = 0;
+    int visibility = 0;
     if(dialog.grid_type == "Circular") visibility = 1;
     labelGridSizeX->setVisible(!visibility);
     spinBoxGridSizeX->setVisible(!visibility);
@@ -3296,8 +3288,8 @@ QWidget* Settings_Dialog::createTabOrthoPolar()
         c->setChecked(settings.checked); \
         c->setIcon(loadIcon(icon)); \
         connect(c, SIGNAL(stateChanged(int)), this, SLOT(f(int))); \
-        connect(this, SIGNAL(buttonQSnapSelectAll(bool)), c, SLOT(setChecked(bool))); \
-        connect(this, SIGNAL(buttonQSnapClearAll(bool)), c, SLOT(setChecked(bool))); \
+        connect(this, SIGNAL(buttonQSnapSelectAll(int)), c, SLOT(setChecked(int))); \
+        connect(this, SIGNAL(buttonQSnapClearAll(int)), c, SLOT(setChecked(int))); \
         gridLayoutQSnap->addWidget(c, x, y, Qt::AlignLeft); \
         dialog.checked = settings.checked; \
     }
@@ -4073,7 +4065,7 @@ void Settings_Dialog::comboBoxGridTypeCurrentIndexChanged(const QString& type)
     if (senderObj) {
         QObject* parent = senderObj->parent();
         if (parent) {
-            bool visibility = 0;
+            int visibility = 0;
             if(type == "Circular") visibility = 1;
 
             QLabel* labelGridSizeX = parent->findChild<QLabel*>("labelGridSizeX");
@@ -4144,7 +4136,7 @@ void Settings_Dialog::comboBoxRulerMetricCurrentIndexChanged(int index)
 {
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender());
     if (comboBox) {
-        bool ok = 0;
+        int ok = 0;
         dialog.ruler_metric = comboBox->itemData(index).toBool();
     }
     else {
@@ -4463,7 +4455,7 @@ void Settings_Dialog::rejectChanges()
 
 
 
-PropertyEditor::PropertyEditor(const QString& iconDirectory, bool pickAddMode, QWidget* widgetToFocus, QWidget* parent, Qt::WindowFlags flags) : QDockWidget(parent, flags)
+PropertyEditor::PropertyEditor(const QString& iconDirectory, int pickAddMode, QWidget* widgetToFocus, QWidget* parent, Qt::WindowFlags flags) : QDockWidget(parent, flags)
 {
     int i;
     iconDir = iconDirectory;
@@ -4581,11 +4573,11 @@ QToolButton* PropertyEditor::createToolButtonPickAdd()
     //TODO: Set as PickAdd or PickNew based on settings
     toolButtonPickAdd = new QToolButton(this);
     updatePickAddModeButton(pickAdd);
-    connect(toolButtonPickAdd, SIGNAL(clicked(bool)), this, SLOT(togglePickAddMode()));
+    connect(toolButtonPickAdd, SIGNAL(clicked(int)), this, SLOT(togglePickAddMode()));
     return toolButtonPickAdd;
 }
 
-void PropertyEditor::updatePickAddModeButton(bool pickAddMode)
+void PropertyEditor::updatePickAddModeButton(int pickAddMode)
 {
     pickAdd = pickAddMode;
     if (pickAdd) {
@@ -4697,7 +4689,7 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
                 updateLineEditNumIfVaries(lineEdit[ARC_LENGTH], obj->objectArcLength(), 0);
                 updateLineEditNumIfVaries(lineEdit[ARC_CHORD], obj->objectChord(), 0);
                 updateLineEditNumIfVaries(lineEdit[ARC_INC_ANGLE], obj->objectIncludedAngle(), 1);
-                updateComboBoxBoolIfVaries(comboBox[ARC_CLOCKWISE], obj->objectClockwise(), 1);
+                updateComboBoxintIfVaries(comboBox[ARC_CLOCKWISE], obj->objectClockwise(), 1);
             }
             }
             break;
@@ -4867,8 +4859,8 @@ void PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList)
                 updateLineEditNumIfVaries(lineEditTextSingleRotation, -obj->rotation(), 1);
                 updateLineEditNumIfVaries(lineEditTextSingleX, obj->objectX(), 0);
                 updateLineEditNumIfVaries(lineEditTextSingleY, -obj->objectY(), 0);
-                updateComboBoxBoolIfVaries(comboBoxTextSingleBackward, obj->obj_text.backward, 1);
-                updateComboBoxBoolIfVaries(comboBoxTextSingleUpsideDown, obj->obj_text.upsidedown, 1);
+                updateComboBoxintIfVaries(comboBoxTextSingleBackward, obj->obj_text.backward, 1);
+                updateComboBoxintIfVaries(comboBoxTextSingleUpsideDown, obj->obj_text.upsidedown, 1);
             }
             }
             break;
@@ -4896,7 +4888,7 @@ void PropertyEditor::updateLineEditStrIfVaries(QLineEdit* lineEdit, const QStrin
     else if(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText);
 }
 
-void PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, bool useAnglePrecision)
+void PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, int useAnglePrecision)
 {
     int precision = 0;
     if(useAnglePrecision) precision = precisionAngle;
@@ -4955,7 +4947,7 @@ void PropertyEditor::updateComboBoxStrIfVaries(QComboBox* comboBox, const QStrin
     }
 }
 
-void PropertyEditor::updateComboBoxBoolIfVaries(QComboBox* comboBox, bool val, bool yesOrNoText)
+void PropertyEditor::updateComboBoxintIfVaries(QComboBox* comboBox, int val, int yesOrNoText)
 {
     fieldOldText = comboBox->currentText();
     if(yesOrNoText)
@@ -5226,7 +5218,7 @@ QToolButton* PropertyEditor::createToolButton(const QString& iconName, const QSt
     return tb;
 }
 
-QLineEdit* PropertyEditor::createLineEdit(const QString& validatorType, bool readOnly)
+QLineEdit* PropertyEditor::createLineEdit(const QString& validatorType, int readOnly)
 {
     QLineEdit* le = new QLineEdit(this);
     if (validatorType == "int") {
@@ -5239,14 +5231,14 @@ QLineEdit* PropertyEditor::createLineEdit(const QString& validatorType, bool rea
     return le;
 }
 
-QComboBox* PropertyEditor::createComboBox(bool disable)
+QComboBox* PropertyEditor::createComboBox(int disable)
 {
     QComboBox* cb = new QComboBox(this);
     cb->setDisabled(disable);
     return cb;
 }
 
-QFontComboBox* PropertyEditor::createFontComboBox(bool disable)
+QFontComboBox* PropertyEditor::createFontComboBox(int disable)
 {
     QFontComboBox* fcb = new QFontComboBox(this);
     fcb->setDisabled(disable);
@@ -5282,7 +5274,7 @@ void PropertyEditor::fieldEdited(QObject* fieldObj)
     RectObject* tempRectObj;
     TextSingleObject*   tempTextSingleObj;
 
-    static bool blockSignals = 0;
+    static int blockSignals = 0;
     if(blockSignals) return;
 
     debug_message("==========Field was Edited==========");
@@ -5754,7 +5746,7 @@ float ArcObject::objectIncludedAngle() const
     /* Properties of a Circle - Get the Included Angle - Reference: ASD9 */
 }
 
-bool ArcObject::objectClockwise() const
+int ArcObject::objectClockwise() const
 {
     EmbVector start = to_emb_vector(objectStartPoint());
     EmbVector mid = to_emb_vector(objectMidPoint());
@@ -8254,43 +8246,43 @@ void TextSingleObject::setObjectTextSize(float size)
     setObjectText(objText);
 }
 
-void TextSingleObject::setObjectTextBold(bool val)
+void TextSingleObject::setObjectTextBold(int val)
 {
     obj_text.bold = val;
     setObjectText(objText);
 }
 
-void TextSingleObject::setObjectTextItalic(bool val)
+void TextSingleObject::setObjectTextItalic(int val)
 {
     obj_text.italic = val;
     setObjectText(objText);
 }
 
-void TextSingleObject::setObjectTextUnderline(bool val)
+void TextSingleObject::setObjectTextUnderline(int val)
 {
     obj_text.underline = val;
     setObjectText(objText);
 }
 
-void TextSingleObject::setObjectTextStrikeOut(bool val)
+void TextSingleObject::setObjectTextStrikeOut(int val)
 {
     obj_text.strikeout = val;
     setObjectText(objText);
 }
 
-void TextSingleObject::setObjectTextOverline(bool val)
+void TextSingleObject::setObjectTextOverline(int val)
 {
     obj_text.overline = val;
     setObjectText(objText);
 }
 
-void TextSingleObject::setObjectTextBackward(bool val)
+void TextSingleObject::setObjectTextBackward(int val)
 {
     obj_text.backward = val;
     setObjectText(objText);
 }
 
-void TextSingleObject::setObjectTextUpsideDown(bool val)
+void TextSingleObject::setObjectTextUpsideDown(int val)
 {
     obj_text.upsidedown = val;
     setObjectText(objText);
@@ -8567,7 +8559,7 @@ void MainWindow::actions()
     int i;
     QObject *obj = sender();
     QString caller = obj->objectName();
-    for (i=0; i<n_actions; i++) {
+    for (i=0; action_list[i].abbreviation[0]; i++) {
         if (caller == action_list[i].abbreviation) {
             action.id = i;
             actuator();
@@ -8610,7 +8602,7 @@ void main_redo(void)
     }
 }
 
-bool MainWindow::isShiftPressed()
+int MainWindow::isShiftPressed()
 {
     return settings.shiftKeyPressedState;
 }
@@ -8676,7 +8668,7 @@ QGraphicsScene* MainWindow::activeScene()
     return 0;
 }
 
-void MainWindow::updateAllViewScrollBars(bool val)
+void MainWindow::updateAllViewScrollBars(int val)
 {
     QList<QMdiSubWindow*> windowList = mdiArea->subWindowList();
     for(int i = 0; i < windowList.count(); ++i)
@@ -8736,7 +8728,7 @@ void MainWindow::updateAllViewRulerColors(unsigned int color)
     }
 }
 
-void MainWindow::updatePickAddMode(bool val)
+void MainWindow::updatePickAddMode(int val)
 {
     settings.selection_mode_pickadd = val;
     dockPropEdit->updatePickAddModeButton(val);
@@ -8744,7 +8736,7 @@ void MainWindow::updatePickAddMode(bool val)
 
 void MainWindow::pickAddModeToggled()
 {
-    bool val = !settings.selection_mode_pickadd;
+    int val = !settings.selection_mode_pickadd;
     updatePickAddMode(val);
 }
 
@@ -8898,7 +8890,7 @@ void MainWindow::disableMoveRapidFire()
     if(gview) gview->disableMoveRapidFire();
 }
 
-void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float rot, bool fill, int rubberMode)
+void MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float rot, int fill, int rubberMode)
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
@@ -8942,7 +8934,7 @@ void MainWindow::nativeAddLine(float x1, float y1, float x2, float y2, float rot
     }
 }
 
-void MainWindow::nativeAddRectangle(float x, float y, float w, float h, float rot, bool fill, int rubberMode)
+void MainWindow::nativeAddRectangle(float x, float y, float w, float h, float rot, int fill, int rubberMode)
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
@@ -8976,7 +8968,7 @@ void MainWindow::nativeAddArc(float startX, float startY, float midX, float midY
     }
 }
 
-void MainWindow::nativeAddCircle(float centerX, float centerY, float radius, bool fill, int rubberMode)
+void MainWindow::nativeAddCircle(float centerX, float centerY, float radius, int fill, int rubberMode)
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
@@ -8996,7 +8988,7 @@ void MainWindow::nativeAddCircle(float centerX, float centerY, float radius, boo
     }
 }
 
-void MainWindow::nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, bool fill, int rubberMode)
+void MainWindow::nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, int fill, int rubberMode)
 {
     View* gview = activeView();
     QGraphicsScene* gscene = gview->scene();
@@ -9161,10 +9153,10 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     //Init
     mainWin = this;
-    for (i=0; i<n_menus+1; i++) {
+    for (i=0; i<N_MENUS; i++) {
         menu[i] = new QMenu(tr(menu_label[i]), this);
     }
-    for (i=0; i<n_toolbars; i++) {
+    for (i=0; i<N_TOOLBARS; i++) {
         toolbar[i] = addToolBar(tr(toolbar_label[i]));
     }
     //Selectors
@@ -9215,7 +9207,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     debug_message("Creating All Actions...");
     QString appName = QApplication::applicationName();
 
-    for (i=0; i<n_actions; i++) {
+    for (i=0; action_list[i].abbreviation[0]; i++) {
         QAction *ACTION = new QAction(loadIcon(action_list[i].icon), action_list[i].menu_name, this);
         // TODO: Set What's This Context Help to statusTip for now so there is some infos there.
         // Make custom What's This Context Help popup with more descriptive help than just
@@ -9380,7 +9372,7 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     debug_message("MainWindow createAllToolbars()");
 
-    for (i=0; i<n_toolbars; i++) {
+    for (i=0; i<N_TOOLBARS; i++) {
         int j;
         char message[100];
         sprintf(message, "MainWindow creating %s\n", toolbar_label[i]);
@@ -9397,7 +9389,7 @@ MainWindow::MainWindow() : QMainWindow(0)
             }
         }
 
-        connect(toolbar[i], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+        connect(toolbar[i], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)));
     }
 
     /* ---------------------------------------------------------------- */
@@ -9425,7 +9417,7 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layerprevious));
 
-    connect(toolbar[TOOLBAR_LAYER], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+    connect(toolbar[TOOLBAR_LAYER], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)));
     
     /* ----------------- */
 
@@ -9496,7 +9488,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector);
     connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(lineweightSelectorIndexChanged(int)));
 
-    connect(toolbar[TOOLBAR_PROPERTIES], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+    connect(toolbar[TOOLBAR_PROPERTIES], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)));
 
     /* ------------------------------------------------------------- */
 
@@ -9540,7 +9532,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     connect(textSizeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(textSizeSelectorIndexChanged(int)));
     */
 
-    connect(toolbar[TOOLBAR_TEXT], SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChangedToolBar(bool)));
+    connect(toolbar[TOOLBAR_TEXT], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)));
 
     /* ------------------------------------------------------------ */
 
@@ -9647,12 +9639,12 @@ void MainWindow::windowMenuAboutToShow()
         aAction->setCheckable(1);
         aAction->setData(i);
         menu[WINDOW_MENU]->addAction(aAction);
-        connect(aAction, SIGNAL(toggled(bool)), this, SLOT(windowMenuActivated(bool)));
+        connect(aAction, SIGNAL(toggled(int)), this, SLOT(windowMenuActivated(int)));
         aAction->setChecked(mdiArea->activeSubWindow() == windows.at(i));
     }
 }
 
-void MainWindow::windowMenuActivated(bool checked)
+void MainWindow::windowMenuActivated(int checked)
 {
     debug_message("MainWindow::windowMenuActivated()");
     QAction* aSender = qobject_cast<QAction*>(sender());
@@ -9683,14 +9675,14 @@ void MainWindow::newFile()
     }
 }
 
-void MainWindow::openFile(bool recent, const QString& recentFile)
+void MainWindow::openFile(int recent, const QString& recentFile)
 {
     debug_message("MainWindow::openFile()");
 
     QApplication::setOverrideCursor(Qt::ArrowCursor);
 
     QStringList files;
-    bool preview = settings.opensave_open_thumbnail;
+    int preview = settings.opensave_open_thumbnail;
     openFilesPath = settings.opensave_recent_directory;
 
     //Check to see if this from the recent files list
@@ -9718,7 +9710,7 @@ void MainWindow::openFile(bool recent, const QString& recentFile)
 
 void MainWindow::openFilesSelected(const QStringList& filesToOpen)
 {
-    bool doOnce = 1;
+    int doOnce = 1;
 
     if(filesToOpen.count())
     {
@@ -9848,7 +9840,7 @@ void MainWindow::onCloseMdiWin(MdiWindow* theMdiWin)
     debug_message("MainWindow::onCloseMdiWin()");
     numOfDocs--;
 
-    bool keepMaximized;
+    int keepMaximized;
     if(theMdiWin) { keepMaximized = theMdiWin->isMaximized(); }
 
     mdiArea->removeSubWindow(theMdiWin);
@@ -9896,7 +9888,7 @@ void MainWindow::updateMenuToolbarStatusbar()
     if (numOfDocs) {
         int i;
         //Toolbars
-        for (i=0; i<n_toolbars; i++) {
+        for (i=0; i<N_TOOLBARS; i++) {
             toolbar[i]->show();
         }
 
@@ -9981,7 +9973,7 @@ void MainWindow::updateMenuToolbarStatusbar()
     }
 }
 
-bool MainWindow::validFileFormat(const QString& fileName)
+int MainWindow::validFileFormat(const QString& fileName)
 {
     if(fileName.length() == 0) {
         return 0;
@@ -10075,7 +10067,7 @@ void MainWindow::closeToolBar(QAction* action)
     }
 }
 
-void MainWindow::floatingChangedToolBar(bool isFloating)
+void MainWindow::floatingChangedToolBar(int isFloating)
 {
     QToolBar* tb = qobject_cast<QToolBar*>(sender());
     if(tb)
@@ -10237,13 +10229,13 @@ ImageWidget::ImageWidget(const QString &filename, QWidget* parent) : QWidget(par
     this->show();
 }
 
-bool ImageWidget::load(const QString &fileName)
+int ImageWidget::load(const QString &fileName)
 {
     img.load(fileName);
     return 1;
 }
 
-bool ImageWidget::save(const QString &fileName)
+int ImageWidget::save(const QString &fileName)
 {
     img.save(fileName, "PNG");
     return 1;
@@ -10317,13 +10309,13 @@ LayerManager::~LayerManager()
 }
 
 void LayerManager::addLayer(const QString& name,
-                            const bool visible,
-                            const bool frozen,
+                            const int visible,
+                            const int frozen,
                             const float zValue,
                             const unsigned int color,
                             const QString& lineType,
                             const QString& lineWeight,
-                            const bool print)
+                            const int print)
 {
     layerModel->insertRow(0);
     layerModel->setData(layerModel->index(0, 0), name);
@@ -10404,19 +10396,19 @@ MdiArea::~MdiArea()
 {
 }
 
-void MdiArea::useBackgroundLogo(bool use)
+void MdiArea::useBackgroundLogo(int use)
 {
     useLogo = use;
     forceRepaint();
 }
 
-void MdiArea::useBackgroundTexture(bool use)
+void MdiArea::useBackgroundTexture(int use)
 {
     useTexture = use;
     forceRepaint();
 }
 
-void MdiArea::useBackgroundColor(bool use)
+void MdiArea::useBackgroundColor(int use)
 {
     useColor = use;
     forceRepaint();
@@ -10571,7 +10563,7 @@ MdiWindow::~MdiWindow()
     debug_message("MdiWindow Destructor()");
 }
 
-bool MdiWindow::saveFile(const QString &fileName)
+int MdiWindow::saveFile(const QString &fileName)
 {
     debug_message("SaveObject save(%s)", qPrintable(fileName));
 
@@ -10584,7 +10576,7 @@ bool MdiWindow::saveFile(const QString &fileName)
      *       to try to hide dark colored stitches beneath light colored fills.
      */
     int formatType = EMBFORMAT_UNSUPPORTED;
-    bool writeSuccessful = 0;
+    int writeSuccessful = 0;
     int i;
 
     formatType = emb_identify_format((char*)qPrintable(fileName));
@@ -10822,7 +10814,7 @@ bool MdiWindow::saveFile(const QString &fileName)
     return writeSuccessful;
 }
 
-bool MdiWindow::loadFile(const QString &fileName)
+int MdiWindow::loadFile(const QString &fileName)
 {
     debug_message("MdiWindow loadFile()");
 
@@ -10923,7 +10915,7 @@ bool MdiWindow::loadFile(const QString &fileName)
             for (int i = 0; i < p->polygons->count; i++) {
                 EmbArray *curPointList = p->polygons->polygon[i]->pointList;
                 QPainterPath polygonPath;
-                bool firstPoint = 0;
+                int firstPoint = 0;
                 float startX = 0, startY = 0;
                 float x = 0, y = 0;
                 EmbColor thisColor = p->polygons->polygon[i]->color;
@@ -10951,7 +10943,7 @@ bool MdiWindow::loadFile(const QString &fileName)
             for (int i=0; i<p->polylines->count; i++) {
                 EmbArray* curPointList = p->polylines->polyline[i]->pointList;
                 QPainterPath polylinePath;
-                bool firstPoint = 0;
+                int firstPoint = 0;
                 float startX = 0, startY = 0;
                 float x = 0, y = 0;
                 EmbColor thisColor = p->polylines->polyline[i]->color;
@@ -11129,7 +11121,7 @@ void MdiWindow::escapePressed()
     gview->escapePressed();
 }
 
-void MdiWindow::showViewScrollBars(bool val)
+void MdiWindow::showViewScrollBars(int val)
 {
     gview->showScrollBars(val);
 }
@@ -11256,19 +11248,19 @@ StatusBarButton::StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* 
     this->setCheckable(1);
 
     if (objectName() == "StatusBarButtonSNAP") {
-        connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleSnap(bool)));
+        connect(this, SIGNAL(toggled(int)), this, SLOT(toggleSnap(int)));
     }
     else if (objectName() == "StatusBarButtonGRID") {
-        connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleGrid(bool)));
+        connect(this, SIGNAL(toggled(int)), this, SLOT(toggleGrid(int)));
     }
     else if(objectName() == "StatusBarButtonRULER") {
-        connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleRuler(bool)));
+        connect(this, SIGNAL(toggled(int)), this, SLOT(toggleRuler(int)));
     }
-    else if(objectName() == "StatusBarButtonORTHO")  { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleOrtho(bool))); }
-    else if(objectName() == "StatusBarButtonPOLAR")  { connect(this, SIGNAL(toggled(bool)), this, SLOT(togglePolar(bool))); }
-    else if(objectName() == "StatusBarButtonQSNAP")  { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleQSnap(bool))); }
-    else if(objectName() == "StatusBarButtonQTRACK") { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleQTrack(bool))); }
-    else if(objectName() == "StatusBarButtonLWT")    { connect(this, SIGNAL(toggled(bool)), this, SLOT(toggleLwt(bool))); }
+    else if(objectName() == "StatusBarButtonORTHO")  { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleOrtho(int))); }
+    else if(objectName() == "StatusBarButtonPOLAR")  { connect(this, SIGNAL(toggled(int)), this, SLOT(togglePolar(int))); }
+    else if(objectName() == "StatusBarButtonQSNAP")  { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleQSnap(int))); }
+    else if(objectName() == "StatusBarButtonQTRACK") { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleQTrack(int))); }
+    else if(objectName() == "StatusBarButtonLWT")    { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleLwt(int))); }
 }
 
 void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)

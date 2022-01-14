@@ -12,30 +12,31 @@ extern "C" {
  * -------
  */
 
-#define DEBUG                         1
-#define MAX_STRING_LENGTH           500
+#define DEBUG                          1
+#define MAX_STRING_LENGTH            500
 
-#define TOOLBAR_FILE                  0
-#define TOOLBAR_EDIT                  1
-#define TOOLBAR_VIEW                  2
-#define TOOLBAR_ZOOM                  3
-#define TOOLBAR_PAN                   4
-#define TOOLBAR_ICON                  5
-#define TOOLBAR_HELP                  6
-#define TOOLBAR_LAYER                 7
-#define TOOLBAR_TEXT                  8
-#define TOOLBAR_PROPERTIES            9
+#define TOOLBAR_FILE                   0
+#define TOOLBAR_EDIT                   1
+#define TOOLBAR_VIEW                   2
+#define TOOLBAR_ZOOM                   3
+#define TOOLBAR_PAN                    4
+#define TOOLBAR_ICON                   5
+#define TOOLBAR_HELP                   6
+#define TOOLBAR_LAYER                  7
+#define TOOLBAR_TEXT                   8
+#define TOOLBAR_PROPERTIES             9
+#define N_TOOLBARS                    10
 
-#define FILE_MENU                     0
-#define EDIT_MENU                     1
-#define VIEW_MENU                     2
-#define SETTINGS_MENU                 3
-#define WINDOW_MENU                   4
-#define HELP_MENU                     5
-#define RECENT_MENU                   6
-#define ZOOM_MENU                     7
-#define PAN_MENU                      8
-#define N_MENUS                       9
+#define FILE_MENU                      0
+#define EDIT_MENU                      1
+#define VIEW_MENU                      2
+#define SETTINGS_MENU                  3
+#define WINDOW_MENU                    4
+#define HELP_MENU                      5
+#define RECENT_MENU                    6
+#define ZOOM_MENU                      7
+#define PAN_MENU                       8
+#define N_MENUS                        9
 
 #define STATUS_SNAP                   0
 #define STATUS_GRID                   1
@@ -81,103 +82,91 @@ extern "C" {
 
 /* LineEdits */
 /* --------------------------------- */
-#define ARC_CENTER_X                  0
-#define ARC_CENTER_Y                  1
-#define ARC_RADIUS                    2
-#define ARC_START_ANGLE               3
-#define ARC_END_ANGLE                 4
-#define ARC_START_X                   5
-#define ARC_START_Y                   6
-#define ARC_END_X                     7
-#define ARC_END_Y                     8
-#define ARC_AREA                      9
-#define ARC_LENGTH                   10
-#define ARC_CHORD                    11
-#define ARC_INC_ANGLE                12
-
-#define TEXT_SINGLE_CONTENTS         13
-#define TEXT_SINGLE_HEIGHT           14
-#define TEXT_SINGLE_ROTATION         15
-#define TEXT_SINGLE_X                16
-#define TEXT_SINGLE_Y                17
-
-#define CIRCLE_CENTER_X              18
-#define CIRCLE_CENTER_Y              19
-#define CIRCLE_RADIUS                20
-#define CIRCLE_DIAMETER              21
-#define CIRCLE_AREA                  22
-#define CIRCLE_CIRCUMFERENCE         23
-
-#define ELLIPSE_CENTER_X             24
-#define ELLIPSE_CENTER_Y             25
-#define ELLIPSE_RADIUS_MAJOR         26
-#define ELLIPSE_RADIUS_MINOR         27
-#define ELLIPSE_DIAMETER_MAJOR       28
-#define ELLIPSE_DIAMETER_MINOR       29
-
-#define IMAGE_X                      30
-#define IMAGE_Y                      31
-#define IMAGE_WIDTH                  32
-#define IMAGE_HEIGHT                 33
-#define IMAGE_NAME                   34
-#define IMAGE_PATH                   35
-
-#define INFINITE_LINE_X1             36
-#define INFINITE_LINE_Y1             37
-#define INFINITE_LINE_X2             38
-#define INFINITE_LINE_Y2             39
-#define INFINITE_LINE_VECTOR_X       40
-#define INFINITE_LINE_VECTOR_Y       41
-
-#define BLOCK_X                      42
-#define BLOCK_Y                      43
-
-#define LINE_START_X                 44
-#define LINE_START_Y                 45
-#define LINE_END_X                   46
-#define LINE_END_Y                   47
-#define LINE_DELTA_X                 48
-#define LINE_DELTA_Y                 49
-#define LINE_ANGLE                   50
-#define LINE_LENGTH                  51
-
-#define POLYGON_CENTER_X             52
-#define POLYGON_CENTER_Y             53
-#define POLYGON_RADIUS_VERTEX        54
-#define POLYGON_RADIUS_SIDE          55
-#define POLYGON_DIAMETER_VERTEX      56
-#define POLYGON_DIAMETER_SIDE        57
-#define POLYGON_INTERIOR_ANGLE       58
-
-#define RECT_CORNER_X1               59
-#define RECT_CORNER_Y1               60
-#define RECT_CORNER_X2               61
-#define RECT_CORNER_Y2               62
-#define RECT_CORNER_X3               63
-#define RECT_CORNER_Y3               64
-#define RECT_CORNER_X4               65
-#define RECT_CORNER_Y4               66
-#define RECT_HEIGHT                  67
-#define RECT_WIDTH                   68
-#define RECT_AREA                    69
-
-#define POINT_X                      70
-#define POINT_Y                      71
+#define ARC_CENTER_X                   0
+#define ARC_CENTER_Y                   1
+#define ARC_RADIUS                     2
+#define ARC_START_ANGLE                3
+#define ARC_END_ANGLE                  4
+#define ARC_START_X                    5
+#define ARC_START_Y                    6
+#define ARC_END_X                      7
+#define ARC_END_Y                      8
+#define ARC_AREA                       9
+#define ARC_LENGTH                    10
+#define ARC_CHORD                     11
+#define ARC_INC_ANGLE                 12
+#define TEXT_SINGLE_CONTENTS          13
+#define TEXT_SINGLE_HEIGHT            14
+#define TEXT_SINGLE_ROTATION          15
+#define TEXT_SINGLE_X                 16
+#define TEXT_SINGLE_Y                 17
+#define CIRCLE_CENTER_X               18
+#define CIRCLE_CENTER_Y               19
+#define CIRCLE_RADIUS                 20
+#define CIRCLE_DIAMETER               21
+#define CIRCLE_AREA                   22
+#define CIRCLE_CIRCUMFERENCE          23
+#define ELLIPSE_CENTER_X              24
+#define ELLIPSE_CENTER_Y              25
+#define ELLIPSE_RADIUS_MAJOR          26
+#define ELLIPSE_RADIUS_MINOR          27
+#define ELLIPSE_DIAMETER_MAJOR        28
+#define ELLIPSE_DIAMETER_MINOR        29
+#define IMAGE_X                       30
+#define IMAGE_Y                       31
+#define IMAGE_WIDTH                   32
+#define IMAGE_HEIGHT                  33
+#define IMAGE_NAME                    34
+#define IMAGE_PATH                    35
+#define INFINITE_LINE_X1              36
+#define INFINITE_LINE_Y1              37
+#define INFINITE_LINE_X2              38
+#define INFINITE_LINE_Y2              39
+#define INFINITE_LINE_VECTOR_X        40
+#define INFINITE_LINE_VECTOR_Y        41
+#define BLOCK_X                       42
+#define BLOCK_Y                       43
+#define LINE_START_X                  44
+#define LINE_START_Y                  45
+#define LINE_END_X                    46
+#define LINE_END_Y                    47
+#define LINE_DELTA_X                  48
+#define LINE_DELTA_Y                  49
+#define LINE_ANGLE                    50
+#define LINE_LENGTH                   51
+#define POLYGON_CENTER_X              52
+#define POLYGON_CENTER_Y              53
+#define POLYGON_RADIUS_VERTEX         54
+#define POLYGON_RADIUS_SIDE           55
+#define POLYGON_DIAMETER_VERTEX       56
+#define POLYGON_DIAMETER_SIDE         57
+#define POLYGON_INTERIOR_ANGLE        58
+#define RECT_CORNER_X1                59
+#define RECT_CORNER_Y1                60
+#define RECT_CORNER_X2                61
+#define RECT_CORNER_Y2                62
+#define RECT_CORNER_X3                63
+#define RECT_CORNER_Y3                64
+#define RECT_CORNER_X4                65
+#define RECT_CORNER_Y4                66
+#define RECT_HEIGHT                   67
+#define RECT_WIDTH                    68
+#define RECT_AREA                     69
+#define POINT_X                       70
+#define POINT_Y                       71
+#define LINEEDIT_PROPERTY_EDITORS     72
 
 /* Comboboxes */
 /* --------------------------------- */
 #define ARC_CLOCKWISE                 0
-
 #define GENERAL_LAYER                 1
 #define GENERAL_COLOR                 2
 #define GENERAL_LINE_TYPE             3
 #define GENERAL_LINE_WEIGHT           4
-
 #define TEXT_SINGLE_FONT              5
 #define TEXT_SINGLE_JUSTIFY           6
-
-#define LINEEDIT_PROPERTY_EDITORS    72
 #define COMBOBOX_PROPERTY_EDITORS     7
+
 #define PROPERTY_EDITORS \
     ( LINEEDIT_PROPERTY_EDITORS + COMBOBOX_PROPERTY_EDITORS )
 
@@ -258,79 +247,80 @@ extern "C" {
 /* OBJ_LWT_VALUES
  * --------------
  */
-#define OBJ_LWT_BYLAYER            (-2)
-#define OBJ_LWT_BYBLOCK            (-1)
-#define OBJ_LWT_DEFAULT               0
-#define OBJ_LWT_01                    1
-#define OBJ_LWT_02                    2
-#define OBJ_LWT_03                    3
-#define OBJ_LWT_04                    4 
-#define OBJ_LWT_05                    5 
-#define OBJ_LWT_06                    6 
-#define OBJ_LWT_07    7 
-#define OBJ_LWT_08    8 
-#define OBJ_LWT_09    9 
-#define OBJ_LWT_10   10 
-#define OBJ_LWT_11   11 
-#define OBJ_LWT_12   12 
-#define OBJ_LWT_13   13 
-#define OBJ_LWT_14   14 
-#define OBJ_LWT_15   15 
-#define OBJ_LWT_16   16 
-#define OBJ_LWT_17   17 
-#define OBJ_LWT_18   18 
-#define OBJ_LWT_19   19 
-#define OBJ_LWT_20   20 
-#define OBJ_LWT_21   21 
-#define OBJ_LWT_22   22 
-#define OBJ_LWT_23   23 
-#define OBJ_LWT_24   24
+#define OBJ_LWT_BYLAYER             (-2)
+#define OBJ_LWT_BYBLOCK             (-1)
+#define OBJ_LWT_DEFAULT                0
+#define OBJ_LWT_01                     1
+#define OBJ_LWT_02                     2
+#define OBJ_LWT_03                     3
+#define OBJ_LWT_04                     4
+#define OBJ_LWT_05                     5
+#define OBJ_LWT_06                     6
+#define OBJ_LWT_07                     7
+#define OBJ_LWT_08                     8
+#define OBJ_LWT_09                     9
+#define OBJ_LWT_10                    10
+#define OBJ_LWT_11                    11
+#define OBJ_LWT_12                    12
+#define OBJ_LWT_13                    13
+#define OBJ_LWT_14                    14
+#define OBJ_LWT_15                    15
+#define OBJ_LWT_16                    16
+#define OBJ_LWT_17                    17
+#define OBJ_LWT_18                    18
+#define OBJ_LWT_19                    19
+#define OBJ_LWT_20                    20
+#define OBJ_LWT_21                    21
+#define OBJ_LWT_22                    22
+#define OBJ_LWT_23                    23
+#define OBJ_LWT_24                    24
+
 
 /* OBJ_SNAP_VALUES */
 /* --------------- */
 /* NOTE: Allow this enum to evaluate false */
-#define OBJ_SNAP_NULL  0
-#define OBJ_SNAP_ENDPOINT  1
-#define OBJ_SNAP_MIDPOINT  2
-#define OBJ_SNAP_CENTER    3
-#define OBJ_SNAP_NODE  4
-#define OBJ_SNAP_QUADRANT  5
-#define OBJ_SNAP_INTERSECTION  6
-#define OBJ_SNAP_EXTENSION 7
-#define OBJ_SNAP_INSERTION 8
-#define OBJ_SNAP_PERPENDICULAR 9
-#define OBJ_SNAP_TANGENT  10
-#define OBJ_SNAP_NEAREST  11
-#define OBJ_SNAP_APPINTERSECTION  12
-#define OBJ_SNAP_PARALLEL 13
+#define OBJ_SNAP_NULL                  0
+#define OBJ_SNAP_ENDPOINT              1
+#define OBJ_SNAP_MIDPOINT              2
+#define OBJ_SNAP_CENTER                3
+#define OBJ_SNAP_NODE                  4
+#define OBJ_SNAP_QUADRANT              5
+#define OBJ_SNAP_INTERSECTION          6
+#define OBJ_SNAP_EXTENSION             7
+#define OBJ_SNAP_INSERTION             8
+#define OBJ_SNAP_PERPENDICULAR         9
+#define OBJ_SNAP_TANGENT              10
+#define OBJ_SNAP_NEAREST              11
+#define OBJ_SNAP_APPINTERSECTION      12
+#define OBJ_SNAP_PARALLEL             13
 
 
 /* OBJ_RUBBER_VALUES
  * -----------------
- * NOTE: Allow this enum to evaluate false */
-#define OBJ_RUBBER_OFF                0
-/* NOTE: Allow this enum to evaluate true */
-#define OBJ_RUBBER_ON                 1
-#define OBJ_RUBBER_CIRCLE_1P_RAD      2
-#define OBJ_RUBBER_CIRCLE_1P_DIA      3
-#define OBJ_RUBBER_CIRCLE_2P          4
-#define OBJ_RUBBER_CIRCLE_3P          5
-#define OBJ_RUBBER_CIRCLE_TTR         6
-#define OBJ_RUBBER_CIRCLE_TTT         7
-#define OBJ_RUBBER_DIMLEADER_LINE     8
-#define OBJ_RUBBER_ELLIPSE_LINE       9
+ * NOTE: Allow this enum to evaluate false and true */
+#define OBJ_RUBBER_OFF                 0
+#define OBJ_RUBBER_ON                  1
+#define OBJ_RUBBER_CIRCLE_1P_RAD       2
+#define OBJ_RUBBER_CIRCLE_1P_DIA       3
+#define OBJ_RUBBER_CIRCLE_2P           4
+#define OBJ_RUBBER_CIRCLE_3P           5
+#define OBJ_RUBBER_CIRCLE_TTR          6
+#define OBJ_RUBBER_CIRCLE_TTT          7
+#define OBJ_RUBBER_DIMLEADER_LINE      8
+#define OBJ_RUBBER_ELLIPSE_LINE        9
 #define OBJ_RUBBER_ELLIPSE_MAJORDIAMETER_MINORRADIUS 10
-#define OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS  11
-#define OBJ_RUBBER_ELLIPSE_ROTATION  12
-#define OBJ_RUBBER_GRIP              13
-#define OBJ_RUBBER_LINE              14
-#define OBJ_RUBBER_POLYGON           15
-#define OBJ_RUBBER_POLYGON_INSCRIBE  16
+#define OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS 11
+#define OBJ_RUBBER_ELLIPSE_ROTATION   12
+#define OBJ_RUBBER_GRIP               13
+#define OBJ_RUBBER_LINE               14
+#define OBJ_RUBBER_POLYGON            15
+#define OBJ_RUBBER_POLYGON_INSCRIBE   16
 #define OBJ_RUBBER_POLYGON_CIRCUMSCRIBE 17
-#define OBJ_RUBBER_POLYLINE          18
-#define OBJ_RUBBER_IMAGE 19
-#define OBJ_RUBBER_RECTANGLE 20
-#define OBJ_RUBBER_TEXTSINGLE    21
+#define OBJ_RUBBER_POLYLINE           18
+#define OBJ_RUBBER_IMAGE              19
+#define OBJ_RUBBER_RECTANGLE          20
+#define OBJ_RUBBER_TEXTSINGLE         21
+
 
 /* SPARE_RUBBER_VALUES
  * -------------------
@@ -448,6 +438,7 @@ extern "C" {
 #define ACTION_delete                75
 #define ACTION_heart                 76
 #define ACTION_locatepoint           77
+#define N_ACTIONS                    78
 
 /*
 TODO: ACTION_spellcheck 
@@ -843,16 +834,10 @@ TODO: ACTION_quickselect
 #define icon_zoomwindow              363
 #define icon_zoom                    364
 
-
 /*
  * TYPEDEFS
  * --------
  */
-
-typedef struct Path_Symbol__ {
-    int type;
-    float values[6];
-} path_symbol;
 
 typedef struct Action_hash_data {
     int icon;
@@ -870,37 +855,6 @@ typedef struct Action_call_ {
     char str_args[4][MAX_STRING_LENGTH];
     int args_set;
 } action_call;
-
-typedef struct circle_args_ {
-    float x1;
-    float y1;
-    float x2;
-    float y2;
-    float x3;
-    float y3;
-    float rad;
-    float dia;
-    float cx;
-    float cy;
-    int mode;
-} circle_args;
-
-typedef struct Quad {
-    int flag;
-    float left;
-    float right;
-    float top;
-    float bottom;
-    float red;
-    float green;
-    float blue;
-} quad;
-
-typedef struct Texture_t {
-    float corners[8];
-    int width;
-    int height;
-} texture_t;
 
 typedef struct Property_Editor_Row {
     int object;
@@ -1047,28 +1001,17 @@ typedef struct Settings_wrapper {
  * --------------------------
  */
 
-extern path_symbol *symbol_list[20];
-extern int n_toolbars, n_actions, n_menus;
-extern int *toolbars[];
-extern int *menus[];
-extern char *toolbar_label[];
-extern char *folders[];
+extern int *toolbars[], *menus[];
 extern action_call undo_history[1000];
 extern action_call action;
-extern int undo_history_length;
-extern int undo_history_position;
+extern int undo_history_length, undo_history_position;
 extern action_hash_data action_list[];
-extern const char *actions_strings[];
 extern property_editor_row property_editors[];
-extern int n_property_editors;
-extern char *tips[];
-extern char *menu_label[];
-extern char *settings_tab_label[];
-extern char *status_bar_label[];
-extern char *obj_names[];
+extern const char *actions_strings[], *tips[], *toolbar_label[], *folders[],
+    *menu_label[], *settings_tab_label[], *status_bar_label[], *obj_names[];
+extern char *symbol_list[];
+extern const char * _appName_, * _appVer_;
 extern char **icons[];
-extern const char* _appName_;
-extern const char* _appVer_;
 extern int exitApp;
 extern settings_wrapper settings, preview, dialog, accept_;
 
@@ -1089,7 +1032,7 @@ double degrees(double);
 double sgn(double x);
 double theta(double x);
 void key_handler(int c, int x, int y);
-void render_quadlist(quad *qlist);
+/* void render_quadlist(quad *qlist); */
 void menu___(int key);
 void display(void);
 char *translate(char *a);
@@ -1229,6 +1172,30 @@ void sliderSelectionGripSizeValueChanged(int);
 void sliderSelectionPickBoxSizeValueChanged(int);
 void spinBoxRulerPixelSizeValueChanged(double);
 
+void settingsSnap(void);
+void settingsGrid(void);
+void settingsRuler(void);
+void settingsOrtho(void);
+void settingsPolar(void);
+void settingsQSnap(void);
+void settingsQTrack(void);
+void settingsLwt(void);
+void toggleSnap(int on);
+void toggleGrid(int on);
+void toggleRuler(int on);
+void toggleOrtho(int on);
+void togglePolar(int on);
+void toggleQSnap(int on);
+void toggleQTrack(int on);
+void toggleLwt(int on);
+void enableLwt(void);
+void disableLwt(void);
+void enableReal(void);
+void disableReal(void);
+
+void actuator(void);
+void settings_actuator(void);
+
 EmbVector unit_vector(float angle);
 EmbVector rotate_vector(EmbVector a, float angle);
 EmbVector scale_vector(EmbVector a, float scale);
@@ -1304,12 +1271,8 @@ EmbColor to_emb_color(QColor c);
 QPointF to_qpointf(EmbVector c);
 EmbVector to_emb_vector(QPointF c);
 QIcon loadIcon(int id);
-void toggleGrid();
-void toggleRuler();
-void toggleLwt();
 
-void actuator(void);
-void settings_actuator(void);
+void add_to_path(QPainterPath *path, char *command, float pos[2], float scale[2]);
 
 /* Class based code */
 class LayerManager : public QDialog
@@ -1321,13 +1284,13 @@ public:
     ~LayerManager();
 
     void addLayer(const QString& name,
-  const bool visible,
-  const bool frozen,
+  const int visible,
+  const int frozen,
   const float zValue,
   const unsigned int color,
   const QString& lineType,
   const QString& lineWeight,
-  const bool print);
+  const int print);
 
     QStandardItemModel*    layerModel;
     QSortFilterProxyModel* layerModelSorted;
@@ -1353,8 +1316,8 @@ public:
     ImageWidget(const QString &filename, QWidget* parent = 0);
     ~ImageWidget();
 
-    bool load(const QString &fileName);
-    bool save(const QString &fileName);
+    int load(const QString &fileName);
+    int save(const QString &fileName);
     QImage img;
 
 protected:
@@ -1383,8 +1346,8 @@ public:
     void   setCurrentLineType(const QString& lineType) { curLineType = lineType; }
     void   setCurrentLineWeight(const QString& lineWeight) { curLineWeight = lineWeight; }
     void   designDetails();
-    bool   loadFile(const QString &fileName);
-    bool   saveFile(const QString &fileName);
+    int   loadFile(const QString &fileName);
+    int   saveFile(const QString &fileName);
 signals:
     void   sendCloseMdiWin(MdiWindow*);
 
@@ -1422,7 +1385,7 @@ public slots:
     void   deletePressed();
     void   escapePressed();
 
-    void   showViewScrollBars(bool val);
+    void   showViewScrollBars(int val);
     void   setViewCrossHairColor(unsigned int color);
     void   setViewBackgroundColor(unsigned int color);
     void   setViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
@@ -1467,9 +1430,9 @@ public:
     MdiArea(MainWindow* mw, QWidget* parent = 0);
     ~MdiArea();
 
-    void useBackgroundLogo(bool use);
-    void useBackgroundTexture(bool use);
-    void useBackgroundColor(bool use);
+    void useBackgroundLogo(int use);
+    void useBackgroundTexture(int use);
+    void useBackgroundColor(int use);
 
     void setBackgroundLogo(const QString& fileName);
     void setBackgroundTexture(const QString& fileName);
@@ -1563,29 +1526,29 @@ public:
 
     void onWindowActivated (QMdiSubWindow* w);
     void windowMenuAboutToShow();
-    void windowMenuActivated(bool checked/*int id*/ );
+    void windowMenuActivated(int checked/*int id*/ );
 
-    void updateAllViewScrollBars(bool val);
+    void updateAllViewScrollBars(int val);
     void updateAllViewCrossHairColors(unsigned int color);
     void updateAllViewBackgroundColors(unsigned int color);
     void updateAllViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
     void updateAllViewGridColors(unsigned int color);
     void updateAllViewRulerColors(unsigned int color);
 
-    void updatePickAddMode(bool val);
+    void updatePickAddMode(int val);
     void pickAddModeToggled();
 
     void    settingsDialog(const QString& showTab = QString());
     void    readSettings();
     void    writeSettings();
 
-    static bool    validFileFormat(const QString &fileName);
+    static int    validFileFormat(const QString &fileName);
 
     void stub_testing();
 
     void fill_menu(int menu_id);
     void newFile();
-    void openFile(bool recent = false, const QString& recentFile = "");
+    void openFile(int recent = false, const QString& recentFile = "");
     void openFilesSelected(const QStringList&);
     void openrecentfile();
     void savefile();
@@ -1602,7 +1565,7 @@ public:
     void selectAll();
 
     void closeToolBar(QAction*);
-    void floatingChangedToolBar(bool);
+    void floatingChangedToolBar(int);
 
     // Icons
     void iconResize(int iconSize);
@@ -1623,7 +1586,7 @@ public:
     QString getCurrentLineWeight();
 
     // Standard Slots
-    bool isShiftPressed();
+    int isShiftPressed();
     void setShiftPressed();
     void setShiftReleased();
 
@@ -1633,14 +1596,14 @@ public:
     void setTextSize(float num);
 
     void nativeAddArc(float, float, float, float, float, float, int rubberMode);
-    void nativeAddCircle(float centerX, float centerY, float radius, bool fill, int rubberMode);
+    void nativeAddCircle(float centerX, float centerY, float radius, int fill, int rubberMode);
     void nativeAddLine(float, float, float, float, float, int rubberMode);
-    void nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, bool fill, int rubberMode);
+    void nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, int fill, int rubberMode);
     void nativeAddPoint(float x, float y);
     void nativeAddPolygon(float startX, float startY, const QPainterPath& p, int rubberMode);
-    void nativeAddTextSingle(const QString& str, float x, float y, float rot, bool fill, int rubberMode);
+    void nativeAddTextSingle(const QString& str, float x, float y, float rot, int fill, int rubberMode);
     void nativeAddPolyline(float startX, float startY, const QPainterPath& p, int rubberMode);
-    void nativeAddRectangle(float x, float y, float w, float h, float rot, bool fill, int rubberMode);
+    void nativeAddRectangle(float x, float y, float w, float h, float rot, int fill, int rubberMode);
     void nativeAddDimLeader(float x1, float y1, float x2, float y2, float rot, int rubberMode);
     
     float nativeCalculateAngle(float x1, float y1, float x2, float y2);
@@ -1678,7 +1641,7 @@ class PropertyEditor : public QDockWidget
     Q_OBJECT
 
 public:
-    PropertyEditor(const QString& iconDirectory = QString(), bool pickAddMode = true, QWidget* widgetToFocus = 0, QWidget* parent = 0, Qt::WindowFlags flags = Qt::Widget);
+    PropertyEditor(const QString& iconDirectory = QString(), int pickAddMode = true, QWidget* widgetToFocus = 0, QWidget* parent = 0, Qt::WindowFlags flags = Qt::Widget);
     ~PropertyEditor();
 
     QGroupBox* createGroupBoxGeometry(int objtype);
@@ -1702,16 +1665,16 @@ public:
 
     //Helper functions
     QToolButton*   createToolButton(const QString& iconName, const QString& txt);
-    QLineEdit* createLineEdit(const QString& validatorType = QString(), bool readOnly = false);
-    QComboBox* createComboBox(bool disable = false);
-    QFontComboBox* createFontComboBox(bool disable = false);
+    QLineEdit* createLineEdit(const QString& validatorType = QString(), int readOnly = false);
+    QComboBox* createComboBox(int disable = false);
+    QFontComboBox* createFontComboBox(int disable = false);
 
 
     void updateLineEditStrIfVaries(QLineEdit* lineEdit, const QString& str);
-    void updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, bool useAnglePrecision);
+    void updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, int useAnglePrecision);
     void updateFontComboBoxStrIfVaries(QFontComboBox* fontComboBox, const QString& str);
     void updateComboBoxStrIfVaries(QComboBox* comboBox, const QString& str, const QStringList& strList);
-    void updateComboBoxBoolIfVaries(QComboBox* comboBox, bool val, bool yesOrNoText);
+    void updateComboBoxintIfVaries(QComboBox* comboBox, int val, int yesOrNoText);
 
     QSignalMapper* signalMapper;
     void mapSignal(QObject* fieldObj, const QString& name, QVariant value);
@@ -1734,7 +1697,7 @@ signals:
 
 public slots:
     void setSelectedItems(QList<QGraphicsItem*> itemList);
-    void updatePickAddModeButton(bool pickAddMode);
+    void updatePickAddModeButton(int pickAddMode);
 
 private slots:
     void fieldEdited(QObject* fieldObj);
@@ -1863,32 +1826,11 @@ private slots:
     void rejectChanges();
 
 signals:
-    void buttonCustomFilterSelectAll(bool);
-    void buttonCustomFilterClearAll(bool);
-    void buttonQSnapSelectAll(bool);
-    void buttonQSnapClearAll(bool);
+    void buttonCustomFilterSelectAll(int);
+    void buttonCustomFilterClearAll(int);
+    void buttonQSnapSelectAll(int);
+    void buttonQSnapClearAll(int);
 };
-
-void settingsSnap(void);
-void settingsGrid(void);
-void settingsRuler(void);
-void settingsOrtho(void);
-void settingsPolar(void);
-    void settingsQSnap(void);
-    void settingsQTrack(void);
-    void settingsLwt(void);
-    void toggleSnap(bool on);
-    void toggleGrid(bool on);
-    void toggleRuler(bool on);
-    void toggleOrtho(bool on);
-    void togglePolar(bool on);
-    void toggleQSnap(bool on);
-    void toggleQTrack(bool on);
-    void toggleLwt(bool on);
-    void enableLwt(void);
-    void disableLwt(void);
-    void enableReal(void);
-    void disableReal(void);
 
 class StatusBarButton : public QToolButton
 {
@@ -1922,8 +1864,8 @@ public:
     View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent);
     ~View();
 
-    bool allowZoomIn();
-    bool allowZoomOut();
+    int allowZoomIn();
+    int allowZoomOut();
 
     void recalculateLimits();
     void zoomToPoint(const QPoint& mousePoint, int zoomDir);
@@ -1968,23 +1910,23 @@ public slots:
 
     void cornerButtonClicked();
 
-    void showScrollBars(bool val);
+    void showScrollBars(int val);
     void setCornerButton();
     void setCrossHairColor(unsigned int color);
     void setCrossHairSize(unsigned char percent);
     void setBackgroundColor(unsigned int color);
     void setSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha);
-    void toggleSnap(bool on);
-    void toggleGrid(bool on);
-    void toggleRuler(bool on);
-    void toggleOrtho(bool on);
-    void togglePolar(bool on);
-    void toggleQSnap(bool on);
-    void toggleQTrack(bool on);
-    void toggleLwt(bool on);
-    void toggleReal(bool on);
-    bool isLwtEnabled();
-    bool isRealEnabled();
+    void toggleSnap(int on);
+    void toggleGrid(int on);
+    void toggleRuler(int on);
+    void toggleOrtho(int on);
+    void togglePolar(int on);
+    void toggleQSnap(int on);
+    void toggleQTrack(int on);
+    void toggleLwt(int on);
+    void toggleReal(int on);
+    int isLwtEnabled();
+    int isRealEnabled();
 
     void setGridColor(unsigned int color);
     void createGrid(const QString& gridType);
@@ -1996,7 +1938,7 @@ public slots:
     void enableMoveRapidFire();
     void disableMoveRapidFire();
 
-    bool allowRubber();
+    int allowRubber();
     void addToRubberRoom(QGraphicsItem* item);
     void vulcanizeRubberRoom();
     void clearRubberRoom();
@@ -2031,9 +1973,9 @@ private:
 
     void loadRulerSettings();
 
-    bool willUnderflowInt32(int a, int b);
-    bool willOverflowInt32(int a, int b);
-    int roundToMultiple(bool roundUp, int numToRound, int multiple);
+    int willUnderflowInt32(int a, int b);
+    int willOverflowInt32(int a, int b);
+    int roundToMultiple(int roundUp, int numToRound, int multiple);
     QPainterPath createRulerTextPath(float x, float y, QString str, float height);
 
     QList<QGraphicsItem*> previewObjectList;
@@ -2051,7 +1993,7 @@ private:
     void copySelected();
 
     void startGripping(BaseObject* obj);
-    void stopGripping(bool accept = false);
+    void stopGripping(int accept = false);
 
     BaseObject* gripBaseObj;
     BaseObject* tempBaseObj;
@@ -2149,7 +2091,7 @@ public:
     float   objectArcLength() const;
     float   objectChord() const;
     float   objectIncludedAngle() const;
-    bool    objectClockwise() const;
+    int    objectClockwise() const;
 
     void setObjectRadius(float radius);
     void setObjectStartAngle(float angle);
@@ -2605,14 +2547,14 @@ public:
     void setObjectTextFont(const QString& font);
     void setObjectTextJustify(const QString& justify);
     void setObjectTextSize(float size);
-    void setObjectTextStyle(bool bold, bool italic, bool under, bool strike, bool over);
-    void setObjectTextBold(bool val);
-    void setObjectTextItalic(bool val);
-    void setObjectTextUnderline(bool val);
-    void setObjectTextStrikeOut(bool val);
-    void setObjectTextOverline(bool val);
-    void setObjectTextBackward(bool val);
-    void setObjectTextUpsideDown(bool val);
+    void setObjectTextStyle(int bold, int italic, int under, int strike, int over);
+    void setObjectTextBold(int val);
+    void setObjectTextItalic(int val);
+    void setObjectTextUnderline(int val);
+    void setObjectTextStrikeOut(int val);
+    void setObjectTextOverline(int val);
+    void setObjectTextBackward(int val);
+    void setObjectTextUpsideDown(int val);
     void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
     void setObjectPos(float x, float y) { setPos(x, y); }
     void setObjectX(float x) { setObjectPos(x, objectY()); }
