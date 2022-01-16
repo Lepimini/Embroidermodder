@@ -63,13 +63,12 @@ scripts.
 import os
 import json
 
-def process_json(s):
+def process_json(a):
     r"""
     The jobs carried out by this processor are:
     
         * convert C struct data stored as JSON to C code
     """
-    a = json.loads(s)
     s = """/* This file is part of Embroidermodder 2.
  * ------------------------------------------------------------
  * Copyright 2021 The Embroidermodder Team
@@ -82,16 +81,18 @@ def process_json(s):
 
 #include "embroidermodder.h"
 
-const char *about_xpm[];
+"""
 
-#include "icons/3dviews.xpm"
-#include "icons/aligneddimension.xpm"
+    for k in a.keys():
+        if k[-4:] == "_xpm":
+            s += "const char *%s[];\n" % k
+
+    s += """
 #include "icons/aligntextangle.xpm"
 #include "icons/aligntextcenter.xpm"
 #include "icons/aligntexthome.xpm"
 #include "icons/aligntextleft.xpm"
 #include "icons/aligntextright.xpm"
-#include "icons/aligntext.xpm"
 #include "icons/angulardimension.xpm"
 #include "icons/app.xpm"
 #include "icons/arc3points.xpm"
@@ -2638,10 +2639,11 @@ for fname in os.listdir("src"):
         f = open("src/"+fname, "r")
         s = f.read()
         f.close()
-        s = process_json(s)
-        f = open("src/"+fname[:-5]+".c", "w")
-        f.write(s)
-        f.close()
+        a = json.loads(s)
+        with open("src/"+fname, "w") as f:
+            f.write(json.dumps(a, indent=4))
+        with open("src/"+fname[:-5]+".c", "w") as f:
+            f.write(process_json(a))
         continue
 
     # in place editing
