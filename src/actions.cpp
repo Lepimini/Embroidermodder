@@ -11,11 +11,6 @@
 
 #include <string.h>
 
-void settings_actuator(void)
-{
-    
-}
-
 void icon16(void)
 {
     debug_message("icon16()");
@@ -494,14 +489,19 @@ void doNothing(void)
 }
 
 
-void actuator(void)
+void actuator(char *call)
 {
+    int id;
     undo_history_position++;
     /* an action has been taken, we are at the current head of the stack */
     undo_history_length = undo_history_position;
-    memcpy(undo_history+undo_history_position, &action, sizeof(action_call));
-    if (action.id >= 0 && action.id < N_ACTIONS) {
-        action_list[action.id].function();
+    strcpy(undo_history[undo_history_position], call);
+    id = call[0];
+    if (id < 0) {
+        id += 256;
+    }
+    if (id < N_ACTIONS) {
+        action_list[id].function();
     }
 }
 
@@ -545,7 +545,7 @@ QIcon loadIcon(int icon_id)
     return QIcon(QPixmap(icons[icon_id]));
 }
 
-void get_n_floats(char *command, float *out, int n)
+void get_n_floats(const char *command, float *out, int n)
 {
     int i;
     char modifyable[100];
@@ -558,7 +558,7 @@ void get_n_floats(char *command, float *out, int n)
     }
 }
 
-void add_to_path(QPainterPath *path, char *command, float pos[2], float scale[2])
+void add_to_path(QPainterPath *path, const char *command, float pos[2], float scale[2])
 {
     int j;
     float out[10];

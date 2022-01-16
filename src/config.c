@@ -10,8 +10,9 @@
 
 #include "embroidermodder.h"
 
+const char *about_xpm[];
+
 #include "icons/3dviews.xpm"
-#include "icons/about.xpm"
 #include "icons/aligneddimension.xpm"
 #include "icons/aligntextangle.xpm"
 #include "icons/aligntextcenter.xpm"
@@ -380,441 +381,372 @@ const char* _appName_ = "Embroidermodder";
 const char* _appVer_ = "v2.0 alpha";
 int exitApp = 0;
 
-char **icons[] = {
-    _3dviews_xpm,
-    about_xpm,
-    aligneddimension_xpm,
-    aligntextangle_xpm,
-    aligntextcenter_xpm,
-    aligntexthome_xpm,
-    aligntextleft_xpm,
-    aligntextright_xpm,
-    aligntext_xpm,
-    angulardimension_xpm,
-    app_xpm,
-    arc3points_xpm,
-    arccenterstartangle_xpm,
-    arccenterstartend_xpm,
-    arccenterstartlength_xpm,
-    arccontinue_xpm,
-    arcstartcenterangle_xpm,
-    arcstartcenterend_xpm,
-    arcstartcenterlength_xpm,
-    arcstartendangle_xpm,
-    arcstartenddirection_xpm,
-    arcstartendradius_xpm,
-    arc_xpm,
-    area_xpm,
-    array_xpm,
-    backview_xpm,
-    baselinedimension_xpm,
-    bean_xpm,
-    blank_xpm,
-    bottomview_xpm,
-    boundary_xpm,
-    break2points_xpm,
-    breakatpoint_xpm,
-    browser_xpm,
-    camera_xpm,
-    centermark_xpm,
-    chamfer_xpm,
-    changelog_xpm,
-    check_xpm,
-    circle2points_xpm,
-    circle3points_xpm,
-    circlecenterdiameter_xpm,
-    circlecenterradius_xpm,
-    circletantanradius_xpm,
-    circletantantan_xpm,
-    circle_xpm,
-    cloud_2_xpm,
-    cloud_xpm,
-    colorblue_xpm,
-    colorbyblock_xpm,
-    colorbylayer_xpm,
-    colorcyan_xpm,
-    colorgreen_xpm,
-    colormagenta_xpm,
-    colorother_xpm,
-    colorred_xpm,
-    colorselector_xpm,
-    colorwhite_xpm,
-    coloryellow_xpm,
-    constructionline_xpm,
-    continuedimension_xpm,
-    copyobject_xpm,
-    copy_xpm,
-    customizekeyboard_xpm,
-    customizemenus_xpm,
-    customizetoolbars_xpm,
-    customize_xpm,
-    cut_xpm,
-    date_xpm,
-    day_xpm,
-    designdetails_xpm,
-    diameterdimension_xpm,
-    dimensionedit_xpm,
-    dimensionstyle_xpm,
-    dimensiontextedit_xpm,
-    dimensionupdate_xpm,
-    distance_xpm,
-    dolphin_xpm,
-    donothing_xpm,
-    donut_2_xpm,
-    donut_xpm,
-    drawing2_xpm,
-    drawing_xpm,
-    ellipsearc_xpm,
-    ellipseaxisend_xpm,
-    ellipsecenter_xpm,
-    ellipse_xpm,
-    erase_xpm,
-    escape_xpm,
-    exit_xpm,
-    explode_xpm,
-    extend_xpm,
-    fillet_xpm,
-    findandreplace_xpm,
-    freezealllayers_xpm,
-    frontview_xpm,
-    gridsettings_xpm,
-    gridsnapsettings_xpm,
-    hatch_xpm,
-    heart_2_xpm,
-    heart_xpm,
-    help_2_xpm,
-    help_xpm,
-    hex_xpm,
-    hidealllayers_xpm,
-    histogram_xpm,
-    icon128_xpm,
-    icon16_xpm,
-    icon24_xpm,
-    icon32_xpm,
-    icon48_xpm,
-    icon64_xpm,
-    inquiry_xpm,
-    insertblock_xpm,
-    join_xpm,
-    justifytext_xpm,
-    layerprevious_xpm,
-    layerselector_xpm,
-    layers_xpm,
-    layertranslate_xpm,
-    leftview_xpm,
-    lengthen_xpm,
-    lineardimension_xpm,
-    linetypebyblock_xpm,
-    linetypebylayer_xpm,
-    linetypecenter_xpm,
-    linetypecontinuous_xpm,
-    linetypehidden_xpm,
-    linetypeother_xpm,
-    linetypeselector_xpm,
-    lineweight01_xpm,
-    lineweight02_xpm,
-    lineweight03_xpm,
-    lineweight04_xpm,
-    lineweight05_xpm,
-    lineweight06_xpm,
-    lineweight07_xpm,
-    lineweight08_xpm,
-    lineweight09_xpm,
-    lineweight10_xpm,
-    lineweight11_xpm,
-    lineweight12_xpm,
-    lineweight13_xpm,
-    lineweight14_xpm,
-    lineweight15_xpm,
-    lineweight16_xpm,
-    lineweight17_xpm,
-    lineweight18_xpm,
-    lineweight19_xpm,
-    lineweight20_xpm,
-    lineweight21_xpm,
-    lineweight22_xpm,
-    lineweight23_xpm,
-    lineweight24_xpm,
-    lineweightbyblock_xpm,
-    lineweightbylayer_xpm,
-    lineweightdefault_xpm,
-    lineweightselector_xpm,
-    lineweightsettings_xpm,
-    line_xpm,
-    list_xpm,
-    locatepoint_xpm,
-    locator_snaptoapparentintersection_xpm,
-    locator_snaptocenter_xpm,
-    locator_snaptoendpoint_xpm,
-    locator_snaptoextension_xpm,
-    locator_snaptoinsert_xpm,
-    locator_snaptointersection_xpm,
-    locator_snaptomidpoint_xpm,
-    locator_snaptonearest_xpm,
-    locator_snaptonode_xpm,
-    locator_snaptoparallel_xpm,
-    locator_snaptoperpendicular_xpm,
-    locator_snaptoquadrant_xpm,
-    locator_snaptotangent_xpm,
-    lockalllayers_xpm,
-    makeblock_xpm,
-    makelayercurrent_xpm,
-    mass_xpm,
-    mirror_xpm,
-    move_xpm,
-    multilinetext_xpm,
-    multiline_xpm,
-    namedviews_xpm,
-    neisometricview_xpm,
-    new_xpm,
-    night_xpm,
-    nopreview_xpm,
-    nwisometricview_xpm,
-    obliquedimensions_xpm,
-    offset_xpm,
-    open_xpm,
-    ordinatedimension_xpm,
-    orthosettings_xpm,
-    pandown_xpm,
-    panleft_xpm,
-    panpoint_xpm,
-    panrealtime_xpm,
-    panright_xpm,
-    panup_xpm,
-    pan_xpm,
-    paste_xpm,
-    path_xpm,
-    pickadd_xpm,
-    picknew_xpm,
-    plugin_xpm,
-    pointdivide_xpm,
-    pointmeasure_xpm,
-    pointmultiple_xpm,
-    pointsingle_xpm,
-    point_xpm,
-    polarsettings_xpm,
-    polygon_xpm,
-    polyline_xpm,
-    print_xpm,
-    pyscript_xpm,
-    qsnapsettings_xpm,
-    qtracksettings_xpm,
-    quickdimension_xpm,
-    quickleader_xpm,
-    quickselect_xpm,
-    radiusdimension_xpm,
-    ray_xpm,
-    rectangle_xpm,
-    redo_xpm,
-    region_xpm,
-    render_xpm,
-    rgb_xpm,
-    rightview_xpm,
-    rotate_xpm,
-    rulersettings_xpm,
-    sandbox_xpm,
-    satin_xpm,
-    saveas_xpm,
-    save_xpm,
-    scale_xpm,
-    seisometricview_xpm,
-    settingsdialog_2_xpm,
-    settingsdialog_xpm,
-    shade2dwireframe_xpm,
-    shade3dwireframe_xpm,
-    shadeflatedges_xpm,
-    shadeflat_xpm,
-    shadehidden_xpm,
-    shadesmoothedges_xpm,
-    shadesmooth_xpm,
-    shade_xpm,
-    showalllayers_xpm,
-    singlelinetext_xpm,
-    sketch_2_xpm,
-    sketch_xpm,
-    snapfrom_xpm,
-    snaptoapparentintersection_xpm,
-    snaptocenter_xpm,
-    snaptoendpoint_xpm,
-    snaptoextension_xpm,
-    snaptoinsert_xpm,
-    snaptointersection_xpm,
-    snaptomidpoint_xpm,
-    snaptonearest_xpm,
-    snaptonode_xpm,
-    snaptonone_xpm,
-    snaptoparallel_xpm,
-    snaptoperpendicular_xpm,
-    snaptoquadrant_xpm,
-    snaptotangent_xpm,
-    snowflake_2_xpm,
-    snowflake_xpm,
-    solidbox_xpm,
-    solidcheck_xpm,
-    solidclean_xpm,
-    solidcoloredges_xpm,
-    solidcolorfaces_xpm,
-    solidcone_xpm,
-    solidcopyedges_xpm,
-    solidcopyfaces_xpm,
-    solidcylinder_xpm,
-    soliddeletefaces_xpm,
-    solidextrudefaces_xpm,
-    solidextrude_xpm,
-    solidimprint_xpm,
-    solidinterfere_xpm,
-    solidintersect_xpm,
-    solidmovefaces_xpm,
-    solidoffsetfaces_xpm,
-    solidrevolve_xpm,
-    solidrotatefaces_xpm,
-    solidsection_xpm,
-    solidsediting_xpm,
-    solidseparate_xpm,
-    solidsetupdrawing_xpm,
-    solidsetupprofile_xpm,
-    solidsetupview_xpm,
-    solidsetup_xpm,
-    solidshell_xpm,
-    solidslice_xpm,
-    solidsphere_xpm,
-    solidsubtract_xpm,
-    solids_xpm,
-    solidtaperfaces_xpm,
-    solidtorus_xpm,
-    solidunion_xpm,
-    solidwedge_xpm,
-    spline_xpm,
-    star_xpm,
-    stretch_xpm,
-    stub_xpm,
-    surface2dsolid_xpm,
-    surface3dface_xpm,
-    surface3dmesh_xpm,
-    surfacebox_xpm,
-    surfacecone_xpm,
-    surfacecylinder_xpm,
-    surfacedish_xpm,
-    surfacedome_xpm,
-    surfaceedgesurface_xpm,
-    surfaceedge_xpm,
-    surfacepyramid_xpm,
-    surfacerevolvedsurface_xpm,
-    surfaceruledsurface_xpm,
-    surfacesphere_xpm,
-    surfaces_xpm,
-    surfacetabulatedsurface_xpm,
-    surfacetorus_xpm,
-    surfacewedge_xpm,
-    swisometricview_xpm,
-    temptrackingpoint_xpm,
-    textbold_xpm,
-    textitalic_xpm,
-    textoverline_xpm,
-    textstrikeout_xpm,
-    textunderline_xpm,
-    text_xpm,
-    thawalllayers_xpm,
-    theme_xpm,
-    tipoftheday_2_xpm,
-    tipoftheday_xpm,
-    tolerance_xpm,
-    topview_xpm,
-    trim_xpm,
-    undo_xpm,
-    units_xpm,
-    unlockalllayers_xpm,
-    view_xpm,
-    whatsthis_xpm,
-    wideflange_xpm,
-    windowcascade_xpm,
-    windowcloseall_xpm,
-    windowclose_xpm,
-    windownext_xpm,
-    windowprevious_xpm,
-    windowtile_xpm,
-    world_xpm,
-    zoomall_xpm,
-    zoomcenter_xpm,
-    zoomdynamic_xpm,
-    zoomextents_xpm,
-    zoomin_xpm,
-    zoomout_xpm,
-    zoomprevious_xpm,
-    zoomrealtime_xpm,
-    zoomscale_xpm,
-    zoomselected_xpm,
-    zoomwindow_xpm,
-    zoom_xpm
-};
-
-const char *tips[] = {
-    "we need more tips?",
-    "you can change the color of the display through settings?",
-    "you can hide the scrollbars to increase the viewable area through settings?",
-    "you can change the icon size for increased visibility?",
-    "you can toggle the grid on and off by pressing the button in the statusbar?",
-    "the grid size can be changed to match your hoop size through settings?",
-    "the crosshair size is based on a percentage of your screen size? Setting it to 100 may help you visually line things up better.",
-    "you can pan by pressing the middle mouse button and dragging your mouse across the screen?",
-    "you can open and edit multiple designs simultaneously?",
-    "that many embroidery machines support the .dst format?",
-    "that you can zoom in and out using your mouse wheel?",
-    "that you can use circular and isometric grids?",
-    "about our command line format converter?",
-    "that you can use the 'DAY' and 'NIGHT' commands to quickly switch the view colors to commonly used white or black?",
-    "that you can quickly change the background, crosshair and grid colors using the 'RGB' command?",
-    "\0"
-};
-
-const char *details_label_text[] = {
-    "Total Stitches:",
-    "Real Stitches:",
-    "Jump Stitches:",
-    "Trim Stitches:",
-    "Total Colors:",
-    "Color Changes:",
-    "Left:",
-    "Top:",
-    "Right:",
-    "Bottom:",
-    "Width:",
-    "Height:"
-};
-
-const char *obj_names[] = {
-    "Unknown",
-    "Base",
-    "Arc",
-    "Block",
-    "Circle",
-    "Aligned Dimension",
-    "Angular Dimension",
-    "Arc Length Dimension",
-    "Diameter Dimension",
-    "Leader Dimension",
-    "Linear Dimension",
-    "Ordinate Dimension",
-    "Radius Dimension",
-    "Ellipse",
-    "Elliptical Arc",
-    "Rubber",
-    "Grid",
-    "Hatch",
-    "Image",
-    "Infinite Line",
-    "Line",
-    "Path",
-    "Point",
-    "Polygon",
-    "Polyline",
-    "Ray",
-    "Rectangle",
-    "Slot",
-    "Spline",
-    "Multi Line Text",
-    "Single Line Text",
-    "Unknown"
+const char **icons[] = {
+    (const char**)_3dviews_xpm,
+    (const char**)about_xpm,
+    (const char**)aligneddimension_xpm,
+    (const char**)aligntextangle_xpm,
+    (const char**)aligntextcenter_xpm,
+    (const char**)aligntexthome_xpm,
+    (const char**)aligntextleft_xpm,
+    (const char**)aligntextright_xpm,
+    (const char**)aligntext_xpm,
+    (const char**)angulardimension_xpm,
+    (const char**)app_xpm,
+    (const char**)arc3points_xpm,
+    (const char**)arccenterstartangle_xpm,
+    (const char**)arccenterstartend_xpm,
+    (const char**)arccenterstartlength_xpm,
+    (const char**)arccontinue_xpm,
+    (const char**)arcstartcenterangle_xpm,
+    (const char**)arcstartcenterend_xpm,
+    (const char**)arcstartcenterlength_xpm,
+    (const char**)arcstartendangle_xpm,
+    (const char**)arcstartenddirection_xpm,
+    (const char**)arcstartendradius_xpm,
+    (const char**)arc_xpm,
+    (const char**)area_xpm,
+    (const char**)array_xpm,
+    (const char**)backview_xpm,
+    (const char**)baselinedimension_xpm,
+    (const char**)bean_xpm,
+    (const char**)blank_xpm,
+    (const char**)bottomview_xpm,
+    (const char**)boundary_xpm,
+    (const char**)break2points_xpm,
+    (const char**)breakatpoint_xpm,
+    (const char**)browser_xpm,
+    (const char**)camera_xpm,
+    (const char**)centermark_xpm,
+    (const char**)chamfer_xpm,
+    (const char**)changelog_xpm,
+    (const char**)check_xpm,
+    (const char**)circle2points_xpm,
+    (const char**)circle3points_xpm,
+    (const char**)circlecenterdiameter_xpm,
+    (const char**)circlecenterradius_xpm,
+    (const char**)circletantanradius_xpm,
+    (const char**)circletantantan_xpm,
+    (const char**)circle_xpm,
+    (const char**)cloud_2_xpm,
+    (const char**)cloud_xpm,
+    (const char**)colorblue_xpm,
+    (const char**)colorbyblock_xpm,
+    (const char**)colorbylayer_xpm,
+    (const char**)colorcyan_xpm,
+    (const char**)colorgreen_xpm,
+    (const char**)colormagenta_xpm,
+    (const char**)colorother_xpm,
+    (const char**)colorred_xpm,
+    (const char**)colorselector_xpm,
+    (const char**)colorwhite_xpm,
+    (const char**)coloryellow_xpm,
+    (const char**)constructionline_xpm,
+    (const char**)continuedimension_xpm,
+    (const char**)copyobject_xpm,
+    (const char**)copy_xpm,
+    (const char**)customizekeyboard_xpm,
+    (const char**)customizemenus_xpm,
+    (const char**)customizetoolbars_xpm,
+    (const char**)customize_xpm,
+    (const char**)cut_xpm,
+    (const char**)date_xpm,
+    (const char**)day_xpm,
+    (const char**)designdetails_xpm,
+    (const char**)diameterdimension_xpm,
+    (const char**)dimensionedit_xpm,
+    (const char**)dimensionstyle_xpm,
+    (const char**)dimensiontextedit_xpm,
+    (const char**)dimensionupdate_xpm,
+    (const char**)distance_xpm,
+    (const char**)dolphin_xpm,
+    (const char**)donothing_xpm,
+    (const char**)donut_2_xpm,
+    (const char**)donut_xpm,
+    (const char**)drawing2_xpm,
+    (const char**)drawing_xpm,
+    (const char**)ellipsearc_xpm,
+    (const char**)ellipseaxisend_xpm,
+    (const char**)ellipsecenter_xpm,
+    (const char**)ellipse_xpm,
+    (const char**)erase_xpm,
+    (const char**)escape_xpm,
+    (const char**)exit_xpm,
+    (const char**)explode_xpm,
+    (const char**)extend_xpm,
+    (const char**)fillet_xpm,
+    (const char**)findandreplace_xpm,
+    (const char**)freezealllayers_xpm,
+    (const char**)frontview_xpm,
+    (const char**)gridsettings_xpm,
+    (const char**)gridsnapsettings_xpm,
+    (const char**)hatch_xpm,
+    (const char**)heart_2_xpm,
+    (const char**)heart_xpm,
+    (const char**)help_2_xpm,
+    (const char**)help_xpm,
+    (const char**)hex_xpm,
+    (const char**)hidealllayers_xpm,
+    (const char**)histogram_xpm,
+    (const char**)icon128_xpm,
+    (const char**)icon16_xpm,
+    (const char**)icon24_xpm,
+    (const char**)icon32_xpm,
+    (const char**)icon48_xpm,
+    (const char**)icon64_xpm,
+    (const char**)inquiry_xpm,
+    (const char**)insertblock_xpm,
+    (const char**)join_xpm,
+    (const char**)justifytext_xpm,
+    (const char**)layerprevious_xpm,
+    (const char**)layerselector_xpm,
+    (const char**)layers_xpm,
+    (const char**)layertranslate_xpm,
+    (const char**)leftview_xpm,
+    (const char**)lengthen_xpm,
+    (const char**)lineardimension_xpm,
+    (const char**)linetypebyblock_xpm,
+    (const char**)linetypebylayer_xpm,
+    (const char**)linetypecenter_xpm,
+    (const char**)linetypecontinuous_xpm,
+    (const char**)linetypehidden_xpm,
+    (const char**)linetypeother_xpm,
+    (const char**)linetypeselector_xpm,
+    (const char**)lineweight01_xpm,
+    (const char**)lineweight02_xpm,
+    (const char**)lineweight03_xpm,
+    (const char**)lineweight04_xpm,
+    (const char**)lineweight05_xpm,
+    (const char**)lineweight06_xpm,
+    (const char**)lineweight07_xpm,
+    (const char**)lineweight08_xpm,
+    (const char**)lineweight09_xpm,
+    (const char**)lineweight10_xpm,
+    (const char**)lineweight11_xpm,
+    (const char**)lineweight12_xpm,
+    (const char**)lineweight13_xpm,
+    (const char**)lineweight14_xpm,
+    (const char**)lineweight15_xpm,
+    (const char**)lineweight16_xpm,
+    (const char**)lineweight17_xpm,
+    (const char**)lineweight18_xpm,
+    (const char**)lineweight19_xpm,
+    (const char**)lineweight20_xpm,
+    (const char**)lineweight21_xpm,
+    (const char**)lineweight22_xpm,
+    (const char**)lineweight23_xpm,
+    (const char**)lineweight24_xpm,
+    (const char**)lineweightbyblock_xpm,
+    (const char**)lineweightbylayer_xpm,
+    (const char**)lineweightdefault_xpm,
+    (const char**)lineweightselector_xpm,
+    (const char**)lineweightsettings_xpm,
+    (const char**)line_xpm,
+    (const char**)list_xpm,
+    (const char**)locatepoint_xpm,
+    (const char**)locator_snaptoapparentintersection_xpm,
+    (const char**)locator_snaptocenter_xpm,
+    (const char**)locator_snaptoendpoint_xpm,
+    (const char**)locator_snaptoextension_xpm,
+    (const char**)locator_snaptoinsert_xpm,
+    (const char**)locator_snaptointersection_xpm,
+    (const char**)locator_snaptomidpoint_xpm,
+    (const char**)locator_snaptonearest_xpm,
+    (const char**)locator_snaptonode_xpm,
+    (const char**)locator_snaptoparallel_xpm,
+    (const char**)locator_snaptoperpendicular_xpm,
+    (const char**)locator_snaptoquadrant_xpm,
+    (const char**)locator_snaptotangent_xpm,
+    (const char**)lockalllayers_xpm,
+    (const char**)makeblock_xpm,
+    (const char**)makelayercurrent_xpm,
+    (const char**)mass_xpm,
+    (const char**)mirror_xpm,
+    (const char**)move_xpm,
+    (const char**)multilinetext_xpm,
+    (const char**)multiline_xpm,
+    (const char**)namedviews_xpm,
+    (const char**)neisometricview_xpm,
+    (const char**)new_xpm,
+    (const char**)night_xpm,
+    (const char**)nopreview_xpm,
+    (const char**)nwisometricview_xpm,
+    (const char**)obliquedimensions_xpm,
+    (const char**)offset_xpm,
+    (const char**)open_xpm,
+    (const char**)ordinatedimension_xpm,
+    (const char**)orthosettings_xpm,
+    (const char**)pandown_xpm,
+    (const char**)panleft_xpm,
+    (const char**)panpoint_xpm,
+    (const char**)panrealtime_xpm,
+    (const char**)panright_xpm,
+    (const char**)panup_xpm,
+    (const char**)pan_xpm,
+    (const char**)paste_xpm,
+    (const char**)path_xpm,
+    (const char**)pickadd_xpm,
+    (const char**)picknew_xpm,
+    (const char**)plugin_xpm,
+    (const char**)pointdivide_xpm,
+    (const char**)pointmeasure_xpm,
+    (const char**)pointmultiple_xpm,
+    (const char**)pointsingle_xpm,
+    (const char**)point_xpm,
+    (const char**)polarsettings_xpm,
+    (const char**)polygon_xpm,
+    (const char**)polyline_xpm,
+    (const char**)print_xpm,
+    (const char**)pyscript_xpm,
+    (const char**)qsnapsettings_xpm,
+    (const char**)qtracksettings_xpm,
+    (const char**)quickdimension_xpm,
+    (const char**)quickleader_xpm,
+    (const char**)quickselect_xpm,
+    (const char**)radiusdimension_xpm,
+    (const char**)ray_xpm,
+    (const char**)rectangle_xpm,
+    (const char**)redo_xpm,
+    (const char**)region_xpm,
+    (const char**)render_xpm,
+    (const char**)rgb_xpm,
+    (const char**)rightview_xpm,
+    (const char**)rotate_xpm,
+    (const char**)rulersettings_xpm,
+    (const char**)sandbox_xpm,
+    (const char**)satin_xpm,
+    (const char**)saveas_xpm,
+    (const char**)save_xpm,
+    (const char**)scale_xpm,
+    (const char**)seisometricview_xpm,
+    (const char**)settingsdialog_2_xpm,
+    (const char**)settingsdialog_xpm,
+    (const char**)shade2dwireframe_xpm,
+    (const char**)shade3dwireframe_xpm,
+    (const char**)shadeflatedges_xpm,
+    (const char**)shadeflat_xpm,
+    (const char**)shadehidden_xpm,
+    (const char**)shadesmoothedges_xpm,
+    (const char**)shadesmooth_xpm,
+    (const char**)shade_xpm,
+    (const char**)showalllayers_xpm,
+    (const char**)singlelinetext_xpm,
+    (const char**)sketch_2_xpm,
+    (const char**)sketch_xpm,
+    (const char**)snapfrom_xpm,
+    (const char**)snaptoapparentintersection_xpm,
+    (const char**)snaptocenter_xpm,
+    (const char**)snaptoendpoint_xpm,
+    (const char**)snaptoextension_xpm,
+    (const char**)snaptoinsert_xpm,
+    (const char**)snaptointersection_xpm,
+    (const char**)snaptomidpoint_xpm,
+    (const char**)snaptonearest_xpm,
+    (const char**)snaptonode_xpm,
+    (const char**)snaptonone_xpm,
+    (const char**)snaptoparallel_xpm,
+    (const char**)snaptoperpendicular_xpm,
+    (const char**)snaptoquadrant_xpm,
+    (const char**)snaptotangent_xpm,
+    (const char**)snowflake_2_xpm,
+    (const char**)snowflake_xpm,
+    (const char**)solidbox_xpm,
+    (const char**)solidcheck_xpm,
+    (const char**)solidclean_xpm,
+    (const char**)solidcoloredges_xpm,
+    (const char**)solidcolorfaces_xpm,
+    (const char**)solidcone_xpm,
+    (const char**)solidcopyedges_xpm,
+    (const char**)solidcopyfaces_xpm,
+    (const char**)solidcylinder_xpm,
+    (const char**)soliddeletefaces_xpm,
+    (const char**)solidextrudefaces_xpm,
+    (const char**)solidextrude_xpm,
+    (const char**)solidimprint_xpm,
+    (const char**)solidinterfere_xpm,
+    (const char**)solidintersect_xpm,
+    (const char**)solidmovefaces_xpm,
+    (const char**)solidoffsetfaces_xpm,
+    (const char**)solidrevolve_xpm,
+    (const char**)solidrotatefaces_xpm,
+    (const char**)solidsection_xpm,
+    (const char**)solidsediting_xpm,
+    (const char**)solidseparate_xpm,
+    (const char**)solidsetupdrawing_xpm,
+    (const char**)solidsetupprofile_xpm,
+    (const char**)solidsetupview_xpm,
+    (const char**)solidsetup_xpm,
+    (const char**)solidshell_xpm,
+    (const char**)solidslice_xpm,
+    (const char**)solidsphere_xpm,
+    (const char**)solidsubtract_xpm,
+    (const char**)solids_xpm,
+    (const char**)solidtaperfaces_xpm,
+    (const char**)solidtorus_xpm,
+    (const char**)solidunion_xpm,
+    (const char**)solidwedge_xpm,
+    (const char**)spline_xpm,
+    (const char**)star_xpm,
+    (const char**)stretch_xpm,
+    (const char**)stub_xpm,
+    (const char**)surface2dsolid_xpm,
+    (const char**)surface3dface_xpm,
+    (const char**)surface3dmesh_xpm,
+    (const char**)surfacebox_xpm,
+    (const char**)surfacecone_xpm,
+    (const char**)surfacecylinder_xpm,
+    (const char**)surfacedish_xpm,
+    (const char**)surfacedome_xpm,
+    (const char**)surfaceedgesurface_xpm,
+    (const char**)surfaceedge_xpm,
+    (const char**)surfacepyramid_xpm,
+    (const char**)surfacerevolvedsurface_xpm,
+    (const char**)surfaceruledsurface_xpm,
+    (const char**)surfacesphere_xpm,
+    (const char**)surfaces_xpm,
+    (const char**)surfacetabulatedsurface_xpm,
+    (const char**)surfacetorus_xpm,
+    (const char**)surfacewedge_xpm,
+    (const char**)swisometricview_xpm,
+    (const char**)temptrackingpoint_xpm,
+    (const char**)textbold_xpm,
+    (const char**)textitalic_xpm,
+    (const char**)textoverline_xpm,
+    (const char**)textstrikeout_xpm,
+    (const char**)textunderline_xpm,
+    (const char**)text_xpm,
+    (const char**)thawalllayers_xpm,
+    (const char**)theme_xpm,
+    (const char**)tipoftheday_2_xpm,
+    (const char**)tipoftheday_xpm,
+    (const char**)tolerance_xpm,
+    (const char**)topview_xpm,
+    (const char**)trim_xpm,
+    (const char**)undo_xpm,
+    (const char**)units_xpm,
+    (const char**)unlockalllayers_xpm,
+    (const char**)view_xpm,
+    (const char**)whatsthis_xpm,
+    (const char**)wideflange_xpm,
+    (const char**)windowcascade_xpm,
+    (const char**)windowcloseall_xpm,
+    (const char**)windowclose_xpm,
+    (const char**)windownext_xpm,
+    (const char**)windowprevious_xpm,
+    (const char**)windowtile_xpm,
+    (const char**)world_xpm,
+    (const char**)zoomall_xpm,
+    (const char**)zoomcenter_xpm,
+    (const char**)zoomdynamic_xpm,
+    (const char**)zoomextents_xpm,
+    (const char**)zoomin_xpm,
+    (const char**)zoomout_xpm,
+    (const char**)zoomprevious_xpm,
+    (const char**)zoomrealtime_xpm,
+    (const char**)zoomscale_xpm,
+    (const char**)zoomselected_xpm,
+    (const char**)zoomwindow_xpm,
+    (const char**)zoom_xpm
 };
 
 int file_toolbar[] = {
@@ -1097,7 +1029,7 @@ float symbol_scale = 0.01;
  * Also we want to render the patterns themselves using SVG
  * syntax, so it would save on repeated work overall.
  */
-char *symbol_list[] = {
+const char *symbol_list[] = {
     /* 0 */ "icon 0",
     /* 1 */ "M 5 100 L 45 100 M 0 25 L 25 0 L 25 100",
     /* 2 */ "icon 2",
@@ -1118,10 +1050,9 @@ path_symbol icon_zero[] = {
     /* path.addEllipse(QPointF(x+0.25*xScale, y-0.50*yScale), 0.25*xScale, 0.50*yScale);*/
     M 0 -0.75
     L 0 -0.25
-    A 0 -0.5, 0.5, 0.5, 180.0, 180.0
-    L {0.5, -0.75
+    A 0 -0.5 0.5 0.5 180.0 180.0
+    L 0.5, -0.75
     A 0 -1.0, 0.5, 0.5, 0.0, 180.0
-    {PATHS_END, 0 0.0}}
 };
 
 path_symbol icon_two[] = {
@@ -1129,14 +1060,12 @@ path_symbol icon_two[] = {
     A {0.45, 1.00, 0.50, 180.00, -216.87
     L 0 0.0
     L {0.50, 0.0
-    {PATHS_END, 0 0.0}}
 };
 
 path_symbol icon_three[] = {
     {PATHS_ARCMOVETO, 0 -0.50, 0.50, 0.50, 195.00
     A 0 -0.50, 0.50, 195.00, 255.00
     A 0 -0.50, 0.50, 270.00, 255.00
-    {PATHS_END, 0 0.0}}
 };
 
 path_symbol icon_five[] = {
@@ -1163,9 +1092,10 @@ path_symbol icon_nine[] = {
 
 #endif
 
-action_hash_data action_list[] = {
+action action_list[] = {
     {
         /* 0 */
+        OBJ_TYPE_NULL,
         icon_donothing,
         "donothing",
         "&Do Nothing",
@@ -1175,6 +1105,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 1 */
+        OBJ_TYPE_NULL,
         icon_new,
         "new",
         "&New",
@@ -1184,6 +1115,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 2 */
+        OBJ_TYPE_NULL,
         icon_open,
         "open",
         "&Open",
@@ -1193,6 +1125,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 3 */
+        OBJ_TYPE_NULL,
         icon_save,
         "save",
         "&Save",
@@ -1202,6 +1135,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 4 */
+        OBJ_TYPE_NULL,
         icon_saveas,
         "saveas",
         "Save &As",
@@ -1211,6 +1145,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 5 */
+        OBJ_TYPE_NULL,
         icon_print,
         "print",
         "&Print",
@@ -1220,6 +1155,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 6 */
+        OBJ_TYPE_NULL,
         icon_designdetails,
         "designdetails",
         "&Details",
@@ -1229,6 +1165,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 7 */
+        OBJ_TYPE_NULL,
         icon_exit,
         "exit",
         "E&xit",
@@ -1238,6 +1175,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 8 */
+        OBJ_TYPE_NULL,
         icon_cut,
         "cut",
         "Cu&t",
@@ -1247,6 +1185,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 9 */
+        OBJ_TYPE_NULL,
         icon_copy,
         "copy",
         "&Copy",
@@ -1256,6 +1195,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 10 */
+        OBJ_TYPE_NULL,
         icon_paste,
         "paste",
         "&Paste",
@@ -1265,6 +1205,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 11 */
+        OBJ_TYPE_NULL,
         icon_undo,
         "undo",
         "&Undo",
@@ -1274,6 +1215,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 12 */
+        OBJ_TYPE_NULL,
         icon_redo,
         "redo",
         "&Redo",
@@ -1283,6 +1225,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 13 */
+        OBJ_TYPE_NULL,
         icon_windowclose,
         "windowclose",
         "Cl&ose",
@@ -1292,6 +1235,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 14 */
+        OBJ_TYPE_NULL,
         icon_windowcloseall,
         "windowcloseall",
         "Close &All",
@@ -1301,6 +1245,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 15 */
+        OBJ_TYPE_NULL,
         icon_windowcascade,
         "windowcascade",
         "&Cascade",
@@ -1310,6 +1255,7 @@ action_hash_data action_list[] = {
     },
     {
         /* 16 */
+        OBJ_TYPE_NULL,
         icon_windowtile,
         "windowtile",
         "&Tile",
@@ -1318,6 +1264,7 @@ action_hash_data action_list[] = {
         windowTile
     },
     {
+        OBJ_TYPE_NULL,
         icon_windownext,
         "windownext",
         "Ne&xt",
@@ -1326,6 +1273,7 @@ action_hash_data action_list[] = {
         windowNext
     },
     {
+        OBJ_TYPE_NULL,
         icon_windowprevious,
         "windowprevious",
         "Pre&vious",
@@ -1334,6 +1282,7 @@ action_hash_data action_list[] = {
         windowPrevious
     },
     {
+        OBJ_TYPE_NULL,
         icon_help,
         "help",
         "&Help",
@@ -1342,6 +1291,7 @@ action_hash_data action_list[] = {
         main_help
     },
     {
+        OBJ_TYPE_NULL,
         icon_changelog,
         "changelog",
         "&Changelog",
@@ -1350,6 +1300,7 @@ action_hash_data action_list[] = {
         changelog
     },
     {
+        OBJ_TYPE_NULL,
         icon_tipoftheday,
         "tipoftheday",
         "&Tip Of The Day",
@@ -1358,6 +1309,7 @@ action_hash_data action_list[] = {
         tipOfTheDay
     },
     {
+        OBJ_TYPE_NULL,
         icon_about,
         "about",
         "&About Embroidermodder 2",
@@ -1366,6 +1318,7 @@ action_hash_data action_list[] = {
         main_about
     },
     {
+        OBJ_TYPE_NULL,
         icon_whatsthis,
         "whatsthis",
         "&What's This?",
@@ -1374,6 +1327,7 @@ action_hash_data action_list[] = {
         whatsthisContextHelp
     },
     {
+        OBJ_TYPE_NULL,
         icon_icon16,
         "icon16",
         "Icon&16",
@@ -1382,6 +1336,7 @@ action_hash_data action_list[] = {
         icon16
     },
     {
+        OBJ_TYPE_NULL,
         icon_icon24,
         "icon24",
         "Icon&24",
@@ -1390,6 +1345,7 @@ action_hash_data action_list[] = {
         icon24
     },
     {
+        OBJ_TYPE_NULL,
         icon_icon32,
         "icon32",
         "Icon&32",
@@ -1398,6 +1354,7 @@ action_hash_data action_list[] = {
         icon32
     },
     {
+        OBJ_TYPE_NULL,
         icon_icon48,
         "icon48",
         "Icon&48",
@@ -1406,6 +1363,7 @@ action_hash_data action_list[] = {
         icon48
     },
     {
+        OBJ_TYPE_NULL,
         icon_icon64,
         "icon64",
         "Icon&64",
@@ -1414,6 +1372,7 @@ action_hash_data action_list[] = {
         icon64
     },
     {
+        OBJ_TYPE_NULL,
         icon_icon128,
         "icon128",
         "Icon12&8",
@@ -1422,6 +1381,7 @@ action_hash_data action_list[] = {
         icon128
     },
     {
+        OBJ_TYPE_NULL,
         icon_settingsdialog,
         "settingsdialog",
         "&Settings",
@@ -1430,6 +1390,7 @@ action_hash_data action_list[] = {
         settingsDialog
     },
     {
+        OBJ_TYPE_NULL,
        icon_makelayercurrent,
        "makelayercurrent",
        "&Make Layer Active",
@@ -1438,6 +1399,7 @@ action_hash_data action_list[] = {
         makeLayerCurrent
     },
     {
+        OBJ_TYPE_NULL,
         icon_layers,
         "layers",
         "&Layers",
@@ -1446,6 +1408,7 @@ action_hash_data action_list[] = {
         layerManager
     },
     {
+        OBJ_TYPE_NULL,
         icon_layerselector,
         "layerselector",
         "&Layer Selector",
@@ -1454,6 +1417,7 @@ action_hash_data action_list[] = {
         layerSelector
     },
     {
+        OBJ_TYPE_NULL,
         icon_layerprevious,
         "layerprevious",
         "&Layer Previous",
@@ -1462,6 +1426,7 @@ action_hash_data action_list[] = {
         layerPrevious
     },
     {
+        OBJ_TYPE_NULL,
         icon_colorselector,
         "colorselector",
         "&Color Selector",
@@ -1470,6 +1435,7 @@ action_hash_data action_list[] = {
         colorSelector
     },
     {
+        OBJ_TYPE_NULL,
         icon_linetypeselector,
         "linetypeselector",
         "&Stitchtype Selector",
@@ -1478,6 +1444,7 @@ action_hash_data action_list[] = {
         lineTypeSelector
     },
     {
+        OBJ_TYPE_NULL,
         icon_lineweightselector,
         "lineweightselector",
         "&Threadweight Selector",
@@ -1486,6 +1453,7 @@ action_hash_data action_list[] = {
         lineWeightSelector
     },
     {
+        OBJ_TYPE_NULL,
         icon_hidealllayers,
         "hidealllayers",
         "&Hide All Layers",
@@ -1494,6 +1462,7 @@ action_hash_data action_list[] = {
         hideAllLayers
     },
     {
+        OBJ_TYPE_NULL,
         icon_showalllayers,
         "showalllayers",
         "&Show All Layers",
@@ -1502,6 +1471,7 @@ action_hash_data action_list[] = {
         showAllLayers
     },
     {
+        OBJ_TYPE_NULL,
         icon_freezealllayers,
         "freezealllayers",
         "&Freeze All Layers",
@@ -1510,6 +1480,7 @@ action_hash_data action_list[] = {
         freezeAllLayers
     },
     {
+        OBJ_TYPE_NULL,
         icon_thawalllayers,
         "thawalllayers",
         "&Thaw All Layers",
@@ -1518,6 +1489,7 @@ action_hash_data action_list[] = {
         thawAllLayers
     },
     {
+        OBJ_TYPE_NULL,
         icon_lockalllayers,
         "lockalllayers",
         "&Lock All Layers",
@@ -1526,6 +1498,7 @@ action_hash_data action_list[] = {
         lockAllLayers
     },
     {
+        OBJ_TYPE_NULL,
         icon_unlockalllayers,
         "unlockalllayers",
         "&Unlock All Layers",
@@ -1534,6 +1507,7 @@ action_hash_data action_list[] = {
         unlockAllLayers
     },
     {
+        OBJ_TYPE_NULL,
         icon_textbold,
         "textbold",
         "&Bold Text",
@@ -1542,6 +1516,7 @@ action_hash_data action_list[] = {
         textBold
     },
     {
+        OBJ_TYPE_NULL,
         icon_textitalic,
         "textitalic",
         "&Italic Text",
@@ -1550,6 +1525,7 @@ action_hash_data action_list[] = {
         textItalic
     },
     {
+        OBJ_TYPE_NULL,
         icon_textoverline,
         "textunderline",
         "&Underline Text",
@@ -1558,6 +1534,7 @@ action_hash_data action_list[] = {
         textOverline
     },
     {
+        OBJ_TYPE_NULL,
         icon_textstrikeout,
         "textstrikeout",
         "&StrikeOut Text",
@@ -1566,6 +1543,7 @@ action_hash_data action_list[] = {
         textStrikeout
     },
     {
+        OBJ_TYPE_NULL,
         icon_textoverline,
         "textoverline",
         "&Overline Text",
@@ -1574,6 +1552,7 @@ action_hash_data action_list[] = {
         textOverline
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomrealtime,
         "zoomrealtime",
         "Zoom &Realtime",
@@ -1582,6 +1561,7 @@ action_hash_data action_list[] = {
         zoomRealtime
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomprevious,
         "zoomprevious",
         "Zoom &Previous",
@@ -1590,6 +1570,7 @@ action_hash_data action_list[] = {
         zoomPrevious
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomwindow,
         "zoomwindow",
         "Zoom &Window",
@@ -1598,6 +1579,7 @@ action_hash_data action_list[] = {
         zoomWindow
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomdynamic,
         "zoomdynamic",
         "Zoom &Dynamic",
@@ -1606,6 +1588,7 @@ action_hash_data action_list[] = {
         zoomDynamic
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomscale,
         "zoomscale",
         "Zoom &Scale",
@@ -1614,6 +1597,7 @@ action_hash_data action_list[] = {
         zoomScale
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomcenter,
         "zoomcenter",
         "Zoom &Center",
@@ -1622,6 +1606,7 @@ action_hash_data action_list[] = {
         zoomCenter
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomin,
         "zoomin",
         "Zoom &In",
@@ -1630,6 +1615,7 @@ action_hash_data action_list[] = {
         zoomIn
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomout,
         "zoomout",
         "Zoom &Out",
@@ -1638,6 +1624,7 @@ action_hash_data action_list[] = {
         zoomOut
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomselected,
         "zoomselected",
         "Zoom Selec&ted",
@@ -1646,6 +1633,7 @@ action_hash_data action_list[] = {
         zoomSelected
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomall,
         "zoomall",
         "Zoom &All",
@@ -1654,6 +1642,7 @@ action_hash_data action_list[] = {
         zoomAll
     },
     {
+        OBJ_TYPE_NULL,
         icon_zoomextents,
         "zoomextents",
         "Zoom &Extents",
@@ -1662,6 +1651,7 @@ action_hash_data action_list[] = {
         zoomExtents
     },
     {
+        OBJ_TYPE_NULL,
         icon_panrealtime,
         "panrealtime",
         "&Pan Realtime",
@@ -1670,6 +1660,7 @@ action_hash_data action_list[] = {
         panrealtime
     },
     {
+        OBJ_TYPE_NULL,
         icon_panpoint,
         "panpoint",
         "&Pan Point",
@@ -1678,6 +1669,7 @@ action_hash_data action_list[] = {
         panpoint
     },
     {
+        OBJ_TYPE_NULL,
         icon_panleft,
         "panleft",
         "&Pan Left",
@@ -1686,6 +1678,7 @@ action_hash_data action_list[] = {
         panLeft
     },
     {
+        OBJ_TYPE_NULL,
         icon_panright,
         "panright",
         "&Pan Right",
@@ -1694,6 +1687,7 @@ action_hash_data action_list[] = {
         panRight
     },
     {
+        OBJ_TYPE_NULL,
         icon_panup,
         "panup",
         "&Pan Up",
@@ -1702,6 +1696,7 @@ action_hash_data action_list[] = {
         panUp
     },
     {
+        OBJ_TYPE_NULL,
         icon_pandown,
         "pandown",
         "&Pan Down",
@@ -1710,6 +1705,7 @@ action_hash_data action_list[] = {
         panDown
     },
     {
+        OBJ_TYPE_NULL,
         icon_day,
         "day",
         "&Day",
@@ -1718,6 +1714,7 @@ action_hash_data action_list[] = {
         dayVision
     },
     {
+        OBJ_TYPE_NULL,
         icon_night,
         "night",
         "&Night",
@@ -1726,6 +1723,7 @@ action_hash_data action_list[] = {
         nightVision
     },
     {
+        OBJ_TYPE_NULL,
         icon_circle,
         "circle",
         "&Circle",
@@ -1734,6 +1732,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_line,
         "line",
         "&Line",
@@ -1742,6 +1741,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_distance,
         "distance",
         "&Distance",
@@ -1750,6 +1750,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_dolphin,
         "dolphin",
         "&Dolphin",
@@ -1758,6 +1759,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_ellipse,
         "ellipse",
         "&Ellipse",
@@ -1766,6 +1768,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_erase,
         "delete",
         "D&elete",
@@ -1774,6 +1777,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_heart,
         "heart",
         "&Heart",
@@ -1782,6 +1786,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_locatepoint,
         "locatepoint",
         "&Locate Point",
@@ -1790,6 +1795,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_donothing,
         "trebleclef",
         "TrebleClef",
@@ -1798,6 +1804,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_path,
         "path",
         "&Path",
@@ -1806,6 +1813,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_donothing,
         "platform",
         "&Platform",
@@ -1814,6 +1822,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_point,
         "point",
         "&Point",
@@ -1822,6 +1831,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_polygon,
         "polygon",
         "Pol&ygon",
@@ -1830,6 +1840,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_polyline,
         "polyline",
         "&Polyline",
@@ -1838,6 +1849,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_quickleader,
         "quickleader",
         "&QuickLeader",
@@ -1846,6 +1858,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_rectangle,
         "rectangle",
         "&Rectangle",
@@ -1854,6 +1867,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_rgb,
         "rgb",
         "&RGB",
@@ -1862,6 +1876,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_move,
         "move",
         "&Move",
@@ -1870,6 +1885,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_rotate,
         "rotate",
         "&Rotate",
@@ -1878,6 +1894,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_sandbox,
         "sandbox",
         "Sandbox",
@@ -1886,6 +1903,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_scale,
         "scale",
         "Sca&le",
@@ -1894,6 +1912,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_donothing,
         "selectall",
         "&Select All",
@@ -1902,6 +1921,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_singlelinetext,
         "singlelinetext",
         "&Single Line Text",
@@ -1910,6 +1930,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_snowflake,
         "snowflake",
         "&Snowflake",
@@ -1918,6 +1939,7 @@ action_hash_data action_list[] = {
         doNothing
     },
     {
+        OBJ_TYPE_NULL,
         icon_star,
         "star",
         "&Star",
@@ -1927,6 +1949,7 @@ action_hash_data action_list[] = {
     },
     {
         /* end symbol */
+        OBJ_TYPE_NULL,
         icon_donothing,
         "\0",
         "\0",
@@ -1942,7 +1965,7 @@ action_hash_data action_list[] = {
  * a function pointer.
  */
 
-property_editor_row property_editors[] = {
+/* property_editor_row property_editors[] = { */
 /*
 QGroupBox* PropertyEditor::createGroupBoxGeometryCircle()
 {
@@ -2149,15 +2172,15 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolygon()
 
     {
         OBJ_TYPE_POLYGON, POLYGON_CENTER_X,
-        "double", 0, "blank", "Center X", LINE_EDIT_MODE, "lineEditPolygonCenterX"
+        0, "blank", "Center X", LINE_EDIT_MODE, "lineEditPolygonCenterX"
     },
     {
         OBJ_TYPE_POLYGON, POLYGON_CENTER_Y,
-        "double", 0, "blank", "Center Y", LINE_EDIT_MODE, "lineEditPolygonCenterY"
+        0, "blank", "Center Y", LINE_EDIT_MODE, "lineEditPolygonCenterY"
     },
     {
         OBJ_TYPE_POLYGON, POLYGON_VERTEX_RADIUS,
-        "double", 0, "blank", "Vertex Radius", LINE_EDIT_MODE, "lineEditPolygonVertexRadius"
+        0, "blank", "Vertex Radius", LINE_EDIT_MODE, "lineEditPolygonVertexRadius"
     }
 
     toolButtonPolygonRadiusSide = createToolButton("blank", tr("Side Radius"));
@@ -2216,12 +2239,12 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryRay()
     toolButtonRayVectorX = createToolButton("blank", tr("Vector X"));
     toolButtonRayVectorY = createToolButton("blank", tr("Vector Y"));
 
-    "blank", "Start X", "double", 0, "lineEditRayX1"
-    "blank", "Start Y", "double", 0, "lineEditRayY1"
-    "blank", "2nd X", "double", 0, "lineEditRayX2"
-    "blank", "2nd Y", "double", 0, "lineEditRayY2"
-    "blank", "Vector X", "double", 1, "lineEditRayVectorX"
-    "double", 1, "lineEditRayVectorY"
+    "blank", "Start X", 0, "lineEditRayX1"
+    "blank", "Start Y", 0, "lineEditRayY1"
+    "blank", "2nd X", 0, "lineEditRayX2"
+    "blank", "2nd Y", 0, "lineEditRayY2"
+    "blank", "Vector X", 1, "lineEditRayVectorX"
+    1, "lineEditRayVectorY"
 }
 
 QGroupBox* PropertyEditor::createGroupBoxGeometryTextMulti()
@@ -2323,169 +2346,389 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
 }
 
 */
+#if 0
     {
         /* 0 */
         OBJ_TYPE_ARC, ARC_CENTER_X,
-        "double", 0, "blank", "Center X", LINE_EDIT_TYPE, "lineEditArcCenterX"
+        0, "blank", "Center X", LINE_EDIT_DOUBLE, "lineEditArcCenterX"
     },
     {
         /* 1 */
         OBJ_TYPE_ARC, ARC_CENTER_Y,
-        "double", 0, "blank", "Center Y", LINE_EDIT_TYPE, "lineEditArcCenterY"
+        0, "blank", "Center Y", LINE_EDIT_DOUBLE, "lineEditArcCenterY"
     },
     {
         /* 2 */
         OBJ_TYPE_ARC, ARC_RADIUS,
-        "double", 0, "blank", "Radius", LINE_EDIT_TYPE, "lineEditArcRadius"
+        0, "blank", "Radius", LINE_EDIT_DOUBLE, "lineEditArcRadius"
     },
     {
         /* 3 */
         OBJ_TYPE_ARC, ARC_START_ANGLE,
-        "double", 0, "blank", "Start Angle", LINE_EDIT_TYPE, "lineEditArcStartAngle"
+        0, "blank", "Start Angle", LINE_EDIT_DOUBLE, "lineEditArcStartAngle"
     },
     {
         /* 4 */
         OBJ_TYPE_ARC, ARC_END_ANGLE,
-        "double", 0, "blank", "End Angle", LINE_EDIT_TYPE, "lineEditArcEndAngle"
+        0, "blank", "End Angle", LINE_EDIT_DOUBLE, "lineEditArcEndAngle"
     },
     {
         /* 5 */
         OBJ_TYPE_ARC, ARC_START_X,
-        "double", 1, "blank", "Start X", LINE_EDIT_TYPE, "lineEditArcStartX"
+        1, "blank", "Start X", LINE_EDIT_DOUBLE, "lineEditArcStartX"
     },
     {
         /* 6 */
         OBJ_TYPE_ARC, ARC_START_Y,
-        "double", 1, "blank", "Start Y", LINE_EDIT_TYPE, "lineEditArcStartY"
+        1, "blank", "Start Y", LINE_EDIT_DOUBLE, "lineEditArcStartY"
     },
     {
         /* 7 */
         OBJ_TYPE_ARC, ARC_END_X,
-        "double", 1, "blank", "End X", LINE_EDIT_TYPE, "lineEditArcEndX"
+        1, "blank", "End X", LINE_EDIT_DOUBLE, "lineEditArcEndX"
     },
     {
         /* 8 */
         OBJ_TYPE_ARC, ARC_END_Y,
-        "double", 1, "blank", "End Y", LINE_EDIT_TYPE, "lineEditArcEndY"
+        1, "blank", "End Y", LINE_EDIT_DOUBLE, "lineEditArcEndY"
     },
     {
         /* 9 */
         OBJ_TYPE_ARC, ARC_AREA,
-        "double", 1, "blank", "Area", LINE_EDIT_TYPE, "lineEditArcArea"
+        1, "blank", "Area", LINE_EDIT_DOUBLE, "lineEditArcArea"
     },
-/*        ARC_LENGTH, "double", 1, "blank", "ArcLength");
-    create_lineedit_row(formLayout, ARC_CHORD, "double", 1, "blank", "ArcChord");
-    create_lineedit_row(formLayout, ARC_INC_ANGLE, "double", 1, "blank", "ArcIncludedAngle");
+/*        ARC_LENGTH, 1, "blank", "ArcLength");
+    create_lineedit_row(formLayout, ARC_CHORD, 1, "blank", "ArcChord");
+    create_lineedit_row(formLayout, ARC_INC_ANGLE, 1, "blank", "ArcIncludedAngle");
     ARC_CLOCKWISE, "int", 1, "blank", "Clockwise", */
     {
         /* 9 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_X,
-        "double", 0, "blank", "Center X", LINE_EDIT_TYPE, "lineEditEllipseCenterX"
+        0, "blank", "Center X", LINE_EDIT_DOUBLE, "lineEditEllipseCenterX"
     },
     {
         /* 10 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_Y,
-        "double", 0, "blank", "Center Y", LINE_EDIT_TYPE, "lineEditEllipseCenterY"
+        0, "blank", "Center Y", LINE_EDIT_DOUBLE, "lineEditEllipseCenterY"
     },
     {
         /* 11 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MAJOR,
-        "double", 0, "blank", "Radius Major", LINE_EDIT_TYPE, "lineEditEllipseRadiusMajor"
+        0, "blank", "Radius Major", LINE_EDIT_DOUBLE, "lineEditEllipseRadiusMajor"
     },
     {
         /* 12 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MINOR,
-        "double", 0, "blank", "Radius Minor", LINE_EDIT_TYPE, "lineEditEllipseRadiusMinor"
+        0, "blank", "Radius Minor", LINE_EDIT_DOUBLE, "lineEditEllipseRadiusMinor"
     },
     {
         /* 13 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MAJOR,
-        "double", 0, "blank", "Diameter Major", LINE_EDIT_TYPE, "lineEditEllipseDiameterMajor"
+        0, "blank", "Diameter Major", LINE_EDIT_DOUBLE, "lineEditEllipseDiameterMajor"
     },
     {
         /* 14 */
         OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MINOR,
-        "double", 0, "blank", "Diameter Minor", LINE_EDIT_TYPE, "lineEditEllipseDiameterMinor"
+        0, "blank", "Diameter Minor", LINE_EDIT_DOUBLE, "lineEditEllipseDiameterMinor"
     },
     {
         /* 15 */
         OBJ_TYPE_BLOCK, BLOCK_X,
-        "double", 0, "blank", "Position X", LINE_EDIT_TYPE, "lineEditBlockX"
+        0, "blank", "Position X", LINE_EDIT_DOUBLE, "lineEditBlockX"
     },
     {
         /* 16 */
         OBJ_TYPE_BLOCK, BLOCK_Y,
-        "double", 0, "blank", "Position Y", LINE_EDIT_TYPE, "lineEditBlockY"
+        0, "blank", "Position Y", LINE_EDIT_DOUBLE, "lineEditBlockY"
     },
     {
         /* 17 */
         OBJ_TYPE_POINT, POINT_X,
-        "double", 0, "blank", "Position X", LINE_EDIT_TYPE, "lineEditPointX"
+        0, "blank", "Position X", LINE_EDIT_DOUBLE, "lineEditPointX"
     },
     {
         /* 18 */
         OBJ_TYPE_POINT, POINT_Y,
-        "double", 0, "blank", "Position Y", LINE_EDIT_TYPE, "lineEditPointY"
+        0, "blank", "Position Y", LINE_EDIT_DOUBLE, "lineEditPointY"
     },
     {
         /* 19 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_X1,
-        "double", 0, "blank", "Corner 1 X", LINE_EDIT_TYPE, "lineEditRectangleCorner1X"
+        0, "blank", "Corner 1 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner1X"
     },
     {
         /* 20 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_Y1,
-        "double", 0, "blank", "Corner 1 Y", LINE_EDIT_TYPE, "lineEditRectangleCorner1Y"
+        0, "blank", "Corner 1 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner1Y"
     },
     {
         /* 21 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_X2,
-        "double", 0, "blank", "Corner 2 X", LINE_EDIT_TYPE, "lineEditRectangleCorner2X"
+        0, "blank", "Corner 2 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner2X"
     },
     {
         /* 22 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_Y2,
-        "double", 0, "blank", "Corner 2 Y", LINE_EDIT_TYPE, "lineEditRectangleCorner2Y"
+        0, "blank", "Corner 2 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner2Y"
     },
     {
         /* 23 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_X3,
-        "double", 0, "blank", "Corner 3 X", LINE_EDIT_TYPE, "lineEditRectangleCorner3X"
+        0, "blank", "Corner 3 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner3X"
     },
     {
         /* 24 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_Y3,
-        "double", 0, "blank", "Corner 3 Y", LINE_EDIT_TYPE, "lineEditRectangleCorner3Y"
+        0, "blank", "Corner 3 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner3Y"
     },
     {
         /* 25 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_X4,
-        "double", 0, "blank", "Corner 4 X", LINE_EDIT_TYPE, "lineEditRectangleCorner4X"
+        0, "blank", "Corner 4 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner4X"
     },
     {
         /* 26 */
         OBJ_TYPE_RECTANGLE, RECT_CORNER_Y4,
-        "double", 0, "blank", "Corner 4 Y", LINE_EDIT_TYPE, "lineEditRectangleCorner4Y"
+        0, "blank", "Corner 4 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner4Y"
     },
     {
         /* 27 */
         OBJ_TYPE_RECTANGLE, RECT_WIDTH,
-        "double", 0, "blank", "Width", LINE_EDIT_TYPE, "lineEditRectangleWidth"
+        0, "blank", "Width", LINE_EDIT_DOUBLE, "lineEditRectangleWidth"
     },
     {
         /* 28 */
         OBJ_TYPE_RECTANGLE, RECT_HEIGHT,
-        "double", 0, "blank", "Height", LINE_EDIT_TYPE, "lineEditRectangleHeight"
+        0, "blank", "Height", LINE_EDIT_DOUBLE, "lineEditRectangleHeight"
     },
     {
         /* 29 */
         OBJ_TYPE_RECTANGLE, RECT_AREA,
-        "double", 1, "blank", "Area", LINE_EDIT_TYPE, "lineEditRectangleArea"
+        1, "blank", "Area", LINE_EDIT_DOUBLE, "lineEditRectangleArea"
     },
     {
         /* END */
         OBJ_TYPE_UNKNOWN, 0,
         "NULL", 0, "NULL", "NULL", 0, "NULL"
     }
+};
+#endif
+
+const char *tips[] = {
+    "we need more tips?",
+    "you can change the color of the display through settings?",
+    "you can hide the scrollbars to increase the viewable area through settings?",
+    "you can change the icon size for increased visibility?",
+    "you can toggle the grid on and off by pressing the button in the statusbar?",
+    "the grid size can be changed to match your hoop size through settings?",
+    "the crosshair size is based on a percentage of your screen size? Setting it to 100 may help you visually line things up better.",
+    "you can pan by pressing the middle mouse button and dragging your mouse across the screen?",
+    "you can open and edit multiple designs simultaneously?",
+    "that many embroidery machines support the .dst format?",
+    "that you can zoom in and out using your mouse wheel?",
+    "that you can use circular and isometric grids?",
+    "about our command line format converter?",
+    "that you can use the 'DAY' and 'NIGHT' commands to quickly switch the view colors to commonly used white or black?",
+    "that you can quickly change the background, crosshair and grid colors using the 'RGB' command?",
+    "\x00",
+};
+
+const char *details_label_text[] = {
+    "Total Stitches:",
+    "Real Stitches:",
+    "Jump Stitches:",
+    "Trim Stitches:",
+    "Total Colors:",
+    "Color Changes:",
+    "Left:",
+    "Top:",
+    "Right:",
+    "Bottom:",
+    "Width:",
+    "Height:",
+};
+
+const char *obj_names[] = {
+    "Unknown",
+    "Base",
+    "Arc",
+    "Block",
+    "Circle",
+    "Aligned Dimension",
+    "Angular Dimension",
+    "Arc Length Dimension",
+    "Diameter Dimension",
+    "Leader Dimension",
+    "Linear Dimension",
+    "Ordinate Dimension",
+    "Radius Dimension",
+    "Ellipse",
+    "Elliptical Arc",
+    "Rubber",
+    "Grid",
+    "Hatch",
+    "Image",
+    "Infinite Line",
+    "Line",
+    "Path",
+    "Point",
+    "Polygon",
+    "Polyline",
+    "Ray",
+    "Rectangle",
+    "Slot",
+    "Spline",
+    "Multi Line Text",
+    "Single Line Text",
+    "Unknown",
+};
+
+const char *about_xpm[] = {
+    "128 128 17 1",
+    " 	c None",
+    ".	c #000000",
+    "+	c #040702",
+    "@	c #080B06",
+    "#	c #131512",
+    "$	c #1A1C1A",
+    "%	c #1F201E",
+    "&	c #2A2B29",
+    "*	c #333532",
+    "=	c #3A3C3A",
+    "-	c #454644",
+    ";	c #50524F",
+    ">	c #565855",
+    ",	c #60625F",
+    "'	c #686A67",
+    ")	c #727471",
+    "!	c #7D7F7C",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                          .............                                                         ",
+    "                                                    ........................                                                    ",
+    "                                                ................................                                                ",
+    "                                             ............@@$%%%%$#@................                                             ",
+    "                                           ........@&=->>>;--*&&&&&&***&%@............                                          ",
+    "                                         ......+&;,,,-&...................%&&@..........                                        ",
+    "                                       ......*>'';%...+.......................$$@.........                                      ",
+    "                                     .....@;))>%................+................##.........                                    ",
+    "                                   .....%,!'=.......................................@+.......                                   ",
+    "                                  ....$,!'&...................     ................+..@........                                 ",
+    "                                ....@>!'&.............                    ..............@........                               ",
+    "                               ....-!!=............                           ....................                              ",
+    "                             ....$'!,...........                                 ..........+.......                             ",
+    "                            ....-!!&.........                                      .................                            ",
+    "                           ....'!,.........                                          .........+.......                          ",
+    "                          ...#)!-........                                              ................                         ",
+    "                         ...&!!&........                                                 ...............                        ",
+    "                        ...&!)#.......                                                    ...............                       ",
+    "                       ...&!).+......                                                       .............                       ",
+    "                      ...%!)........                                                         .............                      ",
+    "                      ...!!#.+....                                                            .............                     ",
+    "                     ...'!%......                                                              .............                    ",
+    "                    ...>!=......                         ..............                          ............                   ",
+    "                   ...=!;......                       ....................                        .....+.....                   ",
+    "                   ...!'......                      .........................                     ............                  ",
+    "                  ...,!.......                    ......@&=-----=*&#...........                    ............                 ",
+    "                 ...&!-.+....                   .....@-,'',>-=*&&&&&&&#.........                    .....+.....                 ",
+    "                 .+.)'......                   ....$>)),;&#............$#+........                   ...........                ",
+    "                ...-!#.....                  ....+>!!,=..................@@........                  .....+.....                ",
+    "                .+.)>.....                  ....=!!,=......................++.......                  ...........               ",
+    "               ...-!......                 ....>!!-.+................................                  ....+.....               ",
+    "               .+.!-.....                 ....,!'*....................................                 .....+.....              ",
+    "              ...=!.+....                ....'!,%.............     ....................                 ....@.....              ",
+    "              ...';.....                 ...'!,#..........             .................                 ....+.....             ",
+    "              ..&).+....                ...,!,#.........                 ................                ....#.....             ",
+    "             ...>,.....                ...-!'%........                     ..............                 ..........            ",
+    "             ...'&+....                ..%!)&.......                        ..............                ....#.....            ",
+    "            ...*).....                ...'!-.......                          .............                ....#.....            ",
+    "            ...;;.....               ...=!>.......                            ...........                  ....@.....           ",
+    "            ...'%.....               ...))&......                              ........                    ....%.....           ",
+    "            ..%,.....               ...=!-.+.....                               .....                       ...$.....           ",
+    "           ...=>.....               ...''%......                                 ..                         ....+....           ",
+    "           ...>=.....               ..%!-.+....                                                             ....%.....          ",
+    "           .+.>.....               ...;'&......                                                             ....&.....          ",
+    "           ...,.....               ...',.+....                                                               ...%.....          ",
+    "          .+.%>.....               ..$'-......                                                               ...$.....          ",
+    "          ...&-.+...              ...=,%.....                                                                ...+@+...          ",
+    "          +..==.....              ...-,......                                                                ....&.....         ",
+    "          ...-$....               ...;;......                                                                ....*.....         ",
+    "          ...-.....               ...>=......                                                                 ...=.....         ",
+    "          ...-+....               ...>*.....                                                                  ...=.....         ",
+    "          ..+-.....              ....;&.....                                                                  ...=.....         ",
+    "          ...-+....              ....;$.....                                                                  ...=.....         ",
+    "          .+.-.....              +..@-#.....                                                                  ..+=.....         ",
+    "          ...-+....              ....-#.+...                                                                  ...=+....         ",
+    "          ...-.....              ....-#.....                                                                  ...-.....         ",
+    "          ...=.....              ....=#.....                                                                  ...-.....         ",
+    "          ...=.....              ....=$.....                                                                  ..+-.....         ",
+    "          ...*.....              ....&%.....                                                                  ...;.....         ",
+    "          ...%.....               ...&%.....                                                                  ..@;.....         ",
+    "          ...#@....               ...#&......                                                                ...%-+....         ",
+    "          ....%....               ....&......                                                                ...*-.....         ",
+    "          ....&.....              ....%......                                                                ...-&+....         ",
+    "          ...+&.....              ....#@.....                                      .                         ...>.....          ",
+    "           ...&.....               ....$......                                     ....                      ...,.+...          ",
+    "           ...$.....               ....#......                                    ........                   .@&>.....          ",
+    "           ....#....               ....+@......                                   ..........                ...-;.....          ",
+    "           ....&.....               ...........                                  ...*$.......               .+.,%.....          ",
+    "           ....%.....               ....++......                                 ..=!,@.....                ..%'.....           ",
+    "            .........               .............                               ..@)!-......               .+.-,.....           ",
+    "            ....$.....               ....++......                              ...,!>.......               ...'*.....           ",
+    "            ....#.....               .............                            ..+-!'%......                ..*).....            ",
+    "             ..........               .............                          ...=!!=.......               ...,>.....            ",
+    "             ....#.....               ..............                        ..+&!!-.......                ..$)%.....            ",
+    "             ....+......               ...............                     ...=!!;.......                ...>'.....             ",
+    "              ....@.....                ...............                  ....-!!>........                ..$)*.....             ",
+    "              ....+......                .................             .....>!!-..+.....                ...>)......             ",
+    "               ....@.....                ........+...........       ......*)!'=........                 ..%!=.....              ",
+    "               ...........                ........++....................%,!!>&........                 ...,)......              ",
+    "                ....@.....                 .........@@...............+&>)!>=.........                  ..*!*.....               ",
+    "                ...........                 ..........@##@........@&-,''>=..........                  ...)'......               ",
+    "                 ....+......                 ............$$&&**=-->>>>=%...........                  ...>!#.....                ",
+    "                 .....+.....                   .............@%%&&&&$...+..........                  ...=!;......                ",
+    "                  ...........                   ........+.+.....................                    .+.!)......                 ",
+    "                  ............                    ....................+........                    ...'!@.....                  ",
+    "                   ............                    ..........................                     ...>!=......                  ",
+    "                    ............                      .....................                      ...;!>......                   ",
+    "                    .............                        ...............                        ...-!,......                    ",
+    "                     .............                             ..                              ...=!'.......                    ",
+    "                      .............                                                           ...-!'.......                     ",
+    "                       .............                                                         ...-!'.......                      ",
+    "                        ..............                                                     ....>!'.......                       ",
+    "                         ..............                                                   ...@'!>.......                        ",
+    "                          ...............                                               ...+&!!-.......                         ",
+    "                           ...............                                            .....>!)%.......                          ",
+    "                            .......+........                                        .....&)!>........                           ",
+    "                             ........+........                                    .....@>!)&........                            ",
+    "                              ........+..........                               ......;!!-.........                             ",
+    "                               .........@+..........                         ......+-)!-.+.......                               ",
+    "                                 .........@@.............               .........#;));..........                                ",
+    "                                  ..........@#.................................*,)'=...........                                 ",
+    "                                    ...........#$@........................+.*>'';#...........                                   ",
+    "                                      ............$&%@.................@&=>',-$............                                     ",
+    "                                        ..............$&**&&%$$$%&*=--;;;=%..............                                       ",
+    "                                          ....................$%%%$....................                                         ",
+    "                                            ............+..+.........................                                           ",
+    "                                               ..............+....................                                              ",
+    "                                                  .............................                                                 ",
+    "                                                      ....................                                                      ",
+    "                                                                .                                                               ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
+    "                                                                                                                                ",
 };
 

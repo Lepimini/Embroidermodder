@@ -5087,6 +5087,7 @@ QGroupBox* PropertyEditor::createGroupBoxGeometry(int objType)
 
     /* TODO: use proper icons */
     QFormLayout* formLayout = new QFormLayout(this);
+    /*
     for (i=0; property_editors[i].object != OBJ_TYPE_UNKNOWN; i++) {
         if (property_editors[i].object == objType) {
             int index = property_editors[i].id;
@@ -5096,6 +5097,7 @@ QGroupBox* PropertyEditor::createGroupBoxGeometry(int objType)
             mapSignal(lineEdit[index], property_editors[i].signal, objType);
         }
     }
+    */
     gb->setLayout(formLayout);
 
     return gb;
@@ -8557,12 +8559,14 @@ void MainWindow::help()
 void MainWindow::actions()
 {
     int i;
+    char call[100];
     QObject *obj = sender();
     QString caller = obj->objectName();
     for (i=0; action_list[i].abbreviation[0]; i++) {
         if (caller == action_list[i].abbreviation) {
-            action.id = i;
-            actuator();
+            call[0] = (char)i;
+            call[1] = 0;
+            actuator(call);
             return;
         }
     }
@@ -8572,7 +8576,7 @@ void main_undo(void)
 {
     debug_message("undo()");
     if (undo_history_position > 0) {
-        action_call last = undo_history[undo_history_position];
+        char *last = undo_history[undo_history_position];
         undo_history_position--;
         printf("undo_history_position = %d\n", undo_history_position);
         printf("undo_history_length = %d\n", undo_history_length);
@@ -8580,25 +8584,28 @@ void main_undo(void)
         /* Create the reverse action from the last action and apply with
          * the main actuator.
          */
-        switch (last.id) {
+        switch (last[0]) {
         case ACTION_donothing:
         default:
             debug_message("The last action has no undo candidate.");
             break;
         }
-        actuator();
+        actuator(last);
     }
 }
 
 void main_redo(void)
 {
+    char undo_call[100];
     debug_message("redo()");
     if (undo_history_position < undo_history_length) {
         undo_history_position++;
         printf("undo_history_position = %d\n", undo_history_position);
         printf("undo_history_length = %d\n", undo_history_length);
-        memcpy(&action, undo_history+undo_history_position, sizeof(action_call));
-        actuator();
+        strcpy(undo_call, undo_history[undo_history_position]);
+        /* set reverse flag */
+        strcat(undo_call, " -r");
+        actuator(undo_call);
     }
 }
 

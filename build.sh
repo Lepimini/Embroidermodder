@@ -111,6 +111,9 @@ echo "Get internal dependencies."
 git submodule init
 git submodule update
 
+echo "Do metaprogramming tasks."
+python3 code_style.py
+
 echo "Build"
 rm -fr build
 mkdir build

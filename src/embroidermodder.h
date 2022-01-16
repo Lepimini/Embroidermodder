@@ -170,8 +170,10 @@ extern "C" {
 #define PROPERTY_EDITORS \
     ( LINEEDIT_PROPERTY_EDITORS + COMBOBOX_PROPERTY_EDITORS )
 
-#define LINE_EDIT_TYPE                0
-#define COMBO_BOX_TYPE                1
+#define LINE_EDIT_DOUBLE               0
+#define LINE_EDIT_INT                  1
+#define LINE_EDIT_STR                  2
+#define COMBO_BOX_TYPE                 3
 
 /* Keys */
 /* ---- */
@@ -325,10 +327,10 @@ extern "C" {
 /* SPARE_RUBBER_VALUES
  * -------------------
  * NOTE: Allow this enum to evaluate false */
-#define SPARE_RUBBER_OFF    0
-#define SPARE_RUBBER_PATH   1
-#define SPARE_RUBBER_POLYGON    2
-#define SPARE_RUBBER_POLYLINE   3
+#define SPARE_RUBBER_OFF               0
+#define SPARE_RUBBER_PATH              1
+#define SPARE_RUBBER_POLYGON           2
+#define SPARE_RUBBER_POLYLINE          3
 
 
 /* PREVIEW_CLONE_VALUES
@@ -834,38 +836,49 @@ TODO: ACTION_quickselect
 #define icon_zoomwindow              363
 #define icon_zoom                    364
 
+#define PERMISSIONS_USER               0
+#define PERMISSIONS_SYSTEM             1
+
 /*
  * TYPEDEFS
- * --------
+ * ========
+ *
+ * Action
+ * ------
+ *
+ * The object flag 
+ *
+ * The icon index determines which icon from the table is associate with
+ * the action.
+ *
+ * (Not implemented)
+ * The permissions flag determines whether the user or the system can
+ * run this action.
+ *
+ * The mode argument determines what locations in the interface
+ * the action will appear in, for example in mode MODE_TOOLBAR,
+ * the action appears in the toolbars, in MODE_TOOLBAR | MODE_LINE_EDIT_DOUBLE
+ * it also appears as a lineEdit in the property editor expecting a
+ * double as input.
+ *
  */
 
-typedef struct Action_hash_data {
+typedef struct Action {
+    int object;
     int icon;
+    /* int permissions; */
+    /* int mode; */
     char abbreviation[20];
     char menu_name[30];
     char description[100];
     char shortcut[20];
     void (*function)(void);
-} action_hash_data;
+} action;
 
-typedef struct Action_call_ {
-    int id;
-    float float_args[10];
-    int int_args[10];
-    char str_args[4][MAX_STRING_LENGTH];
-    int args_set;
-} action_call;
-
-typedef struct Property_Editor_Row {
-    int object;
-    int id;
-    char type[20];
-    int read_only;
-    char icon[20];
-    char label[100];
-    int mode;
-    char signal[100];
-} property_editor_row;
+/* Text Properties
+ * ---------------
+ *
+ */
 
 typedef struct Text_Properties {
     float size;
@@ -878,6 +891,13 @@ typedef struct Text_Properties {
     int backward;
     int upsidedown;
 } text_properties;
+
+/* Settings Wrapper
+ * ----------------
+ *
+ * The settings wrapper is necessary since during altering a setting
+ * the user .
+ */
 
 typedef struct Settings_wrapper {
     int window_width;
@@ -1002,16 +1022,12 @@ typedef struct Settings_wrapper {
  */
 
 extern int *toolbars[], *menus[];
-extern action_call undo_history[1000];
-extern action_call action;
+extern action action_list[];
 extern int undo_history_length, undo_history_position;
-extern action_hash_data action_list[];
-extern property_editor_row property_editors[];
 extern const char *actions_strings[], *tips[], *toolbar_label[], *folders[],
-    *menu_label[], *settings_tab_label[], *status_bar_label[], *obj_names[];
-extern char *symbol_list[];
-extern const char * _appName_, * _appVer_;
-extern char **icons[];
+    *menu_label[], *settings_tab_label[], *status_bar_label[], *obj_names[],
+    *symbol_list[], **icons[], * _appName_, * _appVer_;
+extern char undo_history[1000][100];
 extern int exitApp;
 extern settings_wrapper settings, preview, dialog, accept_;
 
@@ -1193,8 +1209,7 @@ void disableLwt(void);
 void enableReal(void);
 void disableReal(void);
 
-void actuator(void);
-void settings_actuator(void);
+void actuator(char *call);
 
 EmbVector unit_vector(float angle);
 EmbVector rotate_vector(EmbVector a, float angle);
@@ -1272,7 +1287,7 @@ QPointF to_qpointf(EmbVector c);
 EmbVector to_emb_vector(QPointF c);
 QIcon loadIcon(int id);
 
-void add_to_path(QPainterPath *path, char *command, float pos[2], float scale[2]);
+void add_to_path(QPainterPath *path, const char *command, float pos[2], float scale[2]);
 
 /* Class based code */
 class LayerManager : public QDialog
