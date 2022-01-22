@@ -15,8 +15,7 @@ else
 
 if command -v yum &> /dev/null
 then
-sudo yum install gdb gcc-c++ qt-devel qt5-qtscript-devel \
-	 pandoc
+sudo yum install gdb gcc-c++ qt-devel qt5-qtscript-devel pandoc
 else
 
 if command -v brew &> /dev/null
@@ -34,21 +33,6 @@ EOF
 fi
 fi
 fi
-}
-
-function build_dependencies () {
-git clone git://code.qt.io/qt/qt5.git
-cd qt5
-git checkout 5.12
-perl init-repository
-
-mkdir qt5-build
-cd qt5-build
-
-../configure -developer-build -opensource -nomake examples -nomake tests
-make
-sudo make install
-cd ..
 }
 
 function make_docs () {
@@ -121,8 +105,6 @@ cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build .
 mv libembroidery/embroider .
-mv libembroidery/libembroidery.so .
-mv libembroidery/libembroidery_static.a .
 rm -fr CMakeFiles CMakeCache.txt cmake_install.cmake Makefile
 rm -fr libembroidery embroidermodder_autogen
 cd ..
@@ -145,10 +127,6 @@ do
       ;;
     --get-dependencies)
       get_dependencies
-      shift
-      ;;
-    --build-dependencies)
-      build_dependencies
       shift
       ;;
     --docs)
