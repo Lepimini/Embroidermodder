@@ -10864,7 +10864,7 @@ int MdiWindow::loadFile(const QString &fileName)
                 EmbColor thisColor = p->circles->circle[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 // NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddCircle(c.centerX, c.centerY, c.radius, 0, OBJ_RUBBER_OFF); //TODO: fill
+                mainWin->nativeAddCircle(c.center.x, c.center.y, c.radius, 0, OBJ_RUBBER_OFF); //TODO: fill
             }
         }
         if (p->ellipses) {
@@ -10882,7 +10882,7 @@ int MdiWindow::loadFile(const QString &fileName)
                 EmbColor thisColor = p->lines->line[i].color;
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b));
                 /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed. */
-                mainWin->nativeAddLine(li.x1, li.y1, li.x2, li.y2, 0, OBJ_RUBBER_OFF); //TODO: rotation
+                mainWin->nativeAddLine(li.start.x, li.start.y, li.end.x, li.end.y, 0, OBJ_RUBBER_OFF); //TODO: rotation
             }
         }
         if (p->paths) {

@@ -5,8 +5,6 @@ project(embroidermodder VERSION 1.91.0 LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
-set(CMAKE_INCLUDE_CURRENT_DIR OFF)
-
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -14,8 +12,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
-
-set(EMBROIDERY_BUILD_SHARED_LIBS OFF)
 
 INCLUDE(FindPkgConfig)
 
@@ -192,6 +188,7 @@ add_executable(embroidermodder
 	src/gui.c
 	src/config.c
 	src/embroidermodder.h
+	libembroidery/embroidery.c
 	${FREEGLUT_SRCS}
 )
 
@@ -201,12 +198,10 @@ target_include_directories(embroidermodder PUBLIC
 	${CMAKE_CURRENT_SOURCE_DIR}/extern/freeglut3/src
 	${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-add_subdirectory(libembroidery)
 
 target_link_libraries(embroidermodder
 	Qt5::Widgets
 	GL
-	embroidery_static
 )
 
 if(LINUX)
