@@ -1869,35 +1869,36 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
 
 """
     for k in a.keys():
-        s += a[k]["schema"]+k+"[] = {\n"
-        for i in a[k]["data"]:
-            s += "    \"%s\",\n" % i
-        s += "};\n\n"
+        if "type" in a[k]:
+            if a[k]["type"] == "xpm":
+                # In order to use a global palette, we use a double
+                # reference. The color name in the pattern, which refers to the
+                # a["palette"] to get the hexcode.
+                #
+                # We can combine the palette and other features into a find/replace
+                # macro.
+                #
+                # This allows us to use labelled indices in both the C code
+                # and the configuration.
+                s += "const char *%s[] = {\n" % (k)
+                for i in a[k]["data"]:
+                    for m in a["macro"]["data"].keys():
+                        i = i.replace(m, a["macro"]["data"][m])
+                    s += "    \"%s\",\n" % i
+                s += "};\n\n"
+        else:
+            s += a[k]["schema"]+k+"[] = {\n"
+            for i in a[k]["data"]:
+                s += "    \"%s\",\n" % i
+            s += "};\n\n"
     return s
 
 
 def process_c_code(s):
     r"""
     The jobs carried out by this processor are:
-    
+
         * check indentation is always a multiple of 4
-    """
-    return s
-
-    
-def process_cplusplus_code(s):
-    r"""
-    The jobs carried out by this processor are:
-    
-        * check indentation is always a multiple of 4
-    """
-    return s
-
-
-def process_header(s):
-    r"""
-    The jobs carried out by this processor are:
-    
         * correct define blocks
         * report the number of functions that are within
           classes: to aid the de-object orientation process
@@ -1930,12 +1931,8 @@ for fname in os.listdir("src"):
     s = ""
     with open("src/"+fname, "r") as f:
         s = f.read()
-    if fname[-2:] == ".c":
-        s = process_c_code(s)
-    if fname[-2:] == ".h":
-        s = process_header(s)
-    if fname[-4:] == ".cpp":
-        s = process_cplusplus_code(s)
+        if fname[-2:] == ".c":
+            s = process_c_code(s)
     with open("src/"+fname, "w") as f:
         f.write(s)
 
