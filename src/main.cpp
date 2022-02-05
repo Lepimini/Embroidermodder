@@ -570,10 +570,22 @@ void View::setRulerColor(unsigned int color)
 
 void View::createGrid(const QString& gridType)
 {
-    if     (gridType == "Rectangular") { createGridRect();  gscene->setProperty("ENABLE_GRID", 1); }
-    else if(gridType == "Circular")    { createGridPolar(); gscene->setProperty("ENABLE_GRID", 1); }
-    else if(gridType == "Isometric")   { createGridIso();   gscene->setProperty("ENABLE_GRID", 1); }
-    else                               { gridPath = QPainterPath(); gscene->setProperty("ENABLE_GRID", 0); }
+    if (gridType == "Rectangular") {
+        createGridRect();
+        gscene->setProperty("ENABLE_GRID", 1);
+    }
+    else if(gridType == "Circular") {
+        createGridPolar();
+        gscene->setProperty("ENABLE_GRID", 1);
+    }
+    else if(gridType == "Isometric") {
+        createGridIso();
+        gscene->setProperty("ENABLE_GRID", 1);
+    }
+    else {
+        gridPath = QPainterPath();
+        gscene->setProperty("ENABLE_GRID", 0);
+    }
 
     createOrigin();
 

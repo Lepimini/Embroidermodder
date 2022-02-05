@@ -4319,3 +4319,16 @@ void treble_clef_updateClef(int numPts, double xScale, double yScale)
     setRubberText("POLYGON_NUM_POINTS", numPts.toString());
 }
 
+        for (j=0; j<dolphin_curve_basis_functions; j++) {
+            float coef = dolphin_curve_x[5*j]/(1.0*dolphin_curve_x[5*j+1]);
+            float offset = dolphin_curve_x[5*j+2]/(1.0*dolphin_curve_x[5*j+3]);
+            float t_mult = dophin_curve_x[5*j+4];
+            xx += coef * sin(offset + t_mult * t);
+        }
+        
+        for (j=0; j<dolphin_curve_basis_functions; j++) {
+            float coef = dolphin_curve_y[5*j]/(1.0*dolphin_curve_y[5*j+1]);
+            float offset = dolphin_curve_y[5*j+2]/(1.0*dolphin_curve_y[5*j+3]);
+            float t_mult = dophin_curve_y[5*j+4];
+            yy += coef * sin(offset + t_mult * t);
+        }

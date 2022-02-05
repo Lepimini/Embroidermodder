@@ -42,17 +42,15 @@ f.close()
 f = open("src/config.c", "w")
 f.write("""/* This file is part of Embroidermodder 2.
  * ------------------------------------------------------------
- * Copyright 2021 The Embroidermodder Team
+ * Copyright 2013-2022 The Embroidermodder Team
  * Embroidermodder 2 is Open Source Software.
- * See LICENSE.txt for licensing terms.
+ * See LICENCE for licensing terms.
  * ------------------------------------------------------------
  * This file is only for data and declarations that
  * are compiled into the source.
  */
 
 #include "embroidermodder.h"
-
-#include "non_json_config.c"
 
 """)
 
