@@ -1,3 +1,13 @@
+/* This file is part of Embroidermodder 2.
+ * ------------------------------------------------------------
+ * Copyright 2013-2022 The Embroidermodder Team
+ * Embroidermodder 2 is Open Source Software.
+ * See LICENCE for licensing terms.
+ * ------------------------------------------------------------
+ * This file is the heart of the program and calls all the others.
+ * New developers should start reading here.
+ */
+
 #include <math.h>
 #include <string.h>
 
@@ -567,6 +577,14 @@ void View::createGrid(const QString& gridType)
 
     createOrigin();
 
+    /* EXPERIMENT
+     * Tagging experiments with the path system to the origin.
+     */
+
+    float position[] = {10.0, 0.0};
+    float scale[] = {1.0, 1.0};
+    add_list_to_path(&originPath, origin_string, position, scale);
+
     gscene->update();
 }
 
@@ -577,14 +595,9 @@ void View::createOrigin() /* TODO: Make Origin Customizable */
     if (settings.grid_show_origin) {
         // originPath.addEllipse(QPointF(0,0), 0.5, 0.5);
         /* TODO: Make Origin Customizable */
-        originPath.moveTo(0.0, 0.5);
-        originPath.arcTo(-0.5, -0.5, 1.0, 1.0, 90.0, 360.0);
-        originPath.arcTo(-0.5, -0.5, 1.0, 1.0, 90.0, -360.0);
-        originPath.lineTo(0.0, -0.5);
-        originPath.arcTo(-0.5, -0.5, 1.0, 1.0, 270.0, 90.0);
-        originPath.lineTo(-0.5, 0.0);
-        originPath.arcTo(-0.5, -0.5, 1.0, 1.0, 180.0, -90.0);
-        originPath.closeSubpath();
+        float position[] = {0.0, 0.0};
+        float scale[] = {1.0, 1.0};
+        add_list_to_path(&originPath, origin_string, position, scale);
     }
 }
 

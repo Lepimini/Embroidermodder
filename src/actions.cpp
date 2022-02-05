@@ -592,9 +592,19 @@ void add_to_path(QPainterPath *path, const char *command, float pos[2], float sc
                 QPointF(pos[0]+out[0]*scale[0],  pos[1]+out[1]*scale[1]),
                 out[2]*scale[0], out[3]*scale[1]);
             break;
+        case 'Z':
+            path->closeSubpath();
+            break;
         default:
             break;
         }
+    }
+}
+
+void add_list_to_path(QPainterPath *path, const char *commands[], float pos[2], float scale[2])
+{
+    for (int i=0; origin_string[i][0]; i++) {
+        add_to_path(path, origin_string[i], pos, scale);
     }
 }
 

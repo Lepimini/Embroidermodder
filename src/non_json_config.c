@@ -12,6 +12,18 @@ const char* _appName_ = "Embroidermodder";
 const char* _appVer_ = "v2.0 alpha";
 int exitApp = 0;
 
+const char *origin_string[] = {
+    "M 0.0 0.5",
+    "A -0.5 -0.5 1.0 1.0 90.0 360.0",
+    "A -0.5 -0.5 1.0 1.0 90.0 -360.0",
+    "L 0.0 -0.5",
+    "A -0.5 -0.5 1.0 1.0 270.0 90.0",
+    "L -0.5 0.0",
+    "A -0.5 -0.5 1.0 1.0 180.0 -90.0",
+    "Z",
+    "\0"
+};
+
 int file_toolbar[] = {
     ACTION_new,
     ACTION_open,

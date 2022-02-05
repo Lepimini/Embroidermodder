@@ -1030,6 +1030,7 @@ extern const char *actions_strings[], *tips[], *toolbar_label[], *folders[],
 extern char undo_history[1000][100];
 extern int exitApp;
 extern settings_wrapper settings, preview, dialog, accept_;
+extern const char *origin_string[];
 
 /* C functions for embroidermodder
  * -------------------------------
@@ -1288,6 +1289,7 @@ EmbVector to_emb_vector(QPointF c);
 QIcon loadIcon(int id);
 
 void add_to_path(QPainterPath *path, const char *command, float pos[2], float scale[2]);
+void add_list_to_path(QPainterPath *path, const char *commands[], float pos[2], float scale[2]);
 
 /* Class based code */
 class LayerManager : public QDialog
