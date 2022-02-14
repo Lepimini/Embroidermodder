@@ -18,12 +18,10 @@ To see what we're focussing on at the moment check this table.
 
 | *Date* | *Event* |
 |----|----|
-| Dec 2021 - Jan 2022 | libembroidery 1.0 work and bugfixing |
-| 31st of Jan 2022 | libembroidery 1.0 will be released, then updates will slow down and the Embroidermodder 2 development version will be fixed to the API of this version. |
 | Feb 2022 | An overview of what has changed will be written up for the website as a news update, along with better documentation of libembroidery. |
 | Feb-April | Finish the FreeGLUT 3 conversion |
 | April-May 2022 | Finish all the targets in the Design, or assign them to 2.1. |
-| May-June 2022 | Bugfixing, Testing, QA |
+| May-June 2022 | Bugfixing, Testing, QA. libembroidery 1.0 will be released, then updates will slow down and the Embroidermodder 2 development version will be fixed to the API of this version. |
 | Summer Solstice (21st of June) 2022 | Embroidermodder 2 is officially released. |
 | July 2022 | News and Documentation work for Embroidermodder 2 |
 
