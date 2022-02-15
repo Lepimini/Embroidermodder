@@ -96,7 +96,7 @@ git submodule init
 git submodule update
 
 echo "Do metaprogramming tasks."
-python3 covert_json_to_c.py
+python3 convert_json_to_c.py
 
 echo "Build"
 rm -fr build

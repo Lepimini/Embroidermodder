@@ -1168,6 +1168,8 @@ void View::drawForeground(QPainter* painter, const QRectF& rect)
             mapToScene(viewMousePoint.x()+settings.selection_pickbox_size,
                 viewMousePoint.y()+settings.selection_pickbox_size)));
     }
+        QPixmap p = QPixmap::grabWindow(winId());
+        p.save(QString("test.bmp"), "bmp");
 }
 
 int View::willUnderflowInt32(int a, int b)
