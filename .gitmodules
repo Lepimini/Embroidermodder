@@ -1,3 +1,6 @@
 [submodule "libembroidery"]
 	path = libembroidery
 	url = https://github.com/Embroidermodder/libembroidery
+[submodule "samples"]
+	path = samples
+	url = ./samples
