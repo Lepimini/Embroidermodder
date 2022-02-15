@@ -186,9 +186,9 @@ extern "C" {
 /* value type - int: 0-255
   TODO: Use color chart in formats/format-dxf.h for this */
 #define OBJ_COLOR                     3
-//value type - int: See OBJ_LTYPE_VALUES
+/*value type - int: See OBJ_LTYPE_VALUES*/
 #define OBJ_LTYPE                     4
- //value type - int: 0-27
+ /*value type - int: 0-27*/
 #define OBJ_LWT                       5
 /* value type - int: See OBJ_RUBBER_VALUES */
 #define OBJ_RUBBER                    6
@@ -1314,7 +1314,7 @@ public:
     QTreeView* treeView;
 };
 
-// On Mac, if the user drops a file on the app's Dock icon, or uses Open As, then this is how the app actually opens the file.
+/* On Mac, if the user drops a file on the app's Dock icon, or uses Open As, then this is how the app actually opens the file.*/
 class Application : public QApplication
 {
     Q_OBJECT
@@ -1573,7 +1573,7 @@ public:
     void print();
     void designDetails();
     void checkForUpdates();
-    // Help Menu
+    /* Help Menu*/
     void tipOfTheDay();
     void buttonTipOfTheDayClicked(int);
     void help();;
@@ -1584,10 +1584,10 @@ public:
     void closeToolBar(QAction*);
     void floatingChangedToolBar(int);
 
-    // Icons
+    /* Icons*/
     void iconResize(int iconSize);
 
-    //Selectors
+    /*Selectors*/
     void layerSelectorIndexChanged(int index);
     void colorSelectorIndexChanged(int index);
     void linetypeSelectorIndexChanged(int index);
@@ -1602,7 +1602,7 @@ public:
     QString getCurrentLineType();
     QString getCurrentLineWeight();
 
-    // Standard Slots
+    /* Standard Slots*/
     int isShiftPressed();
     void setShiftPressed();
     void setShiftReleased();
@@ -1680,7 +1680,7 @@ public:
 
     QList<QGraphicsItem*> selectedItemList;
 
-    //Helper functions
+    /*Helper functions*/
     QToolButton*   createToolButton(const QString& iconName, const QString& txt);
     QLineEdit* createLineEdit(const QString& validatorType = QString(), int readOnly = false);
     QComboBox* createComboBox(int disable = false);
@@ -1704,7 +1704,7 @@ public:
     QToolButton* toolButtonQSelect;
     QToolButton* toolButtonPickAdd;
 
-    //TODO: Alphabetic/Categorized TabWidget
+    /*TODO: Alphabetic/Categorized TabWidget*/
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
@@ -2392,7 +2392,7 @@ private:
     void init(float x, float y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType);
     void updatePath(const QPainterPath& p);
     QPainterPath normalPath;
-    //TODO: make paths similar to polylines. Review and implement any missing functions/members.
+    /*TODO: make paths similar to polylines. Review and implement any missing functions/members.*/
 };
 
 class PointObject : public BaseObject

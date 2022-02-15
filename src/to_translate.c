@@ -398,7 +398,7 @@ int prompt(circle_args *args, char *str)
 
 /* -------------------------------------------------------------------------------- */
 
-var global = {}; //Required
+var global = {}; /*Required*/
 args->x1;
 args->y1;
 args->x2;
@@ -473,15 +473,15 @@ function prompt(str)
     }
 }
 
-//Cartesian Coordinate System reported:
-//
-//               (+)
-//               90
-//               |
-//      (-) 180__|__0 (+)
-//               |
-//              270
-//              (-)
+/*Cartesian Coordinate System reported:*/
+/**/
+/*               (+)*/
+/*               90*/
+/*               |*/
+/*      (-) 180__|__0 (+)*/
+/*               |*/
+/*              270*/
+/*              (-)*/
 
 function reportDistance()
 {
@@ -499,16 +499,16 @@ function reportDistance()
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
-global.numPoints = 512; //Default //TODO: min:64 max:8192
+var global = {}; /*Required*/
+global.numPoints = 512; /*Default //TODO: min:64 max:8192*/
 global.cx;
 global.cy;
-global.sx = 0.04; //Default
-global.sy = 0.04; //Default
+global.sx = 0.04; /*Default*/
+global.sy = 0.04; /*Default*/
 global.numPoints;
 args->mode;
 
-//enums
+/*enums*/
 args->mode_NUM_POINTS = 0;
 args->mode_XSCALE     = 1;
 args->mode_YSCALE     = 2;
@@ -667,7 +667,7 @@ function updateDolphin(numPts, xScale, yScale)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 args->x1;
 args->y1;
 args->x2;
@@ -681,7 +681,7 @@ global.height;
 global.rot;
 args->mode;
 
-//enums
+/*enums*/
 args->mode_MAJORDIAMETER_MINORRADIUS = 0;
 args->mode_MAJORRADIUS_MINORRADIUS   = 1;
 args->mode_ELLIPSE_ROTATION          = 2;
@@ -815,7 +815,7 @@ function prompt(str)
     {
         if(isNaN(args->x1))
         {
-            if(str == "C" || str == "CENTER") //TODO: Probably should add additional qsTr calls here.
+            if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 args->mode = args->mode_MAJORRADIUS_MINORRADIUS;
                 setPromptPrefix(qsTr("Specify center point: "));
@@ -866,7 +866,7 @@ function prompt(str)
         }
         else if(isNaN(args->x3))
         {
-            if(str == "R" || str == "ROTATION") //TODO: Probably should add additional qsTr calls here.
+            if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 args->mode = args->mode_ELLIPSE_ROTATION;
                 setPromptPrefix(qsTr("Specify rotation: "));
@@ -937,7 +937,7 @@ function prompt(str)
         }
         else if(isNaN(args->x3))
         {
-            if(str == "R" || str == "ROTATION") //TODO: Probably should add additional qsTr calls here.
+            if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 args->mode = args->mode_ELLIPSE_ROTATION;
                 setPromptPrefix(qsTr("Specify ellipse rotation: "));
@@ -992,8 +992,8 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
-global.numPoints = 512; //Default //TODO: min:64 max:8192
+var global = {}; /*Required*/
+global.numPoints = 512; /*Default //TODO: min:64 max:8192*/
 global.cx;
 global.cy;
 global.sx = 1.0;
@@ -1001,7 +1001,7 @@ global.sy = 1.0;
 global.numPoints;
 args->mode;
 
-//enums
+/*enums*/
 args->mode_NUM_POINTS = 0;
 args->mode_STYLE      = 1;
 args->mode_XSCALE     = 2;
@@ -1014,8 +1014,8 @@ function main()
     global.cy = NaN;
     args->mode = args->mode_NUM_POINTS;
 
-    //Heart4: 10.0 / 512
-    //Heart5: 1.0 / 512
+    /*Heart4: 10.0 / 512*/
+    /*Heart5: 1.0 / 512*/
 
     addRubber("POLYGON");
     setRubberMode("POLYGON");
@@ -1056,9 +1056,9 @@ function updateHeart(style, numPts, xScale, yScale)
 --------------------------------------------------------------------------------
 
 
-//Command: Line
+/*Command: Line*/
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.firstRun;
 global.firstX;
 global.firstY;
@@ -1129,7 +1129,7 @@ function prompt(str)
     }
     else
     {
-        if(str == "U" || str == "UNDO") //TODO: Probably should add additional qsTr calls here.
+        if(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
         {
             todo("LINE", "prompt() for UNDO");
         }
@@ -1193,7 +1193,7 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.firstRun;
 global.baseX;
 global.baseY;
@@ -1214,7 +1214,7 @@ function main()
 
     if(numSelected() <= 0)
     {
-        //TODO: Prompt to select objects if nothing is preselected
+        /*TODO: Prompt to select objects if nothing is preselected*/
         alert(qsTr("Preselect objects before invoking the move command."));
         return;
         messageBox("information", qsTr("Move Preselect"), qsTr("Preselect objects before invoking the move command."));
@@ -1296,9 +1296,9 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-//TODO: The path command is currently broken
+/*TODO: The path command is currently broken*/
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.firstRun;
 global.firstX;
 global.firstY;
@@ -1340,11 +1340,11 @@ function click(x, y)
 
 function prompt(str)
 {
-    if(str == "A" || str == "ARC")//TODO: Probably should add additional qsTr calls here.
+    if(str == "A" || str == "ARC")/*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("PATH", "prompt() for ARC");
     }
-    else if(str == "U" || str == "UNDO") //TODO: Probably should add additional qsTr calls here.
+    else if(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("PATH", "prompt() for UNDO");
     }
@@ -1394,16 +1394,16 @@ function reportPlatform()
 }
 --------------------------------------------------------------------------------
 
-//Command: Point
+/*Command: Point*/
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.firstRun;
 
 function main()
 {
     clearSelection();
     global.firstRun = true;
-    setPromptPrefix("TODO: Current point settings: PDMODE=?  PDSIZE=?"); //TODO: qsTr needed here when complete
+    setPromptPrefix("TODO: Current point settings: PDMODE=?  PDSIZE=?"); /*TODO: qsTr needed here when complete*/
     appendPromptHistory();
     setPromptPrefix(qsTr("Specify first point: "));
 }
@@ -1428,11 +1428,11 @@ function prompt(str)
 {
     if(global.firstRun)
     {
-        if(str == "M" || str == "MODE") //TODO: Probably should add additional qsTr calls here.
+        if(str == "M" || str == "MODE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             todo("POINT", "prompt() for PDMODE");
         }
-        else if(str == "S" || str == "SIZE") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "S" || str == "SIZE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             todo("POINT", "prompt() for PDSIZE");
         }
@@ -1471,7 +1471,7 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.centerX;
 global.centerY;
 global.sideX1;
@@ -1482,11 +1482,11 @@ global.pointIX;
 global.pointIY;
 global.pointCX;
 global.pointCY;
-global.polyType = "Inscribed"; //Default
-global.numSides = 4;           //Default
+global.polyType = "Inscribed"; /*Default*/
+global.numSides = 4;           /*Default*/
 args->mode;
 
-//enums
+/*enums*/
 args->mode_NUM_SIDES    = 0;
 args->mode_CENTER_PT    = 1;
 args->mode_POLYTYPE     = 2;
@@ -1516,7 +1516,7 @@ function click(x, y)
 {
     if(args->mode == args->mode_NUM_SIDES)
     {
-        //Do nothing, the prompt controls this.
+        /*Do nothing, the prompt controls this.*/
     }
     else if(args->mode == args->mode_CENTER_PT)
     {
@@ -1528,7 +1528,7 @@ function click(x, y)
     }
     else if(args->mode == args->mode_POLYTYPE)
     {
-        //Do nothing, the prompt controls this.
+        /*Do nothing, the prompt controls this.*/
     }
     else if(args->mode == args->mode_INSCRIBE)
     {
@@ -1550,7 +1550,7 @@ function click(x, y)
     }
     else if(args->mode == args->mode_DISTANCE)
     {
-        //Do nothing, the prompt controls this.
+        /*Do nothing, the prompt controls this.*/
     }
     else if(args->mode == args->mode_SIDE_LEN)
     {
@@ -1585,7 +1585,7 @@ function prompt(str)
     }
     else if(args->mode == args->mode_CENTER_PT)
     {
-        if(str == "S" || str == "SIDELENGTH") //TODO: Probably should add additional qsTr calls here.
+        if(str == "S" || str == "SIDELENGTH") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SIDE_LEN;
             setPromptPrefix(qsTr("Specify start point: "));
@@ -1617,7 +1617,7 @@ function prompt(str)
            str == "INSCRI"   ||
            str == "INSCRIB"  ||
            str == "INSCRIBE" ||
-           str == "INSCRIBED") //TODO: Probably should add additional qsTr calls here.
+           str == "INSCRIBED") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_INSCRIBE;
             global.polyType = "Inscribed";
@@ -1639,7 +1639,7 @@ function prompt(str)
                 str == "CIRCUMSCRI"   ||
                 str == "CIRCUMSCRIB"  ||
                 str == "CIRCUMSCRIBE" ||
-                str == "CIRCUMSCRIBED") //TODO: Probably should add additional qsTr calls here.
+                str == "CIRCUMSCRIBED") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_CIRCUMSCRIBE;
             global.polyType = "Circumscribed";
@@ -1682,7 +1682,7 @@ function prompt(str)
     }
     else if(args->mode == args->mode_INSCRIBE)
     {
-        if(str == "D" || str == "DISTANCE") //TODO: Probably should add additional qsTr calls here.
+        if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_DISTANCE;
             setPromptPrefix(qsTr("Specify distance: "));
@@ -1707,7 +1707,7 @@ function prompt(str)
     }
     else if(args->mode == args->mode_CIRCUMSCRIBE)
     {
-        if(str == "D" || str == "DISTANCE") //TODO: Probably should add additional qsTr calls here.
+        if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_DISTANCE;
             setPromptPrefix(qsTr("Specify distance: "));
@@ -1769,7 +1769,7 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.firstRun;
 global.firstX;
 global.firstY;
@@ -1841,7 +1841,7 @@ function prompt(str)
     }
     else
     {
-        if(str == "U" || str == "UNDO") //TODO: Probably should add additional qsTr calls here.
+        if(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
         {
             todo("POLYLINE", "prompt() for UNDO");
         }
@@ -1871,13 +1871,13 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 args->x1;
 args->y1;
 args->x2;
 args->y2;
 
-//TODO: Adding the text is not complete yet.
+/*TODO: Adding the text is not complete yet.*/
 
 function main()
 {
@@ -1951,7 +1951,7 @@ function prompt(str)
 }
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.newRect;
 args->x1;
 args->y1;
@@ -1994,15 +1994,15 @@ function click(x, y)
 
 function prompt(str)
 {
-    if(str == "C" || str == "CHAMFER") //TODO: Probably should add additional qsTr calls here.
+    if(str == "C" || str == "CHAMFER") /*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("RECTANGLE", "prompt() for CHAMFER");
     }
-    else if(str == "D" || str == "DIMENSIONS") //TODO: Probably should add additional qsTr calls here.
+    else if(str == "D" || str == "DIMENSIONS") /*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("RECTANGLE", "prompt() for DIMENSIONS");
     }
-    else if(str == "F" || str == "FILLET") //TODO: Probably should add additional qsTr calls here.
+    else if(str == "F" || str == "FILLET") /*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("RECTANGLE", "prompt() for FILLET");
     }
@@ -2043,10 +2043,10 @@ function prompt(str)
 
 ---------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 args->mode;
 
-//enums
+/*enums*/
 args->mode_BACKGROUND = 0;
 args->mode_CROSSHAIR  = 1;
 args->mode_GRID       = 2;
@@ -2062,12 +2062,12 @@ function prompt(str)
 {
     if(args->mode == args->mode_BACKGROUND)
     {
-        if(str == "C" || str == "CROSSHAIR") //TODO: Probably should add additional qsTr calls here.
+        if(str == "C" || str == "CROSSHAIR") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_CROSSHAIR;
             setPromptPrefix(qsTr("Specify crosshair color: "));
         }
-        else if(str == "G" || str == "GRID") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "G" || str == "GRID") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_GRID;
             setPromptPrefix(qsTr("Specify grid color: "));
@@ -2139,7 +2139,7 @@ function validRGB(r, g, b)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.firstRun;
 global.baseX;
 global.baseY;
@@ -2156,7 +2156,7 @@ global.angleNew;
 
 args->mode;
 
-//enums
+/*enums*/
 args->mode_NORMAL    = 0;
 args->mode_REFERENCE = 1;
 
@@ -2179,7 +2179,7 @@ function main()
 
     if(numSelected() <= 0)
     {
-        //TODO: Prompt to select objects if nothing is preselected
+        /*TODO: Prompt to select objects if nothing is preselected*/
         alert(qsTr("Preselect objects before invoking the rotate command."));
         return;
         messageBox("information", qsTr("Rotate Preselect"), qsTr("Preselect objects before invoking the rotate command."));
@@ -2275,7 +2275,7 @@ function prompt(str)
         }
         else
         {
-            if(str == "R" || str == "REFERENCE") //TODO: Probably should add additional qsTr calls here.
+            if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 args->mode = args->mode_REFERENCE;
                 setPromptPrefix(qsTr("Specify the reference angle") + " {0.00}: ");
@@ -2323,12 +2323,12 @@ function prompt(str)
             }
             else
             {
-                //The base and dest values are only set here to advance the command.
+                /*The base and dest values are only set here to advance the command.*/
                 global.baseRX = 0.0;
                 global.baseRY = 0.0;
                 global.destRX = 0.0;
                 global.destRY = 0.0;
-                //The reference angle is what we will use later.
+                /*The reference angle is what we will use later.*/
                 global.angleRef = Number(str);
                 addRubber("LINE");
                 setRubberMode("LINE");
@@ -2359,12 +2359,12 @@ function prompt(str)
             }
             else
             {
-                //The base and dest values are only set here to advance the command.
+                /*The base and dest values are only set here to advance the command.*/
                 global.baseRX = 0.0;
                 global.baseRY = 0.0;
                 global.destRX = 0.0;
                 global.destRY = 0.0;
-                //The reference angle is what we will use later.
+                /*The reference angle is what we will use later.*/
                 global.angleRef = Number(str);
                 previewOn("SELECTED", "ROTATE", global.baseX, global.baseY, global.angleRef);
                 setPromptPrefix(qsTr("Specify the new angle: "));
@@ -2403,22 +2403,22 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.test1;
 global.test2;
 
 function main()
 {
-    //Report number of pre-selected objects
+    /*Report number of pre-selected objects*/
     setPromptPrefix("Number of Objects Selected: " + numSelected().toString());
     appendPromptHistory();
     
     mirrorSelected(0,0,0,1);
     
-    //selectAll();
-    //rotateSelected(0,0,90);
+    /*selectAll();*/
+    /*rotateSelected(0,0,90);*/
     
-    //Polyline & Polygon Testing
+    /*Polyline & Polygon Testing*/
     
     var offsetX = 0.0;
     var offsetY = 0.0;
@@ -2470,7 +2470,7 @@ function main()
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.firstRun;
 global.baseX;
 global.baseY;
@@ -2487,7 +2487,7 @@ global.factorNew;
 
 args->mode;
 
-//enums
+/*enums*/
 args->mode_NORMAL    = 0;
 args->mode_REFERENCE = 1;
 
@@ -2510,7 +2510,7 @@ function main()
 
     if(numSelected() <= 0)
     {
-        //TODO: Prompt to select objects if nothing is preselected
+        /*TODO: Prompt to select objects if nothing is preselected*/
         alert(qsTr("Preselect objects before invoking the scale command."));
         return;
         messageBox("information", qsTr("Scale Preselect"), qsTr("Preselect objects before invoking the scale command."));
@@ -2627,7 +2627,7 @@ function prompt(str)
         }
         else
         {
-            if(str == "R" || str == "REFERENCE") //TODO: Probably should add additional qsTr calls here.
+            if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 args->mode = args->mode_REFERENCE;
                 setPromptPrefix(qsTr("Specify reference length") + " {1}: ");
@@ -2675,12 +2675,12 @@ function prompt(str)
             }
             else
             {
-                //The base and dest values are only set here to advance the command.
+                /*The base and dest values are only set here to advance the command.*/
                 global.baseRX = 0.0;
                 global.baseRY = 0.0;
                 global.destRX = 0.0;
                 global.destRY = 0.0;
-                //The reference length is what we will use later.
+                /*The reference length is what we will use later.*/
                 global.factorRef = Number(str);
                 if(global.factorRef <= 0.0)
                 {
@@ -2735,12 +2735,12 @@ function prompt(str)
             }
             else
             {
-                //The base and dest values are only set here to advance the command.
+                /*The base and dest values are only set here to advance the command.*/
                 global.baseRX = 0.0;
                 global.baseRY = 0.0;
                 global.destRX = 0.0;
                 global.destRY = 0.0;
-                //The reference length is what we will use later.
+                /*The reference length is what we will use later.*/
                 global.factorRef = Number(str);
                 if(global.factorRef <= 0.0)
                 {
@@ -2809,7 +2809,7 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
+var global = {}; /*Required*/
 global.text;
 global.textX;
 global.textY;
@@ -2819,7 +2819,7 @@ global.textHeight;
 global.textRotation;
 args->mode;
 
-//enums
+/*enums*/
 args->mode_JUSTIFY = 0;
 args->mode_SETFONT = 1;
 args->mode_SETGEOM = 2;
@@ -2881,7 +2881,7 @@ function click(x, y)
         }
         else
         {
-            //Do nothing, as we are in rapidFire mode now.
+            /*Do nothing, as we are in rapidFire mode now.*/
         }
     }
 }
@@ -2890,98 +2890,98 @@ function prompt(str)
 {
     if(args->mode == args->mode_JUSTIFY)
     {
-        if(str == "C" || str == "CENTER") //TODO: Probably should add additional qsTr calls here.
+        if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Center";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify center point of text or [Justify/Setfont]: "));
         }
-        else if(str == "R" || str == "RIGHT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "R" || str == "RIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Right";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify right-end point of text or [Justify/Setfont]: "));
         }
-        else if(str == "A" || str == "ALIGN") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "A" || str == "ALIGN") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Aligned";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify start point of text or [Justify/Setfont]: "));
         }
-        else if(str == "M" || str == "MIDDLE") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "M" || str == "MIDDLE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Middle";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify middle point of text or [Justify/Setfont]: "));
         }
-        else if(str == "F" || str == "FIT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "F" || str == "FIT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Fit";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify start point of text or [Justify/Setfont]: "));
         }
-        else if(str == "TL" || str == "TOPLEFT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "TL" || str == "TOPLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Top Left";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify top-left point of text or [Justify/Setfont]: "));
         }
-        else if(str == "TC" || str == "TOPCENTER") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "TC" || str == "TOPCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Top Center";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify top-center point of text or [Justify/Setfont]: "));
         }
-        else if(str == "TR" || str == "TOPRIGHT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "TR" || str == "TOPRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Top Right";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify top-right point of text or [Justify/Setfont]: "));
         }
-        else if(str == "ML" || str == "MIDDLELEFT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "ML" || str == "MIDDLELEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Middle Left";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify middle-left point of text or [Justify/Setfont]: "));
         }
-        else if(str == "MC" || str == "MIDDLECENTER") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "MC" || str == "MIDDLECENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Middle Center";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify middle-center point of text or [Justify/Setfont]: "));
         }
-        else if(str == "MR" || str == "MIDDLERIGHT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "MR" || str == "MIDDLERIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Middle Right";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify middle-right point of text or [Justify/Setfont]: "));
         }
-        else if(str == "BL" || str == "BOTTOMLEFT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "BL" || str == "BOTTOMLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Bottom Left";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify bottom-left point of text or [Justify/Setfont]: "));
         }
-        else if(str == "BC" || str == "BOTTOMCENTER") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "BC" || str == "BOTTOMCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Bottom Center";
             setRubberText("TEXT_JUSTIFY", global.textJustify);
             setPromptPrefix(qsTr("Specify bottom-center point of text or [Justify/Setfont]: "));
         }
-        else if(str == "BR" || str == "BOTTOMRIGHT") //TODO: Probably should add additional qsTr calls here.
+        else if(str == "BR" || str == "BOTTOMRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             args->mode = args->mode_SETGEOM;
             global.textJustify = "Bottom Right";
@@ -3006,12 +3006,12 @@ function prompt(str)
     {
         if(isNaN(global.textX))
         {
-            if(str == "J" || str == "JUSTIFY") //TODO: Probably should add additional qsTr calls here.
+            if(str == "J" || str == "JUSTIFY") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 args->mode = args->mode_JUSTIFY;
                 setPromptPrefix(qsTr("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "));
             }
-            else if(str == "S" || str == "SETFONT") //TODO: Probably should add additional qsTr calls here.
+            else if(str == "S" || str == "SETFONT") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 args->mode = args->mode_SETFONT;
                 setPromptPrefix(qsTr("Specify font name: "));
@@ -3095,7 +3095,7 @@ function prompt(str)
         }
         else
         {
-            //Do nothing, as we are in rapidFire mode now.
+            /*Do nothing, as we are in rapidFire mode now.*/
         }
     }
     else if(args->mode == args->mode_RAPID)
@@ -3109,7 +3109,7 @@ function prompt(str)
             else
             {
                 vulcanize();
-                return; //TODO: Rather than ending the command, calculate where the next line would be and modify the x/y to the new point
+                return; /*TODO: Rather than ending the command, calculate where the next line would be and modify the x/y to the new point*/
             }
         }
         else
@@ -3122,16 +3122,16 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
-global.numPoints = 2048; //Default //TODO: min:64 max:8192
+var global = {}; /*Required*/
+global.numPoints = 2048; /*Default //TODO: min:64 max:8192*/
 global.cx;
 global.cy;
-global.sx = 0.04; //Default
-global.sy = 0.04; //Default
+global.sx = 0.04; /*Default*/
+global.sy = 0.04; /*Default*/
 global.numPoints;
 args->mode;
 
-//enums
+/*enums*/
 args->mode_NUM_POINTS = 0;
 args->mode_XSCALE     = 1;
 args->mode_YSCALE     = 2;
@@ -3162,7 +3162,7 @@ function updateSnowflake(numPts, xScale, yScale)
     {
         t = two_pi/numPts*i; 
 
-//Snowflake Curve with t [0,2pi]
+/*Snowflake Curve with t [0,2pi]*/
 
 xx = 4/7*sin(20/11-318*t)+
 3/13*sin(19/11-317*t)+
@@ -3810,8 +3810,8 @@ sin(263*t+2/7)-
 
 --------------------------------------------------------------------------------
 
-var global = {}; //Required
-global.numPoints = 5; //Default
+var global = {}; /*Required*/
+global.numPoints = 5; /*Default*/
 global.cx;
 global.cy;
 args->x1;
@@ -3820,7 +3820,7 @@ args->x2;
 args->y2;
 args->mode;
 
-//enums
+/*enums*/
 args->mode_NUM_POINTS = 0;
 args->mode_CENTER_PT  = 1;
 args->mode_RAD_OUTER  = 2;
@@ -3843,7 +3843,7 @@ function click(x, y)
 {
     if(args->mode == args->mode_NUM_POINTS)
     {
-        //Do nothing, the prompt controls this.
+        /*Do nothing, the prompt controls this.*/
     }
     else if(args->mode == args->mode_CENTER_PT)
     {
@@ -3879,11 +3879,11 @@ function move(x, y)
 {
     if(args->mode == args->mode_NUM_POINTS)
     {
-        //Do nothing, the prompt controls this.
+        /*Do nothing, the prompt controls this.*/
     }
     else if(args->mode == args->mode_CENTER_PT)
     {
-        //Do nothing, prompt and click controls this.
+        /*Do nothing, prompt and click controls this.*/
     }
     else if(args->mode == args->mode_RAD_OUTER)
     {
@@ -3996,7 +3996,7 @@ function updateStar(x, y)
         distInner = calculateDistance(global.cx, global.cy, x, y);
     }
 
-    //Calculate the Star Points
+    /*Calculate the Star Points*/
     var angInc = 360.0/(global.numPoints*2);
     var odd = true;
     for(var i = 0; i < global.numPoints*2; i++)
@@ -4027,7 +4027,7 @@ function updateStar(x, y)
     "statustip": "Arrange the windows:  SYSWINDOWS",
     "alias": "WINDOWS, SYSWINDOWS"
 
-//Command: SysWindows
+/*Command: SysWindows*/
 
 function main()
 {
@@ -4037,12 +4037,12 @@ function main()
 
 function prompt(str)
 {
-    if(str == "C" || str == "CASCADE") //TODO: Probably should add additional qsTr calls here.
+    if(str == "C" || str == "CASCADE") /*TODO: Probably should add additional qsTr calls here.*/
     {
         windowCascade();
         return;
     }
-    else if(str == "T" || str == "TILE") //TODO: Probably should add additional qsTr calls here.
+    else if(str == "T" || str == "TILE") /*TODO: Probably should add additional qsTr calls here.*/
     {
         windowTile();
         return;
@@ -4076,9 +4076,9 @@ void treble_clef_main()
     clearSelection();
     global.cx = NaN;
     global.cy = NaN;
-    global.numPoints = 1024; //Default //TODO: min:64 max:8192
-    global.sx = 0.04; //Default
-    global.sy = 0.04; //Default
+    global.numPoints = 1024; /*Default //TODO: min:64 max:8192*/
+    global.sx = 0.04; /*Default*/
+    global.sy = 0.04; /*Default*/
     args->mode = TREBLE_CLEF_MODE_NUM_POINTS;
 
     addRubber("POLYGON");

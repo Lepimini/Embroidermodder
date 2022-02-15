@@ -102,7 +102,7 @@ void layerSelector(void)
 
 void main_about(void)
 {
-    //TODO: QTabWidget for about dialog
+    /*TODO: QTabWidget for about dialog*/
     QApplication::setOverrideCursor(Qt::ArrowCursor);
     debug_message("about()");
     QString appDir = qApp->applicationDirPath();
@@ -466,9 +466,9 @@ void dayVision(void)
 {
     View* gview = _mainWin->activeView();
     if (gview) {
-        gview->setBackgroundColor(qRgb(255,255,255)); //TODO: Make day vision color settings.
-        gview->setCrossHairColor(qRgb(0,0,0));        //TODO: Make day vision color settings.
-        gview->setGridColor(qRgb(0,0,0));             //TODO: Make day vision color settings.
+        gview->setBackgroundColor(qRgb(255,255,255)); /*TODO: Make day vision color settings.*/
+        gview->setCrossHairColor(qRgb(0,0,0));        /*TODO: Make day vision color settings.*/
+        gview->setGridColor(qRgb(0,0,0));             /*TODO: Make day vision color settings.*/
     }
 }
 
@@ -477,8 +477,8 @@ void nightVision(void)
     View* gview = _mainWin->activeView();
     if (gview) {
         gview->setBackgroundColor(qRgb(0,0,0)); /* TODO: Make night vision color settings. */
-        gview->setCrossHairColor(qRgb(255,255,255)); //TODO: Make night vision color settings.
-        gview->setGridColor(qRgb(255,255,255));      //TODO: Make night vision color settings.
+        gview->setCrossHairColor(qRgb(255,255,255)); /*TODO: Make night vision color settings.*/
+        gview->setGridColor(qRgb(255,255,255));      /*TODO: Make night vision color settings.*/
     }
 }
 
@@ -608,7 +608,7 @@ void add_list_to_path(QPainterPath *path, const char *commands[], float pos[2], 
     }
 }
 
-//NOTE: This function should be used to interpret various object types and save them as polylines for stitchOnly formats.
+/*NOTE: This function should be used to interpret various object types and save them as polylines for stitchOnly formats.*/
 void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight)
 {
     float startX = objPos.x();
@@ -627,7 +627,7 @@ void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& 
     polyObject = (EmbPolylineObject *) malloc(sizeof(EmbPolylineObject));
     polyObject->pointList = pointList;
     polyObject->color = embColor_make(color.red(), color.green(), color.blue());
-    polyObject->lineType = 1; //TODO: proper lineType
+    polyObject->lineType = 1; /*TODO: proper lineType*/
     embPattern_addPolylineObjectAbs(pattern, polyObject);
 }
 

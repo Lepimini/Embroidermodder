@@ -59,7 +59,7 @@ void usage(void)
   "|_____________________________________________________________________________| "  "\n"
   " " "\n"
   "Usage: embroidermodder [options] files ..."  "\n"
-   //80CHARS======================================================================MAX
+   /*80CHARS======================================================================MAX*/
   "Options:"  "\n"
   "  -d, --debug      Print lots of debugging information." "\n"
   "  -h, --help       Print this message and exit." "\n"
