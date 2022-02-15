@@ -3,4 +3,4 @@
 	url = https://github.com/Embroidermodder/libembroidery
 [submodule "samples"]
 	path = samples
-	url = ./samples
+	url = https://github.com/Embroidermodder/samples
