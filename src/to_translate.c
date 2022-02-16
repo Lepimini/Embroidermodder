@@ -1,7 +1,7 @@
 /*
  * This file is part of Embroidermodder 2.
  * ------------------------------------------------------------
- * Copyright 2021 The Embroidermodder Team
+ * Copyright 2021-2022 The Embroidermodder Team
  * Licensed under the terms of the zlib license.
  * ------------------------------------------------------------
  * The code that needs to be translated from Javascript and C++,
@@ -26,7 +26,31 @@ typedef struct circle_args_ {
     int mode;
 } circle_args;
 
-typedef struct Quad {
+typedef struct dolphin_args_ {
+    int numPoints;
+    float cx;
+    float cy;
+    float sx;
+    float sy;
+    int mode;
+} dolphin_args;
+
+typedef struct ellipse_args_ {
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    float x3;
+    float y3;
+    float cx;
+    float cy;
+    float width;
+    float height;
+    float rot;
+    int mode;
+} ellipse_args;
+
+typedef struct quad_ {
     int flag;
     float left;
     float right;
@@ -37,190 +61,185 @@ typedef struct Quad {
     float blue;
 } quad;
 
-/* Command: Circle */
-int command_circle_init(circle_args *args)
+typedef struct treble_clef_ {
+    int num_points;
+    double cx;
+    double cy;
+    double sx;
+    double sy;
+    int mode;
+} treble_clef;
+
+#define MAX_DISTANCE              10000000.0
+
+#define DOLPHIN_NUM_POINTS                 0
+#define DOLPHIN_XSCALE                     1
+#define DOLPHIN_YSCALE                     2
+
+#define ELLIPSE_MAJORDIAMETER_MINORRADIUS  0
+#define ELLIPSE_MAJORRADIUS_MINORRADIUS    1
+#define ELLIPSE_ROTATION                   2
+
+#define POLYGON_NUM_SIDES                  0
+#define POLYGON_CENTER_PT                  1
+#define POLYGON_POLYTYPE                   2
+#define POLYGON_INSCRIBE                   3
+#define POLYGON_CIRCUMSCRIBE               4
+#define POLYGON_DISTANCE                   5
+#define POLYGON_SIDE_LEN                   6
+
+#define TREBLE_CLEF_MODE_NUM_POINTS        0
+#define TREBLE_CLEF_MODE_XSCALE            1
+#define TREBLE_CLEF_MODE_YSCALE            2
+
+int circle_init(circle_args *args)
 {
     /*
     clearSelection();
     */
-    args->mode = circle_mode_1P_RAD;
-    args->x1 = NaN;
-    args->y1 = NaN;
-    args->x2 = NaN;
-    args->y2 = NaN;
-    args->x3 = NaN;
-    args->y3 = NaN;
+    args.mode = circle_mode_1P_RAD;
+    args.x1 = MAX_DISTANCE+1.0;
+    args.y1 = MAX_DISTANCE+1.0;
+    args.x2 = MAX_DISTANCE+1.0;
+    args.y2 = MAX_DISTANCE+1.0;
+    args.x3 = MAX_DISTANCE+1.0;
+    args.y3 = MAX_DISTANCE+1.0;
     /*
     setPromptPrefix(qsTr("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "));
     */
     return 0;
 }
 
-/* NOTE: click() is run only for left clicks.
- *      Middle clicks are used for panning.
- *      Right clicks bring up the context menu.
- */
-int command_circle_click(circle_args *args, float x, float y)
+int circle_click(circle_args *args, float x, float y)
 {
-    if (args->mode == args->mode_1P_RAD) {
-        if(isNaN(args->x1))
-        {
-            args->x1 = x;
-            args->y1 = y;
-            global.cx = x;
-            global.cy = y;
+    if (args.mode == args.mode_1P_RAD) {
+        if(isNaN(args.x1)) {
+            args.x1 = x;
+            args.y1 = y;
+            args.cx = x;
+            args.cy = y;
             addRubber("CIRCLE");
             setRubberMode("CIRCLE_1P_RAD");
-            setRubberPoint("CIRCLE_CENTER", global.cx, global.cy);
+            setRubberPoint("CIRCLE_CENTER", args.cx, args.cy);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify radius of circle or [Diameter]: "));
         }
-        else
-        {
-            args->x2 = x;
-            args->y2 = y;
-            setRubberPoint("CIRCLE_RADIUS", args->x2, args->y2);
+        else {
+            args.x2 = x;
+            args.y2 = y;
+            setRubberPoint("CIRCLE_RADIUS", args.x2, args.y2);
             vulcanize();
             appendPromptHistory();
             return;
         }
     }
-    else if(args->mode == circle_mode_1P_DIA)
-    {
-        if(isNaN(args->x1))
-        {
+    else if(args.mode == circle_mode_1P_DIA) {
+        if(isNaN(args.x1)) {
             error("CIRCLE", qsTr("This should never happen."));
         }
-        else
-        {
-            args->x2 = x;
-            args->y2 = y;
-            setRubberPoint("CIRCLE_DIAMETER", args->x2, args->y2);
+        else {
+            args.x2 = x;
+            args.y2 = y;
+            setRubberPoint("CIRCLE_DIAMETER", args.x2, args.y2);
             vulcanize();
             appendPromptHistory();
             return;
         }
     }
-    else if(args->mode == args->mode_2P)
-    {
-        if(isNaN(args->x1))
-        {
-            args->x1 = x;
-            args->y1 = y;
+    else if(args.mode == args.mode_2P) {
+        if(isNaN(args.x1)) {
+            args.x1 = x;
+            args.y1 = y;
             addRubber("CIRCLE");
             setRubberMode("CIRCLE_2P");
-            setRubberPoint("CIRCLE_TAN1", args->x1, args->y1);
+            setRubberPoint("CIRCLE_TAN1", args.x1, args.y1);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify second end point of circle's diameter: "));
         }
-        else if(isNaN(args->x2))
-        {
-            args->x2 = x;
-            args->y2 = y;
-            setRubberPoint("CIRCLE_TAN2", args->x2, args->y2);
+        else if(isNaN(args.x2)) {
+            args.x2 = x;
+            args.y2 = y;
+            setRubberPoint("CIRCLE_TAN2", args.x2, args.y2);
             vulcanize();
             appendPromptHistory();
             return;
         }
-        else
-        {
+        else {
             error("CIRCLE", qsTr("This should never happen."));
         }
     }
-    else if(args->mode == args->mode_3P)
-    {
-        if(isNaN(args->x1))
-        {
-            args->x1 = x;
-            args->y1 = y;
+    else if(args.mode == args.mode_3P) {
+        if(isNaN(args.x1)) {
+            args.x1 = x;
+            args.y1 = y;
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify second point on circle: "));
         }
-        else if(isNaN(args->x2))
-        {
-            args->x2 = x;
-            args->y2 = y;
+        else if(isNaN(args.x2)) {
+            args.x2 = x;
+            args.y2 = y;
             addRubber("CIRCLE");
             setRubberMode("CIRCLE_3P");
-            setRubberPoint("CIRCLE_TAN1", args->x1, args->y1);
-            setRubberPoint("CIRCLE_TAN2", args->x2, args->y2);
+            setRubberPoint("CIRCLE_TAN1", args.x1, args.y1);
+            setRubberPoint("CIRCLE_TAN2", args.x2, args.y2);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify third point on circle: "));
         }
-        else if(isNaN(args->x3))
-        {
-            args->x3 = x;
-            args->y3 = y;
-            setRubberPoint("CIRCLE_TAN3", args->x3, args->y3);
+        else if(isNaN(args.x3)) {
+            args.x3 = x;
+            args.y3 = y;
+            setRubberPoint("CIRCLE_TAN3", args.x3, args.y3);
             vulcanize();
             appendPromptHistory();
             return;
         }
-        else
-        {
+        else {
             error("CIRCLE", qsTr("This should never happen."));
         }
     }
-    else if(args->mode == args->mode_TTR)
-    {
-        if(isNaN(args->x1))
-        {
-            args->x1 = x;
-            args->y1 = y;
+    else if(args.mode == args.mode_TTR) {
+        if (isNaN(args.x1)) {
+            args.x1 = x;
+            args.y1 = y;
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify point on object for second tangent of circle: "));
         }
-        else if(isNaN(args->x2))
-        {
-            args->x2 = x;
-            args->y2 = y;
+        else if (isNaN(args.x2)) {
+            args.x2 = x;
+            args.y2 = y;
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify radius of circle: "));
         }
-        else if(isNaN(args->x3))
-        {
-            args->x3 = x;
-            args->y3 = y;
+        else if (isNaN(args.x3)) {
+            args.x3 = x;
+            args.y3 = y;
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify second point: "));
         }
-        else
-        {
+        else {
             todo("CIRCLE", "click() for TTR");
         }
     }
     return 0;
 }
 
-/* NOTE: context() is run when a context menu entry is chosen. */
-int context(char *str)
+int circle_prompt(circle_args args, char *str)
 {
-    todo("CIRCLE", "context()");
-    return 0;
-}
-
-/* NOTE: prompt() is run when Enter is pressed.
- *      appendPromptHistory is automatically called before prompt()
- *      is called so calling it is only needed for erroneous input.
- *      Any text in the command prompt is sent as an uppercase string.
- */
-int prompt(circle_args *args, char *str)
-{
-    if (args->mode == args->mode_1P_RAD) {
-        if (isNaN(args->x1)) {
+    if (args.mode == args.mode_1P_RAD) {
+        if (isNaN(args.x1)) {
             /* TODO: Probably should add additional qsTr calls here. */
             if (!strcmp(str, "2P")) {
-                args->mode = args->mode_2P;
+                args.mode = args.mode_2P;
                 setPromptPrefix(qsTr("Specify first end point of circle's diameter: "));
             }
             /* TODO: Probably should add additional qsTr calls here. */
             else if (!strcmp(str, "3P")) {
-                args->mode = args->mode_3P;
+                args.mode = args.mode_3P;
                 setPromptPrefix(qsTr("Specify first point of circle: "));
             }
             /* TODO: Probably should add additional qsTr calls here. */
             else if (!strcmp(str, "T") || !strcmp(str, "TTR")) {
-                args->mode = args->mode_TTR;
+                args.mode = args.mode_TTR;
                 setPromptPrefix(qsTr("Specify point on object for first tangent of circle: "));
             }
             else {
@@ -230,13 +249,13 @@ int prompt(circle_args *args, char *str)
                     setPromptPrefix(qsTr("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "));
                 }
                 else {
-                    args->x1 = Number(strList[0]);
-                    args->y1 = Number(strList[1]);
-                    args->cx = args->x1;
-                    args->cy = args->y1;
+                    args.x1 = Number(strList[0]);
+                    args.y1 = Number(strList[1]);
+                    args.cx = args.x1;
+                    args.cy = args.y1;
                     addRubber("CIRCLE");
                     setRubberMode("CIRCLE_1P_RAD");
-                    setRubberPoint("CIRCLE_CENTER", global.cx, global.cy);
+                    setRubberPoint("CIRCLE_CENTER", args.cx, args.cy);
                     setPromptPrefix(qsTr("Specify radius of circle or [Diameter]: "));
                 }
             }
@@ -244,7 +263,7 @@ int prompt(circle_args *args, char *str)
         else {
             /* TODO: Probably should add additional qsTr calls here. */
             if (!strcmp(str, "D") || !strcmp(str, "DIAMETER")) {
-                args->mode = circle_mode_1P_DIA;
+                args.mode = circle_mode_1P_DIA;
                 setRubberMode("CIRCLE_1P_DIA");
                 setPromptPrefix(qsTr("Specify diameter of circle: "));
             }
@@ -255,22 +274,21 @@ int prompt(circle_args *args, char *str)
                     setPromptPrefix(qsTr("Specify radius of circle or [Diameter]: "));
                 }
                 else {
-                    args->rad = num;
-                    args->x2 = args->x1 + args->rad;
-                    args->y2 = args->y1;
-                    setRubberPoint("CIRCLE_RADIUS", args->x2, args->y2);
+                    args.rad = num;
+                    args.x2 = args.x1 + args.rad;
+                    args.y2 = args.y1;
+                    setRubberPoint("CIRCLE_RADIUS", args.x2, args.y2);
                     vulcanize();
                     return;
                 }
             }
         }
     }
-    else if (args->mode == circle_mode_1P_DIA) {
-        if (isNaN(args->x1)) {
+    else if (args.mode == circle_mode_1P_DIA) {
+        if (isNaN(args.x1)) {
             error("CIRCLE", qsTr("This should never happen."));
         }
-        if(isNaN(args->x2))
-        {
+        if (isNaN(args.x2)) {
             var num = Number(str);
             if(isNaN(num))
             {
@@ -279,10 +297,10 @@ int prompt(circle_args *args, char *str)
             }
             else
             {
-                args->dia = num;
-                args->x2 = args->x1 + args->dia;
-                args->y2 = args->y1;
-                setRubberPoint("CIRCLE_DIAMETER", args->x2, args->y2);
+                args.dia = num;
+                args.x2 = args.x1 + args.dia;
+                args.y2 = args.y1;
+                setRubberPoint("CIRCLE_DIAMETER", args.x2, args.y2);
                 vulcanize();
                 return;
             }
@@ -292,9 +310,9 @@ int prompt(circle_args *args, char *str)
             error("CIRCLE", qsTr("This should never happen."));
         }
     }
-    else if(args->mode == args->mode_2P)
+    else if(args.mode == args.mode_2P)
     {
-        if(isNaN(args->x1))
+        if(isNaN(args.x1))
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -304,15 +322,15 @@ int prompt(circle_args *args, char *str)
             }
             else
             {
-                args->x1 = Number(strList[0]);
-                args->y1 = Number(strList[1]);
+                args.x1 = Number(strList[0]);
+                args.y1 = Number(strList[1]);
                 addRubber("CIRCLE");
                 setRubberMode("CIRCLE_2P");
-                setRubberPoint("CIRCLE_TAN1", args->x1, args->y1);
+                setRubberPoint("CIRCLE_TAN1", args.x1, args.y1);
                 setPromptPrefix(qsTr("Specify second end point of circle's diameter: "));
             }
         }
-        else if(isNaN(args->x2))
+        else if(isNaN(args.x2))
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -322,9 +340,9 @@ int prompt(circle_args *args, char *str)
             }
             else
             {
-                args->x2 = Number(strList[0]);
-                args->y2 = Number(strList[1]);
-                setRubberPoint("CIRCLE_TAN2", args->x2, args->y2);
+                args.x2 = Number(strList[0]);
+                args.y2 = Number(strList[1]);
+                setRubberPoint("CIRCLE_TAN2", args.x2, args.y2);
                 vulcanize();
                 return;
             }
@@ -334,9 +352,9 @@ int prompt(circle_args *args, char *str)
             error("CIRCLE", qsTr("This should never happen."));
         }
     }
-    else if(args->mode == args->mode_3P)
+    else if(args.mode == args.mode_3P)
     {
-        if(isNaN(args->x1))
+        if(isNaN(args.x1))
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -346,12 +364,12 @@ int prompt(circle_args *args, char *str)
             }
             else
             {
-                args->x1 = Number(strList[0]);
-                args->y1 = Number(strList[1]);
+                args.x1 = Number(strList[0]);
+                args.y1 = Number(strList[1]);
                 setPromptPrefix(qsTr("Specify second point of circle: "));
             }
         }
-        else if(isNaN(args->x2))
+        else if(isNaN(args.x2))
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -361,25 +379,25 @@ int prompt(circle_args *args, char *str)
             }
             else
             {
-                args->x2 = Number(strList[0]);
-                args->y2 = Number(strList[1]);
+                args.x2 = Number(strList[0]);
+                args.y2 = Number(strList[1]);
                 addRubber("CIRCLE");
                 setRubberMode("CIRCLE_3P");
-                setRubberPoint("CIRCLE_TAN1", args->x1, args->y1);
-                setRubberPoint("CIRCLE_TAN2", args->x2, args->y2);
+                setRubberPoint("CIRCLE_TAN1", args.x1, args.y1);
+                setRubberPoint("CIRCLE_TAN2", args.x2, args.y2);
                 setPromptPrefix(qsTr("Specify third point of circle: "));
             }
         }
-        else if(isNaN(args->x3)) {
+        else if(isNaN(args.x3)) {
             var strList = str.split(",");
             if (isNaN(strList[0]) || isNaN(strList[1])) {
                 alert(qsTr("Invalid point."));
                 setPromptPrefix(qsTr("Specify third point of circle: "));
             }
             else {                
-                args->x3 = Number(strList[0]);
-                args->y3 = Number(strList[1]);
-                setRubberPoint("CIRCLE_TAN3", args->x3, args->y3);
+                args.x3 = Number(strList[0]);
+                args.y3 = Number(strList[1]);
+                setRubberPoint("CIRCLE_TAN3", args.x3, args.y3);
                 vulcanize();
                 return;
             }
@@ -390,7 +408,7 @@ int prompt(circle_args *args, char *str)
         }
         
     }
-    else if(args->mode == args->mode_TTR) {
+    else if(args.mode == args.mode_TTR) {
         todo("CIRCLE", "prompt() for TTR");
     }
     return 0;
@@ -398,61 +416,54 @@ int prompt(circle_args *args, char *str)
 
 /* -------------------------------------------------------------------------------- */
 
-var global = {}; /*Required*/
-args->x1;
-args->y1;
-args->x2;
-args->y2;
-
-function main()
+EmbLine line_init(void)
 {
+    EmbLine line;
     clearSelection();
-    args->x1 = NaN;
-    args->y1 = NaN;
-    args->x2 = NaN;
-    args->y2 = NaN;
+    args.x1 = MAX_DISTANCE+1.0;
+    args.y1 = MAX_DISTANCE+1.0;
+    args.x2 = MAX_DISTANCE+1.0;
+    args.y2 = MAX_DISTANCE+1.0;
     setPromptPrefix(qsTr("Specify first point: "));
+    return line;
 }
 
-function click(x, y)
+int line_click(float x, float y)
 {
-    if(isNaN(args->x1))
+    if(isNaN(args.x1))
     {
-        args->x1 = x;
-        args->y1 = y;
+        args.x1 = x;
+        args.y1 = y;
         addRubber("LINE");
         setRubberMode("LINE");
-        setRubberPoint("LINE_START", args->x1, args->y1);
+        setRubberPoint("LINE_START", args.x1, args.y1);
         appendPromptHistory();
         setPromptPrefix(qsTr("Specify second point: "));
     }
     else
     {
         appendPromptHistory();
-        args->x2 = x;
-        args->y2 = y;
+        args.x2 = x;
+        args.y2 = y;
         reportDistance();
         return;
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
     var strList = str.split(",");
-    if(isNaN(args->x1))
-    {
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
+    if (isNaN(args.x1)) {
+        if (isNaN(strList[0]) || isNaN(strList[1])) {
             alert(qsTr("Requires numeric distance or two points."));
             setPromptPrefix(qsTr("Specify first point: "));
         }
-        else
-        {
-            args->x1 = Number(strList[0]);
-            args->y1 = Number(strList[1]);
+        else {
+            args.x1 = Number(strList[0]);
+            args.y1 = Number(strList[1]);
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", args->x1, args->y1);
+            setRubberPoint("LINE_START", args.x1, args.y1);
             setPromptPrefix(qsTr("Specify second point: "));
         }
     }
@@ -465,31 +476,32 @@ function prompt(str)
         }
         else
         {
-            args->x2 = Number(strList[0]);
-            args->y2 = Number(strList[1]);
+            args.x2 = Number(strList[0]);
+            args.y2 = Number(strList[1]);
             reportDistance();
             return;
         }
     }
 }
 
-/*Cartesian Coordinate System reported:*/
-/**/
-/*               (+)*/
-/*               90*/
-/*               |*/
-/*      (-) 180__|__0 (+)*/
-/*               |*/
-/*              270*/
-/*              (-)*/
+/* Cartesian Coordinate System reported:
+ *
+ *               (+)
+ *               90
+ *               |
+ *      (-) 180__|__0 (+)
+ *               |
+ *              270
+ *              (-)
+ */
 
-function reportDistance()
+int reportDistance(void)
 {
-    var dx = args->x2 - args->x1;
-    var dy = args->y2 - args->y1;
+    var dx = args.x2 - args.x1;
+    var dy = args.y2 - args.y1;
 
-    var dist = calculateDistance(args->x1,args->y1,args->x2, args->y2);
-    var angle = calculateAngle(args->x1,args->y1,args->x2, args->y2);
+    var dist = calculateDistance(args.x1,args.y1,args.x2, args.y2);
+    var angle = calculateAngle(args.x1,args.y1,args.x2, args.y2);
 
     setPromptPrefix(qsTr("Distance") + " = " + dist.toString() + ", " + qsTr("Angle") + " = " + angle.toString());
     appendPromptHistory();
@@ -497,49 +509,38 @@ function reportDistance()
     appendPromptHistory();
 }
 
---------------------------------------------------------------------------------
+/* ---------------------------------------------------------------------- */
 
-var global = {}; /*Required*/
-global.numPoints = 512; /*Default //TODO: min:64 max:8192*/
-global.cx;
-global.cy;
-global.sx = 0.04; /*Default*/
-global.sy = 0.04; /*Default*/
-global.numPoints;
-args->mode;
-
-/*enums*/
-args->mode_NUM_POINTS = 0;
-args->mode_XSCALE     = 1;
-args->mode_YSCALE     = 2;
-
-function main()
+dolphin_args dolphin_init(void)
 {
+    dolphin_args args;
     clearSelection();
-    global.cx = NaN;
-    global.cy = NaN;
-    args->mode = args->mode_NUM_POINTS;
+    args.numPoints = 512; /*Default //TODO: min:64 max:8192*/
+    args.cx = MAX_DISTANCE+1.0;
+    args.cy = MAX_DISTANCE+1.0;
+    args.sx = 0.04; /*Default*/
+    args.sy = 0.04; /*Default*/
+    args.mode = DOLPHIN_MODE_NUM_POINTS;
+
 
     addRubber("POLYGON");
     setRubberMode("POLYGON");
-    updateDolphin(global.numPoints, global.sx, global.sy);
+    updateDolphin(args, args.numPoints, args.sx, args.sy);
     spareRubber("POLYGON");
-    return;
+    return args;
 }
 
-function updateDolphin(numPts, xScale, yScale)
+#define basis_func(A, B, C, D, E) (A/B)*sin(C*t+(D/E))
+
+int dolphin_update(dolphin_args args, int numPts, float xScale, float yScale)
 {
-    var i;
-    var t;
-    var xx = NaN;
-    var yy = NaN;
-    var two_pi = 2*embConstantPi;
+    int i;
 
-    for(i = 0; i <= numPts; i++)
-    {
-        t = two_pi/numPts*i; 
+    for (i=0; i<=numPts; i++) {
+        float t, xx, yy;
+        t = (2*embConstantPi)/numPts*i; 
 
-        xx = 4/23*sin(62/33-58*t)+
+        xx = basis_func(4, 23, -58, 62, 33)+
         8/11*sin(10/9-56*t)+
         17/24*sin(38/35-55*t)+
         30/89*sin(81/23-54*t)+
@@ -663,161 +664,126 @@ function updateDolphin(numPts, xScale, yScale)
     }
 
     setRubberText("POLYGON_NUM_POINTS", numPts.toString());
+    return 0;
 }
 
---------------------------------------------------------------------------------
+/* ---------------------------------------------------------------------- */
 
-var global = {}; /*Required*/
-args->x1;
-args->y1;
-args->x2;
-args->y2;
-args->x3;
-args->y3;
-global.cx;
-global.cy;
-global.width;
-global.height;
-global.rot;
-args->mode;
-
-/*enums*/
-args->mode_MAJORDIAMETER_MINORRADIUS = 0;
-args->mode_MAJORRADIUS_MINORRADIUS   = 1;
-args->mode_ELLIPSE_ROTATION          = 2;
-
-function main()
+ellipse_args ellipse_init(void)
 {
+    ellipse_args args;
     clearSelection();
-    args->mode = args->mode_MAJORDIAMETER_MINORRADIUS;
-    args->x1      = NaN;
-    args->y1      = NaN;
-    args->x2      = NaN;
-    args->y2      = NaN;
-    args->x3      = NaN;
-    args->y3      = NaN;
+    args.mode = ELLIPSE_MAJORDIAMETER_MINORRADIUS;
+    args.point1 = {NaN, NaN};
+    args.point2 = {NaN, NaN};
+    args.point3 = {NaN, NaN};
     setPromptPrefix(qsTr("Specify first axis start point or [Center]: "));
+    return args;
 }
 
-function click(x, y)
+int ellipse_click(EmbVector point)
 {
-    if(args->mode == args->mode_MAJORDIAMETER_MINORRADIUS)
-    {
-        if(isNaN(args->x1))
-        {
-            args->x1 = x;
-            args->y1 = y;
+    if (args.mode == ELLIPSE_MAJORDIAMETER_MINORRADIUS) {
+        if (isNaN(args.x1)) {
+            args.point1 = point;
             addRubber("ELLIPSE");
             setRubberMode("ELLIPSE_LINE");
-            setRubberPoint("ELLIPSE_LINE_POINT1", args->x1, args->y1);
+            setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify first axis end point: "));
         }
-        else if(isNaN(args->x2))
-        {
-            args->x2 = x;
-            args->y2 = y;
-            global.cx = (args->x1 + args->x2)/2.0;
-            global.cy = (args->y1 + args->y2)/2.0;
-            global.width = calculateDistance(args->x1, args->y1, args->x2, args->y2);
-            global.rot = calculateAngle(args->x1, args->y1, args->x2, args->y2);
+        else if (isNaN(args.x2)) {
+            args.point2 = point;
+            args.cx = (args.x1 + args.x2)/2.0;
+            args.cy = (args.y1 + args.y2)/2.0;
+            args.width = calculateDistance(args.x1, args.y1, args.x2, args.y2);
+            args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2);
             setRubberMode("ELLIPSE_MAJORDIAMETER_MINORRADIUS");
-            setRubberPoint("ELLIPSE_AXIS1_POINT1", args->x1, args->y1);
-            setRubberPoint("ELLIPSE_AXIS1_POINT2", args->x2, args->y2);
-            setRubberPoint("ELLIPSE_CENTER", global.cx, global.cy);
-            setRubberPoint("ELLIPSE_WIDTH", global.width, 0);
-            setRubberPoint("ELLIPSE_ROT", global.rot, 0);
+            setRubberPoint("ELLIPSE_AXIS1_POINT1", args.x1, args.y1);
+            setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2);
+            setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy);
+            setRubberPoint("ELLIPSE_WIDTH", args.width, 0);
+            setRubberPoint("ELLIPSE_ROT", args.rot, 0);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify second axis end point or [Rotation]: "));
         }
-        else if(isNaN(args->x3))
-        {
-            args->x3 = x;
-            args->y3 = y;
-            global.height = perpendicularDistance(args->x3, args->y3, args->x1, args->y1, args->x2, args->y2)*2.0;
-            setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
+        else if (isNaN(args.x3)) {
+            args.x3 = x;
+            args.y3 = y;
+            args.height = perpendicularDistance(args.x3, args.y3, args.x1, args.y1, args.x2, args.y2)*2.0;
+            setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3);
             vulcanize();
             appendPromptHistory();
             return;
         }
-        else
-        {
+        else {
             error("ELLIPSE", qsTr("This should never happen."));
         }
     }
-    else if(args->mode == args->mode_MAJORRADIUS_MINORRADIUS)
-    {
-        if(isNaN(args->x1))
-        {
-            args->x1 = x;
-            args->y1 = y;
-            global.cx = args->x1;
-            global.cy = args->y1;
+    else if (args.mode == ELLIPSE_MAJORRADIUS_MINORRADIUS) {
+        if (isNaN(args.x1)) {
+            args.x1 = x;
+            args.y1 = y;
+            args.cx = args.x1;
+            args.cy = args.y1;
             addRubber("ELLIPSE");
             setRubberMode("ELLIPSE_LINE");
-            setRubberPoint("ELLIPSE_LINE_POINT1", args->x1, args->y1);
-            setRubberPoint("ELLIPSE_CENTER", global.cx, global.cy);
+            setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1);
+            setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify first axis end point: "));
         }
-        else if(isNaN(args->x2))
-        {
-            args->x2 = x;
-            args->y2 = y;
-            global.width = calculateDistance(global.cx, global.cy, args->x2, args->y2)*2.0;
-            global.rot = calculateAngle(args->x1, args->y1, args->x2, args->y2);
+        else if(isNaN(args.x2)) {
+            args.x2 = x;
+            args.y2 = y;
+            args.width = calculateDistance(args.cx, args.cy, args.x2, args.y2)*2.0;
+            args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2);
             setRubberMode("ELLIPSE_MAJORRADIUS_MINORRADIUS");
-            setRubberPoint("ELLIPSE_AXIS1_POINT2", args->x2, args->y2);
-            setRubberPoint("ELLIPSE_WIDTH", global.width, 0);
-            setRubberPoint("ELLIPSE_ROT", global.rot, 0);
+            setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2);
+            setRubberPoint("ELLIPSE_WIDTH", args.width, 0);
+            setRubberPoint("ELLIPSE_ROT", args.rot, 0);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify second axis end point or [Rotation]: "));
         }
-        else if(isNaN(args->x3))
-        {
-            args->x3 = x;
-            args->y3 = y;
-            global.height = perpendicularDistance(args->x3, args->y3, global.cx, global.cy, args->x2, args->y2)*2.0;
-            setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
+        else if(isNaN(args.x3)) {
+            args.x3 = x;
+            args.y3 = y;
+            args.height = perpendicularDistance(args.x3, args.y3, args.cx, args.cy, args.x2, args.y2)*2.0;
+            setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3);
             vulcanize();
             appendPromptHistory();
             return;
         }
-        else
-        {
+        else {
             error("ELLIPSE", qsTr("This should never happen."));
         }
     }
-    else if(args->mode == args->mode_ELLIPSE_ROTATION)
-    {
-        if(isNaN(args->x1))
-        {
+    else if(args.mode == args.mode_ELLIPSE_ROTATION) {
+        if (isNaN(args.x1)) {
             error("ELLIPSE", qsTr("This should never happen."));
         }
-        else if(isNaN(args->x2))
-        {
+        else if (isNaN(args.x2)) {
             error("ELLIPSE", qsTr("This should never happen."));
         }
-        else if(isNaN(args->x3))
-        {
-            var angle = calculateAngle(global.cx, global.cy, x, y);
-            global.height = cos(angle*embConstantPi/180.0)*global.width;
-            addEllipse(global.cx, global.cy, global.width, global.height, global.rot, false);
+        else if(isNaN(args.x3)) {
+            var angle = calculateAngle(args.cx, args.cy, x, y);
+            args.height = cos(angle*embConstantPi/180.0)*args.width;
+            addEllipse(args.cx, args.cy, args.width, args.height, args.rot, false);
             appendPromptHistory();
             return;
         }
     }
 }
 
-function prompt(str)
+int ellipse_prompt(str)
 {
-    if(args->mode == args->mode_MAJORDIAMETER_MINORRADIUS)
+    if(args.mode == args.mode_MAJORDIAMETER_MINORRADIUS)
     {
-        if(isNaN(args->x1))
+        if(isNaN(args.x1))
         {
             if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args->mode = args->mode_MAJORRADIUS_MINORRADIUS;
+                args.mode = args.mode_MAJORRADIUS_MINORRADIUS;
                 setPromptPrefix(qsTr("Specify center point: "));
             }
             else
@@ -830,16 +796,16 @@ function prompt(str)
                 }
                 else
                 {
-                    args->x1 = Number(strList[0]);
-                    args->y1 = Number(strList[1]);
+                    args.x1 = Number(strList[0]);
+                    args.y1 = Number(strList[1]);
                     addRubber("ELLIPSE");
                     setRubberMode("ELLIPSE_LINE");
-                    setRubberPoint("ELLIPSE_LINE_POINT1", args->x1, args->y1);
+                    setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1);
                     setPromptPrefix(qsTr("Specify first axis end point: "));
                 }
             }
         }
-        else if(isNaN(args->x2))
+        else if(isNaN(args.x2))
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -849,26 +815,26 @@ function prompt(str)
             }
             else
             {
-                args->x2 = Number(strList[0]);
-                args->y2 = Number(strList[1]);
-                global.cx = (args->x1 + args->x2)/2.0;
-                global.cy = (args->y1 + args->y2)/2.0;
-                global.width = calculateDistance(args->x1, args->y1, args->x2, args->y2);
-                global.rot = calculateAngle(args->x1, args->y1, args->x2, args->y2);
+                args.x2 = Number(strList[0]);
+                args.y2 = Number(strList[1]);
+                args.cx = (args.x1 + args.x2)/2.0;
+                args.cy = (args.y1 + args.y2)/2.0;
+                args.width = calculateDistance(args.x1, args.y1, args.x2, args.y2);
+                args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2);
                 setRubberMode("ELLIPSE_MAJORDIAMETER_MINORRADIUS");
-                setRubberPoint("ELLIPSE_AXIS1_POINT1", args->x1, args->y1);
-                setRubberPoint("ELLIPSE_AXIS1_POINT2", args->x2, args->y2);
-                setRubberPoint("ELLIPSE_CENTER", global.cx, global.cy);
-                setRubberPoint("ELLIPSE_WIDTH", global.width, 0);
-                setRubberPoint("ELLIPSE_ROT", global.rot, 0);
+                setRubberPoint("ELLIPSE_AXIS1_POINT1", args.x1, args.y1);
+                setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2);
+                setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy);
+                setRubberPoint("ELLIPSE_WIDTH", args.width, 0);
+                setRubberPoint("ELLIPSE_ROT", args.rot, 0);
                 setPromptPrefix(qsTr("Specify second axis end point or [Rotation]: "));
             }
         }
-        else if(isNaN(args->x3))
+        else if(isNaN(args.x3))
         {
             if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args->mode = args->mode_ELLIPSE_ROTATION;
+                args.mode = args.mode_ELLIPSE_ROTATION;
                 setPromptPrefix(qsTr("Specify rotation: "));
             }
             else
@@ -881,19 +847,19 @@ function prompt(str)
                 }
                 else
                 {
-                    args->x3 = Number(strList[0]);
-                    args->y3 = Number(strList[1]);
-                    global.height = perpendicularDistance(args->x3, args->y3, args->x1, args->y1, args->x2, args->y2)*2.0;
-                    setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
+                    args.x3 = Number(strList[0]);
+                    args.y3 = Number(strList[1]);
+                    args.height = perpendicularDistance(args.x3, args.y3, args.x1, args.y1, args.x2, args.y2)*2.0;
+                    setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3);
                     vulcanize();
                     return;
                 }
             }
         }
     }
-    else if(args->mode == args->mode_MAJORRADIUS_MINORRADIUS)
+    else if(args.mode == args.mode_MAJORRADIUS_MINORRADIUS)
     {
-        if(isNaN(args->x1))
+        if(isNaN(args.x1))
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -903,18 +869,18 @@ function prompt(str)
             }
             else
             {
-                args->x1 = Number(strList[0]);
-                args->y1 = Number(strList[1]);
-                global.cx = args->x1;
-                global.cy = args->y1;
+                args.x1 = Number(strList[0]);
+                args.y1 = Number(strList[1]);
+                args.cx = args.x1;
+                args.cy = args.y1;
                 addRubber("ELLIPSE");
                 setRubberMode("ELLIPSE_LINE");
-                setRubberPoint("ELLIPSE_LINE_POINT1", args->x1, args->y1);
-                setRubberPoint("ELLIPSE_CENTER", global.cx, global.cy);
+                setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1);
+                setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy);
                 setPromptPrefix(qsTr("Specify first axis end point: "));
             }
         }
-        else if(isNaN(args->x2))
+        else if(isNaN(args.x2))
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -924,22 +890,22 @@ function prompt(str)
             }
             else
             {
-                args->x2 = Number(strList[0]);
-                args->y2 = Number(strList[1]);
-                global.width = calculateDistance(args->x1, args->y1, args->x2, args->y2)*2.0;
-                global.rot = calculateAngle(args->x1, args->y1, args->x2, args->y2);
+                args.x2 = Number(strList[0]);
+                args.y2 = Number(strList[1]);
+                args.width = calculateDistance(args.x1, args.y1, args.x2, args.y2)*2.0;
+                args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2);
                 setRubberMode("ELLIPSE_MAJORRADIUS_MINORRADIUS");
-                setRubberPoint("ELLIPSE_AXIS1_POINT2", args->x2, args->y2);
-                setRubberPoint("ELLIPSE_WIDTH", global.width, 0);
-                setRubberPoint("ELLIPSE_ROT", global.rot, 0);
+                setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2);
+                setRubberPoint("ELLIPSE_WIDTH", args.width, 0);
+                setRubberPoint("ELLIPSE_ROT", args.rot, 0);
                 setPromptPrefix(qsTr("Specify second axis end point or [Rotation]: "));
             }
         }
-        else if(isNaN(args->x3))
+        else if(isNaN(args.x3))
         {
             if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args->mode = args->mode_ELLIPSE_ROTATION;
+                args.mode = args.mode_ELLIPSE_ROTATION;
                 setPromptPrefix(qsTr("Specify ellipse rotation: "));
             }
             else
@@ -952,27 +918,27 @@ function prompt(str)
                 }
                 else
                 {
-                    args->x3 = Number(strList[0]);
-                    args->y3 = Number(strList[1]);
-                    global.height = perpendicularDistance(args->x3, args->y3, args->x1, args->y1, args->x2, args->y2)*2.0;
-                    setRubberPoint("ELLIPSE_AXIS2_POINT2", args->x3, args->y3);
+                    args.x3 = Number(strList[0]);
+                    args.y3 = Number(strList[1]);
+                    args.height = perpendicularDistance(args.x3, args.y3, args.x1, args.y1, args.x2, args.y2)*2.0;
+                    setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3);
                     vulcanize();
                     return;
                 }
             }
         }
     }
-    else if(args->mode == args->mode_ELLIPSE_ROTATION)
+    else if(args.mode == args.mode_ELLIPSE_ROTATION)
     {
-        if(isNaN(args->x1))
+        if(isNaN(args.x1))
         {
             error("ELLIPSE", qsTr("This should never happen."));
         }
-        else if(isNaN(args->x2))
+        else if(isNaN(args.x2))
         {
             error("ELLIPSE", qsTr("This should never happen."));
         }
-        else if(isNaN(args->x3))
+        else if(isNaN(args.x3))
         {
             if(isNaN(str))
             {
@@ -982,8 +948,8 @@ function prompt(str)
             else
             {
                 var angle = Number(str);
-                global.height = cos(angle*embConstantPi/180.0)*global.width;
-                addEllipse(global.cx, global.cy, global.width, global.height, global.rot, false);
+                args.height = cos(angle*embConstantPi/180.0)*args.width;
+                addEllipse(args.cx, args.cy, args.width, args.height, args.rot, false);
                 return;
             }
         }
@@ -993,43 +959,43 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.numPoints = 512; /*Default //TODO: min:64 max:8192*/
-global.cx;
-global.cy;
-global.sx = 1.0;
-global.sy = 1.0;
-global.numPoints;
-args->mode;
+args.numPoints = 512; /*Default //TODO: min:64 max:8192*/
+args.cx;
+args.cy;
+args.sx = 1.0;
+args.sy = 1.0;
+args.numPoints;
+args.mode;
 
 /*enums*/
-args->mode_NUM_POINTS = 0;
-args->mode_STYLE      = 1;
-args->mode_XSCALE     = 2;
-args->mode_YSCALE     = 3;
+args.mode_NUM_POINTS = 0;
+args.mode_STYLE      = 1;
+args.mode_XSCALE     = 2;
+args.mode_YSCALE     = 3;
 
-function main()
+int init()
 {
     clearSelection();
-    global.cx = NaN;
-    global.cy = NaN;
-    args->mode = args->mode_NUM_POINTS;
+    args.cx = MAX_DISTANCE+1.0;
+    args.cy = MAX_DISTANCE+1.0;
+    args.mode = args.mode_NUM_POINTS;
 
     /*Heart4: 10.0 / 512*/
     /*Heart5: 1.0 / 512*/
 
     addRubber("POLYGON");
     setRubberMode("POLYGON");
-    updateHeart("HEART5", global.numPoints, global.sx, global.sy);
+    updateHeart("HEART5", args.numPoints, args.sx, args.sy);
     spareRubber("POLYGON");
     return;
 }
 
-function updateHeart(style, numPts, xScale, yScale)
+int updateHeart(style, numPts, xScale, yScale)
 {
     var i;
     var t;
-    var xx = NaN;
-    var yy = NaN;
+    var xx = MAX_DISTANCE+1.0;
+    var yy = MAX_DISTANCE+1.0;
     var two_pi = 2*embConstantPi;
 
     for(i = 0; i <= numPts; i++)
@@ -1038,12 +1004,12 @@ function updateHeart(style, numPts, xScale, yScale)
 
         if(style == "HEART4")
         {
-            xx = cos(t)*((sin(t)*Math.sqrt(Math.abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2);
-            yy = sin(t)*((sin(t)*Math.sqrt(Math.abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2);
+            xx = cos(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2);
+            yy = sin(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2);
         }
         else if(style == "HEART5")
         {
-            xx = 16*Math.pow(sin(t), 3);
+            xx = 16*pow(sin(t), 3);
             yy = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t);
         }
 
@@ -1059,35 +1025,35 @@ function updateHeart(style, numPts, xScale, yScale)
 /*Command: Line*/
 
 var global = {}; /*Required*/
-global.firstRun;
-global.firstX;
-global.firstY;
-global.prevX;
-global.prevY;
+args.firstRun;
+args.firstX;
+args.firstY;
+args.prevX;
+args.prevY;
 
-function main()
+int init()
 {
     clearSelection();
-    global.firstRun = true;
-    global.firstX = NaN;
-    global.firstY = NaN;
-    global.prevX = NaN;
-    global.prevY = NaN;
+    args.firstRun = true;
+    args.firstX = MAX_DISTANCE+1.0;
+    args.firstY = MAX_DISTANCE+1.0;
+    args.prevX = MAX_DISTANCE+1.0;
+    args.prevY = MAX_DISTANCE+1.0;
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(global.firstRun)
+    if(args.firstRun)
     {
-        global.firstRun = false;
-        global.firstX = x;
-        global.firstY = y;
-        global.prevX = x;
-        global.prevY = y;
+        args.firstRun = false;
+        args.firstX = x;
+        args.firstY = y;
+        args.prevX = x;
+        args.prevY = y;
         addRubber("LINE");
         setRubberMode("LINE");
-        setRubberPoint("LINE_START", global.firstX, global.firstY);
+        setRubberPoint("LINE_START", args.firstX, args.firstY);
         appendPromptHistory();
         setPromptPrefix(qsTr("Specify next point or [Undo]: "));
     }
@@ -1099,14 +1065,14 @@ function click(x, y)
         setRubberMode("LINE");
         setRubberPoint("LINE_START", x, y);
         appendPromptHistory();
-        global.prevX = x;
-        global.prevY = y;
+        args.prevX = x;
+        args.prevY = y;
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(global.firstRun)
+    if(args.firstRun)
     {
         var strList = str.split(",");
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1116,14 +1082,14 @@ function prompt(str)
         }
         else
         {
-            global.firstRun = false;
-            global.firstX = Number(strList[0]);
-            global.firstY = Number(strList[1]);
-            global.prevX = global.firstX;
-            global.prevY = global.firstY;
+            args.firstRun = false;
+            args.firstX = Number(strList[0]);
+            args.firstY = Number(strList[1]);
+            args.prevX = args.firstX;
+            args.prevY = args.firstY;
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", global.firstX, global.firstY);
+            setRubberPoint("LINE_START", args.firstX, args.firstY);
             setPromptPrefix(qsTr("Specify next point or [Undo]: "));
         }
     }
@@ -1150,8 +1116,8 @@ function prompt(str)
                 addRubber("LINE");
                 setRubberMode("LINE");
                 setRubberPoint("LINE_START", x, y);
-                global.prevX = x;
-                global.prevY = y;
+                args.prevX = x;
+                args.prevY = y;
                 setPromptPrefix(qsTr("Specify next point or [Undo]: "));
             }
         }
@@ -1160,13 +1126,13 @@ function prompt(str)
 
 --------------------------------------------------------------------------------
 
-function main()
+int init()
 {
     clearSelection();
     setPromptPrefix(qsTr("Specify point: "));
 }
 
-function click(x, y)
+int click(x, y)
 {
     appendPromptHistory();
     setPromptPrefix("X = " + x.toString() + ", Y = " + y.toString());
@@ -1174,7 +1140,7 @@ function click(x, y)
     return;
 }
 
-function prompt(str)
+int prompt(str)
 {
     var strList = str.split(",");
     if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1194,23 +1160,23 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.firstRun;
-global.baseX;
-global.baseY;
-global.destX;
-global.destY;
-global.deltaX;
-global.deltaY;
+args.firstRun;
+args.baseX;
+args.baseY;
+args.destX;
+args.destY;
+args.deltaX;
+args.deltaY;
 
-function main()
+int init()
 {
-    global.firstRun = true;
-    global.baseX  = NaN;
-    global.baseY  = NaN;
-    global.destX  = NaN;
-    global.destY  = NaN;
-    global.deltaX = NaN;
-    global.deltaY = NaN;
+    args.firstRun = true;
+    args.baseX  = MAX_DISTANCE+1.0;
+    args.baseY  = MAX_DISTANCE+1.0;
+    args.destX  = MAX_DISTANCE+1.0;
+    args.destY  = MAX_DISTANCE+1.0;
+    args.deltaX = MAX_DISTANCE+1.0;
+    args.deltaY = MAX_DISTANCE+1.0;
 
     if(numSelected() <= 0)
     {
@@ -1225,35 +1191,35 @@ function main()
     }
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(global.firstRun)
+    if(args.firstRun)
     {
-        global.firstRun = false;
-        global.baseX = x;
-        global.baseY = y;
+        args.firstRun = false;
+        args.baseX = x;
+        args.baseY = y;
         addRubber("LINE");
         setRubberMode("LINE");
-        setRubberPoint("LINE_START", global.baseX, global.baseY);
-        previewOn("SELECTED", "MOVE", global.baseX, global.baseY, 0);
+        setRubberPoint("LINE_START", args.baseX, args.baseY);
+        previewOn("SELECTED", "MOVE", args.baseX, args.baseY, 0);
         appendPromptHistory();
         setPromptPrefix(qsTr("Specify destination point: "));
     }
     else
     {
-        global.destX = x;
-        global.destY = y;
-        global.deltaX = global.destX - global.baseX;
-        global.deltaY = global.destY - global.baseY;
-        moveSelected(global.deltaX, global.deltaY);
+        args.destX = x;
+        args.destY = y;
+        args.deltaX = args.destX - args.baseX;
+        args.deltaY = args.destY - args.baseY;
+        moveSelected(args.deltaX, args.deltaY);
         previewOff();
         return;
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(global.firstRun)
+    if(args.firstRun)
     {
         var strList = str.split(",");
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1263,13 +1229,13 @@ function prompt(str)
         }
         else
         {
-            global.firstRun = false;
-            global.baseX = Number(strList[0]);
-            global.baseY = Number(strList[1]);
+            args.firstRun = false;
+            args.baseX = Number(strList[0]);
+            args.baseY = Number(strList[1]);
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", global.baseX, global.baseY);
-            previewOn("SELECTED", "MOVE", global.baseX, global.baseY, 0);
+            setRubberPoint("LINE_START", args.baseX, args.baseY);
+            previewOn("SELECTED", "MOVE", args.baseX, args.baseY, 0);
             setPromptPrefix(qsTr("Specify destination point: "));
         }
     }
@@ -1283,11 +1249,11 @@ function prompt(str)
         }
         else
         {
-            global.destX = Number(strList[0]);
-            global.destY = Number(strList[1]);
-            global.deltaX = global.destX - global.baseX;
-            global.deltaY = global.destY - global.baseY;
-            moveSelected(global.deltaX, global.deltaY);
+            args.destX = Number(strList[0]);
+            args.destY = Number(strList[1]);
+            args.deltaX = args.destX - args.baseX;
+            args.deltaY = args.destY - args.baseY;
+            moveSelected(args.deltaX, args.deltaY);
             previewOff();
             return;
         }
@@ -1299,32 +1265,32 @@ function prompt(str)
 /*TODO: The path command is currently broken*/
 
 var global = {}; /*Required*/
-global.firstRun;
-global.firstX;
-global.firstY;
-global.prevX;
-global.prevY;
+args.firstRun;
+args.firstX;
+args.firstY;
+args.prevX;
+args.prevY;
 
-function main()
+int init()
 {
     clearSelection();
-    global.firstRun = true;
-    global.firstX = NaN;
-    global.firstY = NaN;
-    global.prevX = NaN;
-    global.prevY = NaN;
+    args.firstRun = true;
+    args.firstX = MAX_DISTANCE+1.0;
+    args.firstY = MAX_DISTANCE+1.0;
+    args.prevX = MAX_DISTANCE+1.0;
+    args.prevY = MAX_DISTANCE+1.0;
     setPromptPrefix(qsTr("Specify start point: "));
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(global.firstRun)
+    if(args.firstRun)
     {
-        global.firstRun = false;
-        global.firstX = x;
-        global.firstY = y;
-        global.prevX = x;
-        global.prevY = y;
+        args.firstRun = false;
+        args.firstX = x;
+        args.firstY = y;
+        args.prevX = x;
+        args.prevY = y;
         addPath(x,y);
         appendPromptHistory();
         setPromptPrefix(qsTr("Specify next point or [Arc/Undo]: "));
@@ -1333,12 +1299,12 @@ function click(x, y)
     {
         appendPromptHistory();
         appendLineToPath(x,y);
-        global.prevX = x;
-        global.prevY = y;
+        args.prevX = x;
+        args.prevY = y;
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
     if(str == "A" || str == "ARC")/*TODO: Probably should add additional qsTr calls here.*/
     {
@@ -1360,91 +1326,86 @@ function prompt(str)
         {
             var x = Number(strList[0]);
             var y = Number(strList[1]);
-            if(global.firstRun)
+            if(args.firstRun)
             {
-                global.firstRun = false;
-                global.firstX = x;
-                global.firstY = y;
-                global.prevX = x;
-                global.prevY = y;
+                args.firstRun = false;
+                args.firstX = x;
+                args.firstY = y;
+                args.prevX = x;
+                args.prevY = y;
                 addPath(x,y);
                 setPromptPrefix(qsTr("Specify next point or [Arc/Undo]: "));
             }
             else
             {
                 appendLineToPath(x,y);
-                global.prevX = x;
-                global.prevY = y;
+                args.prevX = x;
+                args.prevY = y;
             }
         }
     }
 }
 
-function main()
+int init()
 {
     clearSelection();
     reportPlatform();
     return;
 }
 
-function reportPlatform()
+int reportPlatform()
 {
     setPromptPrefix(qsTr("Platform") + " = " + platformString());
     appendPromptHistory();
 }
---------------------------------------------------------------------------------
 
-/*Command: Point*/
+/* ------------------------------------------------------------------------- */
 
 var global = {}; /*Required*/
-global.firstRun;
+args.firstRun;
 
-function main()
+int point_init()
 {
     clearSelection();
-    global.firstRun = true;
+    args.firstRun = true;
     setPromptPrefix("TODO: Current point settings: PDMODE=?  PDSIZE=?"); /*TODO: qsTr needed here when complete*/
     appendPromptHistory();
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-function click(x, y)
+int point_click(x, y)
 {
-    if(global.firstRun)
-    {
-        global.firstRun = false;
+    if(args.firstRun) {
+        args.firstRun = false;
         appendPromptHistory();
         setPromptPrefix(qsTr("Specify next point: "));
         addPoint(x,y);
     }
-    else
-    {
+    else {
         appendPromptHistory();
         addPoint(x,y);
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(global.firstRun)
-    {
-        if(str == "M" || str == "MODE") /*TODO: Probably should add additional qsTr calls here.*/
-        {
+    if (args.firstRun) {
+        if(str == "M" || str == "MODE") {
+            /*TODO: Probably should add additional qsTr calls here.*/
             todo("POINT", "prompt() for PDMODE");
         }
-        else if(str == "S" || str == "SIZE") /*TODO: Probably should add additional qsTr calls here.*/
-        {
+        else if(str == "S" || str == "SIZE") {
+            /*TODO: Probably should add additional qsTr calls here.*/
             todo("POINT", "prompt() for PDSIZE");
         }
         var strList = str.split(",");
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
+        if (isNaN(strList[0]) || isNaN(strList[1])) {
             alert(qsTr("Invalid point."));
             setPromptPrefix(qsTr("Specify first point: "));
         }
         else
         {
-            global.firstRun = false;
+            args.firstRun = false;
             var x = Number(strList[0]);
             var y = Number(strList[1]);
             setPromptPrefix(qsTr("Specify next point: "));
@@ -1472,100 +1433,90 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.centerX;
-global.centerY;
-global.sideX1;
-global.sideY1;
-global.sideX2;
-global.sideY2;
-global.pointIX;
-global.pointIY;
-global.pointCX;
-global.pointCY;
-global.polyType = "Inscribed"; /*Default*/
-global.numSides = 4;           /*Default*/
-args->mode;
+args.centerX;
+args.centerY;
+args.sideX1;
+args.sideY1;
+args.sideX2;
+args.sideY2;
+args.pointIX;
+args.pointIY;
+args.pointCX;
+args.pointCY;
+args.polyType = "Inscribed"; /*Default*/
+args.numSides = 4;           /*Default*/
+args.mode;
 
-/*enums*/
-args->mode_NUM_SIDES    = 0;
-args->mode_CENTER_PT    = 1;
-args->mode_POLYTYPE     = 2;
-args->mode_INSCRIBE     = 3;
-args->mode_CIRCUMSCRIBE = 4;
-args->mode_DISTANCE     = 5;
-args->mode_SIDE_LEN     = 6;
 
-function main()
+int init()
 {
     clearSelection();
-    global.centerX = NaN;
-    global.centerY = NaN;
-    global.sideX1  = NaN;
-    global.sideY1  = NaN;
-    global.sideX2  = NaN;
-    global.sideY2  = NaN;
-    global.pointIX = NaN;
-    global.pointIY = NaN;
-    global.pointCX = NaN;
-    global.pointCY = NaN;
-    args->mode = args->mode_NUM_SIDES;
-    setPromptPrefix(qsTr("Enter number of sides") + " {" + global.numSides.toString() + "}: ");
+    args.center.x = MAX_DISTANCE+1.0;
+    args.center.y = MAX_DISTANCE+1.0;
+    args.sideX1  = MAX_DISTANCE+1.0;
+    args.sideY1  = MAX_DISTANCE+1.0;
+    args.sideX2  = MAX_DISTANCE+1.0;
+    args.sideY2  = MAX_DISTANCE+1.0;
+    args.pointIX = MAX_DISTANCE+1.0;
+    args.pointIY = MAX_DISTANCE+1.0;
+    args.pointCX = MAX_DISTANCE+1.0;
+    args.pointCY = MAX_DISTANCE+1.0;
+    args.mode = #define POLYGON_NUM_SIDES;
+    setPromptPrefix(qsTr("Enter number of sides") + " {" + args.numSides.toString() + "}: ");
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(args->mode == args->mode_NUM_SIDES)
-    {
+    if (args.mode == POLYGON_NUM_SIDES) {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args->mode == args->mode_CENTER_PT)
-    {
-        global.centerX = x;
-        global.centerY = y;
-        args->mode = args->mode_POLYTYPE;
+    else if (args.mode == POLYGON_CENTER_PT) {
+        args.centerX = x;
+        args.centerY = y;
+        args.mode = args.mode_POLYTYPE;
         appendPromptHistory();
-        setPromptPrefix(qsTr("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + global.polyType + "}: ");
+        setPromptPrefix(qsTr("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + args.polyType + "}: ");
     }
-    else if(args->mode == args->mode_POLYTYPE)
+    else if(args.mode == args.mode_POLYTYPE)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args->mode == args->mode_INSCRIBE)
+    else if(args.mode == args.mode_INSCRIBE)
     {
-        global.pointIX = x;
-        global.pointIY = y;
-        setRubberPoint("POLYGON_INSCRIBE_POINT", global.pointIX, global.pointIY);
+        args.pointIX = x;
+        args.pointIY = y;
+        setRubberPoint("POLYGON_INSCRIBE_POINT", args.pointIX, args.pointIY);
         vulcanize();
         appendPromptHistory();
         return;
     }
-    else if(args->mode == args->mode_CIRCUMSCRIBE)
+    else if(args.mode == args.mode_CIRCUMSCRIBE)
     {
-        global.pointCX = x;
-        global.pointCY = y;
-        setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", global.pointCX, global.pointCY);
+        args.pointCX = x;
+        args.pointCY = y;
+        setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", args.pointCX, args.pointCY);
         vulcanize();
         appendPromptHistory();
         return;
     }
-    else if(args->mode == args->mode_DISTANCE)
+    else if(args.mode == args.mode_DISTANCE)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args->mode == args->mode_SIDE_LEN)
+    else if(args.mode == args.mode_SIDE_LEN)
     {
         todo("POLYGON", "Sidelength mode");
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(args->mode == args->mode_NUM_SIDES)
+    if(args.mode == args.mode_NUM_SIDES)
     {
-        if(str == "" && global.numSides >= 3 && global.numSides <= 1024)
+        if(str == "" && args.numSides >= 3 && args.numSides <= 1024)
         {
             setPromptPrefix(qsTr("Specify center point or [Sidelength]: "));
-            args->mode = args->mode_CENTER_PT;
+            args.mode = args.mode_CENTER_PT;
         }
         else
         {
@@ -1573,21 +1524,21 @@ function prompt(str)
             if(isNaN(tmp) || !isInt(tmp) || tmp < 3 || tmp > 1024)
             {
                 alert(qsTr("Requires an integer between 3 and 1024."));
-                setPromptPrefix(qsTr("Enter number of sides") + " {" + global.numSides.toString() + "}: ");
+                setPromptPrefix(qsTr("Enter number of sides") + " {" + args.numSides.toString() + "}: ");
             }
             else
             {
-                global.numSides = tmp;
+                args.numSides = tmp;
                 setPromptPrefix(qsTr("Specify center point or [Sidelength]: "));
-                args->mode = args->mode_CENTER_PT;
+                args.mode = args.mode_CENTER_PT;
             }
         }
     }
-    else if(args->mode == args->mode_CENTER_PT)
+    else if(args.mode == args.mode_CENTER_PT)
     {
         if(str == "S" || str == "SIDELENGTH") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SIDE_LEN;
+            args.mode = args.mode_SIDE_LEN;
             setPromptPrefix(qsTr("Specify start point: "));
         }
         else
@@ -1600,14 +1551,14 @@ function prompt(str)
             }
             else
             {
-                global.centerX = Number(strList[0]);
-                global.centerY = Number(strList[1]);
-                args->mode = args->mode_POLYTYPE;
-                setPromptPrefix(qsTr("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + global.polyType + "}: ");
+                args.centerX = Number(strList[0]);
+                args.centerY = Number(strList[1]);
+                args.mode = args.mode_POLYTYPE;
+                setPromptPrefix(qsTr("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + args.polyType + "}: ");
             }
         }
     }
-    else if(args->mode == args->mode_POLYTYPE)
+    else if(args.mode == args.mode_POLYTYPE)
     {
         if(str == "I"        ||
            str == "IN"       ||
@@ -1619,13 +1570,13 @@ function prompt(str)
            str == "INSCRIBE" ||
            str == "INSCRIBED") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_INSCRIBE;
-            global.polyType = "Inscribed";
+            args.mode = args.mode_INSCRIBE;
+            args.polyType = "Inscribed";
             setPromptPrefix(qsTr("Specify polygon corner point or [Distance]: "));
             addRubber("POLYGON");
             setRubberMode("POLYGON_INSCRIBE");
-            setRubberPoint("POLYGON_CENTER", global.centerX, global.centerY);
-            setRubberPoint("POLYGON_NUM_SIDES", global.numSides, 0);
+            setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY);
+            setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0);
         }
         else if(str == "C"            ||
                 str == "CI"           ||
@@ -1641,33 +1592,33 @@ function prompt(str)
                 str == "CIRCUMSCRIBE" ||
                 str == "CIRCUMSCRIBED") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_CIRCUMSCRIBE;
-            global.polyType = "Circumscribed";
+            args.mode = args.mode_CIRCUMSCRIBE;
+            args.polyType = "Circumscribed";
             setPromptPrefix(qsTr("Specify polygon side point or [Distance]: "));
             addRubber("POLYGON");
             setRubberMode("POLYGON_CIRCUMSCRIBE");
-            setRubberPoint("POLYGON_CENTER", global.centerX, global.centerY);
-            setRubberPoint("POLYGON_NUM_SIDES", global.numSides, 0);
+            setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY);
+            setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0);
         }
         else if(str == "")
         {
-            if(global.polyType == "Inscribed")
+            if(args.polyType == "Inscribed")
             {
-                args->mode = args->mode_INSCRIBE;
+                args.mode = args.mode_INSCRIBE;
                 setPromptPrefix(qsTr("Specify polygon corner point or [Distance]: "));
                 addRubber("POLYGON");
                 setRubberMode("POLYGON_INSCRIBE");
-                setRubberPoint("POLYGON_CENTER", global.centerX, global.centerY);
-                setRubberPoint("POLYGON_NUM_SIDES", global.numSides, 0);
+                setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY);
+                setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0);
             }
-            else if(global.polyType == "Circumscribed")
+            else if(args.polyType == "Circumscribed")
             {
-                args->mode = args->mode_CIRCUMSCRIBE;
+                args.mode = args.mode_CIRCUMSCRIBE;
                 setPromptPrefix(qsTr("Specify polygon side point or [Distance]: "));
                 addRubber("POLYGON");
                 setRubberMode("POLYGON_CIRCUMSCRIBE");
-                setRubberPoint("POLYGON_CENTER", global.centerX, global.centerY);
-                setRubberPoint("POLYGON_NUM_SIDES", global.numSides, 0);
+                setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY);
+                setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0);
             }
             else
             {
@@ -1677,14 +1628,14 @@ function prompt(str)
         else
         {
             alert(qsTr("Invalid option keyword."));
-            setPromptPrefix(qsTr("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + global.polyType + "}: ");
+            setPromptPrefix(qsTr("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + args.polyType + "}: ");
         }
     }
-    else if(args->mode == args->mode_INSCRIBE)
+    else if(args.mode == args.mode_INSCRIBE)
     {
         if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_DISTANCE;
+            args.mode = args.mode_DISTANCE;
             setPromptPrefix(qsTr("Specify distance: "));
         }
         else
@@ -1697,19 +1648,19 @@ function prompt(str)
             }
             else
             {
-                global.pointIX = Number(strList[0]);
-                global.pointIY = Number(strList[1]);
-                setRubberPoint("POLYGON_INSCRIBE_POINT", global.pointIX, global.pointIY);
+                args.pointIX = Number(strList[0]);
+                args.pointIY = Number(strList[1]);
+                setRubberPoint("POLYGON_INSCRIBE_POINT", args.pointIX, args.pointIY);
                 vulcanize();
                 return;
             }
         }
     }
-    else if(args->mode == args->mode_CIRCUMSCRIBE)
+    else if(args.mode == args.mode_CIRCUMSCRIBE)
     {
         if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_DISTANCE;
+            args.mode = args.mode_DISTANCE;
             setPromptPrefix(qsTr("Specify distance: "));
         }
         else
@@ -1722,15 +1673,15 @@ function prompt(str)
             }
             else
             {
-                global.pointCX = Number(strList[0]);
-                global.pointCY = Number(strList[1]);
-                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", global.pointCX, global.pointCY);
+                args.pointCX = Number(strList[0]);
+                args.pointCY = Number(strList[1]);
+                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", args.pointCX, args.pointCY);
                 vulcanize();
                 return;
             }
         }
     }
-    else if(args->mode == args->mode_DISTANCE)
+    else if(args.mode == args.mode_DISTANCE)
     {
         if(isNaN(str))
         {
@@ -1739,19 +1690,19 @@ function prompt(str)
         }
         else
         {
-            if(global.polyType == "Inscribed")
+            if(args.polyType == "Inscribed")
             {
-                global.pointIX = global.centerX;
-                global.pointIY = global.centerY + Number(str);
-                setRubberPoint("POLYGON_INSCRIBE_POINT", global.pointIX, global.pointIY);
+                args.pointIX = args.centerX;
+                args.pointIY = args.centerY + Number(str);
+                setRubberPoint("POLYGON_INSCRIBE_POINT", args.pointIX, args.pointIY);
                 vulcanize();
                 return;
             }
-            else if(global.polyType == "Circumscribed")
+            else if(args.polyType == "Circumscribed")
             {
-                global.pointCX = global.centerX;
-                global.pointCY = global.centerY + Number(str);
-                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", global.pointCX, global.pointCY);
+                args.pointCX = args.centerX;
+                args.pointCY = args.centerY + Number(str);
+                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", args.pointCX, args.pointCY);
                 vulcanize();
                 return;
             }
@@ -1761,7 +1712,7 @@ function prompt(str)
             }
         }
     }
-    else if(args->mode == args->mode_SIDE_LEN)
+    else if(args.mode == args.mode_SIDE_LEN)
     {
         todo("POLYGON", "Sidelength mode");
     }
@@ -1770,55 +1721,55 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.firstRun;
-global.firstX;
-global.firstY;
-global.prevX;
-global.prevY;
-global.num;
+args.firstRun;
+args.firstX;
+args.firstY;
+args.prevX;
+args.prevY;
+args.num;
 
-function main()
+int init()
 {
     clearSelection();
-    global.firstRun = true;
-    global.firstX = NaN;
-    global.firstY = NaN;
-    global.prevX = NaN;
-    global.prevY = NaN;
-    global.num = 0;
+    args.firstRun = true;
+    args.firstX = MAX_DISTANCE+1.0;
+    args.firstY = MAX_DISTANCE+1.0;
+    args.prevX = MAX_DISTANCE+1.0;
+    args.prevY = MAX_DISTANCE+1.0;
+    args.num = 0;
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(global.firstRun)
+    if(args.firstRun)
     {
-        global.firstRun = false;
-        global.firstX = x;
-        global.firstY = y;
-        global.prevX = x;
-        global.prevY = y;
+        args.firstRun = false;
+        args.firstX = x;
+        args.firstY = y;
+        args.prevX = x;
+        args.prevY = y;
         addRubber("POLYLINE");
         setRubberMode("POLYLINE");
-        setRubberPoint("POLYLINE_POINT_0", global.firstX, global.firstY);
+        setRubberPoint("POLYLINE_POINT_0", args.firstX, args.firstY);
         appendPromptHistory();
         setPromptPrefix(qsTr("Specify next point or [Undo]: "));
     }
     else
     {
-        global.num++;
-        setRubberPoint("POLYLINE_POINT_" + global.num.toString(), x, y);
-        setRubberText("POLYLINE_NUM_POINTS", global.num.toString());
+        args.num++;
+        setRubberPoint("POLYLINE_POINT_" + args.num.toString(), x, y);
+        setRubberText("POLYLINE_NUM_POINTS", args.num.toString());
         spareRubber("POLYLINE");
         appendPromptHistory();
-        global.prevX = x;
-        global.prevY = y;
+        args.prevX = x;
+        args.prevY = y;
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(global.firstRun)
+    if(args.firstRun)
     {
         var strList = str.split(",");
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1828,14 +1779,14 @@ function prompt(str)
         }
         else
         {
-            global.firstRun = false;
-            global.firstX = Number(strList[0]);
-            global.firstY = Number(strList[1]);
-            global.prevX = global.firstX;
-            global.prevY = global.firstY;
+            args.firstRun = false;
+            args.firstX = Number(strList[0]);
+            args.firstY = Number(strList[1]);
+            args.prevX = args.firstX;
+            args.prevY = args.firstY;
             addRubber("POLYLINE");
             setRubberMode("POLYLINE");
-            setRubberPoint("POLYLINE_POINT_0", global.firstX, global.firstY);
+            setRubberPoint("POLYLINE_POINT_0", args.firstX, args.firstY);
             setPromptPrefix(qsTr("Specify next point or [Undo]: "));
         }
     }
@@ -1857,12 +1808,12 @@ function prompt(str)
             {
                 var x = Number(strList[0]);
                 var y = Number(strList[1]);
-                global.num++;
-                setRubberPoint("POLYLINE_POINT_" + global.num.toString(), x, y);
-                setRubberText("POLYLINE_NUM_POINTS", global.num.toString());
+                args.num++;
+                setRubberPoint("POLYLINE_POINT_" + args.num.toString(), x, y);
+                setRubberText("POLYLINE_NUM_POINTS", args.num.toString());
                 spareRubber("POLYLINE");
-                global.prevX = x;
-                global.prevY = y;
+                args.prevX = x;
+                args.prevY = y;
                 setPromptPrefix(qsTr("Specify next point or [Undo]: "));
             }
         }
@@ -1872,50 +1823,50 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args->x1;
-args->y1;
-args->x2;
-args->y2;
+args.x1;
+args.y1;
+args.x2;
+args.y2;
 
 /*TODO: Adding the text is not complete yet.*/
 
-function main()
+int init()
 {
     clearSelection();
-    args->x1 = NaN;
-    args->y1 = NaN;
-    args->x2 = NaN;
-    args->y2 = NaN;
+    args.x1 = MAX_DISTANCE+1.0;
+    args.y1 = MAX_DISTANCE+1.0;
+    args.x2 = MAX_DISTANCE+1.0;
+    args.y2 = MAX_DISTANCE+1.0;
     setPromptPrefix(qsTr("Specify first point: "));
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(isNaN(args->x1))
+    if(isNaN(args.x1))
     {
-        args->x1 = x;
-        args->y1 = y;
+        args.x1 = x;
+        args.y1 = y;
         addRubber("DIMLEADER");
         setRubberMode("DIMLEADER_LINE");
-        setRubberPoint("DIMLEADER_LINE_START", args->x1, args->y1);
+        setRubberPoint("DIMLEADER_LINE_START", args.x1, args.y1);
         appendPromptHistory();
         setPromptPrefix(qsTr("Specify second point: "));
     }
     else
     {
-        args->x2 = x;
-        args->y2 = y;
-        setRubberPoint("DIMLEADER_LINE_END", args->x2, args->y2);
+        args.x2 = x;
+        args.y2 = y;
+        setRubberPoint("DIMLEADER_LINE_END", args.x2, args.y2);
         vulcanize();
         appendPromptHistory();
         return;
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
     var strList = str.split(",");
-    if(isNaN(args->x1))
+    if(isNaN(args.x1))
     {
         if(isNaN(strList[0]) || isNaN(strList[1]))
         {
@@ -1924,11 +1875,11 @@ function prompt(str)
         }
         else
         {
-            args->x1 = Number(strList[0]);
-            args->y1 = Number(strList[1]);
+            args.x1 = Number(strList[0]);
+            args.y1 = Number(strList[1]);
             addRubber("DIMLEADER");
             setRubberMode("DIMLEADER_LINE");
-            setRubberPoint("DIMLEADER_LINE_START", args->x1, args->y1);
+            setRubberPoint("DIMLEADER_LINE_START", args.x1, args.y1);
             setPromptPrefix(qsTr("Specify second point: "));
         }
     }
@@ -1941,9 +1892,9 @@ function prompt(str)
         }
         else
         {
-            args->x2 = Number(strList[0]);
-            args->y2 = Number(strList[1]);
-            setRubberPoint("DIMLEADER_LINE_END", args->x2, args->y2);
+            args.x2 = Number(strList[0]);
+            args.y2 = Number(strList[1]);
+            setRubberPoint("DIMLEADER_LINE_END", args.x2, args.y2);
             vulcanize();
             return;
         }
@@ -1952,30 +1903,30 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.newRect;
-args->x1;
-args->y1;
-args->x2;
-args->y2;
+args.newRect;
+args.x1;
+args.y1;
+args.x2;
+args.y2;
 
-function main()
+int init()
 {
     clearSelection();
-    global.newRect = true;
-    args->x1 = NaN;
-    args->y1 = NaN;
-    args->x2 = NaN;
-    args->y2 = NaN;
+    args.newRect = true;
+    args.x1 = MAX_DISTANCE+1.0;
+    args.y1 = MAX_DISTANCE+1.0;
+    args.x2 = MAX_DISTANCE+1.0;
+    args.y2 = MAX_DISTANCE+1.0;
     setPromptPrefix(qsTr("Specify first corner point or [Chamfer/Fillet]: "));
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(global.newRect)
+    if(args.newRect)
     {
-        global.newRect = false;
-        args->x1 = x;
-        args->y1 = y;
+        args.newRect = false;
+        args.x1 = x;
+        args.y1 = y;
         addRubber("RECTANGLE");
         setRubberMode("RECTANGLE");
         setRubberPoint("RECTANGLE_START", x, y);
@@ -1983,16 +1934,16 @@ function click(x, y)
     }
     else
     {
-        global.newRect = true;
-        args->x2 = x;
-        args->y2 = y;
+        args.newRect = true;
+        args.x2 = x;
+        args.y2 = y;
         setRubberPoint("RECTANGLE_END", x, y);
         vulcanize();
         return;
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
     if(str == "C" || str == "CHAMFER") /*TODO: Probably should add additional qsTr calls here.*/
     {
@@ -2018,11 +1969,11 @@ function prompt(str)
         {
             var x = Number(strList[0]);
             var y = Number(strList[1]);
-            if(global.newRect)
+            if(args.newRect)
             {
-                global.newRect = false;
-                args->x1 = x;
-                args->y1 = y;
+                args.newRect = false;
+                args.x1 = x;
+                args.y1 = y;
                 addRubber("RECTANGLE");
                 setRubberMode("RECTANGLE");
                 setRubberPoint("RECTANGLE_START", x, y);
@@ -2030,9 +1981,9 @@ function prompt(str)
             }
             else
             {
-                global.newRect = true;
-                args->x2 = x;
-                args->y2 = y;
+                args.newRect = true;
+                args.x2 = x;
+                args.y2 = y;
                 setRubberPoint("RECTANGLE_END", x, y);
                 vulcanize();
                 return;
@@ -2044,32 +1995,32 @@ function prompt(str)
 ---------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args->mode;
+args.mode;
 
 /*enums*/
-args->mode_BACKGROUND = 0;
-args->mode_CROSSHAIR  = 1;
-args->mode_GRID       = 2;
+args.mode_BACKGROUND = 0;
+args.mode_CROSSHAIR  = 1;
+args.mode_GRID       = 2;
 
-function main()
+int init()
 {
     clearSelection();
-    args->mode = args->mode_BACKGROUND;
+    args.mode = args.mode_BACKGROUND;
     setPromptPrefix(qsTr("Enter RED,GREEN,BLUE values for background or [Crosshair/Grid]: "));
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(args->mode == args->mode_BACKGROUND)
+    if(args.mode == args.mode_BACKGROUND)
     {
         if(str == "C" || str == "CROSSHAIR") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_CROSSHAIR;
+            args.mode = args.mode_CROSSHAIR;
             setPromptPrefix(qsTr("Specify crosshair color: "));
         }
         else if(str == "G" || str == "GRID") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_GRID;
+            args.mode = args.mode_GRID;
             setPromptPrefix(qsTr("Specify grid color: "));
         }
         else
@@ -2090,7 +2041,7 @@ function prompt(str)
             }
         }
     }
-    else if(args->mode == args->mode_CROSSHAIR)
+    else if(args.mode == args.mode_CROSSHAIR)
     {
         var strList = str.split(",");
         var r = Number(strList[0]);
@@ -2107,7 +2058,7 @@ function prompt(str)
             return;
         }
     }
-    else if(args->mode == args->mode_GRID)
+    else if(args.mode == args.mode_GRID)
     {
         var strList = str.split(",");
         var r = Number(strList[0]);
@@ -2126,7 +2077,7 @@ function prompt(str)
     }
 }
 
-function validRGB(r, g, b)
+int validRGB(r, g, b)
 {
     if(isNaN(r)) return false;
     if(isNaN(g)) return false;
@@ -2140,42 +2091,42 @@ function validRGB(r, g, b)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.firstRun;
-global.baseX;
-global.baseY;
-global.destX;
-global.destY;
-global.angle;
+args.firstRun;
+args.baseX;
+args.baseY;
+args.destX;
+args.destY;
+args.angle;
 
-global.baseRX;
-global.baseRY;
-global.destRX;
-global.destRY;
-global.angleRef;
-global.angleNew;
+args.baseRX;
+args.baseRY;
+args.destRX;
+args.destRY;
+args.angleRef;
+args.angleNew;
 
-args->mode;
+args.mode;
 
 /*enums*/
-args->mode_NORMAL    = 0;
-args->mode_REFERENCE = 1;
+args.mode_NORMAL    = 0;
+args.mode_REFERENCE = 1;
 
-function main()
+int init()
 {
-    args->mode = args->mode_NORMAL;
-    global.firstRun = true;
-    global.baseX = NaN;
-    global.baseY = NaN;
-    global.destX = NaN;
-    global.destY = NaN;
-    global.angle = NaN;
+    args.mode = args.mode_NORMAL;
+    args.firstRun = true;
+    args.baseX = MAX_DISTANCE+1.0;
+    args.baseY = MAX_DISTANCE+1.0;
+    args.destX = MAX_DISTANCE+1.0;
+    args.destY = MAX_DISTANCE+1.0;
+    args.angle = MAX_DISTANCE+1.0;
 
-    global.baseRX   = NaN;
-    global.baseRY   = NaN;
-    global.destRX   = NaN;
-    global.destRY   = NaN;
-    global.angleRef = NaN;
-    global.angleNew = NaN;
+    args.baseRX   = MAX_DISTANCE+1.0;
+    args.baseRY   = MAX_DISTANCE+1.0;
+    args.destRX   = MAX_DISTANCE+1.0;
+    args.destRY   = MAX_DISTANCE+1.0;
+    args.angleRef = MAX_DISTANCE+1.0;
+    args.angleNew = MAX_DISTANCE+1.0;
 
     if(numSelected() <= 0)
     {
@@ -2190,70 +2141,70 @@ function main()
     }
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(args->mode == args->mode_NORMAL)
+    if(args.mode == args.mode_NORMAL)
     {
-        if(global.firstRun)
+        if(args.firstRun)
         {
-            global.firstRun = false;
-            global.baseX = x;
-            global.baseY = y;
+            args.firstRun = false;
+            args.baseX = x;
+            args.baseY = y;
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", global.baseX, global.baseY);
-            previewOn("SELECTED", "ROTATE", global.baseX, global.baseY, 0);
+            setRubberPoint("LINE_START", args.baseX, args.baseY);
+            previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, 0);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify rotation angle or [Reference]: "));
         }
         else
         {
-            global.destX = x;
-            global.destY = y;
-            global.angle = calculateAngle(global.baseX, global.baseY, global.destX, global.destY);
+            args.destX = x;
+            args.destY = y;
+            args.angle = calculateAngle(args.baseX, args.baseY, args.destX, args.destY);
             appendPromptHistory();
-            rotateSelected(global.baseX, global.baseY, global.angle);
+            rotateSelected(args.baseX, args.baseY, args.angle);
             previewOff();
             return;
         }
     }
-    else if(args->mode == args->mode_REFERENCE)
+    else if(args.mode == args.mode_REFERENCE)
     {
-        if(isNaN(global.baseRX))
+        if(isNaN(args.baseRX))
         {
-            global.baseRX = x;
-            global.baseRY = y;
+            args.baseRX = x;
+            args.baseRY = y;
             appendPromptHistory();
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", global.baseRX, global.baseRY);
+            setRubberPoint("LINE_START", args.baseRX, args.baseRY);
             setPromptPrefix(qsTr("Specify second point: "));
         }
-        else if(isNaN(global.destRX))
+        else if(isNaN(args.destRX))
         {
-            global.destRX = x;
-            global.destRY = y;
-            global.angleRef = calculateAngle(global.baseRX, global.baseRY, global.destRX, global.destRY);
-            setRubberPoint("LINE_START", global.baseX, global.baseY);
-            previewOn("SELECTED", "ROTATE", global.baseX, global.baseY, global.angleRef);
+            args.destRX = x;
+            args.destRY = y;
+            args.angleRef = calculateAngle(args.baseRX, args.baseRY, args.destRX, args.destRY);
+            setRubberPoint("LINE_START", args.baseX, args.baseY);
+            previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify the new angle: "));
         }
-        else if(isNaN(global.angleNew))
+        else if(isNaN(args.angleNew))
         {
-            global.angleNew = calculateAngle(global.baseX, global.baseY, x, y);
-            rotateSelected(global.baseX, global.baseY, global.angleNew - global.angleRef);
+            args.angleNew = calculateAngle(args.baseX, args.baseY, x, y);
+            rotateSelected(args.baseX, args.baseY, args.angleNew - args.angleRef);
             previewOff();
             return;
         }
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(args->mode == args->mode_NORMAL)
+    if(args.mode == args.mode_NORMAL)
     {
-        if(global.firstRun)
+        if(args.firstRun)
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -2263,13 +2214,13 @@ function prompt(str)
             }
             else
             {
-                global.firstRun = false;
-                global.baseX = Number(strList[0]);
-                global.baseY = Number(strList[1]);
+                args.firstRun = false;
+                args.baseX = Number(strList[0]);
+                args.baseY = Number(strList[1]);
                 addRubber("LINE");
                 setRubberMode("LINE");
-                setRubberPoint("LINE_START", global.baseX, global.baseY);
-                previewOn("SELECTED", "ROTATE", global.baseX, global.baseY, 0);
+                setRubberPoint("LINE_START", args.baseX, args.baseY);
+                previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, 0);
                 setPromptPrefix(qsTr("Specify rotation angle or [Reference]: "));
             }
         }
@@ -2277,7 +2228,7 @@ function prompt(str)
         {
             if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args->mode = args->mode_REFERENCE;
+                args.mode = args.mode_REFERENCE;
                 setPromptPrefix(qsTr("Specify the reference angle") + " {0.00}: ");
                 clearRubber();
                 previewOff();
@@ -2291,17 +2242,17 @@ function prompt(str)
                 }
                 else
                 {
-                    global.angle = Number(str);
-                    rotateSelected(global.baseX, global.baseY, global.angle);
+                    args.angle = Number(str);
+                    rotateSelected(args.baseX, args.baseY, args.angle);
                     previewOff();
                     return;
                 }
             }
         }
     }
-    else if(args->mode == args->mode_REFERENCE)
+    else if(args.mode == args.mode_REFERENCE)
     {
-        if(isNaN(global.baseRX))
+        if(isNaN(args.baseRX))
         {
             if(isNaN(str))
             {
@@ -2313,31 +2264,31 @@ function prompt(str)
                 }
                 else
                 {
-                    global.baseRX = Number(strList[0]);
-                    global.baseRY = Number(strList[1]);
+                    args.baseRX = Number(strList[0]);
+                    args.baseRY = Number(strList[1]);
                     addRubber("LINE");
                     setRubberMode("LINE");
-                    setRubberPoint("LINE_START", global.baseRX, global.baseRY);
+                    setRubberPoint("LINE_START", args.baseRX, args.baseRY);
                     setPromptPrefix(qsTr("Specify second point: "));
                 }
             }
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                global.baseRX = 0.0;
-                global.baseRY = 0.0;
-                global.destRX = 0.0;
-                global.destRY = 0.0;
+                args.baseRX = 0.0;
+                args.baseRY = 0.0;
+                args.destRX = 0.0;
+                args.destRY = 0.0;
                 /*The reference angle is what we will use later.*/
-                global.angleRef = Number(str);
+                args.angleRef = Number(str);
                 addRubber("LINE");
                 setRubberMode("LINE");
-                setRubberPoint("LINE_START", global.baseX, global.baseY);
-                previewOn("SELECTED", "ROTATE", global.baseX, global.baseY, global.angleRef);
+                setRubberPoint("LINE_START", args.baseX, args.baseY);
+                previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef);
                 setPromptPrefix(qsTr("Specify the new angle: "));
             }
         }
-        else if(isNaN(global.destRX))
+        else if(isNaN(args.destRX))
         {
             if(isNaN(str))
             {
@@ -2349,28 +2300,28 @@ function prompt(str)
                 }
                 else
                 {
-                    global.destRX = Number(strList[0]);
-                    global.destRY = Number(strList[1]);
-                    global.angleRef = calculateAngle(global.baseRX, global.baseRY, global.destRX, global.destRY);
-                    previewOn("SELECTED", "ROTATE", global.baseX, global.baseY, global.angleRef);
-                    setRubberPoint("LINE_START", global.baseX, global.baseY);
+                    args.destRX = Number(strList[0]);
+                    args.destRY = Number(strList[1]);
+                    args.angleRef = calculateAngle(args.baseRX, args.baseRY, args.destRX, args.destRY);
+                    previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef);
+                    setRubberPoint("LINE_START", args.baseX, args.baseY);
                     setPromptPrefix(qsTr("Specify the new angle: "));
                 }
             }
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                global.baseRX = 0.0;
-                global.baseRY = 0.0;
-                global.destRX = 0.0;
-                global.destRY = 0.0;
+                args.baseRX = 0.0;
+                args.baseRY = 0.0;
+                args.destRX = 0.0;
+                args.destRY = 0.0;
                 /*The reference angle is what we will use later.*/
-                global.angleRef = Number(str);
-                previewOn("SELECTED", "ROTATE", global.baseX, global.baseY, global.angleRef);
+                args.angleRef = Number(str);
+                previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef);
                 setPromptPrefix(qsTr("Specify the new angle: "));
             }
         }
-        else if(isNaN(global.angleNew))
+        else if(isNaN(args.angleNew))
         {
             if(isNaN(str))
             {
@@ -2384,16 +2335,16 @@ function prompt(str)
                 {
                     var x = Number(strList[0]);
                     var y = Number(strList[1]);
-                    global.angleNew = calculateAngle(global.baseX, global.baseY, x, y);
-                    rotateSelected(global.baseX, global.baseY, global.angleNew - global.angleRef);
+                    args.angleNew = calculateAngle(args.baseX, args.baseY, x, y);
+                    rotateSelected(args.baseX, args.baseY, args.angleNew - args.angleRef);
                     previewOff();
                     return;
                 }
             }
             else
             {
-                global.angleNew = Number(str);
-                rotateSelected(global.baseX, global.baseY, global.angleNew - global.angleRef);
+                args.angleNew = Number(str);
+                rotateSelected(args.baseX, args.baseY, args.angleNew - args.angleRef);
                 previewOff();
                 return;
             }
@@ -2404,10 +2355,10 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.test1;
-global.test2;
+args.test1;
+args.test2;
 
-function main()
+int init()
 {
     /*Report number of pre-selected objects*/
     setPromptPrefix("Number of Objects Selected: " + numSelected().toString());
@@ -2471,42 +2422,42 @@ function main()
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.firstRun;
-global.baseX;
-global.baseY;
-global.destX;
-global.destY;
-global.factor;
+args.firstRun;
+args.baseX;
+args.baseY;
+args.destX;
+args.destY;
+args.factor;
 
-global.baseRX;
-global.baseRY;
-global.destRX;
-global.destRY;
-global.factorRef;
-global.factorNew;
+args.baseRX;
+args.baseRY;
+args.destRX;
+args.destRY;
+args.factorRef;
+args.factorNew;
 
-args->mode;
+args.mode;
 
 /*enums*/
-args->mode_NORMAL    = 0;
-args->mode_REFERENCE = 1;
+args.mode_NORMAL    = 0;
+args.mode_REFERENCE = 1;
 
-function main()
+int init()
 {
-    args->mode = args->mode_NORMAL;
-    global.firstRun = true;
-    global.baseX  = NaN;
-    global.baseY  = NaN;
-    global.destX  = NaN;
-    global.destY  = NaN;
-    global.factor = NaN;
+    args.mode = args.mode_NORMAL;
+    args.firstRun = true;
+    args.baseX  = MAX_DISTANCE+1.0;
+    args.baseY  = MAX_DISTANCE+1.0;
+    args.destX  = MAX_DISTANCE+1.0;
+    args.destY  = MAX_DISTANCE+1.0;
+    args.factor = MAX_DISTANCE+1.0;
 
-    global.baseRX    = NaN;
-    global.baseRY    = NaN;
-    global.destRX    = NaN;
-    global.destRY    = NaN;
-    global.factorRef = NaN;
-    global.factorNew = NaN;
+    args.baseRX    = MAX_DISTANCE+1.0;
+    args.baseRY    = MAX_DISTANCE+1.0;
+    args.destRX    = MAX_DISTANCE+1.0;
+    args.destRY    = MAX_DISTANCE+1.0;
+    args.factorRef = MAX_DISTANCE+1.0;
+    args.factorNew = MAX_DISTANCE+1.0;
 
     if(numSelected() <= 0)
     {
@@ -2521,79 +2472,79 @@ function main()
     }
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(args->mode == args->mode_NORMAL)
+    if(args.mode == args.mode_NORMAL)
     {
-        if(global.firstRun)
+        if(args.firstRun)
         {
-            global.firstRun = false;
-            global.baseX = x;
-            global.baseY = y;
+            args.firstRun = false;
+            args.baseX = x;
+            args.baseY = y;
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", global.baseX, global.baseY);
-            previewOn("SELECTED", "SCALE", global.baseX, global.baseY, 1);
+            setRubberPoint("LINE_START", args.baseX, args.baseY);
+            previewOn("SELECTED", "SCALE", args.baseX, args.baseY, 1);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify scale factor or [Reference]: "));
         }
         else
         {
-            global.destX = x;
-            global.destY = y;
-            global.factor = calculateDistance(global.baseX, global.baseY, global.destX, global.destY);
+            args.destX = x;
+            args.destY = y;
+            args.factor = calculateDistance(args.baseX, args.baseY, args.destX, args.destY);
             appendPromptHistory();
-            scaleSelected(global.baseX, global.baseY, global.factor);
+            scaleSelected(args.baseX, args.baseY, args.factor);
             previewOff();
             return;
         }
     }
-    else if(args->mode == args->mode_REFERENCE)
+    else if(args.mode == args.mode_REFERENCE)
     {
-        if(isNaN(global.baseRX))
+        if(isNaN(args.baseRX))
         {
-            global.baseRX = x;
-            global.baseRY = y;
+            args.baseRX = x;
+            args.baseRY = y;
             appendPromptHistory();
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", global.baseRX, global.baseRY);
+            setRubberPoint("LINE_START", args.baseRX, args.baseRY);
             setPromptPrefix(qsTr("Specify second point: "));
         }
-        else if(isNaN(global.destRX))
+        else if(isNaN(args.destRX))
         {
-            global.destRX = x;
-            global.destRY = y;
-            global.factorRef = calculateDistance(global.baseRX, global.baseRY, global.destRX, global.destRY);
-            if(global.factorRef <= 0.0)
+            args.destRX = x;
+            args.destRY = y;
+            args.factorRef = calculateDistance(args.baseRX, args.baseRY, args.destRX, args.destRY);
+            if(args.factorRef <= 0.0)
             {
-                global.destRX    = NaN;
-                global.destRY    = NaN;
-                global.factorRef = NaN;
+                args.destRX    = MAX_DISTANCE+1.0;
+                args.destRY    = MAX_DISTANCE+1.0;
+                args.factorRef = MAX_DISTANCE+1.0;
                 alert(qsTr("Value must be positive and nonzero."));
                 setPromptPrefix(qsTr("Specify second point: "));
             }
             else
             {
                 appendPromptHistory();
-                setRubberPoint("LINE_START", global.baseX, global.baseY);
-                previewOn("SELECTED", "SCALE", global.baseX, global.baseY, global.factorRef);
+                setRubberPoint("LINE_START", args.baseX, args.baseY);
+                previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef);
                 setPromptPrefix(qsTr("Specify new length: "));
             }
         }
-        else if(isNaN(global.factorNew))
+        else if(isNaN(args.factorNew))
         {
-            global.factorNew = calculateDistance(global.baseX, global.baseY, x, y);
-            if(global.factorNew <= 0.0)
+            args.factorNew = calculateDistance(args.baseX, args.baseY, x, y);
+            if(args.factorNew <= 0.0)
             {
-                global.factorNew = NaN;
+                args.factorNew = MAX_DISTANCE+1.0;
                 alert(qsTr("Value must be positive and nonzero."));
                 setPromptPrefix(qsTr("Specify new length: "));
             }
             else
             {
                 appendPromptHistory();
-                scaleSelected(global.baseX, global.baseY, global.factorNew/global.factorRef);
+                scaleSelected(args.baseX, args.baseY, args.factorNew/args.factorRef);
                 previewOff();
                 return;
             }
@@ -2601,11 +2552,11 @@ function click(x, y)
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(args->mode == args->mode_NORMAL)
+    if(args.mode == args.mode_NORMAL)
     {
-        if(global.firstRun)
+        if(args.firstRun)
         {
             var strList = str.split(",");
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -2615,13 +2566,13 @@ function prompt(str)
             }
             else
             {
-                global.firstRun = false;
-                global.baseX = Number(strList[0]);
-                global.baseY = Number(strList[1]);
+                args.firstRun = false;
+                args.baseX = Number(strList[0]);
+                args.baseY = Number(strList[1]);
                 addRubber("LINE");
                 setRubberMode("LINE");
-                setRubberPoint("LINE_START", global.baseX, global.baseY);
-                previewOn("SELECTED", "SCALE", global.baseX, global.baseY, 1);
+                setRubberPoint("LINE_START", args.baseX, args.baseY);
+                previewOn("SELECTED", "SCALE", args.baseX, args.baseY, 1);
                 setPromptPrefix(qsTr("Specify scale factor or [Reference]: "));
             }
         }
@@ -2629,7 +2580,7 @@ function prompt(str)
         {
             if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args->mode = args->mode_REFERENCE;
+                args.mode = args.mode_REFERENCE;
                 setPromptPrefix(qsTr("Specify reference length") + " {1}: ");
                 clearRubber();
                 previewOff();
@@ -2643,17 +2594,17 @@ function prompt(str)
                 }
                 else
                 {
-                    global.factor = Number(str);
-                    scaleSelected(global.baseX, global.baseY, global.factor);
+                    args.factor = Number(str);
+                    scaleSelected(args.baseX, args.baseY, args.factor);
                     previewOff();
                     return;
                 }
             }
         }
     }
-    else if(args->mode == args->mode_REFERENCE)
+    else if(args.mode == args.mode_REFERENCE)
     {
-        if(isNaN(global.baseRX))
+        if(isNaN(args.baseRX))
         {
             if(isNaN(str))
             {
@@ -2665,30 +2616,30 @@ function prompt(str)
                 }
                 else
                 {
-                    global.baseRX = Number(strList[0]);
-                    global.baseRY = Number(strList[1]);
+                    args.baseRX = Number(strList[0]);
+                    args.baseRY = Number(strList[1]);
                     addRubber("LINE");
                     setRubberMode("LINE");
-                    setRubberPoint("LINE_START", global.baseRX, global.baseRY);
+                    setRubberPoint("LINE_START", args.baseRX, args.baseRY);
                     setPromptPrefix(qsTr("Specify second point: "));
                 }
             }
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                global.baseRX = 0.0;
-                global.baseRY = 0.0;
-                global.destRX = 0.0;
-                global.destRY = 0.0;
+                args.baseRX = 0.0;
+                args.baseRY = 0.0;
+                args.destRX = 0.0;
+                args.destRY = 0.0;
                 /*The reference length is what we will use later.*/
-                global.factorRef = Number(str);
-                if(global.factorRef <= 0.0)
+                args.factorRef = Number(str);
+                if(args.factorRef <= 0.0)
                 {
-                    global.baseRX    = NaN;
-                    global.baseRY    = NaN;
-                    global.destRX    = NaN;
-                    global.destRY    = NaN;
-                    global.factorRef = NaN;
+                    args.baseRX    = MAX_DISTANCE+1.0;
+                    args.baseRY    = MAX_DISTANCE+1.0;
+                    args.destRX    = MAX_DISTANCE+1.0;
+                    args.destRY    = MAX_DISTANCE+1.0;
+                    args.factorRef = MAX_DISTANCE+1.0;
                     alert(qsTr("Value must be positive and nonzero."));
                     setPromptPrefix(qsTr("Specify reference length") + " {1}: ");
                 }
@@ -2696,13 +2647,13 @@ function prompt(str)
                 {
                     addRubber("LINE");
                     setRubberMode("LINE");
-                    setRubberPoint("LINE_START", global.baseX, global.baseY);
-                    previewOn("SELECTED", "SCALE", global.baseX, global.baseY, global.factorRef);
+                    setRubberPoint("LINE_START", args.baseX, args.baseY);
+                    previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef);
                     setPromptPrefix(qsTr("Specify new length: "));
                 }
             }
         }
-        else if(isNaN(global.destRX))
+        else if(isNaN(args.destRX))
         {
             if(isNaN(str))
             {
@@ -2714,21 +2665,21 @@ function prompt(str)
                 }
                 else
                 {
-                    global.destRX = Number(strList[0]);
-                    global.destRY = Number(strList[1]);
-                    global.factorRef = calculateDistance(global.baseRX, global.baseRY, global.destRX, global.destRY);
-                    if(global.factorRef <= 0.0)
+                    args.destRX = Number(strList[0]);
+                    args.destRY = Number(strList[1]);
+                    args.factorRef = calculateDistance(args.baseRX, args.baseRY, args.destRX, args.destRY);
+                    if(args.factorRef <= 0.0)
                     {
-                        global.destRX    = NaN;
-                        global.destRY    = NaN;
-                        global.factorRef = NaN;
+                        args.destRX    = MAX_DISTANCE+1.0;
+                        args.destRY    = MAX_DISTANCE+1.0;
+                        args.factorRef = MAX_DISTANCE+1.0;
                         alert(qsTr("Value must be positive and nonzero."));
                         setPromptPrefix(qsTr("Specify second point: "));
                     }
                     else
                     {
-                        setRubberPoint("LINE_START", global.baseX, global.baseY);
-                        previewOn("SELECTED", "SCALE", global.baseX, global.baseY, global.factorRef);
+                        setRubberPoint("LINE_START", args.baseX, args.baseY);
+                        previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef);
                         setPromptPrefix(qsTr("Specify new length: "));
                     }
                 }
@@ -2736,29 +2687,29 @@ function prompt(str)
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                global.baseRX = 0.0;
-                global.baseRY = 0.0;
-                global.destRX = 0.0;
-                global.destRY = 0.0;
+                args.baseRX = 0.0;
+                args.baseRY = 0.0;
+                args.destRX = 0.0;
+                args.destRY = 0.0;
                 /*The reference length is what we will use later.*/
-                global.factorRef = Number(str);
-                if(global.factorRef <= 0.0)
+                args.factorRef = Number(str);
+                if(args.factorRef <= 0.0)
                 {
-                    global.destRX    = NaN;
-                    global.destRY    = NaN;
-                    global.factorRef = NaN;
+                    args.destRX    = MAX_DISTANCE+1.0;
+                    args.destRY    = MAX_DISTANCE+1.0;
+                    args.factorRef = MAX_DISTANCE+1.0;
                     alert(qsTr("Value must be positive and nonzero."));
                     setPromptPrefix(qsTr("Specify second point: "));
                 }
                 else
                 {
-                    setRubberPoint("LINE_START", global.baseX, global.baseY);
-                    previewOn("SELECTED", "SCALE", global.baseX, global.baseY, global.factorRef);
+                    setRubberPoint("LINE_START", args.baseX, args.baseY);
+                    previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef);
                     setPromptPrefix(qsTr("Specify new length: "));
                 }
             }
         }
-        else if(isNaN(global.factorNew))
+        else if(isNaN(args.factorNew))
         {
             if(isNaN(str))
             {
@@ -2772,16 +2723,16 @@ function prompt(str)
                 {
                     var x = Number(strList[0]);
                     var y = Number(strList[1]);
-                    global.factorNew = calculateDistance(global.baseX, global.baseY, x, y);
-                    if(global.factorNew <= 0.0)
+                    args.factorNew = calculateDistance(args.baseX, args.baseY, x, y);
+                    if(args.factorNew <= 0.0)
                     {
-                        global.factorNew = NaN;
+                        args.factorNew = MAX_DISTANCE+1.0;
                         alert(qsTr("Value must be positive and nonzero."));
                         setPromptPrefix(qsTr("Specify new length: "));
                     }
                     else
                     {
-                        scaleSelected(global.baseX, global.baseY, global.factorNew/global.factorRef);
+                        scaleSelected(args.baseX, args.baseY, args.factorNew/args.factorRef);
                         previewOff();
                         return;
                     }
@@ -2789,16 +2740,16 @@ function prompt(str)
             }
             else
             {
-                global.factorNew = Number(str);
-                if(global.factorNew <= 0.0)
+                args.factorNew = Number(str);
+                if(args.factorNew <= 0.0)
                 {
-                    global.factorNew = NaN;
+                    args.factorNew = MAX_DISTANCE+1.0;
                     alert(qsTr("Value must be positive and nonzero."));
                     setPromptPrefix(qsTr("Specify new length: "));
                 }
                 else
                 {
-                    scaleSelected(global.baseX, global.baseY, global.factorNew/global.factorRef);
+                    scaleSelected(args.baseX, args.baseY, args.factorNew/args.factorRef);
                     previewOff();
                     return;
                 }
@@ -2810,74 +2761,74 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.text;
-global.textX;
-global.textY;
-global.textJustify;
-global.textFont;
-global.textHeight;
-global.textRotation;
-args->mode;
+args.text;
+args.textX;
+args.textY;
+args.textJustify;
+args.textFont;
+args.textHeight;
+args.textRotation;
+args.mode;
 
 /*enums*/
-args->mode_JUSTIFY = 0;
-args->mode_SETFONT = 1;
-args->mode_SETGEOM = 2;
-args->mode_RAPID   = 3;
+args.mode_JUSTIFY = 0;
+args.mode_SETFONT = 1;
+args.mode_SETGEOM = 2;
+args.mode_RAPID   = 3;
 
-function main()
+int init()
 {
     clearSelection();
-    global.text = "";
-    global.textX = NaN;
-    global.textY = NaN;
-    global.textJustify = "Left";
-    global.textFont = textFont();
-    global.textHeight = NaN;
-    global.textRotation = NaN;
-    args->mode = args->mode_SETGEOM;
-    setPromptPrefix(qsTr("Current font: ") + "{" + global.textFont + "} " + qsTr("Text height: ") + "{" +  textSize() + "}");
+    args.text = "";
+    args.textX = MAX_DISTANCE+1.0;
+    args.textY = MAX_DISTANCE+1.0;
+    args.textJustify = "Left";
+    args.textFont = textFont();
+    args.textHeight = MAX_DISTANCE+1.0;
+    args.textRotation = MAX_DISTANCE+1.0;
+    args.mode = args.mode_SETGEOM;
+    setPromptPrefix(qsTr("Current font: ") + "{" + args.textFont + "} " + qsTr("Text height: ") + "{" +  textSize() + "}");
     appendPromptHistory();
     setPromptPrefix(qsTr("Specify start point of text or [Justify/Setfont]: "));
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(args->mode == args->mode_SETGEOM)
+    if(args.mode == args.mode_SETGEOM)
     {
-        if(isNaN(global.textX))
+        if(isNaN(args.textX))
         {
-            global.textX = x;
-            global.textY = y;
+            args.textX = x;
+            args.textY = y;
             addRubber("LINE");
             setRubberMode("LINE");
-            setRubberPoint("LINE_START", global.textX, global.textY);
+            setRubberPoint("LINE_START", args.textX, args.textY);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify text height") + " {" + textSize() + "}: ");
         }
-        else if(isNaN(global.textHeight))
+        else if(isNaN(args.textHeight))
         {
-            global.textHeight = calculateDistance(global.textX, global.textY, x, y);
-            setTextSize(global.textHeight);
+            args.textHeight = calculateDistance(args.textX, args.textY, x, y);
+            setTextSize(args.textHeight);
             appendPromptHistory();
             setPromptPrefix(qsTr("Specify text angle") + " {" + textAngle() + "}: ");
         }
-        else if(isNaN(global.textRotation))
+        else if(isNaN(args.textRotation))
         {
-            global.textRotation = calculateAngle(global.textX, global.textY, x, y);
-            setTextAngle(global.textRotation);
+            args.textRotation = calculateAngle(args.textX, args.textY, x, y);
+            setTextAngle(args.textRotation);
             appendPromptHistory();
             setPromptPrefix(qsTr("Enter text: "));
-            args->mode = args->mode_RAPID;
+            args.mode = args.mode_RAPID;
             enablePromptRapidFire();
             clearRubber();
             addRubber("TEXTSINGLE");
             setRubberMode("TEXTSINGLE");
-            setRubberPoint("TEXT_POINT", global.textX, global.textY);
-            setRubberPoint("TEXT_HEIGHT_ROTATION", global.textHeight, global.textRotation);
-            setRubberText("TEXT_FONT", global.textFont);
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
-            setRubberText("TEXT_RAPID", global.text);
+            setRubberPoint("TEXT_POINT", args.textX, args.textY);
+            setRubberPoint("TEXT_HEIGHT_ROTATION", args.textHeight, args.textRotation);
+            setRubberText("TEXT_FONT", args.textFont);
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
+            setRubberText("TEXT_RAPID", args.text);
         }
         else
         {
@@ -2886,106 +2837,106 @@ function click(x, y)
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(args->mode == args->mode_JUSTIFY)
+    if(args.mode == args.mode_JUSTIFY)
     {
         if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Center";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Center";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify center point of text or [Justify/Setfont]: "));
         }
         else if(str == "R" || str == "RIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Right";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Right";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify right-end point of text or [Justify/Setfont]: "));
         }
         else if(str == "A" || str == "ALIGN") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Aligned";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Aligned";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify start point of text or [Justify/Setfont]: "));
         }
         else if(str == "M" || str == "MIDDLE") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Middle";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Middle";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify middle point of text or [Justify/Setfont]: "));
         }
         else if(str == "F" || str == "FIT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Fit";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Fit";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify start point of text or [Justify/Setfont]: "));
         }
         else if(str == "TL" || str == "TOPLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Top Left";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Top Left";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify top-left point of text or [Justify/Setfont]: "));
         }
         else if(str == "TC" || str == "TOPCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Top Center";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Top Center";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify top-center point of text or [Justify/Setfont]: "));
         }
         else if(str == "TR" || str == "TOPRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Top Right";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Top Right";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify top-right point of text or [Justify/Setfont]: "));
         }
         else if(str == "ML" || str == "MIDDLELEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Middle Left";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Middle Left";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify middle-left point of text or [Justify/Setfont]: "));
         }
         else if(str == "MC" || str == "MIDDLECENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Middle Center";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Middle Center";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify middle-center point of text or [Justify/Setfont]: "));
         }
         else if(str == "MR" || str == "MIDDLERIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Middle Right";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Middle Right";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify middle-right point of text or [Justify/Setfont]: "));
         }
         else if(str == "BL" || str == "BOTTOMLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Bottom Left";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Bottom Left";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify bottom-left point of text or [Justify/Setfont]: "));
         }
         else if(str == "BC" || str == "BOTTOMCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Bottom Center";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Bottom Center";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify bottom-center point of text or [Justify/Setfont]: "));
         }
         else if(str == "BR" || str == "BOTTOMRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args->mode = args->mode_SETGEOM;
-            global.textJustify = "Bottom Right";
-            setRubberText("TEXT_JUSTIFY", global.textJustify);
+            args.mode = args.mode_SETGEOM;
+            args.textJustify = "Bottom Right";
+            setRubberText("TEXT_JUSTIFY", args.textJustify);
             setPromptPrefix(qsTr("Specify bottom-right point of text or [Justify/Setfont]: "));
         }
         else
@@ -2994,26 +2945,26 @@ function prompt(str)
             setPromptPrefix(qsTr("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "));
         }
     }
-    else if(args->mode == args->mode_SETFONT)
+    else if(args.mode == args.mode_SETFONT)
     {
-        args->mode = args->mode_SETGEOM;
-        global.textFont = str;
-        setRubberText("TEXT_FONT", global.textFont);
-        setTextFont(global.textFont);
+        args.mode = args.mode_SETGEOM;
+        args.textFont = str;
+        setRubberText("TEXT_FONT", args.textFont);
+        setTextFont(args.textFont);
         setPromptPrefix(qsTr("Specify start point of text or [Justify/Setfont]: "));
     }
-    else if(args->mode == args->mode_SETGEOM)
+    else if(args.mode == args.mode_SETGEOM)
     {
-        if(isNaN(global.textX))
+        if(isNaN(args.textX))
         {
             if(str == "J" || str == "JUSTIFY") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args->mode = args->mode_JUSTIFY;
+                args.mode = args.mode_JUSTIFY;
                 setPromptPrefix(qsTr("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "));
             }
             else if(str == "S" || str == "SETFONT") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args->mode = args->mode_SETFONT;
+                args.mode = args.mode_SETFONT;
                 setPromptPrefix(qsTr("Specify font name: "));
             }
             else
@@ -3026,20 +2977,20 @@ function prompt(str)
                 }
                 else
                 {
-                    global.textX = Number(strList[0]);
-                    global.textY = Number(strList[1]);
+                    args.textX = Number(strList[0]);
+                    args.textY = Number(strList[1]);
                     addRubber("LINE");
                     setRubberMode("LINE");
-                    setRubberPoint("LINE_START", global.textX, global.textY);
+                    setRubberPoint("LINE_START", args.textX, args.textY);
                     setPromptPrefix(qsTr("Specify text height") + " {" + textSize() + "}: ");
                 }
             }
         }
-        else if(isNaN(global.textHeight))
+        else if(isNaN(args.textHeight))
         {
             if(str == "")
             {
-                global.textHeight = textSize();
+                args.textHeight = textSize();
                 setPromptPrefix(qsTr("Specify text angle") + " {" + textAngle() + "}: ");
             }
             else if(isNaN(str))
@@ -3049,27 +3000,27 @@ function prompt(str)
             }
             else
             {
-                global.textHeight = Number(str);
-                setTextSize(global.textHeight);
+                args.textHeight = Number(str);
+                setTextSize(args.textHeight);
                 setPromptPrefix(qsTr("Specify text angle") + " {" + textAngle() + "}: ");
             }
         }
-        else if(isNaN(global.textRotation))
+        else if(isNaN(args.textRotation))
         {
             if(str == "")
             {
-                global.textRotation = textAngle();
+                args.textRotation = textAngle();
                 setPromptPrefix(qsTr("Enter text: "));
-                args->mode = args->mode_RAPID;
+                args.mode = args.mode_RAPID;
                 enablePromptRapidFire();
                 clearRubber();
                 addRubber("TEXTSINGLE");
                 setRubberMode("TEXTSINGLE");
-                setRubberPoint("TEXT_POINT", global.textX, global.textY);
-                setRubberPoint("TEXT_HEIGHT_ROTATION", global.textHeight, global.textRotation);
-                setRubberText("TEXT_FONT", global.textFont);
-                setRubberText("TEXT_JUSTIFY", global.textJustify);
-                setRubberText("TEXT_RAPID", global.text);
+                setRubberPoint("TEXT_POINT", args.textX, args.textY);
+                setRubberPoint("TEXT_HEIGHT_ROTATION", args.textHeight, args.textRotation);
+                setRubberText("TEXT_FONT", args.textFont);
+                setRubberText("TEXT_JUSTIFY", args.textJustify);
+                setRubberText("TEXT_RAPID", args.text);
             }
             else if(isNaN(str))
             {
@@ -3078,19 +3029,19 @@ function prompt(str)
             }
             else
             {
-                global.textRotation = Number(str);
-                setTextAngle(global.textRotation);
+                args.textRotation = Number(str);
+                setTextAngle(args.textRotation);
                 setPromptPrefix(qsTr("Enter text: "));
-                args->mode = args->mode_RAPID;
+                args.mode = args.mode_RAPID;
                 enablePromptRapidFire();
                 clearRubber();
                 addRubber("TEXTSINGLE");
                 setRubberMode("TEXTSINGLE");
-                setRubberPoint("TEXT_POINT", global.textX, global.textY);
-                setRubberPoint("TEXT_HEIGHT_ROTATION", global.textHeight, global.textRotation);
-                setRubberText("TEXT_FONT", global.textFont);
-                setRubberText("TEXT_JUSTIFY", global.textJustify);
-                setRubberText("TEXT_RAPID", global.text);
+                setRubberPoint("TEXT_POINT", args.textX, args.textY);
+                setRubberPoint("TEXT_HEIGHT_ROTATION", args.textHeight, args.textRotation);
+                setRubberText("TEXT_FONT", args.textFont);
+                setRubberText("TEXT_JUSTIFY", args.textJustify);
+                setRubberText("TEXT_RAPID", args.text);
             }
         }
         else
@@ -3098,11 +3049,11 @@ function prompt(str)
             /*Do nothing, as we are in rapidFire mode now.*/
         }
     }
-    else if(args->mode == args->mode_RAPID)
+    else if(args.mode == args.mode_RAPID)
     {
         if(str == "RAPID_ENTER")
         {
-            if(global.text == "")
+            if(args.text == "")
             {
                 return;
             }
@@ -3114,8 +3065,8 @@ function prompt(str)
         }
         else
         {
-            global.text = str;
-            setRubberText("TEXT_RAPID", global.text);
+            args.text = str;
+            setRubberText("TEXT_RAPID", args.text);
         }
     }
 }
@@ -3123,39 +3074,39 @@ function prompt(str)
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.numPoints = 2048; /*Default //TODO: min:64 max:8192*/
-global.cx;
-global.cy;
-global.sx = 0.04; /*Default*/
-global.sy = 0.04; /*Default*/
-global.numPoints;
-args->mode;
+args.numPoints = 2048; /*Default //TODO: min:64 max:8192*/
+args.cx;
+args.cy;
+args.sx = 0.04; /*Default*/
+args.sy = 0.04; /*Default*/
+args.numPoints;
+args.mode;
 
 /*enums*/
-args->mode_NUM_POINTS = 0;
-args->mode_XSCALE     = 1;
-args->mode_YSCALE     = 2;
+args.mode_NUM_POINTS = 0;
+args.mode_XSCALE     = 1;
+args.mode_YSCALE     = 2;
 
-function main()
+int init()
 {
     clearSelection();
-    global.cx = NaN;
-    global.cy = NaN;
-    args->mode = args->mode_NUM_POINTS;
+    args.cx = MAX_DISTANCE+1.0;
+    args.cy = MAX_DISTANCE+1.0;
+    args.mode = args.mode_NUM_POINTS;
 
     addRubber("POLYGON");
     setRubberMode("POLYGON");
-    updateSnowflake(global.numPoints, global.sx, global.sy);
+    updateSnowflake(args.numPoints, args.sx, args.sy);
     spareRubber("POLYGON");
     return;
 }
 
-function updateSnowflake(numPts, xScale, yScale)
+int updateSnowflake(numPts, xScale, yScale)
 {
     var i;
     var t;
-    var xx = NaN;
-    var yy = NaN;
+    var xx = MAX_DISTANCE+1.0;
+    var yy = MAX_DISTANCE+1.0;
     var two_pi = 2*embConstantPi;
 
     for(i = 0; i <= numPts; i++)
@@ -3811,98 +3762,98 @@ sin(263*t+2/7)-
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-global.numPoints = 5; /*Default*/
-global.cx;
-global.cy;
-args->x1;
-args->y1;
-args->x2;
-args->y2;
-args->mode;
+args.numPoints = 5; /*Default*/
+args.cx;
+args.cy;
+args.x1;
+args.y1;
+args.x2;
+args.y2;
+args.mode;
 
 /*enums*/
-args->mode_NUM_POINTS = 0;
-args->mode_CENTER_PT  = 1;
-args->mode_RAD_OUTER  = 2;
-args->mode_RAD_INNER  = 3;
+args.mode_NUM_POINTS = 0;
+args.mode_CENTER_PT  = 1;
+args.mode_RAD_OUTER  = 2;
+args.mode_RAD_INNER  = 3;
 
-function main()
+int init()
 {
     clearSelection();
-    global.cx       = NaN;
-    global.cy       = NaN;
-    args->x1       = NaN;
-    args->y1       = NaN;
-    args->x2       = NaN;
-    args->y2       = NaN;
-    args->mode = args->mode_NUM_POINTS;
-    setPromptPrefix(qsTr("Enter number of star points") + " {" + global.numPoints.toString() + "}: ");
+    args.cx       = MAX_DISTANCE+1.0;
+    args.cy       = MAX_DISTANCE+1.0;
+    args.x1       = MAX_DISTANCE+1.0;
+    args.y1       = MAX_DISTANCE+1.0;
+    args.x2       = MAX_DISTANCE+1.0;
+    args.y2       = MAX_DISTANCE+1.0;
+    args.mode = args.mode_NUM_POINTS;
+    setPromptPrefix(qsTr("Enter number of star points") + " {" + args.numPoints.toString() + "}: ");
 }
 
-function click(x, y)
+int click(x, y)
 {
-    if(args->mode == args->mode_NUM_POINTS)
+    if(args.mode == args.mode_NUM_POINTS)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args->mode == args->mode_CENTER_PT)
+    else if(args.mode == args.mode_CENTER_PT)
     {
-        global.cx = x;
-        global.cy = y;
-        args->mode = args->mode_RAD_OUTER;
+        args.cx = x;
+        args.cy = y;
+        args.mode = args.mode_RAD_OUTER;
         setPromptPrefix(qsTr("Specify outer radius of star: "));
         addRubber("POLYGON");
         setRubberMode("POLYGON");
-        updateStar(global.cx, global.cy);
+        updateStar(args.cx, args.cy);
         enableMoveRapidFire();
     }
-    else if(args->mode == args->mode_RAD_OUTER)
+    else if(args.mode == args.mode_RAD_OUTER)
     {
-        args->x1 = x;
-        args->y1 = y;
-        args->mode = args->mode_RAD_INNER;
+        args.x1 = x;
+        args.y1 = y;
+        args.mode = args.mode_RAD_INNER;
         setPromptPrefix(qsTr("Specify inner radius of star: "));
-        updateStar(args->x1, args->y1);
+        updateStar(args.x1, args.y1);
     }
-    else if(args->mode == args->mode_RAD_INNER)
+    else if(args.mode == args.mode_RAD_INNER)
     {
-        args->x2 = x;
-        args->y2 = y;
+        args.x2 = x;
+        args.y2 = y;
         disableMoveRapidFire();
-        updateStar(args->x2, args->y2);
+        updateStar(args.x2, args.y2);
         spareRubber("POLYGON");
         return;
     }
 }
 
-function move(x, y)
+int move(x, y)
 {
-    if(args->mode == args->mode_NUM_POINTS)
+    if(args.mode == args.mode_NUM_POINTS)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args->mode == args->mode_CENTER_PT)
+    else if(args.mode == args.mode_CENTER_PT)
     {
         /*Do nothing, prompt and click controls this.*/
     }
-    else if(args->mode == args->mode_RAD_OUTER)
+    else if(args.mode == args.mode_RAD_OUTER)
     {
         updateStar(x, y);
     }
-    else if(args->mode == args->mode_RAD_INNER)
+    else if(args.mode == args.mode_RAD_INNER)
     {
         updateStar(x, y);
     }
 }
 
-function prompt(str)
+int prompt(str)
 {
-    if(args->mode == args->mode_NUM_POINTS)
+    if(args.mode == args.mode_NUM_POINTS)
     {
-        if(str == "" && global.numPoints >= 3 && global.numPoints <= 1024)
+        if(str == "" && args.numPoints >= 3 && args.numPoints <= 1024)
         {
             setPromptPrefix(qsTr("Specify center point: "));
-            args->mode = args->mode_CENTER_PT;
+            args.mode = args.mode_CENTER_PT;
         }
         else
         {
@@ -3910,17 +3861,17 @@ function prompt(str)
             if(isNaN(tmp) || !isInt(tmp) || tmp < 3 || tmp > 1024)
             {
                 alert(qsTr("Requires an integer between 3 and 1024."));
-                setPromptPrefix(qsTr("Enter number of star points") + " {" + global.numPoints.toString() + "}: ");
+                setPromptPrefix(qsTr("Enter number of star points") + " {" + args.numPoints.toString() + "}: ");
             }
             else
             {
-                global.numPoints = tmp;
+                args.numPoints = tmp;
                 setPromptPrefix(qsTr("Specify center point: "));
-                args->mode = args->mode_CENTER_PT;
+                args.mode = args.mode_CENTER_PT;
             }
         }
     }
-    else if(args->mode == args->mode_CENTER_PT)
+    else if(args.mode == args.mode_CENTER_PT)
     {
         var strList = str.split(",");
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -3930,9 +3881,9 @@ function prompt(str)
         }
         else
         {
-            global.cx = Number(strList[0]);
-            global.cy = Number(strList[1]);
-            args->mode = args->mode_RAD_OUTER;
+            args.cx = Number(strList[0]);
+            args.cy = Number(strList[1]);
+            args.mode = args.mode_RAD_OUTER;
             setPromptPrefix(qsTr("Specify outer radius of star: "));
             addRubber("POLYGON");
             setRubberMode("POLYGON");
@@ -3940,7 +3891,7 @@ function prompt(str)
             enableMoveRapidFire();
         }
     }
-    else if(args->mode == args->mode_RAD_OUTER)
+    else if(args.mode == args.mode_RAD_OUTER)
     {
         var strList = str.split(",");
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -3950,14 +3901,14 @@ function prompt(str)
         }
         else
         {
-            args->x1 = Number(strList[0]);
-            args->y1 = Number(strList[1]);
-            args->mode = args->mode_RAD_INNER;
+            args.x1 = Number(strList[0]);
+            args.y1 = Number(strList[1]);
+            args.mode = args.mode_RAD_INNER;
             setPromptPrefix(qsTr("Specify inner radius of star: "));
             updateStar(qsnapX(), qsnapY());
         }
     }
-    else if(args->mode == args->mode_RAD_INNER)
+    else if(args.mode == args.mode_RAD_INNER)
     {
         var strList = str.split(",");
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -3967,39 +3918,39 @@ function prompt(str)
         }
         else
         {
-            args->x2 = Number(strList[0]);
-            args->y2 = Number(strList[1]);
+            args.x2 = Number(strList[0]);
+            args.y2 = Number(strList[1]);
             disableMoveRapidFire();
-            updateStar(args->x2, args->y2);
+            updateStar(args.x2, args.y2);
             spareRubber("POLYGON");
             return;
         }
     }
 }
 
-function updateStar(x, y)
+int updateStar(x, y)
 {
     var distOuter;
     var distInner;
     var angOuter;
 
-    if(args->mode == args->mode_RAD_OUTER)
+    if(args.mode == args.mode_RAD_OUTER)
     {
-        angOuter = calculateAngle(global.cx, global.cy, x, y);
-        distOuter = calculateDistance(global.cx, global.cy, x, y);
+        angOuter = calculateAngle(args.cx, args.cy, x, y);
+        distOuter = calculateDistance(args.cx, args.cy, x, y);
         distInner = distOuter/2.0;
     }
-    else if(args->mode == args->mode_RAD_INNER)
+    else if(args.mode == args.mode_RAD_INNER)
     {
-        angOuter = calculateAngle(global.cx, global.cy, args->x1, args->y1);
-        distOuter = calculateDistance(global.cx, global.cy, args->x1, args->y1);
-        distInner = calculateDistance(global.cx, global.cy, x, y);
+        angOuter = calculateAngle(args.cx, args.cy, args.x1, args.y1);
+        distOuter = calculateDistance(args.cx, args.cy, args.x1, args.y1);
+        distInner = calculateDistance(args.cx, args.cy, x, y);
     }
 
     /*Calculate the Star Points*/
-    var angInc = 360.0/(global.numPoints*2);
+    var angInc = 360.0/(args.numPoints*2);
     var odd = true;
-    for(var i = 0; i < global.numPoints*2; i++)
+    for(var i = 0; i < args.numPoints*2; i++)
     {
         var xx;
         var yy;
@@ -4014,9 +3965,9 @@ function updateStar(x, y)
             yy = distInner*sin((angOuter+(angInc*i))*embConstantPi/180.0);
         }
         odd = !odd;
-        setRubberPoint("POLYGON_POINT_" + i.toString(), global.cx + xx, global.cy + yy);
+        setRubberPoint("POLYGON_POINT_" + i.toString(), args.cx + xx, args.cy + yy);
     }
-    setRubberText("POLYGON_NUM_POINTS", (global.numPoints*2 - 1).toString());
+    setRubberText("POLYGON_NUM_POINTS", (args.numPoints*2 - 1).toString());
 }
 
     "menu-name": "None",
@@ -4029,13 +3980,13 @@ function updateStar(x, y)
 
 /*Command: SysWindows*/
 
-function main()
+int init()
 {
     clearSelection();
     setPromptPrefix(qsTr("Enter an option [Cascade/Tile]: "));
 }
 
-function prompt(str)
+int prompt(str)
 {
     if(str == "C" || str == "CASCADE") /*TODO: Probably should add additional qsTr calls here.*/
     {
@@ -4056,34 +4007,20 @@ function prompt(str)
 
 /* ----------------------------------------------------------------------- */
 
-typedef struct TREBLECLEF_DATA {
-    int num_points;
-    double cx;
-    double cy;
-    double sx;
-    double sy;
-    int mode;
-} treble_clef;
-
-
-#define TREBLE_CLEF_MODE_NUM_POINTS    0
-#define TREBLE_CLEF_MODE_XSCALE        1
-#define TREBLE_CLEF_MODE_YSCALE        2
-
-void treble_clef_main()
+void treble_clef_init()
 {
     treble_clef global;
     clearSelection();
-    global.cx = NaN;
-    global.cy = NaN;
-    global.numPoints = 1024; /*Default //TODO: min:64 max:8192*/
-    global.sx = 0.04; /*Default*/
-    global.sy = 0.04; /*Default*/
-    args->mode = TREBLE_CLEF_MODE_NUM_POINTS;
+    args.cx = MAX_DISTANCE+1.0;
+    args.cy = MAX_DISTANCE+1.0;
+    args.numPoints = 1024; /*Default //TODO: min:64 max:8192*/
+    args.sx = 0.04; /*Default*/
+    args.sy = 0.04; /*Default*/
+    args.mode = TREBLE_CLEF_MODE_NUM_POINTS;
 
     addRubber("POLYGON");
     setRubberMode("POLYGON");
-    updateClef(global.numPoints, global.sx, global.sy);
+    updateClef(args.numPoints, args.sx, args.sy);
     spareRubber("POLYGON");
     return;
 }
@@ -4091,13 +4028,10 @@ void treble_clef_main()
 void treble_clef_updateClef(int numPts, double xScale, double yScale)
 {
     int i;
-    int t;
-    double xx = NaN;
-    double yy = NaN;
-    double sixteen_pi = 16*embConstantPi;
 
-    for (i = 0; i <= numPts; i++) {
-        t = sixteen_pi/numPts*i;
+    for (i=0; i<=numPts; i++) {
+        double t, xx, yy;
+        t = (16*embConstantPi)/numPts*i;
 
         xx = ((-1/12*sin(215/214-18*t)-
         9/17*sin(23/17-12*t)-
@@ -4204,7 +4138,7 @@ void treble_clef_updateClef(int numPts, double xScale, double yScale)
         2/7*sin(47*t+43/21)-727/14)*
         theta(3*embConstantPi-t)*
         theta(t+embConstantPi))*
-        theta(Math.sqrt(sgn(sin(t/2))));
+        theta(sqrt(sgn(sin(t/2))));
 
         yy = ((-1/43*sin(21/17-14*t)-
         7/20*sin(2/11-12*t)-
@@ -4311,7 +4245,7 @@ void treble_clef_updateClef(int numPts, double xScale, double yScale)
         8/39*sin(47*t+56/17)-1223/15)*
         theta(3*embConstantPi-t)*
         theta(t+embConstantPi))*
-        theta(Math.sqrt(sgn(sin(t/2))));
+        theta(sqrt(sgn(sin(t/2))));
 
         setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale);
     }
@@ -4319,14 +4253,14 @@ void treble_clef_updateClef(int numPts, double xScale, double yScale)
     setRubberText("POLYGON_NUM_POINTS", numPts.toString());
 }
 
-        for (j=0; j<dolphin_curve_basis_functions; j++) {
+        for (j=0; j<dolphin_curve_basis_ints; j++) {
             float coef = dolphin_curve_x[5*j]/(1.0*dolphin_curve_x[5*j+1]);
             float offset = dolphin_curve_x[5*j+2]/(1.0*dolphin_curve_x[5*j+3]);
             float t_mult = dophin_curve_x[5*j+4];
             xx += coef * sin(offset + t_mult * t);
         }
         
-        for (j=0; j<dolphin_curve_basis_functions; j++) {
+        for (j=0; j<dolphin_curve_basis_ints; j++) {
             float coef = dolphin_curve_y[5*j]/(1.0*dolphin_curve_y[5*j+1]);
             float offset = dolphin_curve_y[5*j+2]/(1.0*dolphin_curve_y[5*j+3]);
             float t_mult = dophin_curve_y[5*j+4];
