@@ -40,7 +40,7 @@ echo "Updating libembroidery"
 git submodule init
 git submodule update
 cd libembroidery
-git pull origin master
+git pull origin main
 cd ..
 
 echo "Building webpages"
