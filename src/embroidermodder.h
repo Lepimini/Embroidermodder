@@ -11,8 +11,6 @@ extern "C" {
  * Defines
  * -------
  */
-
-#define DEBUG                          1
 #define MAX_STRING_LENGTH            500
 
 #define TOOLBAR_FILE                   0
@@ -844,23 +842,52 @@ TODO: ACTION_quickselect
  * ========
  *
  * Action
- * ------
+ * -----------------------------------------------------------------------------
  *
- * The object flag 
+ * DESCRIPTION
+ * -----------
  *
- * The icon index determines which icon from the table is associate with
- * the action.
+ * object 
+ *     The object flag 
+ *
+ * icon
+ *     The icon index determines which icon from the table is associate with
+ *     the action.
  *
  * (Not implemented)
- * The permissions flag determines whether the user or the system can
- * run this action.
+ *     The permissions flag determines whether the user or the system can
+ *     run this action.
  *
- * The mode argument determines what locations in the interface
- * the action will appear in, for example in mode MODE_TOOLBAR,
- * the action appears in the toolbars, in MODE_TOOLBAR | MODE_LINE_EDIT_DOUBLE
- * it also appears as a lineEdit in the property editor expecting a
- * double as input.
+ *     The mode argument determines what locations in the interface
+ *     the action will appear in, for example in mode MODE_TOOLBAR,
+ *     the action appears in the toolbars, in MODE_TOOLBAR | MODE_LINE_EDIT_DOUBLE
+ *     it also appears as a lineEdit in the property editor expecting a
+ *     double as input.
  *
+ * abbreviation
+ *     .
+ *
+ * menu_name
+ *     .
+ *
+ * description
+ *     .
+ *
+ * shortcut
+ *     .
+ *
+ * function
+ *     The function to call, which only uses global variables, so we can take
+ *     a void in, void out pointer.
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * FUNCTIONS
+ * ---------
+ *
+ * The action typedef is used in 
+ *
+ * -----------------------------------------------------------------------------
  */
 
 typedef struct Action {
@@ -875,9 +902,68 @@ typedef struct Action {
     void (*function)(void);
 } action;
 
+/* Textures
+ * --------
+ */
+
+typedef struct Texture_t {
+    float corners[8];
+    int width;
+    int height;
+} texture_t;
+
+/* Widget
+ * -----------------------------------------------------------------------------
+ *
+ * DESCRIPTION
+ * -----------
+ *
+ * svg_path
+ *     If the widget is a button, it needs a symbol. The svg_path is the path
+ *     that draws the symbol using the .
+ *
+ * width
+ *     The width as a proportion of the total width of the parent.
+ *     0.1 means 10% of the width of the parent.
+ *
+ * height
+ *     The height as a proportion of the total width of the parent.
+ *     0.1 means 10% of the width of the parent.
+ *
+ * left
+ *     A leaf widget, as part of the binary tree of widgets. Fill this entry
+ *     first, then the right widget, then the left widget's left widget.
+ *
+ * right
+ *     A leaf widget, as part of the binary tree of widgets.
+ *
+ * position
+ *     Relative to its parent, where should the widget go (the top left corner's
+ *     offset from the top left corner).
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * FUNCTIONS
+ * ---------
+ * 
+ * 
+ *
+ * -----------------------------------------------------------------------------
+ */
+
+typedef struct Widget_ widget;
+
+struct Widget_ {
+    char svg_path[300];
+    float width;
+    float height;
+    struct Widget_ *left;
+    struct Widget_ *right;
+    EmbVector position;
+};
+
 /* Text Properties
  * ---------------
- *
  */
 
 typedef struct Text_Properties {
@@ -1031,6 +1117,8 @@ extern char undo_history[1000][100];
 extern int exitApp;
 extern settings_wrapper settings, preview, dialog, accept_;
 extern const char *origin_string[];
+extern widget root;
+extern int debug_mode;
 
 /* C functions for embroidermodder
  * -------------------------------
@@ -1043,7 +1131,7 @@ void debug_message(const char *format, ...);
 void app_dir(char *string, int folder);
 int file_exists(char *fname);
 int parseJSON(char *fname);
-int main_tex_example(int, char*argv[]);
+int old_main(int, char*argv[]);
 double radians(double);
 double degrees(double);
 double sgn(double x);

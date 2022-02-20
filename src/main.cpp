@@ -10367,13 +10367,8 @@ void LayerManager::addLayer(const QString& name,
     layerModel->setData(layerModel->index(0, 7), print);
 }
 
-int main(int argc, char* argv[])
+int old_main(int argc, char* argv[])
 {
-    if (argc > 1) {
-        main_tex_example(argc, argv);
-        return 0;
-    }
-
 #if defined(Q_OS_MAC)
     Application app(argc, argv);
 #else

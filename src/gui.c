@@ -1,10 +1,16 @@
-/* Embroidermodder 2.
- * ------------------------------------------------------------
- * Copyright 2021 The Embroidermodder Team
- * Embroidermodder 2 is Open Source Software.
- * See LICENSE.txt for licensing terms.
- * ------------------------------------------------------------
- * This file is for the functions, not the data, of embroidermodder 2.
+/* This file is part of Embroidermodder 2.
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright 2013-2022 The Embroidermodder Team
+ * Embroidermodder 2 is Open Source Software under the zlib licence.
+ * See LICENCE for details.
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * This is the heart of the program, we're working on replacing
+ * the Qt reliance, so these functions and data represent the core
+ * of the program.
  */
 
 #include <stdio.h>
@@ -25,13 +31,12 @@
 
 #include "embroidermodder.h"
 
-typedef struct Texture_t {
-    float corners[8];
-    int width;
-    int height;
-} texture_t;
+/* FUNCTION DECLARATIONS */
+void right_click_menu(void);
+void make_button(char *svg_path, float scale[2]);
 
 /* DATA SECTION */
+int debug_mode = 1;
 texture_t tex[N_TEXTURES];
 GLuint texture[N_TEXTURES];
 int interaction_mode = 0;
@@ -45,309 +50,10 @@ char undo_history[1000][100];
 int undo_history_length = 0;
 int undo_history_position = 0;
 settings_wrapper settings, preview, dialog, accept_;
-
-void usage(void)
-{
-    fprintf(stderr,
-  " ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ " "\n"
-  "| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ |     |/  \\|   \\|   \\| __| _ \\  |__ \\" "\n"
-  "| __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/" "\n"
-  "|___|_|_|_|___/|_|\\_\\\\__/|_|___/|___|_|\\_\\|_|_|_|\\__/|___/|___/|___|_|\\_\\ |___|" "\n"
-  " _____________________________________________________________________________ " "\n"
-  "|                                                                             | "  "\n"
-  "|                   http://embroidermodder.github.io                          | "  "\n"
-  "|_____________________________________________________________________________| "  "\n"
-  " " "\n"
-  "Usage: embroidermodder [options] files ..."  "\n"
-   /*80CHARS======================================================================MAX*/
-  "Options:"  "\n"
-  "  -d, --debug      Print lots of debugging information." "\n"
-  "  -h, --help       Print this message and exit." "\n"
-  "  -v, --version    Print the version number of embroidermodder and exit."  "\n"
-  "\n"
-           );
-    exitApp = 1;
-}
-
-void version()
-{
-    fprintf(stdout, "%s %s\n", _appName_, _appVer_);
-    exitApp = 1;
-}
-
-
-/* FUNCTIONS SECTION */
-
-int main_tex_example(int argc, char *argv[])
-{
-    int window;
-    int rightclick_menu;
-    int file_menu, edit_menu, settings_menu, window_menu, help_menu;
-    int i, ntextures;
-    puts("SDL2 version of Embroidermodder");
-    
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(window_width, window_height);
-    glutInitWindowPosition(100,100);
-    window = glutCreateWindow("Embroidermodder 2 (SDL)");
-    glClearColor (0.5, 0.5, 0.5, 0.0);
-    
-    file_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("New", ACTION_new);
-    glutAddMenuEntry("Open", ACTION_open);
-    glutAddMenuEntry("Save", ACTION_save);
-    glutAddMenuEntry("Save as", ACTION_saveas);
-    glutAddMenuEntry("Exit", ACTION_exit);
-    edit_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    settings_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    window_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    help_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    rightclick_menu = glutCreateMenu(menu___);
-    glutAddSubMenu("File", file_menu);
-    glutAddSubMenu("Edit", edit_menu);
-    glutAddSubMenu("Settings", settings_menu);
-    glutAddSubMenu("Window", window_menu);
-    glutAddSubMenu("Help", help_menu);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    ntextures = 2;
-    glGenTextures(N_TEXTURES, texture);
-    for (i=0; i<N_TEXTURES; i++) {
-        generate_texture(i);
-    }
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-    glEnable(GL_TEXTURE_2D);
-    glShadeModel(GL_FLAT);
-    glutDisplayFunc(display);
-    glutKeyboardFunc(key_handler);
-    glutMainLoop();
-    return 0;
-}
-
-double sgn(double x)
-{
-    if (x > 0.0) return 1.0;
-    else if(x < 0.0) return -1.0;
-    else return 0.0;
-}
-
-double theta(double x)
-{
-    if (x < 0.0) return 0.0;
-    else return 1.0;
-}
-
-EmbVector unit_vector(float angle)
-{
-    EmbVector u;
-    u.x = cos(angle);
-    u.y = sin(angle);
-    return u;
-}
-
-EmbVector rotate_vector(EmbVector a, float angle)
-{
-    EmbVector rot;
-    EmbVector u = unit_vector(angle);
-    rot.x = a.x*u.x - a.y*u.y;
-    rot.y = a.x*u.y + a.y*u.x;
-    return rot;
-}
-
-EmbVector scale_vector(EmbVector a, float scale)
-{
-    a.x *= scale;
-    a.y *= scale;
-    return a;
-}
-
-EmbVector scale_and_rotate(EmbVector a, float scale, float angle)
-{
-    a = scale_vector(a, scale);
-    a = rotate_vector(a, angle);
-    return a;
-}
-
-
-void app_dir(char *output, int folder)
-{
-#if defined(__unix__) || defined(__linux__)
-    char *separator = "/";
-
-    strcpy(output, getenv("HOME"));
-
-    /* On MacOS we set a system "HOME" manually if it is not set. */
-    if (!output) {
-        struct passwd* pwd = getpwuid(getuid());
-        if (pwd) {
-            output = pwd->pw_dir;
-        }
-        else {
-            printf("ERROR: failed to set HOME.");
-        }
-    }
-
-#else
-    char *separator = "\\";
-
-    strcpy(output, getenv("HOMEDRIVE"));
-    strcat(output, getenv("HOMEPATH"));
-#endif
-
-    strcat(output, separator);
-    strcat(output, ".embroidermodder2");
-    strcat(output, separator);
-
-    if (folder >= 0 && folder < nFolders) {
-        strcat(output, folders[folder]);
-        strcat(output, separator);
-    }
-}
-
-/* UTILITY FUNCTIONS FOR ALL SYSTEMS */
-void debug_message(const char *format, ...)
-{
-    if (DEBUG) {
-        va_list args;
-        va_start(args, format);
-        vprintf(format, args);
-        printf("\n");
-        va_end(args);
-    }
-}
-
-int file_exists(char *fname)
-{
-    struct stat stats;
-    return !stat(fname, &stats);
-}
-
-/*
-void render_quadlist(quad *qlist)
-{
-    int i;
-    glViewport(0, 0, window_width, window_height);
-    glClearColor(1.0, 1.0, 1.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    for (i=0; qlist[i].flag; i++) {
-        glColor3f(qlist[i].red, qlist[i].green, qlist[i].blue);
-        glBegin(GL_QUADS);
-        glVertex2f(qlist[i].left, qlist[i].top);
-        glVertex2f(qlist[i].left, qlist[i].bottom);
-        glVertex2f(qlist[i].right, qlist[i].bottom);
-        glVertex2f(qlist[i].right, qlist[i].top);
-        glEnd();
-    }
-}
-*/
-
-void menu___(int key)
-{
-    switch (key) {
-    default:
-        break;
-    }
-}
-
-void display()
-{
-    /* render_quadlist(quad_list1); */
-    int i;
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (i=0; i<N_TEXTURES; i++) {
-        glBindTexture(GL_TEXTURE_2D, texture[i]);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0);
-        glVertex2f(tex[i].corners[0], tex[i].corners[1]);
-        glTexCoord2f(0.0, 1.0);
-        glVertex2f(tex[i].corners[2], tex[i].corners[3]);
-        glTexCoord2f(1.0, 1.0);
-        glVertex2f(tex[i].corners[4], tex[i].corners[5]);
-        glTexCoord2f(1.0, 0.0);
-        glVertex2f(tex[i].corners[6], tex[i].corners[7]);
-        glEnd();
-    }
-    glutSwapBuffers();
-}
-
-void key_handler(int key, int x, int y)
-{
-    switch (key) {
-    case 27:
-        exit(0);
-    default:
-        break;
-    }
-}
-
-void generate_texture(int i)
-{
-    unsigned char data[128*128*3];
-    int j;
-    for (j=0; j<128*128; j++) {
-        data[3*j] = j%256;
-        data[3*j+1] = j%256;
-        data[3*j+2] = j%256;
-    }
-    tex[i].width = 128;
-    tex[i].height = 128;
-    tex[i].corners[0] = 0.0;
-    tex[i].corners[1] = 0.0;
-    tex[i].corners[2] = 0.0;
-    tex[i].corners[3] = 1.0;
-    tex[i].corners[4] = 1.0;
-    tex[i].corners[5] = 1.0;
-    tex[i].corners[6] = 1.0;
-    tex[i].corners[7] = 0.0;
-    glBindTexture(GL_TEXTURE_2D, texture[i]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, tex[i].width, tex[i].height, 0,
-        GL_RGB, GL_UNSIGNED_BYTE, data);
-}
-
-char *translate(char *a)
-{
-    return a;
-}
-
-void
-to_lower(char *dst, char *src)
-{
-    int i;
-    for (i=0; i<MAX_STRING_LENGTH; i++) {
-        if (src[i] >= 'A' && src[i] <= 'Z') {
-            dst[i] = src[i] - 'A';
-        }
-        else {
-            dst[i] = src[i];
-        }
-    }
-}
-
-
-/* This file is part of Embroidermodder 2.
- * ------------------------------------------------------------
- * Copyright 2021 The Embroidermodder Team
- * Embroidermodder 2 is Open Source Software.
- * See LICENSE.txt for licensing terms.
- * ------------------------------------------------------------
- * This file is only for data and declarations that
- * are compiled into the source.
- */
-
 const char* _appName_ = "Embroidermodder";
 const char* _appVer_ = "v2.0 alpha";
 int exitApp = 0;
+widget root;
 
 const char *origin_string[] = {
     "M 0.0 0.5",
@@ -2064,3 +1770,305 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
     }
 };
 #endif
+
+/* FUNCTIONS SECTION */
+
+int main(int argc, char *argv[])
+{
+    int window, i, ntextures;
+    puts("FreeGLUT3 version of Embroidermodder");
+    if (argc > 1) {
+        old_main(argc, argv);
+        return 0;
+    }
+    
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitWindowSize(window_width, window_height);
+    glutInitWindowPosition(100,100);
+    window = glutCreateWindow("Embroidermodder 2");
+    glClearColor (0.5, 0.5, 0.5, 0.0);
+
+    right_click_menu();
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    ntextures = 2;
+    glGenTextures(N_TEXTURES, texture);
+    for (i=0; i<N_TEXTURES; i++) {
+        generate_texture(i);
+    }
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    glEnable(GL_TEXTURE_2D);
+    glShadeModel(GL_FLAT);
+    glutDisplayFunc(display);
+    glutKeyboardFunc(key_handler);
+    glutMainLoop();
+    return 0;
+}
+
+void make_button(char *svg_path, float scale[2])
+{
+
+}
+
+void right_click_menu(void)
+{
+    int rightclick_menu;
+    int file_menu, edit_menu, settings_menu, window_menu, help_menu;
+    file_menu = glutCreateMenu(menu___);
+    glutAddMenuEntry("New", ACTION_new);
+    glutAddMenuEntry("Open", ACTION_open);
+    glutAddMenuEntry("Save", ACTION_save);
+    glutAddMenuEntry("Save as", ACTION_saveas);
+    glutAddMenuEntry("Exit", ACTION_exit);
+    edit_menu = glutCreateMenu(menu___);
+    glutAddMenuEntry("Undo", ACTION_undo);
+    settings_menu = glutCreateMenu(menu___);
+    glutAddMenuEntry("Undo", ACTION_undo);
+    window_menu = glutCreateMenu(menu___);
+    glutAddMenuEntry("Undo", ACTION_undo);
+    help_menu = glutCreateMenu(menu___);
+    glutAddMenuEntry("Undo", ACTION_undo);
+    rightclick_menu = glutCreateMenu(menu___);
+    glutAddSubMenu("File", file_menu);
+    glutAddSubMenu("Edit", edit_menu);
+    glutAddSubMenu("Settings", settings_menu);
+    glutAddSubMenu("Window", window_menu);
+    glutAddSubMenu("Help", help_menu);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+
+double sgn(double x)
+{
+    if (x > 0.0) return 1.0;
+    else if(x < 0.0) return -1.0;
+    else return 0.0;
+}
+
+double theta(double x)
+{
+    if (x < 0.0) return 0.0;
+    else return 1.0;
+}
+
+EmbVector unit_vector(float angle)
+{
+    EmbVector u;
+    u.x = cos(angle);
+    u.y = sin(angle);
+    return u;
+}
+
+EmbVector rotate_vector(EmbVector a, float angle)
+{
+    EmbVector rot;
+    EmbVector u = unit_vector(angle);
+    rot.x = a.x*u.x - a.y*u.y;
+    rot.y = a.x*u.y + a.y*u.x;
+    return rot;
+}
+
+EmbVector scale_vector(EmbVector a, float scale)
+{
+    a.x *= scale;
+    a.y *= scale;
+    return a;
+}
+
+EmbVector scale_and_rotate(EmbVector a, float scale, float angle)
+{
+    a = scale_vector(a, scale);
+    a = rotate_vector(a, angle);
+    return a;
+}
+
+
+void app_dir(char *output, int folder)
+{
+#if defined(__unix__) || defined(__linux__)
+    char *separator = "/";
+
+    strcpy(output, getenv("HOME"));
+
+    /* On MacOS we set a system "HOME" manually if it is not set. */
+    if (!output) {
+        struct passwd* pwd = getpwuid(getuid());
+        if (pwd) {
+            output = pwd->pw_dir;
+        }
+        else {
+            printf("ERROR: failed to set HOME.");
+        }
+    }
+
+#else
+    char *separator = "\\";
+
+    strcpy(output, getenv("HOMEDRIVE"));
+    strcat(output, getenv("HOMEPATH"));
+#endif
+
+    strcat(output, separator);
+    strcat(output, ".embroidermodder2");
+    strcat(output, separator);
+
+    if (folder >= 0 && folder < nFolders) {
+        strcat(output, folders[folder]);
+        strcat(output, separator);
+    }
+}
+
+/* UTILITY FUNCTIONS FOR ALL SYSTEMS */
+void debug_message(const char *format, ...)
+{
+    if (debug_mode) {
+        va_list args;
+        va_start(args, format);
+        vprintf(format, args);
+        printf("\n");
+        va_end(args);
+    }
+}
+
+int file_exists(char *fname)
+{
+    struct stat stats;
+    return !stat(fname, &stats);
+}
+
+/*
+void render_quadlist(quad *qlist)
+{
+    int i;
+    glViewport(0, 0, window_width, window_height);
+    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    for (i=0; qlist[i].flag; i++) {
+        glColor3f(qlist[i].red, qlist[i].green, qlist[i].blue);
+        glBegin(GL_QUADS);
+        glVertex2f(qlist[i].left, qlist[i].top);
+        glVertex2f(qlist[i].left, qlist[i].bottom);
+        glVertex2f(qlist[i].right, qlist[i].bottom);
+        glVertex2f(qlist[i].right, qlist[i].top);
+        glEnd();
+    }
+}
+*/
+
+void menu___(int key)
+{
+    switch (key) {
+    default:
+        break;
+    }
+}
+
+void display()
+{
+    /* render_quadlist(quad_list1); */
+    int i;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    for (i=0; i<N_TEXTURES; i++) {
+        glBindTexture(GL_TEXTURE_2D, texture[i]);
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0, 0.0);
+        glVertex2f(tex[i].corners[0], tex[i].corners[1]);
+        glTexCoord2f(0.0, 1.0);
+        glVertex2f(tex[i].corners[2], tex[i].corners[3]);
+        glTexCoord2f(1.0, 1.0);
+        glVertex2f(tex[i].corners[4], tex[i].corners[5]);
+        glTexCoord2f(1.0, 0.0);
+        glVertex2f(tex[i].corners[6], tex[i].corners[7]);
+        glEnd();
+    }
+    glutSwapBuffers();
+}
+
+void key_handler(int key, int x, int y)
+{
+    switch (key) {
+    case 27:
+        exit(0);
+    default:
+        break;
+    }
+}
+
+void generate_texture(int i)
+{
+    unsigned char data[128*128*3];
+    int j;
+    for (j=0; j<128*128; j++) {
+        data[3*j] = j%256;
+        data[3*j+1] = j%256;
+        data[3*j+2] = j%256;
+    }
+    tex[i].width = 128;
+    tex[i].height = 128;
+    tex[i].corners[0] = 0.0;
+    tex[i].corners[1] = 0.0;
+    tex[i].corners[2] = 0.0;
+    tex[i].corners[3] = 1.0;
+    tex[i].corners[4] = 1.0;
+    tex[i].corners[5] = 1.0;
+    tex[i].corners[6] = 1.0;
+    tex[i].corners[7] = 0.0;
+    glBindTexture(GL_TEXTURE_2D, texture[i]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, tex[i].width, tex[i].height, 0,
+        GL_RGB, GL_UNSIGNED_BYTE, data);
+}
+
+char *translate(char *a)
+{
+    return a;
+}
+
+void
+to_lower(char *dst, char *src)
+{
+    int i;
+    for (i=0; i<MAX_STRING_LENGTH; i++) {
+        if (src[i] >= 'A' && src[i] <= 'Z') {
+            dst[i] = src[i] - 'A';
+        }
+        else {
+            dst[i] = src[i];
+        }
+    }
+}
+
+void usage(void)
+{
+    fprintf(stderr,
+  " ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ " "\n"
+  "| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ |     |/  \\|   \\|   \\| __| _ \\  |__ \\" "\n"
+  "| __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/" "\n"
+  "|___|_|_|_|___/|_|\\_\\\\__/|_|___/|___|_|\\_\\|_|_|_|\\__/|___/|___/|___|_|\\_\\ |___|" "\n"
+  " _____________________________________________________________________________ " "\n"
+  "|                                                                             | "  "\n"
+  "|                   http://embroidermodder.github.io                          | "  "\n"
+  "|_____________________________________________________________________________| "  "\n"
+  " " "\n"
+  "Usage: embroidermodder [options] files ..."  "\n"
+   /*80CHARS======================================================================MAX*/
+  "Options:"  "\n"
+  "  -d, --debug      Print lots of debugging information." "\n"
+  "  -h, --help       Print this message and exit." "\n"
+  "  -v, --version    Print the version number of embroidermodder and exit."  "\n"
+  "\n"
+           );
+    exitApp = 1;
+}
+
+void version()
+{
+    fprintf(stdout, "%s %s\n", _appName_, _appVer_);
+    exitApp = 1;
+}
+
