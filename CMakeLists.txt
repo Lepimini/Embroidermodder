@@ -179,9 +179,9 @@ ENDIF()
 
 add_executable(embroidermodder
 	src/main.cpp
-	src/actions.cpp
 	src/gui.c
 	src/config.c
+	src/tables.c
 	src/embroidermodder.h
 	libembroidery/embroidery.c
 	${FREEGLUT_SRCS}
