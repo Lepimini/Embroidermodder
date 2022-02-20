@@ -1,3 +1,20 @@
+/* This file is part of Embroidermodder 2.
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * Copyright 2013-2022 The Embroidermodder Team
+ * Embroidermodder 2 is Open Source Software under the zlib licence.
+ * See LICENCE for details.
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * We're in the process of translating this common code into mostly C by
+ * building a basic binary tree widget system.
+ *
+ * The structs are fully documented here, please read this documentation
+ * before any other inside the code itself.
+ */
+
 #ifndef EMBROIDERMODDER_H
 #define EMBROIDERMODDER_H
 
@@ -844,8 +861,13 @@ TODO: ACTION_quickselect
  * Action
  * -----------------------------------------------------------------------------
  *
- * DESCRIPTION
- * -----------
+ * OVERVIEW
+ *
+ * 
+ * 
+ * -----------------------------------------------------------------------------
+ *
+ * DESCRIPTION OF STRUCT CONTENTS
  *
  * object 
  *     The object flag 
@@ -883,7 +905,6 @@ TODO: ACTION_quickselect
  * -----------------------------------------------------------------------------
  *
  * FUNCTIONS
- * ---------
  *
  * The action typedef is used in 
  *
@@ -915,8 +936,21 @@ typedef struct Texture_t {
 /* Widget
  * -----------------------------------------------------------------------------
  *
- * DESCRIPTION
- * -----------
+ * OVERVIEW
+ *
+ * All buttons, shortcuts, menus and regions of the windows should be widgets.
+ *
+ * The widgets are stored, accessed and altered via a binary tree where the
+ * left side is dominant. 
+ *
+ * The strength of the new GUI relies heavily on this core concept. All the
+ * FreeGLUT 3 calls will happen at the end of calls to the widgets.
+ *
+ * Perhaps the action system should be connected to this somehow?
+ *
+ * -----------------------------------------------------------------------------
+ *
+ * DESCRIPTION OF STRUCT CONTENTS
  *
  * svg_path
  *     If the widget is a button, it needs a symbol. The svg_path is the path
@@ -944,9 +978,16 @@ typedef struct Texture_t {
  * -----------------------------------------------------------------------------
  *
  * FUNCTIONS
- * ---------
  * 
- * 
+ * widget *make_widget(float width, float height);
+ *     Allocate the memory for the widget and initialise all the values.
+ *
+ * void draw_widget(widget *w);
+ *     Recursively draw the widgets starting at the supplied node, so draw
+ *     the window is "draw_widget(root);"
+ *
+ * void free_widget(widget *w);
+ *     Recursively free all the widgets starting at the supplied node.
  *
  * -----------------------------------------------------------------------------
  */
@@ -954,7 +995,7 @@ typedef struct Texture_t {
 typedef struct Widget_ widget;
 
 struct Widget_ {
-    char svg_path[300];
+    char svg_path[MAX_STRING_LENGTH];
     float width;
     float height;
     struct Widget_ *left;
@@ -1117,7 +1158,7 @@ extern char undo_history[1000][100];
 extern int exitApp;
 extern settings_wrapper settings, preview, dialog, accept_;
 extern const char *origin_string[];
-extern widget root;
+extern widget *root;
 extern int debug_mode;
 
 /* C functions for embroidermodder
