@@ -559,13 +559,13 @@ QPixmap *draw_pixmap(const char *description)
     return icon;
 }
 
-QIcon loadIcon(int icon_id)
+QIcon loadIcon(const char **icon)
 {
     /* so we can experiment with different icon generation methods */
-    if (icons[icon_id][0][0] == 'C') {
-        return QIcon(*draw_pixmap(icons[icon_id][0]+2));
+    if (icon[0][0] == 'C') {
+        return QIcon(*draw_pixmap(icon[0]+2));
     }
-    return QIcon(QPixmap(icons[icon_id]));
+    return QIcon(QPixmap(icon));
 }
 
 void get_n_floats(const char *command, float *out, int n)

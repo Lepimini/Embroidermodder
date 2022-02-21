@@ -1940,22 +1940,22 @@ void View::contextMenuEvent(QContextMenuEvent* event)
     menu.addSeparator();
 
     if (!selectionEmpty) {
-        QAction* deleteAction = new QAction(loadIcon(icon_erase), "D&elete", this);
+        QAction* deleteAction = new QAction(loadIcon(erase_xpm), "D&elete", this);
         deleteAction->setStatusTip("Removes objects from a drawing.");
         connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteSelected()));
         menu.addAction(deleteAction);
 
-        QAction* moveAction = new QAction(loadIcon(icon_move), "&Move", this);
+        QAction* moveAction = new QAction(loadIcon(move_xpm), "&Move", this);
         moveAction->setStatusTip("Displaces objects a specified distance in a specified direction.");
         connect(moveAction, SIGNAL(triggered()), this, SLOT(moveAction()));
         menu.addAction(moveAction);
 
-        QAction* scaleAction = new QAction(loadIcon(icon_scale), "Sca&le", this);
+        QAction* scaleAction = new QAction(loadIcon(scale_xpm), "Sca&le", this);
         scaleAction->setStatusTip("Enlarges or reduces objects proportionally in the X, Y, and Z directions.");
         connect(scaleAction, SIGNAL(triggered()), this, SLOT(scaleAction()));
         menu.addAction(scaleAction);
 
-        QAction* rotateAction = new QAction(loadIcon(icon_rotate), "R&otate", this);
+        QAction* rotateAction = new QAction(loadIcon(rotate_xpm), "R&otate", this);
         rotateAction->setStatusTip("Rotates objects about a base point.");
         connect(rotateAction, SIGNAL(triggered()), this, SLOT(rotateAction()));
         menu.addAction(rotateAction);
@@ -2476,19 +2476,19 @@ QWidget* Settings_Dialog::createTabGeneral()
     strcpy(dialog.general_icon_theme, settings.general_icon_theme);
     foreach(QString dirName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
     {
-        comboBoxIconTheme->addItem(loadIcon(icon_theme), dirName);
+        comboBoxIconTheme->addItem(loadIcon(theme_xpm), dirName);
     }
     comboBoxIconTheme->setCurrentIndex(comboBoxIconTheme->findText(dialog.general_icon_theme));
     connect(comboBoxIconTheme, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(comboBoxIconThemeCurrentIndexChanged(const QString&)));
 
     QLabel* labelIconSize = new QLabel(tr("Icon Size"), groupBoxIcon);
     QComboBox* comboBoxIconSize = new QComboBox(groupBoxIcon);
-    comboBoxIconSize->addItem(loadIcon(icon_icon16), "Very Small", 16);
-    comboBoxIconSize->addItem(loadIcon(icon_icon24), "Small", 24);
-    comboBoxIconSize->addItem(loadIcon(icon_icon32), "Medium", 32);
-    comboBoxIconSize->addItem(loadIcon(icon_icon48), "Large", 48);
-    comboBoxIconSize->addItem(loadIcon(icon_icon64), "Very Large", 64);
-    comboBoxIconSize->addItem(loadIcon(icon_icon128), "I'm Blind", 128);
+    comboBoxIconSize->addItem(loadIcon(icon16_xpm), "Very Small", 16);
+    comboBoxIconSize->addItem(loadIcon(icon24_xpm), "Small", 24);
+    comboBoxIconSize->addItem(loadIcon(icon32_xpm), "Medium", 32);
+    comboBoxIconSize->addItem(loadIcon(icon48_xpm), "Large", 48);
+    comboBoxIconSize->addItem(loadIcon(icon64_xpm), "Very Large", 64);
+    comboBoxIconSize->addItem(loadIcon(icon128_xpm), "I'm Blind", 128);
     dialog.general_icon_size = settings.general_icon_size;
     comboBoxIconSize->setCurrentIndex(comboBoxIconSize->findData(dialog.general_icon_size));
     connect(comboBoxIconSize, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxIconSizeCurrentIndexChanged(int)));
@@ -2942,7 +2942,7 @@ QWidget* Settings_Dialog::createTabPrinting()
     QList<QPrinterInfo> listAvailPrinters = QPrinterInfo::availablePrinters();
     foreach(QPrinterInfo info, listAvailPrinters)
     {
-        comboBoxDefaultDevice->addItem(loadIcon(icon_print), info.printerName());
+        comboBoxDefaultDevice->addItem(loadIcon(print_xpm), info.printerName());
     }
 
     QVBoxLayout* vboxLayoutDefaultPrinter = new QVBoxLayout(groupBoxDefaultPrinter);
@@ -3334,19 +3334,19 @@ QWidget* Settings_Dialog::createTabQuickSnap()
     connect(buttonQSnapSelectAll, SIGNAL(clicked()), this, SLOT(buttonQSnapSelectAllClicked()));
     connect(buttonQSnapClearAll, SIGNAL(clicked()), this, SLOT(buttonQSnapClearAllClicked()));
 
-    make_check_box("Endpoint", qsnap_endpoint, icon_locator_snaptoendpoint, checkBoxQSnapEndPointStateChanged, 0, 0);
-    make_check_box("Midpoint", qsnap_midpoint, icon_locator_snaptomidpoint, checkBoxQSnapMidPointStateChanged, 1, 0);
-    make_check_box("Center", qsnap_center, icon_locator_snaptocenter, checkBoxQSnapCenterStateChanged, 2, 0);
-    make_check_box("Node", qsnap_node, icon_locator_snaptonode, checkBoxQSnapNodeStateChanged, 3, 0);
-    make_check_box("Quadrant", qsnap_quadrant, icon_locator_snaptoquadrant, checkBoxQSnapQuadrantStateChanged, 4, 0);
-    make_check_box("Intersection", qsnap_intersection, icon_locator_snaptointersection, checkBoxQSnapIntersectionStateChanged, 5, 0);
-    make_check_box("Extension", qsnap_extension, icon_locator_snaptoextension, checkBoxQSnapExtensionStateChanged, 6, 0);
-    make_check_box("Insertion", qsnap_insertion, icon_locator_snaptoinsert, checkBoxQSnapInsertionStateChanged, 0, 1);
-    make_check_box("Perpendicular", qsnap_perpendicular, icon_locator_snaptoperpendicular, checkBoxQSnapPerpendicularStateChanged, 1, 1);
-    make_check_box("Tangent", qsnap_tangent, icon_locator_snaptotangent, checkBoxQSnapTangentStateChanged, 2, 1);
-    make_check_box("Nearest", qsnap_nearest, icon_locator_snaptonearest, checkBoxQSnapNearestStateChanged, 3, 1);
-    make_check_box("Apparent Intersection", qsnap_apparent, icon_locator_snaptoapparentintersection, checkBoxQSnapApparentIntersectionStateChanged, 4, 1);
-    make_check_box("Parallel", qsnap_parallel, icon_locator_snaptoparallel, checkBoxQSnapParallelStateChanged, 5, 1);
+    make_check_box("Endpoint", qsnap_endpoint, locator_snaptoendpoint_xpm, checkBoxQSnapEndPointStateChanged, 0, 0);
+    make_check_box("Midpoint", qsnap_midpoint, locator_snaptomidpoint_xpm, checkBoxQSnapMidPointStateChanged, 1, 0);
+    make_check_box("Center", qsnap_center, locator_snaptocenter_xpm, checkBoxQSnapCenterStateChanged, 2, 0);
+    make_check_box("Node", qsnap_node, locator_snaptonode_xpm, checkBoxQSnapNodeStateChanged, 3, 0);
+    make_check_box("Quadrant", qsnap_quadrant, locator_snaptoquadrant_xpm, checkBoxQSnapQuadrantStateChanged, 4, 0);
+    make_check_box("Intersection", qsnap_intersection, locator_snaptointersection_xpm, checkBoxQSnapIntersectionStateChanged, 5, 0);
+    make_check_box("Extension", qsnap_extension, locator_snaptoextension_xpm, checkBoxQSnapExtensionStateChanged, 6, 0);
+    make_check_box("Insertion", qsnap_insertion, locator_snaptoinsert_xpm, checkBoxQSnapInsertionStateChanged, 0, 1);
+    make_check_box("Perpendicular", qsnap_perpendicular, locator_snaptoperpendicular_xpm, checkBoxQSnapPerpendicularStateChanged, 1, 1);
+    make_check_box("Tangent", qsnap_tangent, locator_snaptotangent_xpm, checkBoxQSnapTangentStateChanged, 2, 1);
+    make_check_box("Nearest", qsnap_nearest, locator_snaptonearest_xpm, checkBoxQSnapNearestStateChanged, 3, 1);
+    make_check_box("Apparent Intersection", qsnap_apparent, locator_snaptoapparentintersection_xpm, checkBoxQSnapApparentIntersectionStateChanged, 4, 1);
+    make_check_box("Parallel", qsnap_parallel, locator_snaptoparallel_xpm, checkBoxQSnapParallelStateChanged, 5, 1);
 
     gridLayoutQSnap->addWidget(buttonQSnapSelectAll, 0, 2, Qt::AlignLeft);
     gridLayoutQSnap->addWidget(buttonQSnapClearAll, 1, 2, Qt::AlignLeft);
@@ -3576,13 +3576,13 @@ QWidget* Settings_Dialog::createTabSelection()
 
 void Settings_Dialog::addColorsToComboBox(QComboBox* comboBox)
 {
-    comboBox->addItem(loadIcon(icon_colorred), tr("Red"), qRgb(255, 0, 0));
-    comboBox->addItem(loadIcon(icon_coloryellow), tr("Yellow"), qRgb(255,255, 0));
-    comboBox->addItem(loadIcon(icon_colorgreen), tr("Green"), qRgb(  0,255, 0));
-    comboBox->addItem(loadIcon(icon_colorcyan), tr("Cyan"), qRgb(  0,255,255));
-    comboBox->addItem(loadIcon(icon_colorblue), tr("Blue"), qRgb(  0, 0,255));
-    comboBox->addItem(loadIcon(icon_colormagenta), tr("Magenta"), qRgb(255, 0,255));
-    comboBox->addItem(loadIcon(icon_colorwhite), tr("White"), qRgb(255,255,255));
+    comboBox->addItem(loadIcon(colorred_xpm), tr("Red"), qRgb(255, 0, 0));
+    comboBox->addItem(loadIcon(coloryellow_xpm), tr("Yellow"), qRgb(255,255, 0));
+    comboBox->addItem(loadIcon(colorgreen_xpm), tr("Green"), qRgb(  0,255, 0));
+    comboBox->addItem(loadIcon(colorcyan_xpm), tr("Cyan"), qRgb(  0,255,255));
+    comboBox->addItem(loadIcon(colorblue_xpm), tr("Blue"), qRgb(  0, 0,255));
+    comboBox->addItem(loadIcon(colormagenta_xpm), tr("Magenta"), qRgb(255, 0,255));
+    comboBox->addItem(loadIcon(colorwhite_xpm), tr("White"), qRgb(255,255,255));
     /* TODO: Add Other... so the user can select custom colors */
 }
 
@@ -4587,7 +4587,7 @@ QComboBox* PropertyEditor::createComboBoxSelected()
 QToolButton* PropertyEditor::createToolButtonQSelect()
 {
     toolButtonQSelect = new QToolButton(this);
-    toolButtonQSelect->setIcon(loadIcon(icon_quickselect));
+    toolButtonQSelect->setIcon(loadIcon(quickselect_xpm));
     toolButtonQSelect->setIconSize(QSize(iconSize, iconSize));
     toolButtonQSelect->setText("QSelect");
     toolButtonQSelect->setToolTip("QSelect"); /*TODO: Better Description*/
@@ -4608,14 +4608,14 @@ void PropertyEditor::updatePickAddModeButton(int pickAddMode)
 {
     pickAdd = pickAddMode;
     if (pickAdd) {
-        toolButtonPickAdd->setIcon(loadIcon(icon_pickadd));
+        toolButtonPickAdd->setIcon(loadIcon(pickadd_xpm));
         toolButtonPickAdd->setIconSize(QSize(iconSize, iconSize));
         toolButtonPickAdd->setText("PickAdd");
         toolButtonPickAdd->setToolTip("PickAdd Mode - Add to current selection.\nClick to switch to PickNew Mode.");
         toolButtonPickAdd->setToolButtonStyle(Qt::ToolButtonIconOnly);
     }
     else {
-        toolButtonPickAdd->setIcon(loadIcon(icon_picknew));
+        toolButtonPickAdd->setIcon(loadIcon(picknew_xpm));
         toolButtonPickAdd->setIconSize(QSize(iconSize, iconSize));
         toolButtonPickAdd->setText("PickNew");
         toolButtonPickAdd->setToolTip("PickNew Mode - Replace current selection.\nClick to switch to PickAdd Mode.");
@@ -5239,7 +5239,7 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle()
 QToolButton* PropertyEditor::createToolButton(const QString& iconName, const QString& txt)
 {
     QToolButton* tb = new QToolButton(this);
-    tb->setIcon(loadIcon(icon_blank));
+    tb->setIcon(loadIcon(blank_xpm));
     tb->setIconSize(QSize(iconSize, iconSize));
     tb->setText(txt);
     tb->setToolButtonStyle(propertyEditorButtonStyle);
@@ -9206,7 +9206,7 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     settings.shiftKeyPressedState = 0;
 
-    setWindowIcon(loadIcon(icon_app));
+    setWindowIcon(loadIcon(app_xpm));
     setMinimumSize(800, 480); /*Require Minimum WVGA*/
 
     loadFormats();
@@ -9242,7 +9242,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     QString appName = QApplication::applicationName();
 
     for (i=0; action_list[i].abbreviation[0]; i++) {
-        QAction *ACTION = new QAction(loadIcon(action_list[i].icon), action_list[i].menu_name, this);
+        QAction *ACTION = new QAction(loadIcon((const char **)action_list[i].icon), action_list[i].menu_name, this);
         /* TODO: Set What's This Context Help to statusTip for now so there is some infos there.*/
         /* Make custom What's This Context Help popup with more descriptive help than just*/
         /* the status bar/tip one liner(short but not real long) with a hyperlink in the custom popup*/
@@ -9338,7 +9338,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     menuBar()->addMenu(menu[VIEW_MENU]);
     menu[VIEW_MENU]->addSeparator();
     menu[VIEW_MENU]->addMenu(menu[ZOOM_MENU]);
-    menu[ZOOM_MENU]->setIcon(loadIcon(icon_zoom));
+    menu[ZOOM_MENU]->setIcon(loadIcon(zoom_xpm));
     menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomrealtime));
     menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomprevious));
     menu[ZOOM_MENU]->addSeparator();
@@ -9354,7 +9354,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomall));
     menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomextents));
     menu[VIEW_MENU]->addMenu(menu[PAN_MENU]);
-    menu[PAN_MENU]->setIcon(loadIcon(icon_pan));
+    menu[PAN_MENU]->setIcon(loadIcon(pan_xpm));
     menu[PAN_MENU]->addAction(actionHash.value(ACTION_panrealtime));
     menu[PAN_MENU]->addAction(actionHash.value(ACTION_panpoint));
     menu[PAN_MENU]->addSeparator();
@@ -9436,16 +9436,16 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     /*NOTE: Qt4.7 wont load icons without an extension...*/
     /*TODO: Create layer pixmaps by concatenating several icons*/
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "0");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "1");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "2");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "3");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "4");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "5");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "6");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "7");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "8");
-    layerSelector->addItem(loadIcon(icon_linetypebylayer), "9");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "0");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "1");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "2");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "3");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "4");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "5");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "6");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "7");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "8");
+    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "9");
     toolbar[TOOLBAR_LAYER]->addWidget(layerSelector);
     connect(layerSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(layerSelectorIndexChanged(int)));
 
@@ -9461,62 +9461,62 @@ MainWindow::MainWindow() : QMainWindow(0)
 
     colorSelector->setFocusProxy(menu[FILE_MENU]);
     /*NOTE: Qt4.7 wont load icons without an extension...*/
-    colorSelector->addItem(loadIcon(icon_colorbylayer), "ByLayer");
-    colorSelector->addItem(loadIcon(icon_colorbyblock), "ByBlock");
-    colorSelector->addItem(loadIcon(icon_colorred), tr("Red"), qRgb(255, 0, 0));
-    colorSelector->addItem(loadIcon(icon_coloryellow), tr("Yellow"), qRgb(255,255, 0));
-    colorSelector->addItem(loadIcon(icon_colorgreen), tr("Green"), qRgb(0, 255, 0));
-    colorSelector->addItem(loadIcon(icon_colorcyan), tr("Cyan"), qRgb(  0,255,255));
-    colorSelector->addItem(loadIcon(icon_colorblue), tr("Blue"), qRgb(  0, 0,255));
-    colorSelector->addItem(loadIcon(icon_colormagenta), tr("Magenta"), qRgb(255, 0,255));
-    colorSelector->addItem(loadIcon(icon_colorwhite), tr("White"), qRgb(255,255,255));
-    colorSelector->addItem(loadIcon(icon_colorother), tr("Other..."));
+    colorSelector->addItem(loadIcon(colorbylayer_xpm), "ByLayer");
+    colorSelector->addItem(loadIcon(colorbyblock_xpm), "ByBlock");
+    colorSelector->addItem(loadIcon(colorred_xpm), tr("Red"), qRgb(255, 0, 0));
+    colorSelector->addItem(loadIcon(coloryellow_xpm), tr("Yellow"), qRgb(255,255, 0));
+    colorSelector->addItem(loadIcon(colorgreen_xpm), tr("Green"), qRgb(0, 255, 0));
+    colorSelector->addItem(loadIcon(colorcyan_xpm), tr("Cyan"), qRgb(  0,255,255));
+    colorSelector->addItem(loadIcon(colorblue_xpm), tr("Blue"), qRgb(  0, 0,255));
+    colorSelector->addItem(loadIcon(colormagenta_xpm), tr("Magenta"), qRgb(255, 0,255));
+    colorSelector->addItem(loadIcon(colorwhite_xpm), tr("White"), qRgb(255,255,255));
+    colorSelector->addItem(loadIcon(colorother_xpm), tr("Other..."));
     toolbar[TOOLBAR_PROPERTIES]->addWidget(colorSelector);
     connect(colorSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(colorSelectorIndexChanged(int)));
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator();
     linetypeSelector->setFocusProxy(menu[FILE_MENU]);
     /*NOTE: Qt4.7 wont load icons without an extension...*/
-    linetypeSelector->addItem(loadIcon(icon_linetypebylayer), "ByLayer");
-    linetypeSelector->addItem(loadIcon(icon_linetypebyblock), "ByBlock");
-    linetypeSelector->addItem(loadIcon(icon_linetypecontinuous), "Continuous");
-    linetypeSelector->addItem(loadIcon(icon_linetypehidden), "Hidden");
-    linetypeSelector->addItem(loadIcon(icon_linetypecenter), "Center");
-    linetypeSelector->addItem(loadIcon(icon_linetypeother), "Other...");
+    linetypeSelector->addItem(loadIcon(linetypebylayer_xpm), "ByLayer");
+    linetypeSelector->addItem(loadIcon(linetypebyblock_xpm), "ByBlock");
+    linetypeSelector->addItem(loadIcon(linetypecontinuous_xpm), "Continuous");
+    linetypeSelector->addItem(loadIcon(linetypehidden_xpm), "Hidden");
+    linetypeSelector->addItem(loadIcon(linetypecenter_xpm), "Center");
+    linetypeSelector->addItem(loadIcon(linetypeother_xpm), "Other...");
     toolbar[TOOLBAR_PROPERTIES]->addWidget(linetypeSelector);
     connect(linetypeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(linetypeSelectorIndexChanged(int)));
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator();
     lineweightSelector->setFocusProxy(menu[FILE_MENU]);
     /*NOTE: Qt4.7 wont load icons without an extension...*/
-    lineweightSelector->addItem(loadIcon(icon_lineweightbylayer), "ByLayer", -2.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweightbyblock), "ByBlock", -1.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweightdefault), "Default", 0.00);
+    lineweightSelector->addItem(loadIcon(lineweightbylayer_xpm), "ByLayer", -2.00);
+    lineweightSelector->addItem(loadIcon(lineweightbyblock_xpm), "ByBlock", -1.00);
+    lineweightSelector->addItem(loadIcon(lineweightdefault_xpm), "Default", 0.00);
     /* TODO: Thread weight is weird. See http://en.wikipedia.org/wiki/Thread_(yarn)#Weight */
-    lineweightSelector->addItem(loadIcon(icon_lineweight01), "0.00 mm", 0.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweight02), "0.05 mm", 0.05);
-    lineweightSelector->addItem(loadIcon(icon_lineweight03), "0.15 mm", 0.15);
-    lineweightSelector->addItem(loadIcon(icon_lineweight04), "0.20 mm", 0.20);
-    lineweightSelector->addItem(loadIcon(icon_lineweight05), "0.25 mm", 0.25);
-    lineweightSelector->addItem(loadIcon(icon_lineweight06), "0.30 mm", 0.30);
-    lineweightSelector->addItem(loadIcon(icon_lineweight07), "0.35 mm", 0.35);
-    lineweightSelector->addItem(loadIcon(icon_lineweight08), "0.40 mm", 0.40);
-    lineweightSelector->addItem(loadIcon(icon_lineweight09), "0.45 mm", 0.45);
-    lineweightSelector->addItem(loadIcon(icon_lineweight10), "0.50 mm", 0.50);
-    lineweightSelector->addItem(loadIcon(icon_lineweight11), "0.55 mm", 0.55);
-    lineweightSelector->addItem(loadIcon(icon_lineweight12), "0.60 mm", 0.60);
-    lineweightSelector->addItem(loadIcon(icon_lineweight13), "0.65 mm", 0.65);
-    lineweightSelector->addItem(loadIcon(icon_lineweight14), "0.70 mm", 0.70);
-    lineweightSelector->addItem(loadIcon(icon_lineweight15), "0.75 mm", 0.75);
-    lineweightSelector->addItem(loadIcon(icon_lineweight16), "0.80 mm", 0.80);
-    lineweightSelector->addItem(loadIcon(icon_lineweight17), "0.85 mm", 0.85);
-    lineweightSelector->addItem(loadIcon(icon_lineweight18), "0.90 mm", 0.90);
-    lineweightSelector->addItem(loadIcon(icon_lineweight19), "0.95 mm", 0.95);
-    lineweightSelector->addItem(loadIcon(icon_lineweight20), "1.00 mm", 1.00);
-    lineweightSelector->addItem(loadIcon(icon_lineweight21), "1.05 mm", 1.05);
-    lineweightSelector->addItem(loadIcon(icon_lineweight22), "1.10 mm", 1.10);
-    lineweightSelector->addItem(loadIcon(icon_lineweight23), "1.15 mm", 1.15);
-    lineweightSelector->addItem(loadIcon(icon_lineweight24), "1.20 mm", 1.20);
+    lineweightSelector->addItem(loadIcon(lineweight01_xpm), "0.00 mm", 0.00);
+    lineweightSelector->addItem(loadIcon(lineweight02_xpm), "0.05 mm", 0.05);
+    lineweightSelector->addItem(loadIcon(lineweight03_xpm), "0.15 mm", 0.15);
+    lineweightSelector->addItem(loadIcon(lineweight04_xpm), "0.20 mm", 0.20);
+    lineweightSelector->addItem(loadIcon(lineweight05_xpm), "0.25 mm", 0.25);
+    lineweightSelector->addItem(loadIcon(lineweight06_xpm), "0.30 mm", 0.30);
+    lineweightSelector->addItem(loadIcon(lineweight07_xpm), "0.35 mm", 0.35);
+    lineweightSelector->addItem(loadIcon(lineweight08_xpm), "0.40 mm", 0.40);
+    lineweightSelector->addItem(loadIcon(lineweight09_xpm), "0.45 mm", 0.45);
+    lineweightSelector->addItem(loadIcon(lineweight10_xpm), "0.50 mm", 0.50);
+    lineweightSelector->addItem(loadIcon(lineweight11_xpm), "0.55 mm", 0.55);
+    lineweightSelector->addItem(loadIcon(lineweight12_xpm), "0.60 mm", 0.60);
+    lineweightSelector->addItem(loadIcon(lineweight13_xpm), "0.65 mm", 0.65);
+    lineweightSelector->addItem(loadIcon(lineweight14_xpm), "0.70 mm", 0.70);
+    lineweightSelector->addItem(loadIcon(lineweight15_xpm), "0.75 mm", 0.75);
+    lineweightSelector->addItem(loadIcon(lineweight16_xpm), "0.80 mm", 0.80);
+    lineweightSelector->addItem(loadIcon(lineweight17_xpm), "0.85 mm", 0.85);
+    lineweightSelector->addItem(loadIcon(lineweight18_xpm), "0.90 mm", 0.90);
+    lineweightSelector->addItem(loadIcon(lineweight19_xpm), "0.95 mm", 0.95);
+    lineweightSelector->addItem(loadIcon(lineweight20_xpm), "1.00 mm", 1.00);
+    lineweightSelector->addItem(loadIcon(lineweight21_xpm), "1.05 mm", 1.05);
+    lineweightSelector->addItem(loadIcon(lineweight22_xpm), "1.10 mm", 1.10);
+    lineweightSelector->addItem(loadIcon(lineweight23_xpm), "1.15 mm", 1.15);
+    lineweightSelector->addItem(loadIcon(lineweight24_xpm), "1.20 mm", 1.20);
     lineweightSelector->setMinimumContentsLength(8);
     /* Prevent dropdown text readability being squish...d. */
     toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector);
@@ -9598,7 +9598,9 @@ MainWindow::MainWindow() : QMainWindow(0)
     iconResize(settings.general_icon_size);
     updateMenuToolbarStatusbar();
 
-    /*Show date in statusbar after it has been updated*/
+    /* Show date in statusbar after it has been updated
+     * TODO: Switch to ISO dates.
+     */
     QDate date = QDate::currentDate();
     QString datestr = date.toString("MMMM d, yyyy");
     statusbar->showMessage(datestr);
@@ -11297,12 +11299,12 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
     QApplication::setOverrideCursor(Qt::ArrowCursor);
     QMenu menu_(this);
     if (objectName() == "StatusBarButtonSNAP") {
-        QAction* settingsSnapAction = new QAction(loadIcon(icon_gridsnapsettings), "&Settings...", &menu_);
+        QAction* settingsSnapAction = new QAction(loadIcon(gridsnapsettings_xpm), "&Settings...", &menu_);
         connect(settingsSnapAction, SIGNAL(triggered()), this, SLOT(settingsSnap()));
         menu_.addAction(settingsSnapAction);
     }
     else if (objectName() == "StatusBarButtonGRID") {
-        QAction* settingsGridAction = new QAction(loadIcon(icon_gridsettings), "&Settings...", &menu_);
+        QAction* settingsGridAction = new QAction(loadIcon(gridsettings_xpm), "&Settings...", &menu_);
         connect(settingsGridAction, SIGNAL(triggered()), this, SLOT(settingsGrid()));
         menu_.addAction(settingsGridAction);
     }
@@ -11347,7 +11349,7 @@ void StatusBarButton::contextMenuEvent(QContextMenuEvent *event)
             menu_.addAction(disableRealAction);
         }
 
-        QAction* settingsLwtAction = new QAction(loadIcon(icon_lineweightsettings), "&Settings...", &menu_);
+        QAction* settingsLwtAction = new QAction(loadIcon(lineweightsettings_xpm), "&Settings...", &menu_);
         connect(settingsLwtAction, SIGNAL(triggered()), this, SLOT(settingsLwt()));
         menu_.addAction(settingsLwtAction);
     }

@@ -997,7 +997,7 @@ action action_list[] = {
     {
         /* 0 */
         OBJ_TYPE_NULL,
-        icon_donothing,
+        donothing_xpm,
         "donothing",
         "&Do Nothing",
         "Does nothing.",
@@ -1007,7 +1007,7 @@ action action_list[] = {
     {
         /* 1 */
         OBJ_TYPE_NULL,
-        icon_new,
+        new_xpm,
         "new",
         "&New",
         "Create a new file.",
@@ -1017,7 +1017,7 @@ action action_list[] = {
     {
         /* 2 */
         OBJ_TYPE_NULL,
-        icon_open,
+        open_xpm,
         "open",
         "&Open",
         "Open an existing file.",
@@ -1027,7 +1027,7 @@ action action_list[] = {
     {
         /* 3 */
         OBJ_TYPE_NULL,
-        icon_save,
+        save_xpm,
         "save",
         "&Save",
         "Save the design to disk.",
@@ -1037,7 +1037,7 @@ action action_list[] = {
     {
         /* 4 */
         OBJ_TYPE_NULL,
-        icon_saveas,
+        saveas_xpm,
         "saveas",
         "Save &As",
         "Save the design under a new name.",
@@ -1047,7 +1047,7 @@ action action_list[] = {
     {
         /* 5 */
         OBJ_TYPE_NULL,
-        icon_print,
+        print_xpm,
         "print",
         "&Print",
         "Print the design.",
@@ -1057,7 +1057,7 @@ action action_list[] = {
     {
         /* 6 */
         OBJ_TYPE_NULL,
-        icon_designdetails,
+        designdetails_xpm,
         "designdetails",
         "&Details",
         "Details of the current design.",
@@ -1067,7 +1067,7 @@ action action_list[] = {
     {
         /* 7 */
         OBJ_TYPE_NULL,
-        icon_exit,
+        exit_xpm,
         "exit",
         "E&xit",
         "Exit the application.",
@@ -1077,7 +1077,7 @@ action action_list[] = {
     {
         /* 8 */
         OBJ_TYPE_NULL,
-        icon_cut,
+        cut_xpm,
         "cut",
         "Cu&t",
         "Cut the current selection's contents to the clipboard.",
@@ -1087,7 +1087,7 @@ action action_list[] = {
     {
         /* 9 */
         OBJ_TYPE_NULL,
-        icon_copy,
+        copy_xpm,
         "copy",
         "&Copy",
         "Copy the current selection's contents to the clipboard.",
@@ -1097,7 +1097,7 @@ action action_list[] = {
     {
         /* 10 */
         OBJ_TYPE_NULL,
-        icon_paste,
+        paste_xpm,
         "paste",
         "&Paste",
         "Paste the clipboard's contents into the current selection.",
@@ -1107,7 +1107,7 @@ action action_list[] = {
     {
         /* 11 */
         OBJ_TYPE_NULL,
-        icon_undo,
+        undo_xpm,
         "undo",
         "&Undo",
         "Reverses the most recent action.",
@@ -1117,7 +1117,7 @@ action action_list[] = {
     {
         /* 12 */
         OBJ_TYPE_NULL,
-        icon_redo,
+        redo_xpm,
         "redo",
         "&Redo",
         "Reverses the effects of the previous undo action.",
@@ -1127,7 +1127,7 @@ action action_list[] = {
     {
         /* 13 */
         OBJ_TYPE_NULL,
-        icon_windowclose,
+        windowclose_xpm,
         "windowclose",
         "Cl&ose",
         "Close the active window.",
@@ -1137,7 +1137,7 @@ action action_list[] = {
     {
         /* 14 */
         OBJ_TYPE_NULL,
-        icon_windowcloseall,
+        windowcloseall_xpm,
         "windowcloseall",
         "Close &All",
         "Close all the windows.",
@@ -1147,7 +1147,7 @@ action action_list[] = {
     {
         /* 15 */
         OBJ_TYPE_NULL,
-        icon_windowcascade,
+        windowcascade_xpm,
         "windowcascade",
         "&Cascade",
         "Cascade the windows.",
@@ -1157,7 +1157,7 @@ action action_list[] = {
     {
         /* 16 */
         OBJ_TYPE_NULL,
-        icon_windowtile,
+        windowtile_xpm,
         "windowtile",
         "&Tile",
         "Tile the windows.",
@@ -1166,7 +1166,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_windownext,
+        windownext_xpm,
         "windownext",
         "Ne&xt",
         "Move the focus to the next window.",
@@ -1175,7 +1175,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_windowprevious,
+        windowprevious_xpm,
         "windowprevious",
         "Pre&vious",
         "Move the focus to the previous window.",
@@ -1184,7 +1184,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_help,
+        help_xpm,
         "help",
         "&Help",
         "Displays help.",
@@ -1193,7 +1193,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_changelog,
+        changelog_xpm,
         "changelog",
         "&Changelog",
         "Describes new features in this product.",
@@ -1202,7 +1202,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_tipoftheday,
+        tipoftheday_xpm,
         "tipoftheday",
         "&Tip Of The Day",
         "Displays a dialog with useful tips",
@@ -1211,7 +1211,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_about,
+        about_xpm,
         "about",
         "&About Embroidermodder 2",
         "Displays information about this product.",
@@ -1220,7 +1220,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_whatsthis,
+        whatsthis_xpm,
         "whatsthis",
         "&What's This?",
         "What's This? Context Help!",
@@ -1229,7 +1229,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_icon16,
+        icon16_xpm,
         "icon16",
         "Icon&16",
         "Sets the toolbar icon size to 16x16.",
@@ -1238,7 +1238,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_icon24,
+        icon24_xpm,
         "icon24",
         "Icon&24",
         "Sets the toolbar icon size to 24x24.",
@@ -1247,7 +1247,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_icon32,
+        icon32_xpm,
         "icon32",
         "Icon&32",
         "Sets the toolbar icon size to 32x32.",
@@ -1256,7 +1256,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_icon48,
+        icon48_xpm,
         "icon48",
         "Icon&48",
         "Sets the toolbar icon size to 48x48.",
@@ -1265,7 +1265,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_icon64,
+        icon64_xpm,
         "icon64",
         "Icon&64",
         "Sets the toolbar icon size to 64x64.",
@@ -1274,7 +1274,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_icon128,
+        icon128_xpm,
         "icon128",
         "Icon12&8",
         "Sets the toolbar icon size to 128x128.",
@@ -1283,7 +1283,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_settingsdialog,
+        settingsdialog_xpm,
         "settingsdialog",
         "&Settings",
         "Configure settings specific to this product.",
@@ -1292,16 +1292,16 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-       icon_makelayercurrent,
-       "makelayercurrent",
-       "&Make Layer Active",
-       "Makes the layer of a selected object the active layer",
+        makelayercurrent_xpm,
+        "makelayercurrent",
+        "&Make Layer Active",
+        "Makes the layer of a selected object the active layer",
         "\\0",
         makeLayerCurrent
     },
     {
         OBJ_TYPE_NULL,
-        icon_layers,
+        layers_xpm,
         "layers",
         "&Layers",
         "Manages layers and layer properties:  LAYER",
@@ -1310,7 +1310,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_layerselector,
+        layerselector_xpm,
         "layerselector",
         "&Layer Selector",
         "Dropdown selector for changing the current layer",
@@ -1319,7 +1319,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_layerprevious,
+        layerprevious_xpm,
         "layerprevious",
         "&Layer Previous",
         "Restores the previous layer settings:  LAYERP",
@@ -1328,7 +1328,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_colorselector,
+        colorselector_xpm,
         "colorselector",
         "&Color Selector",
         "Dropdown selector for changing the current thread color",
@@ -1337,7 +1337,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_linetypeselector,
+        linetypeselector_xpm,
         "linetypeselector",
         "&Stitchtype Selector",
         "Dropdown selector for changing the current stitch type",
@@ -1346,7 +1346,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_lineweightselector,
+        lineweightselector_xpm,
         "lineweightselector",
         "&Threadweight Selector",
         "Dropdown selector for changing the current thread weight",
@@ -1355,7 +1355,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_hidealllayers,
+        hidealllayers_xpm,
         "hidealllayers",
         "&Hide All Layers",
         "Turns the visibility off for all layers in the current drawing:  HIDEALL",
@@ -1364,7 +1364,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_showalllayers,
+        showalllayers_xpm,
         "showalllayers",
         "&Show All Layers",
         "Turns the visibility on for all layers in the current drawing:  SHOWALL",
@@ -1373,7 +1373,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_freezealllayers,
+        freezealllayers_xpm,
         "freezealllayers",
         "&Freeze All Layers",
         "Freezes all layers in the current drawing:  FREEZEALL",
@@ -1382,7 +1382,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_thawalllayers,
+        thawalllayers_xpm,
         "thawalllayers",
         "&Thaw All Layers",
         "Thaws all layers in the current drawing:  THAWALL",
@@ -1391,7 +1391,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_lockalllayers,
+        lockalllayers_xpm,
         "lockalllayers",
         "&Lock All Layers",
         "Locks all layers in the current drawing:  LOCKALL",
@@ -1400,7 +1400,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_unlockalllayers,
+        unlockalllayers_xpm,
         "unlockalllayers",
         "&Unlock All Layers",
         "Unlocks all layers in the current drawing:  UNLOCKALL",
@@ -1409,7 +1409,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_textbold,
+        textbold_xpm,
         "textbold",
         "&Bold Text",
         "Sets text to be bold.",
@@ -1418,7 +1418,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_textitalic,
+        textitalic_xpm,
         "textitalic",
         "&Italic Text",
         "Sets text to be italic.",
@@ -1427,7 +1427,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_textoverline,
+        textoverline_xpm,
         "textunderline",
         "&Underline Text",
         "Sets text to be underlined.",
@@ -1436,7 +1436,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_textstrikeout,
+        textstrikeout_xpm,
         "textstrikeout",
         "&StrikeOut Text",
         "Sets text to be striked out.",
@@ -1445,7 +1445,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_textoverline,
+        textoverline_xpm,
         "textoverline",
         "&Overline Text",
         "Sets text to be overlined.",
@@ -1454,7 +1454,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomrealtime,
+        zoomrealtime_xpm,
         "zoomrealtime",
         "Zoom &Realtime",
         "Zooms to increase or decrease the apparent size of objects in the current viewport.",
@@ -1463,7 +1463,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomprevious,
+        zoomprevious_xpm,
         "zoomprevious",
         "Zoom &Previous",
         "Zooms to display the previous view.",
@@ -1472,7 +1472,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomwindow,
+        zoomwindow_xpm,
         "zoomwindow",
         "Zoom &Window",
         "Zooms to display an area specified by a rectangular window.",
@@ -1481,7 +1481,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomdynamic,
+        zoomdynamic_xpm,
         "zoomdynamic",
         "Zoom &Dynamic",
         "Zooms to display the generated portion of the drawing.",
@@ -1490,7 +1490,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomscale,
+        zoomscale_xpm,
         "zoomscale",
         "Zoom &Scale",
         "Zooms the display using a specified scale factor.",
@@ -1499,7 +1499,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomcenter,
+        zoomcenter_xpm,
         "zoomcenter",
         "Zoom &Center",
         "Zooms to display a view specified by a center point and magnification or height.",
@@ -1508,7 +1508,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomin,
+        zoomin_xpm,
         "zoomin",
         "Zoom &In",
         "Zooms to increase the apparent size of objects.",
@@ -1517,7 +1517,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomout,
+        zoomout_xpm,
         "zoomout",
         "Zoom &Out",
         "Zooms to decrease the apparent size of objects.",
@@ -1526,7 +1526,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomselected,
+        zoomselected_xpm,
         "zoomselected",
         "Zoom Selec&ted",
         "Zooms to display the selected objects.",
@@ -1535,7 +1535,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomall,
+        zoomall_xpm,
         "zoomall",
         "Zoom &All",
         "Zooms to display the drawing extents or the grid limits.",
@@ -1544,7 +1544,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_zoomextents,
+        zoomextents_xpm,
         "zoomextents",
         "Zoom &Extents",
         "Zooms to display the drawing extents.",
@@ -1553,7 +1553,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_panrealtime,
+        panrealtime_xpm,
         "panrealtime",
         "&Pan Realtime",
         "Moves the view in the current viewport.",
@@ -1562,7 +1562,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_panpoint,
+        panpoint_xpm,
         "panpoint",
         "&Pan Point",
         "Moves the view by the specified distance.",
@@ -1571,7 +1571,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_panleft,
+        panleft_xpm,
         "panleft",
         "&Pan Left",
         "Moves the view to the left.",
@@ -1580,7 +1580,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_panright,
+        panright_xpm,
         "panright",
         "&Pan Right",
         "Moves the view to the right.",
@@ -1589,7 +1589,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_panup,
+        panup_xpm,
         "panup",
         "&Pan Up",
         "Moves the view up.",
@@ -1598,7 +1598,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_pandown,
+        pandown_xpm,
         "pandown",
         "&Pan Down",
         "Moves the view down.",
@@ -1607,7 +1607,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_day,
+        day_xpm,
         "day",
         "&Day",
         "Updates the current view using day vision settings.",
@@ -1616,7 +1616,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_night,
+        night_xpm,
         "night",
         "&Night",
         "Updates the current view using night vision settings.",
@@ -1625,7 +1625,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_circle,
+        circle_xpm,
         "circle",
         "&Circle",
         "Creates a circle:  CIRCLE",
@@ -1634,7 +1634,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_line,
+        line_xpm,
         "line",
         "&Line",
         "Creates straight line segments:  LINE",
@@ -1643,7 +1643,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_distance,
+        distance_xpm,
         "distance",
         "&Distance",
         "Measures the distance and angle between two points:  DIST",
@@ -1652,7 +1652,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_dolphin,
+        dolphin_xpm,
         "dolphin",
         "&Dolphin",
         "Creates a dolphin:  DOLPHIN",
@@ -1661,7 +1661,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_ellipse,
+        ellipse_xpm,
         "ellipse",
         "&Ellipse",
         "Creates a ellipse:  ELLIPSE",
@@ -1670,7 +1670,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_erase,
+        erase_xpm,
         "delete",
         "D&elete",
         "Removes objects from a drawing:  DELETE",
@@ -1679,7 +1679,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_heart,
+        heart_xpm,
         "heart",
         "&Heart",
         "Creates a heart:  HEART",
@@ -1688,7 +1688,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_locatepoint,
+        locatepoint_xpm,
         "locatepoint",
         "&Locate Point",
         "Displays the coordinate values of a location:  ID",
@@ -1697,7 +1697,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_donothing,
+        donothing_xpm,
         "trebleclef",
         "TrebleClef",
         "Creates a treble clef:  TREBLECLEF",
@@ -1706,7 +1706,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_path,
+        path_xpm,
         "path",
         "&Path",
         "Creates a 2D path:  PATH",
@@ -1715,7 +1715,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_donothing,
+        donothing_xpm,
         "platform",
         "&Platform",
         "List which platform is in use:  PLATFORM",
@@ -1724,7 +1724,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_point,
+        point_xpm,
         "point",
         "&Point",
         "Creates multiple points:  POINT",
@@ -1733,7 +1733,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_polygon,
+        polygon_xpm,
         "polygon",
         "Pol&ygon",
         "Creates a regular polygon:  POLYGON",
@@ -1742,7 +1742,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_polyline,
+        polyline_xpm,
         "polyline",
         "&Polyline",
         "Creates a 2D polyline:  PLINE",
@@ -1751,7 +1751,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_quickleader,
+        quickleader_xpm,
         "quickleader",
         "&QuickLeader",
         "Creates a leader and annotation:  QUICKLEADER",
@@ -1760,7 +1760,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_rectangle,
+        rectangle_xpm,
         "rectangle",
         "&Rectangle",
         "Creates a rectangular polyline: RECTANGLE",
@@ -1769,7 +1769,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_rgb,
+        rgb_xpm,
         "rgb",
         "&RGB",
         "Updates the current view colors:  RGB",
@@ -1778,7 +1778,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_move,
+        move_xpm,
         "move",
         "&Move",
         "Displaces objects a specified distance in a specified direction: MOVE",
@@ -1787,7 +1787,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_rotate,
+        rotate_xpm,
         "rotate",
         "&Rotate",
         "Rotates objects about a base point:  ROTATE",
@@ -1796,7 +1796,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_sandbox,
+        sandbox_xpm,
         "sandbox",
         "Sandbox",
         "A sandbox to play in:  SANDBOX",
@@ -1805,7 +1805,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_scale,
+        scale_xpm,
         "scale",
         "Sca&le",
         "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE",
@@ -1814,7 +1814,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_donothing,
+        donothing_xpm,
         "selectall",
         "&Select All",
         "Selects all objects:  SELECTALL",
@@ -1823,7 +1823,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_singlelinetext,
+        singlelinetext_xpm,
         "singlelinetext",
         "&Single Line Text",
         "Creates single-line text objects:  TEXT",
@@ -1832,7 +1832,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_snowflake,
+        snowflake_xpm,
         "snowflake",
         "&Snowflake",
         "Creates a snowflake:  SNOWFLAKE",
@@ -1841,7 +1841,7 @@ action action_list[] = {
     },
     {
         OBJ_TYPE_NULL,
-        icon_star,
+        star_xpm,
         "star",
         "&Star",
         "Creates a star:  STAR",
@@ -1851,7 +1851,7 @@ action action_list[] = {
     {
         /* end symbol */
         OBJ_TYPE_NULL,
-        icon_donothing,
+        donothing_xpm,
         "\0",
         "\0",
         "\0",
@@ -1859,3 +1859,4 @@ action action_list[] = {
         doNothing
     }
 };
+
