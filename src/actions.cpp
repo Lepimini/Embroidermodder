@@ -540,21 +540,31 @@ EmbColor to_emb_color(QColor c)
 
 /* --------------------------------------------------------------- */
 
+void get_n_ints(const char *command, int *out, int n);
+void get_n_floats(const char *command, float *out, int n);
+
 /* This is similar to using an svg path, we can blend these systems
  * later. */
 QPixmap *draw_pixmap(const char *description)
 {
-    QPixmap *icon = new QPixmap(128, 128);
-    QPainter *painter = new QPainter(icon);
+    char *ptr;
+    int int_buffer[4];
+    QPixmap *icon;
+    QPainter *painter;
     QPen pen;
+    get_n_ints(description, int_buffer, 2);
+    icon = new QPixmap(int_buffer[0], int_buffer[1]);
+    painter = new QPainter(icon);
     pen.setWidth(10);
-    /* This is the part based on description. */
-    /* Other functions we can use are eraseRect, drawArc etc. https://doc.qt.io/qt-5/qpainter.html */
-    if (strncmp(description, "rect", 4)==0) {
-        
-        pen.setColor(QColor(QRgb(0x000000)));
-        painter->setPen(pen);
-        painter->fillRect(0, 0, 128, 128, Qt::SolidPattern); 
+    for (ptr=(char*)description; *ptr; ptr++) {
+        /* Other functions we can use are eraseRect, drawArc etc. https://doc.qt.io/qt-5/qpainter.html */
+        if (strncmp(ptr, "rect", 4)==0) {
+            pen.setColor(QColor(QRgb(0x000000)));
+            painter->setPen(pen);
+            get_n_ints(ptr+5, int_buffer, 4);
+            painter->fillRect(int_buffer[0], int_buffer[1],
+                int_buffer[2], int_buffer[3], Qt::SolidPattern); 
+        }
     }
     return icon;
 }
@@ -566,6 +576,18 @@ QIcon loadIcon(const char **icon)
         return QIcon(*draw_pixmap(icon[0]+2));
     }
     return QIcon(QPixmap(icon));
+}
+
+void get_n_ints(const char *command, int *out, int n)
+{
+    int i;
+    char modifyable[100];
+    strcpy(modifyable, command);
+    char *rest = (char*)modifyable;
+    for (i=0; i<n; i++) {
+        char *tok = strtok_r(rest, " ", &rest);
+        out[i] = atoi(tok);
+    }
 }
 
 void get_n_floats(const char *command, float *out, int n)
