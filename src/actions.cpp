@@ -540,25 +540,32 @@ EmbColor to_emb_color(QColor c)
 
 /* --------------------------------------------------------------- */
 
+/* This is similar to using an svg path, we can blend these systems
+ * later. */
+QPixmap *draw_pixmap(const char *description)
+{
+    QPixmap *icon = new QPixmap(128, 128);
+    QPainter *painter = new QPainter(icon);
+    QPen pen;
+    pen.setWidth(10);
+    /* This is the part based on description. */
+    /* Other functions we can use are eraseRect, drawArc etc. https://doc.qt.io/qt-5/qpainter.html */
+    if (strncmp(description, "rect", 4)==0) {
+        
+        pen.setColor(QColor(QRgb(0x000000)));
+        painter->setPen(pen);
+        painter->fillRect(0, 0, 128, 128, Qt::SolidPattern); 
+    }
+    return icon;
+}
+
 QIcon loadIcon(int icon_id)
 {
     /* so we can experiment with different icon generation methods */
-    switch (icon_id) {
-    case icon_new: {
-        QPixmap *colorPix = new QPixmap(16, 16);
-        QPainter *painter = new QPainter(colorPix);
-        QPen pen;
-        colorPix->fill(QColor(0xFFFFFF));
-        pen.setWidth(10);
-        pen.setColor(QColor(QRgb(0x000000)));
-        painter->setPen(pen);
-        painter->drawLine(0, 0, 16, 16);
-        return QIcon(*colorPix);
+    if (icons[icon_id][0][0] == 'C') {
+        return QIcon(*draw_pixmap(icons[icon_id][0]+2));
     }
-    default:
-        return QIcon(QPixmap(icons[icon_id]));
-    }
-    return QIcon(QPixmap(icons[icon_blank]));
+    return QIcon(QPixmap(icons[icon_id]));
 }
 
 void get_n_floats(const char *command, float *out, int n)
@@ -570,7 +577,6 @@ void get_n_floats(const char *command, float *out, int n)
     for (i=0; i<n; i++) {
         char *tok = strtok_r(rest, " ", &rest);
         out[i] = atof(tok);
-        printf("%f\n", out[i]);
     }
 }
 

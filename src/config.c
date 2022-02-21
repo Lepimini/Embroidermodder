@@ -13,7 +13,6 @@
 /* For a bit of optimisation for slower text editors. */
 #define BLANK_LINE "                                                                                                                                ",
 #define EIGHT_TIMES(A) A A A A A A A A
-#define _128_TIMES(A) EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE)) EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
 #define DOUBLE_BLANK_LINE "                                                                                                                                                                                                                                                                ",
 #define DOUBLE_FILL_LINE "................................................................................................................................................................................................................................................................",
 
@@ -154,11 +153,7 @@ const char *about_xpm[] = {
     EIGHT_TIMES(BLANK_LINE)
 };
 
-const char *aligntext_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    _128_TIMES(BLANK_LINES)
-};
+const char *aligntext_xpm[] = {"C rect 0 0 128 128 #f4ed04"};
 
 const char *_3dviews_xpm[] = {
     "128 128 17 1",
@@ -442,35 +437,11 @@ const char *aligneddimension_xpm[] = {
     BLANK_LINE
 };
 
-const char *aligntextangle_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    _128_TIMES(BLANK_LINES)
-};
-
-const char *aligntextcenter_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    _128_TIMES(BLANK_LINES)
-};
-
-const char *aligntexthome_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    _128_TIMES(BLANK_LINES)
-};
-
-const char *aligntextleft_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    _128_TIMES(BLANK_LINES)
-};
-
-const char *aligntextright_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    _128_TIMES(BLANK_LINES)
-};
+const char *aligntextangle_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *aligntextcenter_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *aligntexthome_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *aligntextleft_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *aligntextright_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
 
 const char *angulardimension_xpm[] = {
     "128 128 17 1",
@@ -3643,12 +3614,7 @@ const char *browser_xpm[] = {
     BLANK_LINE
 };
 
-const char *camera_xpm[] = {
-    "128 128 1 1",
-    " 	c #da0608",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *camera_xpm[] = {"C rect 0 0 128 128  #da0608"};
 
 const char *centermark_xpm[] = {
     "128 128 17 1",
@@ -6421,12 +6387,7 @@ const char *colorred_xpm[] = {
     BLANK_LINE
 };
 
-const char *colorselector_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *colorselector_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *colorwhite_xpm[] = {
     "128 128 17 1",
@@ -7252,33 +7213,10 @@ const char *copy_xpm[] = {
     EIGHT_TIMES(BLANK_LINE)
 };
 
-const char *customizekeyboard_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *customizemenus_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *customizetoolbars_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *customize_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *customizekeyboard_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *customizemenus_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *customizetoolbars_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *customize_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
 
 const char *cut_xpm[] = {
     "128 128 17 1",
@@ -7422,12 +7360,7 @@ const char *cut_xpm[] = {
     BLANK_LINE
 };
 
-const char *date_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *date_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *day_xpm[] = {
     "128 128 17 1",
@@ -9727,12 +9660,7 @@ const char *erase_xpm[] = {
     BLANK_LINE
 };
 
-const char *escape_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *escape_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
 
 const char *exit_xpm[] = {
     "128 128 17 1",
@@ -10437,12 +10365,7 @@ const char *findandreplace_xpm[] = {
     BLANK_LINE
 };
 
-const char *freezealllayers_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *freezealllayers_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *frontview_xpm[] = {
     "128 128 17 1",
@@ -11524,19 +11447,8 @@ const char *help_xpm[] = {
     BLANK_LINE
 };
 
-const char *hex_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *hidealllayers_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *hex_xpm[] = {"C rect 0 0 128 128  #1210bd"};
+const char *hidealllayers_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *histogram_xpm[] = {
     "128 128 17 1",
@@ -12536,19 +12448,8 @@ const char *insertblock_xpm[] = {
     BLANK_LINE
 };
 
-const char *join_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *justifytext_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *join_xpm[] = {"C rect 0 0 128 128  #1210bd"};
+const char *justifytext_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *layerprevious_xpm[] = {
     "128 128 17 1",
@@ -12692,12 +12593,7 @@ const char *layerprevious_xpm[] = {
     BLANK_LINE
 };
 
-const char *layerselector_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *layerselector_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *layers_xpm[] = {
     "128 128 17 1",
@@ -13793,12 +13689,7 @@ const char *linetypeother_xpm[] = {
     DOUBLE_BLANK_LINE
 };
 
-const char *linetypeselector_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *linetypeselector_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *lineweight01_xpm[] = {
     "256 64 2 1",
@@ -17878,12 +17769,7 @@ const char *locator_snaptotangent_xpm[] = {
     BLANK_LINE
 };
 
-const char *lockalllayers_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *lockalllayers_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *makeblock_xpm[] = {
     "128 128 17 1",
@@ -18851,12 +18737,7 @@ const char *multiline_xpm[] = {
     BLANK_LINE
 };
 
-const char *namedviews_xpm[] = {
-    "128 128 1 1",
-    " 	c #da0608",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *namedviews_xpm[] = {"C rect 0 0 128 128  #da0608"};
 
 const char *neisometricview_xpm[] = {
     "128 128 17 1",
@@ -19540,12 +19421,7 @@ const char *nwisometricview_xpm[] = {
     BLANK_LINE
 };
 
-const char *obliquedimensions_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *obliquedimensions_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
 
 const char *offset_xpm[] = {
     "128 128 17 1",
@@ -19796,12 +19672,7 @@ const char *open_xpm[] = {
     BLANK_LINE
 };
 
-const char *ordinatedimension_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *ordinatedimension_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *orthosettings_xpm[] = {
     "128 128 17 1",
@@ -21507,12 +21378,7 @@ const char *picknew_xpm[] = {
     BLANK_LINE
 };
 
-const char *plugin_xpm[] = {
-    "128 128 1 1",
-    " 	c #0daa10",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *plugin_xpm[] = {"C rect 0 0 128 128  #0daa10"};
 
 const char *pointdivide_xpm[] = {
     "128 128 17 1",
@@ -24018,12 +23884,7 @@ const char *region_xpm[] = {
     EIGHT_TIMES(BLANK_LINE)
 };
 
-const char *render_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *render_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
 
 const char *rgb_xpm[] = {
     "128 128 17 1",
@@ -25985,54 +25846,13 @@ const char *shade3dwireframe_xpm[] = {
     BLANK_LINE
 };
 
-const char *shadeflatedges_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *shadeflat_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *shadehidden_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *shadesmoothedges_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *shadesmooth_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *shade_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *showalllayers_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *shadeflatedges_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *shadeflat_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *shadehidden_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *shadesmoothedges_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *shadesmooth_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *shade_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *showalllayers_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *singlelinetext_xpm[] = {
     "128 128 17 1",
@@ -28727,33 +28547,10 @@ const char *solidbox_xpm[] = {
     BLANK_LINE
 };
 
-const char *solidcheck_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidclean_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidcoloredges_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidcolorfaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *solidcheck_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidclean_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidcoloredges_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidcolorfaces_xpm[] = {"C rect 0 0 128 128  #b707a9"};
 
 const char *solidcone_xpm[] = {
     "128 128 17 1",
@@ -28897,53 +28694,14 @@ const char *solidcone_xpm[] = {
     BLANK_LINE
 };
 
-const char *solidcopyedges_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidcopyfaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidcylinder_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *soliddeletefaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidextrudefaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidextrude_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidimprint_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidinterfere_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    _128_TIMES(BLANK_LINE)
-};
+const char *solidcopyedges_xpm[] = {"C rect 0 0 128 128 #b707a9"};
+const char *solidcopyfaces_xpm[] = {"C rect 0 0 128 128 #b707a9"};
+const char *solidcylinder_xpm[] = {"C rect 0 0 128 128 #7a7e01"};
+const char *soliddeletefaces_xpm[] = {"C rect 0 0 128 128 #b707a9"};
+const char *solidextrudefaces_xpm[] = {"C rect 0 0 128 128 #b707a9"};
+const char *solidextrude_xpm[] = {"C rect 0 0 128 128 #7a7e01"};
+const char *solidimprint_xpm[] = {"C rect 0 0 128 128 #b707a9"};
+const char *solidinterfere_xpm[] = {"C rect 0 0 128 128 #7a7e01"};
 
 const char *solidintersect_xpm[] = {
     "128 128 17 1",
@@ -29080,99 +28838,20 @@ const char *solidintersect_xpm[] = {
     BLANK_LINE
 };
 
-const char *solidmovefaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidoffsetfaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidrevolve_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidrotatefaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    _128_TIMES(BLANK_LINE)
-};
-
-const char *solidsection_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidsediting_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidseparate_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidsetupdrawing_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidsetupprofile_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidsetupview_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidsetup_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidshell_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidslice_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidsphere_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *solidmovefaces_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidoffsetfaces_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidrevolve_xpm[] = {"C rect 0 0 128 128  #7a7e01"};
+const char *solidrotatefaces_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidsection_xpm[] = {"C rect 0 0 128 128  #7a7e01"};
+const char *solidsediting_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidseparate_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidsetupdrawing_xpm[] = {"C rect 0 0 128 128  #7a7e01"};
+const char *solidsetupprofile_xpm[] = {"C rect 0 0 128 128  #7a7e01"};
+const char *solidsetupview_xpm[] = {"C rect 0 0 128 128  #7a7e01"};
+const char *solidsetup_xpm[] = {"C rect 0 0 128 128 #7a7e01"};
+const char *solidshell_xpm[] = {"C rect 0 0 128 128 #b707a9"};
+const char *solidslice_xpm[] = {"C rect 0 0 128 128 #7a7e01"};
+const char *solidsphere_xpm[] = {"C rect 0 0 128 128 #7a7e01"};
 
 const char *solidsubtract_xpm[] = {
     "128 128 17 1",
@@ -29309,26 +28988,9 @@ const char *solidsubtract_xpm[] = {
     BLANK_LINE
 };
 
-const char *solids_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidtaperfaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #b707a9",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *solidtorus_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *solids_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *solidtaperfaces_xpm[] = {"C rect 0 0 128 128  #b707a9"};
+const char *solidtorus_xpm[] = {"C rect 0 0 128 128  #7a7e01"};
 
 const char *solidunion_xpm[] = {
     "128 128 17 1",
@@ -29465,12 +29127,7 @@ const char *solidunion_xpm[] = {
     BLANK_LINE
 };
 
-const char *solidwedge_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a7e01",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *solidwedge_xpm[] = {"C rect 0 0 128 128  #7a7e01"};
 
 const char *spline_xpm[] = {
     "128 128 17 1",
@@ -29856,138 +29513,25 @@ const char *stretch_xpm[] = {
     BLANK_LINE
 };
 
-const char *stub_xpm[] = {
-    "128 128 1 1",
-    " 	c #62b251",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surface2dsolid_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surface3dface_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surface3dmesh_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacebox_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacecone_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacecylinder_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacedish_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacedome_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfaceedgesurface_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfaceedge_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacepyramid_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacerevolvedsurface_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfaceruledsurface_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacesphere_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfaces_xpm[] = {
-    "128 128 1 1",
-    " 	c #f4ed04",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacetabulatedsurface_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacetorus_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *surfacewedge_xpm[] = {
-    "128 128 1 1",
-    " 	c #7a090b",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *stub_xpm[] = {"C rect 0 0 128 128  #62b251"};
+const char *surface2dsolid_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surface3dface_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surface3dmesh_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacebox_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacecone_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacecylinder_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacedish_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacedome_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfaceedgesurface_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfaceedge_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacepyramid_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacerevolvedsurface_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfaceruledsurface_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacesphere_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfaces_xpm[] = {"C rect 0 0 128 128  #f4ed04"};
+const char *surfacetabulatedsurface_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacetorus_xpm[] = {"C rect 0 0 128 128  #7a090b"};
+const char *surfacewedge_xpm[] = {"C rect 0 0 128 128  #7a090b"};
 
 const char *swisometricview_xpm[] = {
     "128 128 17 1",
@@ -31041,12 +30585,7 @@ const char *text_xpm[] = {
     BLANK_LINE
 };
 
-const char *thawalllayers_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *thawalllayers_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *theme_xpm[] = {
     "128 128 17 1",
@@ -31481,12 +31020,7 @@ const char *tipoftheday_xpm[] = {
     BLANK_LINE
 };
 
-const char *tolerance_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *tolerance_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *topview_xpm[] = {
     "128 128 17 1",
@@ -31879,26 +31413,9 @@ const char *undo_xpm[] = {
     BLANK_LINE
 };
 
-const char *units_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *unlockalllayers_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
-
-const char *view_xpm[] = {
-    "128 128 1 1",
-    " 	c #1210bd",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *units_xpm[] = {"C rect 0 0 128 128  #1210bd"};
+const char *unlockalllayers_xpm[] = {"C rect 0 0 128 128  #1210bd"};
+const char *view_xpm[] = {"C rect 0 0 128 128  #1210bd"};
 
 const char *whatsthis_xpm[] = {
     "128 128 17 1",
@@ -32049,12 +31566,7 @@ const char *whatsthis_xpm[] = {
     BLANK_LINE
 };
 
-const char *wideflange_xpm[] = {
-    "128 128 1 1",
-    " 	c #0daa10",
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-    EIGHT_TIMES(EIGHT_TIMES(BLANK_LINE))
-};
+const char *wideflange_xpm[] = {"C rect 0 0 128 128  #0daa10"};
 
 const char *windowcascade_xpm[] = {
     "128 128 17 1",
@@ -35170,6 +34682,5 @@ const char **icons[] = {
     zoomscale_xpm,
     zoomselected_xpm,
     zoomwindow_xpm,
-
 };
 
