@@ -1800,7 +1800,7 @@ action action_list[] = {
         "sandbox",
         "Sandbox",
         "A sandbox to play in:  SANDBOX",
-        "\\0",
+        "\0",
         doNothing
     },
     {
@@ -1809,7 +1809,7 @@ action action_list[] = {
         "scale",
         "Sca&le",
         "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE",
-        "\\0",
+        "\0",
         doNothing
     },
     {
@@ -1818,7 +1818,7 @@ action action_list[] = {
         "selectall",
         "&Select All",
         "Selects all objects:  SELECTALL",
-        "\\0",
+        "\0",
         doNothing
     },
     {
@@ -1827,7 +1827,7 @@ action action_list[] = {
         "singlelinetext",
         "&Single Line Text",
         "Creates single-line text objects:  TEXT",
-        "\\0",
+        "\0",
         doNothing
     },
     {
@@ -1836,7 +1836,7 @@ action action_list[] = {
         "snowflake",
         "&Snowflake",
         "Creates a snowflake:  SNOWFLAKE",
-        "\\0",
+        "\0",
         doNothing
     },
     {
@@ -1845,17 +1845,17 @@ action action_list[] = {
         "star",
         "&Star",
         "Creates a star:  STAR",
-        "\\0",
+        "\0",
         doNothing
     },
     {
         /* end symbol */
         OBJ_TYPE_NULL,
         icon_donothing,
-        "\\0",
-        "\\0",
-        "\\0",
-        "\\0",
+        "\0",
+        "\0",
+        "\0",
+        "\0",
         doNothing
     }
 };

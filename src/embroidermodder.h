@@ -1538,7 +1538,7 @@ void debug_message(const char *format, ...);
 void app_dir(char *string, int folder);
 int file_exists(char *fname);
 int parseJSON(char *fname);
-int old_main(int, char*argv[]);
+int new_main(int argc, char *argv[]);
 double radians(double);
 double degrees(double);
 double sgn(double x);

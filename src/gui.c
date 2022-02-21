@@ -71,14 +71,10 @@ int settings_data_length;
 
 /* FUNCTIONS SECTION */
 
-int main(int argc, char *argv[])
+int new_main(int argc, char *argv[])
 {
     int window, i, ntextures;
     puts("FreeGLUT3 version of Embroidermodder");
-    if (argc > 1) {
-        old_main(argc, argv);
-        return 0;
-    }
     
     root = make_widget(1.0, 1.0);
     
