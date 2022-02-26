@@ -48,7 +48,7 @@ cd docs
 pandoc ../libembroidery/README.md -o temp.html
 cat header.html temp.html footer.html > libembroidery.html
 
-for i in index documentation contributing contact about donate downloads features
+for i in index documentation contact about downloads
 do
 pandoc $i.md -o temp.html
 cat header.html temp.html footer.html > $i.html
