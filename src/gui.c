@@ -9,8 +9,14 @@
  * -----------------------------------------------------------------------------
  *
  * This is the heart of the program, we're working on replacing
- * the Qt reliance, so these functions and data represent the core
+ * the Qt reliance, so these functions and data represent the eventual core
  * of the program.
+ *
+ * The widget system is created here, but it is built on top of the
+ * SVG system created in libembroidery. So a widget is an svg drawing,
+ * with a position to draw it in relative to its parent. The widgets
+ * form a tree rooted at the global variable called root.
+ *
  */
 
 #include <stdio.h>
@@ -32,7 +38,11 @@
 #include "embroidermodder.h"
 
 /* FUNCTION DECLARATIONS */
+void clearSelection(void);
+circle_args circle_init(void);
+
 void right_click_menu(void);
+void generate_texture(int i, char *svg_icon);
 
 widget *make_widget(float width, float height);
 void draw_widget(widget *w);
@@ -46,7 +56,7 @@ int embClamp(int lower, int x, int upper);
 
 /* DATA SECTION */
 int debug_mode = 1;
-texture_t tex[N_TEXTURES];
+quad quads[N_TEXTURES];
 GLuint texture[N_TEXTURES];
 int interaction_mode = 0;
 int run = 1;
@@ -75,9 +85,9 @@ int new_main(int argc, char *argv[])
 {
     int window, i, ntextures;
     puts("FreeGLUT3 version of Embroidermodder");
-    
+
     root = make_widget(1.0, 1.0);
-    
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(window_width, window_height);
@@ -93,7 +103,7 @@ int new_main(int argc, char *argv[])
     ntextures = 2;
     glGenTextures(N_TEXTURES, texture);
     for (i=0; i<N_TEXTURES; i++) {
-        generate_texture(i);
+        generate_texture(i, "");
     }
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glEnable(GL_TEXTURE_2D);
@@ -246,7 +256,9 @@ void app_dir(char *output, int folder)
     }
 }
 
-/* UTILITY FUNCTIONS FOR ALL SYSTEMS */
+/* UTILITY FUNCTIONS FOR ALL SYSTEMS
+ * These could be moved to libembroidery.
+ */
 void debug_message(const char *format, ...)
 {
     if (debug_mode) {
@@ -264,25 +276,20 @@ int file_exists(char *fname)
     return !stat(fname, &stats);
 }
 
-/*
-void render_quadlist(quad *qlist)
+void render_quad(quad q)
 {
-    int i;
-    glViewport(0, 0, window_width, window_height);
-    glClearColor(1.0, 1.0, 1.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    for (i=0; qlist[i].flag; i++) {
-        glColor3f(qlist[i].red, qlist[i].green, qlist[i].blue);
-        glBegin(GL_QUADS);
-        glVertex2f(qlist[i].left, qlist[i].top);
-        glVertex2f(qlist[i].left, qlist[i].bottom);
-        glVertex2f(qlist[i].right, qlist[i].bottom);
-        glVertex2f(qlist[i].right, qlist[i].top);
-        glEnd();
-    }
+    glBindTexture(GL_TEXTURE_2D, texture[q.texture_id]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2f(q.left, q.top);
+    glTexCoord2f(0.0, 1.0);
+    glVertex2f(q.left, q.bottom);
+    glTexCoord2f(1.0, 1.0);
+    glVertex2f(q.right, q.bottom);
+    glTexCoord2f(1.0, 0.0);
+    glVertex2f(q.right, q.top);
+    glEnd();
 }
-*/
 
 void menu___(int key)
 {
@@ -294,21 +301,10 @@ void menu___(int key)
 
 void display()
 {
-    /* render_quadlist(quad_list1); */
     int i;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     for (i=0; i<N_TEXTURES; i++) {
-        glBindTexture(GL_TEXTURE_2D, texture[i]);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0, 0.0);
-        glVertex2f(tex[i].corners[0], tex[i].corners[1]);
-        glTexCoord2f(0.0, 1.0);
-        glVertex2f(tex[i].corners[2], tex[i].corners[3]);
-        glTexCoord2f(1.0, 1.0);
-        glVertex2f(tex[i].corners[4], tex[i].corners[5]);
-        glTexCoord2f(1.0, 0.0);
-        glVertex2f(tex[i].corners[6], tex[i].corners[7]);
-        glEnd();
+        render_quad(quads[i]);
     }
     glutSwapBuffers();
 }
@@ -323,29 +319,27 @@ void key_handler(int key, int x, int y)
     }
 }
 
-void generate_texture(int i)
+void generate_texture(int i, char *svg_icon)
 {
     unsigned char data[128*128*3];
     int j;
+    /* make texture from icon svg at this point */
     for (j=0; j<128*128; j++) {
         data[3*j] = j%256;
         data[3*j+1] = j%256;
         data[3*j+2] = j%256;
     }
-    tex[i].width = 128;
-    tex[i].height = 128;
-    tex[i].corners[0] = 0.0;
-    tex[i].corners[1] = 0.0;
-    tex[i].corners[2] = 0.0;
-    tex[i].corners[3] = 1.0;
-    tex[i].corners[4] = 1.0;
-    tex[i].corners[5] = 1.0;
-    tex[i].corners[6] = 1.0;
-    tex[i].corners[7] = 0.0;
+    quads[i].width = 128;
+    quads[i].height = 128;
+    quads[i].left = 0.0;
+    quads[i].right = 1.0;
+    quads[i].top = 0.0;
+    quads[i].bottom = 1.0;
+    quads[i].texture_id = i;
     glBindTexture(GL_TEXTURE_2D, texture[i]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, tex[i].width, tex[i].height, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, quads[i].width, quads[i].height, 0,
         GL_RGB, GL_UNSIGNED_BYTE, data);
 }
 
@@ -397,95 +391,15 @@ void version()
     exitApp = 1;
 }
 
-
-#if 0
-#include <math.h>
-
-typedef struct circle_args_ {
-    float x1;
-    float y1;
-    float x2;
-    float y2;
-    float x3;
-    float y3;
-    float rad;
-    float dia;
-    float cx;
-    float cy;
-    int mode;
-} circle_args;
-
-typedef struct dolphin_args_ {
-    int numPoints;
-    float cx;
-    float cy;
-    float sx;
-    float sy;
-    int mode;
-} dolphin_args;
-
-typedef struct ellipse_args_ {
-    float x1;
-    float y1;
-    float x2;
-    float y2;
-    float x3;
-    float y3;
-    float cx;
-    float cy;
-    float width;
-    float height;
-    float rot;
-    int mode;
-} ellipse_args;
-
-typedef struct quad_ {
-    int flag;
-    float left;
-    float right;
-    float top;
-    float bottom;
-    float red;
-    float green;
-    float blue;
-} quad;
-
-typedef struct treble_clef_ {
-    int num_points;
-    double cx;
-    double cy;
-    double sx;
-    double sy;
-    int mode;
-} treble_clef;
-
-#define MAX_DISTANCE              10000000.0
-
-#define DOLPHIN_NUM_POINTS                 0
-#define DOLPHIN_XSCALE                     1
-#define DOLPHIN_YSCALE                     2
-
-#define ELLIPSE_MAJORDIAMETER_MINORRADIUS  0
-#define ELLIPSE_MAJORRADIUS_MINORRADIUS    1
-#define ELLIPSE_ROTATION                   2
-
-#define POLYGON_NUM_SIDES                  0
-#define POLYGON_CENTER_PT                  1
-#define POLYGON_POLYTYPE                   2
-#define POLYGON_INSCRIBE                   3
-#define POLYGON_CIRCUMSCRIBE               4
-#define POLYGON_DISTANCE                   5
-#define POLYGON_SIDE_LEN                   6
-
-#define TREBLE_CLEF_MODE_NUM_POINTS        0
-#define TREBLE_CLEF_MODE_XSCALE            1
-#define TREBLE_CLEF_MODE_YSCALE            2
-
-int circle_init(circle_args *args)
+void clearSelection(void)
 {
-    /*
+
+}
+
+circle_args circle_init(void)
+{
     clearSelection();
-    */
+    circle_args args;
     args.mode = circle_mode_1P_RAD;
     args.x1 = MAX_DISTANCE+1.0;
     args.y1 = MAX_DISTANCE+1.0;
@@ -496,9 +410,10 @@ int circle_init(circle_args *args)
     /*
     setPromptPrefix(qsTr("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "));
     */
-    return 0;
+    return args;
 }
 
+#if 0
 int circle_click(circle_args *args, float x, float y)
 {
     if (args.mode == args.mode_1P_RAD) {
@@ -918,6 +833,7 @@ dolphin_args dolphin_init(void)
     spareRubber("POLYGON");
     return args;
 }
+#endif
 
 #define basis_func(A, B, C, D, E) (A/B)*sin(C*t+(D/E))
 
@@ -1049,12 +965,17 @@ int dolphin_update(dolphin_args args, int numPts, float xScale, float yScale)
         19/14*sin(53*t+61/48)+
         34/25*sin(54*t+37/26);
 
+        /*
         setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale);
+        */
     }
 
-    setRubberText("POLYGON_NUM_POINTS", numPts.toString());
+    /*
+    setRubberText("POLYGON_NUM_POINTS", numPts.toString()); */
     return 0;
 }
+
+#if 0
 
 /* ---------------------------------------------------------------------- */
 

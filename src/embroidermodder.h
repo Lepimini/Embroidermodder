@@ -488,6 +488,28 @@ TODO: ACTION_quickselect
 #define PERMISSIONS_USER               0
 #define PERMISSIONS_SYSTEM             1
 
+#define MAX_DISTANCE              10000000.0
+
+#define DOLPHIN_NUM_POINTS                 0
+#define DOLPHIN_XSCALE                     1
+#define DOLPHIN_YSCALE                     2
+
+#define ELLIPSE_MAJORDIAMETER_MINORRADIUS  0
+#define ELLIPSE_MAJORRADIUS_MINORRADIUS    1
+#define ELLIPSE_ROTATION                   2
+
+#define POLYGON_NUM_SIDES                  0
+#define POLYGON_CENTER_PT                  1
+#define POLYGON_POLYTYPE                   2
+#define POLYGON_INSCRIBE                   3
+#define POLYGON_CIRCUMSCRIBE               4
+#define POLYGON_DISTANCE                   5
+#define POLYGON_SIDE_LEN                   6
+
+#define TREBLE_CLEF_MODE_NUM_POINTS        0
+#define TREBLE_CLEF_MODE_XSCALE            1
+#define TREBLE_CLEF_MODE_YSCALE            2
+
 /*
  * TYPEDEFS
  * ========
@@ -557,15 +579,19 @@ typedef struct Action {
     void (*function)(void);
 } action;
 
-/* Textures
- * --------
- */
 
-typedef struct Texture_t {
-    float corners[8];
+/* Quad
+ * -----------------------------------------------------------------------------
+ */
+typedef struct Quad {
+    float left;
+    float right;
+    float top;
+    float bottom;
     int width;
     int height;
-} texture_t;
+    int texture_id;
+} quad;
 
 /* Widget
  * -----------------------------------------------------------------------------
@@ -652,6 +678,65 @@ typedef struct Text_Properties {
     int backward;
     int upsidedown;
 } text_properties;
+
+
+typedef struct circle_args_ {
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    float x3;
+    float y3;
+    float rad;
+    float dia;
+    float cx;
+    float cy;
+    int mode;
+} circle_args;
+
+typedef struct dolphin_args_ {
+    int numPoints;
+    float cx;
+    float cy;
+    float sx;
+    float sy;
+    int mode;
+} dolphin_args;
+
+typedef struct ellipse_args_ {
+    float x1;
+    float y1;
+    float x2;
+    float y2;
+    float x3;
+    float y3;
+    float cx;
+    float cy;
+    float width;
+    float height;
+    float rot;
+    int mode;
+} ellipse_args;
+
+typedef struct user_quad__ {
+    int flag;
+    float left;
+    float right;
+    float top;
+    float bottom;
+    float red;
+    float green;
+    float blue;
+} user_quad_;
+
+typedef struct treble_clef_ {
+    int num_points;
+    double cx;
+    double cy;
+    double sx;
+    double sy;
+    int mode;
+} treble_clef;
 
 /* Settings Wrapper
  * ----------------
