@@ -9,7 +9,7 @@ if command -v apt-get &> /dev/null
 then
 sudo apt-get update
 sudo apt-get install --fix-missing \
-    build-essential cmake mesa-common-dev x11proto-input-dev libxcb-xinput-dev \
+    build-essential cmake libglu1-mesa-dev freeglut3-dev mesa-common-dev \
     pandoc
 else
 
