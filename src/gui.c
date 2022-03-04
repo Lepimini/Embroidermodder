@@ -42,7 +42,7 @@ void clearSelection(void);
 circle_args circle_init(void);
 
 void right_click_menu(void);
-void generate_texture(int i, char *svg_icon);
+quad make_texture(xpm_texture texture);
 
 widget *make_widget(float width, float height);
 void draw_widget(widget *w);
@@ -78,12 +78,41 @@ char settings_fname[1000];
 char settings_data[5000];
 char value_out[1000];
 int settings_data_length;
+float aspect = 640.0/480.0;
+float ui_scale = 0.1;
+char new_palette_symbols[] = " .+@#$%&*=-;>,')!";
+int ntextures = 0;
+
+extern int new_palette[17*3];
+extern int open_palette[17*3];
+
+xpm_texture example1 = {
+    0,
+    0,
+    {-1.0, 1.0},
+    128,
+    128,
+    (char*)new_palette_symbols,
+    (int*)new_palette,
+    (char**)new_xpm
+};
+
+xpm_texture example2 = {
+    0,
+    1,
+    {-1.0+0.1, 1.0},
+    128,
+    128,
+    (char*)new_palette_symbols,
+    (int*)open_palette,
+    (char**)open_xpm
+};
 
 /* FUNCTIONS SECTION */
 
 int new_main(int argc, char *argv[])
 {
-    int window, i, ntextures;
+    int window;
     puts("FreeGLUT3 version of Embroidermodder");
 
     root = make_widget(1.0, 1.0);
@@ -100,11 +129,13 @@ int new_main(int argc, char *argv[])
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    ntextures = 2;
     glGenTextures(N_TEXTURES, texture);
-    for (i=0; i<N_TEXTURES; i++) {
-        generate_texture(i, "");
-    }
+    root->left = make_widget(ui_scale, ui_scale);
+    root->right = make_widget(ui_scale, ui_scale);
+    root->left->texture_id = 0;
+    root->right->texture_id = 1;
+    quads[0] = make_texture(example1);
+    quads[1] = make_texture(example2);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_FLAT);
@@ -119,7 +150,6 @@ int new_main(int argc, char *argv[])
 widget *make_widget(float width, float height)
 {
     widget *w = (widget *)malloc(sizeof(widget));
-    w->svg_path[0] = 0;
     w->left = 0;
     w->right = 0;
     w->width = width;
@@ -135,6 +165,7 @@ void draw_widget(widget *w)
     if (w->right > 0) {
         draw_widget(w->right);
     }
+    render_quad(quads[w->texture_id]);
 }
 
 void free_widget(widget *w)
@@ -303,9 +334,7 @@ void display()
 {
     int i;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (i=0; i<N_TEXTURES; i++) {
-        render_quad(quads[i]);
-    }
+    draw_widget(root);
     glutSwapBuffers();
 }
 
@@ -319,28 +348,46 @@ void key_handler(int key, int x, int y)
     }
 }
 
-void generate_texture(int i, char *svg_icon)
+quad make_texture(xpm_texture t)
 {
+    quad output;
     unsigned char data[128*128*3];
-    int j;
-    /* make texture from icon svg at this point */
-    for (j=0; j<128*128; j++) {
-        data[3*j] = j%256;
-        data[3*j+1] = j%256;
-        data[3*j+2] = j%256;
+    ntextures++;
+    if (t.mode == 0) {
+        /* xpm-style drawing routine */
+        int a, j, k, npalette, pixel;
+        npalette = strlen(t.palette_symbols);
+        for (a=0; a<128; a++) {
+            for (j=0; j<128; j++) {
+                for (k=0; k<npalette; k++) {
+                    if (t.palette_symbols[k] == t.icon[1+npalette+a][j]) {
+                        break;
+                    }
+                }
+                pixel = 3*(128*(127-a)+j);
+                data[pixel+0] = t.palette[3*k+0];
+                data[pixel+1] = t.palette[3*k+1];
+                data[pixel+2] = t.palette[3*k+2];
+            }
+        }
     }
-    quads[i].width = 128;
-    quads[i].height = 128;
-    quads[i].left = 0.0;
-    quads[i].right = 1.0;
-    quads[i].top = 0.0;
-    quads[i].bottom = 1.0;
-    quads[i].texture_id = i;
-    glBindTexture(GL_TEXTURE_2D, texture[i]);
+    else {
+        /* svg-style drawing routine */
+    
+    }
+    output.width = t.width;
+    output.height = t.height;
+    output.left = t.position.x;
+    output.right = t.position.x+ui_scale;
+    output.top =  t.position.y-ui_scale*aspect;
+    output.bottom =  t.position.y;
+    output.texture_id =  t.texture_id;
+    glBindTexture(GL_TEXTURE_2D, texture[t.texture_id]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, quads[i].width, quads[i].height, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, t.width, t.height, 0,
         GL_RGB, GL_UNSIGNED_BYTE, data);
+    return output;
 }
 
 char *translate(char *a)

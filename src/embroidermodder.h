@@ -654,8 +654,19 @@ typedef struct Quad {
 
 typedef struct Widget_ widget;
 
+typedef struct Xpm_Texture_ {
+    int mode;
+    int texture_id;
+    EmbVector position;
+    int width;
+    int height;
+    char *palette_symbols;
+    int *palette;
+    char **icon;
+} xpm_texture;
+
 struct Widget_ {
-    char svg_path[MAX_STRING_LENGTH];
+    int texture_id;
     float width;
     float height;
     struct Widget_ *left;
