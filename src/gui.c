@@ -26,7 +26,7 @@
 #include <sys/stat.h>
 #include <math.h>
 
-#if defined(__unix__) || defined(__linux__)
+#if defined(__unix__) || defined(__linux__) || defined(__APPLE__)
 #include <pwd.h>
 #include <unistd.h>
 #else
