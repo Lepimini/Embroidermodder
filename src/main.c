@@ -8,6 +8,8 @@
  * New developers should start reading here.
  */
 
+#if 0
+
 #include <math.h>
 #include <string.h>
 
@@ -10369,12 +10371,8 @@ void LayerManager::addLayer(const QString& name,
     layerModel->setData(layerModel->index(0, 7), print);
 }
 
-int main(int argc, char *argv[])
+int old_main(int argc, char *argv[])
 {
-    if (argc==1) {
-        return new_main(argc, argv);
-    }
-
 #if defined(Q_OS_MAC)
     Application app(argc, argv);
 #else
@@ -11389,3 +11387,4 @@ void StatusBar::setMouseCoord(float x, float y)
     /* TODO: use precision from unit settings */
 }
 
+#endif

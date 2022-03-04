@@ -5,12 +5,6 @@ project(embroidermodder VERSION 1.91.0 LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 90)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-set(CMAKE_AUTOMOC ON)
-
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic -Wall -O2")
 
 INCLUDE(FindPkgConfig)
@@ -27,7 +21,6 @@ else()
 set(ASSET_DIR %HOMEDRIVE%%HOMEPATH%\.embroidermodder2)
 endif()
 
-find_package(Qt5Widgets)
 find_package(OpenGL)
 
 # Most of Embroidermodder is assets, so we just copy a full
@@ -63,8 +56,6 @@ SET(FREEGLUT_SRCS
 	freeglut3/src/fg_spaceball.c
 	freeglut3/src/fg_state.c
 	freeglut3/src/fg_structure.c
-	freeglut3/src/fg_teapot.c
-	freeglut3/src/fg_teapot_data.h
 	freeglut3/src/fg_videoresize.c
 	freeglut3/src/fg_window.c
 	freeglut3/src/fg_font.c
@@ -175,10 +166,9 @@ ELSE()
 ENDIF()
 
 add_executable(embroidermodder
-	src/main.cpp
-	src/actions.cpp
 	src/gui.c
 	src/config.c
+	src/actions.c
 	src/tables.c
 	src/embroidermodder.h
 	libembroidery/embroidery.c
@@ -193,13 +183,13 @@ target_include_directories(embroidermodder PUBLIC
 )
 
 target_link_libraries(embroidermodder
-	Qt5::Widgets
 	GL
 )
 
 if(LINUX)
 target_link_libraries(embroidermodder
 	X11
+	m
 )
 endif()
 

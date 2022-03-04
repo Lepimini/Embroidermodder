@@ -10,73 +10,61 @@
 #include "embroidermodder.h"
 
 #include <string.h>
+#include <stdlib.h>
 
 void icon16(void)
 {
     debug_message("icon16()");
-    _mainWin->iconResize(16);
 }
 
 void icon24(void)
 {
     debug_message("icon24()");
-    _mainWin->iconResize(24);
 }
 
 void icon32(void)
 {
     debug_message("icon32()");
-    _mainWin->iconResize(32);
 }
 
 void icon48(void)
 {
     debug_message("icon48()");
-    _mainWin->iconResize(48);
 }
 
 void icon64(void)
 {
     debug_message("icon64()");
-    _mainWin->iconResize(64);
 }
 
 void icon128(void)
 {
     debug_message("icon128()");
-    _mainWin->iconResize(128);
 }
 
 void newFile(void)
 {
     debug_message("newFile()");
-    _mainWin->newFile();
 }
 
 void openFile(void)
 {
     debug_message("openFile()");
-    _mainWin->openFile();
 }
 
 void saveFile(void)
 {
     debug_message("saveFile()");
-    _mainWin->savefile();
 }
 
 void main_print(void)
 {
     debug_message("print()");
-    _mainWin->print();
 }
 
 void main_exit(void)
 {
     debug_message("main_exit()");
-    qApp->closeAllWindows();
-    _mainWin->deleteLater();
-    /* Force the MainWindow destructor to run before exiting. Makes Valgrind "still reachable" happy :) */
     exit(0);
 }
 
@@ -103,7 +91,7 @@ void layerSelector(void)
 void main_about(void)
 {
     /*TODO: QTabWidget for about dialog*/
-    QApplication::setOverrideCursor(Qt::ArrowCursor);
+    /*QApplication::setOverrideCursor(Qt::ArrowCursor);
     debug_message("about()");
     QString appDir = qApp->applicationDirPath();
     QString title = "About Embroidermodder 2";
@@ -146,6 +134,7 @@ void main_about(void)
     dialog.setLayout(&layout);
     dialog.exec();
     QApplication::restoreOverrideCursor();
+    */
 }
 
 void main_help(void)
@@ -166,28 +155,57 @@ void designDetails(void)
 void main_cut(void)
 {
     debug_message("cut()");
+    /*
     View* gview = _mainWin->activeView();
     if (gview) {
         gview->cut();
     }
+    */
 }
 
 void main_copy(void)
 {
     debug_message("copy()");
+    /*
     View* gview = _mainWin->activeView();
     if (gview) {
         gview->copy();
     }
+    */
 }
 
 void main_paste(void)
 {
     debug_message("main_paste()");
+    /*
     View* gview = _mainWin->activeView();
     if (gview) {
         gview->paste();
     }
+    */
+}
+
+
+void main_redo(void)
+{
+    debug_message("copy()");
+    /*
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->copy();
+    }
+    */
+}
+
+void main_undo(void)
+{
+    debug_message("main_paste()");
+    /*
+    View* gview = _mainWin->activeView();
+    if (gview) {
+        gview->paste();
+    }
+    */
 }
 
 void tipOfTheDay(void)
@@ -317,8 +335,9 @@ void layerManager(void)
 {
     debug_message("layerManager()");
     debug_message("Implement layerManager.");
-    LayerManager layman( _mainWin,  _mainWin);
+    /*LayerManager layman( _mainWin,  _mainWin);
     layman.exec();
+    */
 }
 
 void layerPrevious(void)
@@ -342,10 +361,11 @@ void zoomPrevious(void)
 void zoomWindow(void)
 {
     debug_message("zoomWindow()");
-    View* gview = _mainWin->activeView();
+    /*View* gview = _mainWin->activeView();
     if (gview) {
         gview->zoomWindow();
     }
+    */
 }
 
 void zoomDynamic(void)
@@ -369,28 +389,16 @@ void zoomCenter(void)
 void zoomIn(void)
 {
     debug_message("zoomIn()");
-    View* gview =  _mainWin->activeView();
-    if (gview) {
-        gview->zoomIn();
-    }
 }
 
 void zoomOut(void)
 {
     debug_message("zoomOut()");
-    View* gview =  _mainWin->activeView();
-    if (gview) {
-        gview->zoomOut();
-    }
 }
 
 void zoomSelected(void)
 {
     debug_message("zoomSelected()");
-    View* gview =  _mainWin->activeView();
-    if (gview) {
-        gview->zoomSelected();
-    }
 }
 
 void zoomAll(void)
@@ -402,84 +410,60 @@ void zoomAll(void)
 void zoomExtents(void)
 {
     debug_message("zoomExtents()");
-    View* gview =  _mainWin->activeView();
-    if (gview) {
-        gview->zoomExtents();
-    }
 }
 
 void panrealtime(void)
 {
     debug_message("panrealtime()");
-    View* gview =  _mainWin->activeView();
-    if (gview) {
-        gview->panRealTime();
-    }
 }
 
 void panpoint(void)
 {
     debug_message("panpoint()");
-    View* gview =  _mainWin->activeView();
-    if (gview) {
-        gview->panPoint();
-    }
 }
 
 void panLeft(void)
 {
     debug_message("panLeft()");
-    View* gview =  _mainWin->activeView();
-    if (gview) {
-        gview->panLeft();
-    }
 }
 
 void panRight(void)
 {
     debug_message("panRight()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->panRight();
-    }
 }
 
 void panUp(void)
 {
     debug_message("panUp()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->panUp();
-    }
 }
 
 void panDown(void)
 {
     debug_message("panDown()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->panDown();
-    }
 }
 
 void dayVision(void)
 {
+    #if 0
     View* gview = _mainWin->activeView();
     if (gview) {
         gview->setBackgroundColor(qRgb(255,255,255)); /*TODO: Make day vision color settings.*/
         gview->setCrossHairColor(qRgb(0,0,0));        /*TODO: Make day vision color settings.*/
         gview->setGridColor(qRgb(0,0,0));             /*TODO: Make day vision color settings.*/
     }
+    #endif
 }
 
 void nightVision(void)
 {
+    #if 0
     View* gview = _mainWin->activeView();
     if (gview) {
         gview->setBackgroundColor(qRgb(0,0,0)); /* TODO: Make night vision color settings. */
         gview->setCrossHairColor(qRgb(255,255,255)); /*TODO: Make night vision color settings.*/
         gview->setGridColor(qRgb(255,255,255));      /*TODO: Make night vision color settings.*/
     }
+    #endif
 }
 
 void doNothing(void)
@@ -505,39 +489,6 @@ void actuator(char *call)
     }
 }
 
-
-/* Temporary interface fix
- * conversion between native (Emb) types and Qt types
- */
-/* --------------------------------------------------------------- */
-
-QPointF to_qpointf(EmbVector v)
-{
-    return QPointF(v.x, v.y);
-}
-
-EmbVector to_emb_vector(QPointF p)
-{
-    EmbVector v;
-    v.x = p.x();
-    v.y = p.y();
-    return v;
-}
-
-QColor to_qcolor(EmbColor c)
-{
-    return QColor(c.r, c.g, c.b);
-}
-
-EmbColor to_emb_color(QColor c)
-{
-    EmbColor C;
-    C.r = c.red();
-    C.g = c.green();
-    C.b = c.blue();
-    return C;
-}
-
 /* --------------------------------------------------------------- */
 
 void get_n_ints(const char *command, int *out, int n);
@@ -545,6 +496,7 @@ void get_n_floats(const char *command, float *out, int n);
 
 /* This is similar to using an svg path, we can blend these systems
  * later. */
+ #if 0
 QPixmap *draw_pixmap(const char *description)
 {
     char *ptr;
@@ -578,6 +530,7 @@ QIcon loadIcon(const char **icon)
     return QIcon(QPixmap(icon));
 }
 
+#endif
 void get_n_ints(const char *command, int *out, int n)
 {
     int i;
@@ -602,6 +555,7 @@ void get_n_floats(const char *command, float *out, int n)
     }
 }
 
+#if 0
 void add_to_path(QPainterPath *path, const char *command, float pos[2], float scale[2])
 {
     int j;
@@ -671,142 +625,114 @@ void toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& 
     polyObject->lineType = 1; /*TODO: proper lineType*/
     embPattern_addPolylineObjectAbs(pattern, polyObject);
 }
+#endif
 
 void settingsSnap()
 {
-    _mainWin->settingsDialog("Snap");
+
 }
 
 void settingsGrid()
 {
-    _mainWin->settingsDialog("Grid/Ruler");
+
 }
 
 void settingsRuler()
 {
-    _mainWin->settingsDialog("Grid/Ruler");
+
 }
 
 void settingsOrtho()
 {
-    _mainWin->settingsDialog("Ortho/Polar");
+
 }
 
 void settingsPolar()
 {
-    _mainWin->settingsDialog("Ortho/Polar");
+
 }
 
 void settingsQSnap()
 {
-    _mainWin->settingsDialog("QuickSnap");
+
 }
 
 void settingsQTrack()
 {
-    _mainWin->settingsDialog("QuickTrack");
+
 }
 
 void settingsLwt()
 {
-    _mainWin->settingsDialog("LineWeight");
+
 }
 
 void toggleSnap(int on)
 {
     debug_message("StatusBarButton toggleSnap()");
-    View* gview = _mainWin->activeView();
-    if(gview) { gview->toggleSnap(on); }
+
 }
 
 void toggleGrid(int on)
 {
     debug_message("StatusBarButton toggleGrid()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->toggleGrid(on);
-    }
+
 }
 
 void toggleRuler(int on)
 {
     debug_message("StatusBarButton toggleRuler()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->toggleRuler(on);
-    }
+
 }
 
 void toggleOrtho(int on)
 {
     debug_message("StatusBarButton toggleOrtho()");
-    View* gview = _mainWin->activeView();
-    if(gview) { gview->toggleOrtho(on); }
+
 }
 
 void togglePolar(int on)
 {
     debug_message("StatusBarButton togglePolar()");
-    View* gview = _mainWin->activeView();
-    if(gview) { gview->togglePolar(on); }
+
 }
 
 void toggleQSnap(int on)
 {
     debug_message("StatusBarButton toggleQSnap()");
-    View* gview = _mainWin->activeView();
-    if(gview) { gview->toggleQSnap(on); }
+
 }
 
 void toggleQTrack(int on)
 {
     debug_message("StatusBarButton toggleQTrack()");
-    View* gview = _mainWin->activeView();
-    if (gview) {
-        gview->toggleQTrack(on);
-    }
+
 }
 
 void toggleLwt(int on)
 {
     debug_message("StatusBarButton toggleLwt()");
-    View* gview = _mainWin->activeView();
-    if(gview) { gview->toggleLwt(on); }
+
 }
 
 void enableLwt()
 {
     debug_message("StatusBarButton enableLwt()");
-    View* gview = _mainWin->activeView();
-    if(gview)
-    {
-        if(!gview->isLwtEnabled())
-            gview->toggleLwt(1);
-    }
+
 }
 
 void disableLwt()
 {
     debug_message("StatusBarButton disableLwt()");
-    View* gview = _mainWin->activeView();
-    if(gview)
-    {
-        if(gview->isLwtEnabled())
-            gview->toggleLwt(0);
-    }
 }
 
 void enableReal()
 {
     debug_message("StatusBarButton enableReal()");
-    View* gview = _mainWin->activeView();
-    if(gview) { gview->toggleReal(1); }
 }
 
 void disableReal()
 {
     debug_message("StatusBarButton disableReal()");
-    View* gview = _mainWin->activeView();
-    if(gview) { gview->toggleReal(0); }
 }
 

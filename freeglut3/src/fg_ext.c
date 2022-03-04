@@ -137,12 +137,6 @@ static GLUTproc fghGetGLUTProcAddress( const char* procName )
     CHECK_NAME(glutSolidTorus);
     CHECK_NAME(glutWireCylinder);
     CHECK_NAME(glutSolidCylinder);
-    CHECK_NAME(glutWireTeapot);
-    CHECK_NAME(glutSolidTeapot);
-    CHECK_NAME(glutWireTeacup);
-    CHECK_NAME(glutSolidTeacup);
-    CHECK_NAME(glutWireTeaspoon);
-    CHECK_NAME(glutSolidTeaspoon);
     CHECK_NAME(glutWireCube);
     CHECK_NAME(glutSolidCube);
     CHECK_NAME(glutWireDodecahedron);

@@ -45,11 +45,13 @@
 
 #include "embroidermodder.h"
 
+#define N_TEXTURES                    20
+
 /* FUNCTION DECLARATIONS */
 void clearSelection(void);
 circle_args circle_init(void);
 
-quad make_texture(xpm_texture texture);
+void make_texture(widget *w, char** icon, EmbVector position);
 
 widget *make_widget(float width, float height);
 void draw_widget(widget *w);
@@ -65,7 +67,6 @@ void mouse_callback(int button, int state, int x, int y);
 
 /* DATA SECTION */
 int debug_mode = 1;
-quad quads[N_TEXTURES];
 GLuint texture[N_TEXTURES];
 int interaction_mode = 0;
 int run = 1;
@@ -90,39 +91,32 @@ char value_out[1000];
 int settings_data_length;
 float aspect = 640.0/480.0;
 float ui_scale = 0.1;
-char new_palette_symbols[] = " .+@#$%&*=-;>,')!";
+char palette_symbols[] = " .+@#$%&*=-;>,')!";
 int ntextures = 0;
 char user_string[100];
-
-extern int new_palette[17*3];
-extern int open_palette[17*3];
-
-xpm_texture icon_xpm[] = {
-    {
-        0,
-        0,
-        {-1.0, 1.0},
-        128,
-        128,
-        (char*)new_palette_symbols,
-        (int*)new_palette,
-        (char**)new_xpm
-    },
-    {
-        0,
-        1,
-        {-1.0+0.1, 1.0},
-        128,
-        128,
-        (char*)new_palette_symbols,
-        (int*)open_palette,
-        (char**)open_xpm
-    }
+int ui_palette[17*3] = {
+    0, 0, 0,
+    0, 0, 0,
+    0, 0, 0,
+    0x3b, 0x3c, 0x34,
+    0x3f, 0x44, 0x3e,
+    0x66, 0x6f, 0x67,
+    0x8f, 0x94, 0x8e,
+    0xc1, 0xbb, 0xbe,
+    0xc3, 0xc0, 0xc4,
+    0xc3, 0xc0, 0xc4,
+    0xc3, 0xc0, 0xc4,
+    0xde, 0xe4, 0xe0,
+    0xde, 0xe4, 0xe0,
+    0xe7, 0xeb, 0xe6,
+    0xe7, 0xeb, 0xe6,
+    0xe7, 0xeb, 0xe6,
+    0xe7, 0xeb, 0xe6,
 };
 
 /* FUNCTIONS SECTION */
 
-int new_main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int window, i;
     puts("FreeGLUT3 version of Embroidermodder");
@@ -141,13 +135,39 @@ int new_main(int argc, char *argv[])
     glDepthFunc(GL_LESS);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glGenTextures(N_TEXTURES, texture);
-    root->left = make_widget(ui_scale, ui_scale);
-    root->right = make_widget(ui_scale, ui_scale);
-    root->left->texture_id = 0;
-    root->right->texture_id = 1;
-    for (i=0; i<2; i++) {
-        quads[i] = make_texture(icon_xpm[i]);
+    for (i=0; i<N_TEXTURES; i++) {
+        widget *a = make_widget(ui_scale, ui_scale);
+        append_widget(root, a);
+        a->texture_id = i;
     }
+    EmbVector pos;
+
+    pos.x = -1.0;
+    pos.y = 1.0;
+    make_texture(root->leaves[0], new_xpm, pos);
+    pos.x = -1.0+ui_scale;
+    make_texture(root->leaves[1], open_xpm, pos);
+    pos.x = -1.0+2*ui_scale;
+    make_texture(root->leaves[2], save_xpm, pos);
+    pos.x = -1.0+3*ui_scale;
+    make_texture(root->leaves[3], saveas_xpm, pos);
+    pos.x = -1.0+4*ui_scale;
+    make_texture(root->leaves[4], print_xpm, pos);
+    /* pos.x = -1.0+5*ui_scale;
+    make_texture(root->leaves[5], details_xpm, pos); */
+
+    pos.x = -1.0+6*ui_scale;
+    make_texture(root->leaves[6], undo_xpm, pos);
+    pos.x = -1.0+7*ui_scale;
+    make_texture(root->leaves[7], redo_xpm, pos);
+
+    pos.x = -1.0+8*ui_scale;
+    make_texture(root->leaves[8], cut_xpm, pos);
+    pos.x = -1.0+9*ui_scale;
+    make_texture(root->leaves[9], copy_xpm, pos);
+    pos.x = -1.0+10*ui_scale;
+    make_texture(root->leaves[10], paste_xpm, pos);
+
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_FLAT);
@@ -163,32 +183,59 @@ int new_main(int argc, char *argv[])
 
 widget *make_widget(float width, float height)
 {
-    widget *w = (widget *)malloc(sizeof(widget));
-    w->left = 0;
-    w->right = 0;
+    widget *w = malloc(sizeof(widget));
+    w->n_leaves = 0;
     w->width = width;
     w->height = height;
+    w->size = 2;
+    w->leaves = (widget *)malloc(w->size*sizeof(widget*));
+    w->texture_id = 0;
     return w;
 }
 
 void draw_widget(widget *w)
 {
-    if (w->left > 0) {
-        draw_widget(w->left);
+    int i;
+    for (i=0; i<w->n_leaves; i++) {
+        draw_widget(w->leaves[i]);  
     }
-    if (w->right > 0) {
-        draw_widget(w->right);
+    glBindTexture(GL_TEXTURE_2D, texture[w->texture_id]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2f(w->left, w->top);
+    glTexCoord2f(0.0, 1.0);
+    glVertex2f(w->left, w->bottom);
+    glTexCoord2f(1.0, 1.0);
+    glVertex2f(w->right, w->bottom);
+    glTexCoord2f(1.0, 0.0);
+    glVertex2f(w->right, w->top);
+    glEnd();
+}
+
+void append_widget(widget *w, widget *a)
+{
+    if (w->n_leaves >= w->size) {
+        w->size += 10;
+        w->leaves = realloc(w->leaves, w->size*sizeof(widget));
     }
-    render_quad(quads[w->texture_id]);
+    w->leaves[w->n_leaves] = a;
+    w->n_leaves++;
+}
+
+void pop_widget(widget *w, int i)
+{
+    if (i < w->n_leaves) {
+        free_widget(w->leaves[i]);
+        w->leaves[i] = w->leaves[w->n_leaves-1];
+        w->n_leaves--;
+    }
 }
 
 void free_widget(widget *w)
 {
-    if (w->left > 0) {
-        free_widget(w->left);
-    }
-    if (w->right > 0) {
-        free_widget(w->right);
+    int i;
+    for (i=0; i<w->n_leaves; i++) {
+        free_widget(w->leaves[i]);
     }
     free(w);
 }
@@ -293,21 +340,6 @@ int file_exists(char *fname)
     return !stat(fname, &stats);
 }
 
-void render_quad(quad q)
-{
-    glBindTexture(GL_TEXTURE_2D, texture[q.texture_id]);
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0, 0.0);
-    glVertex2f(q.left, q.top);
-    glTexCoord2f(0.0, 1.0);
-    glVertex2f(q.left, q.bottom);
-    glTexCoord2f(1.0, 1.0);
-    glVertex2f(q.right, q.bottom);
-    glTexCoord2f(1.0, 0.0);
-    glVertex2f(q.right, q.top);
-    glEnd();
-}
-
 void menu___(int key)
 {
     switch (key) {
@@ -340,46 +372,38 @@ void key_handler(int key, int x, int y)
     }
 }
 
-quad make_texture(xpm_texture t)
+void make_texture(widget *output, char **icon, EmbVector position)
 {
-    quad output;
     unsigned char data[128*128*3];
-    ntextures++;
-    if (t.mode == 0) {
-        /* xpm-style drawing routine */
-        int a, j, k, npalette, pixel;
-        npalette = strlen(t.palette_symbols);
-        for (a=0; a<128; a++) {
-            for (j=0; j<128; j++) {
-                for (k=0; k<npalette; k++) {
-                    if (t.palette_symbols[k] == t.icon[1+npalette+a][j]) {
-                        break;
-                    }
+    /* xpm-style drawing routine */
+    int a, j, k, npalette, pixel;
+    npalette = strlen(palette_symbols);
+    for (a=0; a<128; a++) {
+        for (j=0; j<128; j++) {
+            for (k=0; k<npalette; k++) {
+                if (palette_symbols[k] == icon[1+npalette+a][j]) {
+                    break;
                 }
-                pixel = 3*(128*(127-a)+j);
-                data[pixel+0] = t.palette[3*k+0];
-                data[pixel+1] = t.palette[3*k+1];
-                data[pixel+2] = t.palette[3*k+2];
             }
+            pixel = 3*(128*(127-a)+j);
+            data[pixel+0] = ui_palette[3*k+0];
+            data[pixel+1] = ui_palette[3*k+1];
+            data[pixel+2] = ui_palette[3*k+2];
         }
     }
-    else {
-        /* svg-style drawing routine */
-    
-    }
-    output.width = t.width;
-    output.height = t.height;
-    output.left = t.position.x;
-    output.right = t.position.x+ui_scale;
-    output.top =  t.position.y-ui_scale*aspect;
-    output.bottom =  t.position.y;
-    output.texture_id =  t.texture_id;
-    glBindTexture(GL_TEXTURE_2D, texture[t.texture_id]);
+    output->width = ui_scale;
+    output->height = ui_scale;
+    output->left = position.x;
+    output->right = position.x+ui_scale;
+    output->top = position.y-ui_scale*aspect;
+    output->bottom = position.y;
+    output->texture_id = ntextures;
+    glBindTexture(GL_TEXTURE_2D, texture[ntextures]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, t.width, t.height, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, 128, 128, 0,
         GL_RGB, GL_UNSIGNED_BYTE, data);
-    return output;
+    ntextures++;
 }
 
 char *translate(char *a)
@@ -462,8 +486,9 @@ void mouse_callback(int button, int state, int x, int y)
             mouse_x = x;
             mouse_y = y;
             for (i=0; i<2; i++) {
-                if ((quads[i].left < pos_x) && (pos_x < quads[i].right))
-                if ((quads[i].top < pos_y) && (pos_y < quads[i].bottom)) {
+                widget *leaf = root->leaves[i];
+                if ((leaf->left < pos_x) && (pos_x < leaf->right))
+                if ((leaf->top < pos_y) && (pos_y < leaf->bottom)) {
                     action_id = i;
                     break;
                 }
@@ -5219,4 +5244,5 @@ void checkBoxRulerShowOnLoadStateChanged(int checked)
 {
     dialog.ruler_show_on_load = checked;
 }
+
 
