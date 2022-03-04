@@ -3,6 +3,38 @@
 LIBEMB_VERSION=0.1
 VERSION=1.90.0
 
+function get_dependencies () {
+
+if command -v apt-get &> /dev/null
+then
+sudo apt-get update
+sudo apt-get install --fix-missing \
+    build-essential cmake mesa-common-dev x11proto-input-dev libxcb-xinput-dev \
+    pandoc
+else
+
+if command -v yum &> /dev/null
+then
+sudo yum install gdb gcc-c++ pandoc
+else
+
+if command -v brew &> /dev/null
+then
+brew install pandoc
+else
+
+cat <<EOF
+Could not detect apt-get, yum or homebrew, at least
+one of these should be present for automated installation of
+the dependencies.
+
+Try './build.sh --build-dependencies' instead.
+EOF
+fi
+fi
+fi
+}
+
 function make_docs () {
 echo "Updating libembroidery"
 git submodule init
@@ -86,9 +118,14 @@ while true
 do
     case $1 in
     --all)
+      get_dependencies
       make_docs
       main_build
       install_to_userspace n
+      shift
+      ;;
+    --get-dependencies)
+      get_dependencies
       shift
       ;;
     --docs)
@@ -109,3 +146,4 @@ do
       ;;
     esac
 done
+
