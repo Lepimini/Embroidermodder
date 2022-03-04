@@ -28,27 +28,20 @@
 #include <GL/freeglut.h>
 #include "fg_internal.h"
 
-/*
- * TODO BEFORE THE STABLE RELEASE:
+/* The original version of the fg_font_data.c file had a notice that said
+ * there was possible ownership disputes over the file. So I decided to override the
+ * old fonts with these stubs rather than deal with that.
  *
- *  Test things out ...
+ * Robin
  */
 
-/* -- IMPORT DECLARATIONS -------------------------------------------------- */
-
-/*
- * These are the font faces defined in fg_font_data.c file:
- */
-extern SFG_Font fgFontFixed8x13;
-extern SFG_Font fgFontFixed9x15;
-extern SFG_Font fgFontHelvetica10;
-extern SFG_Font fgFontHelvetica12;
-extern SFG_Font fgFontHelvetica18;
-extern SFG_Font fgFontTimesRoman10;
-extern SFG_Font fgFontTimesRoman24;
-extern SFG_StrokeFont fgStrokeRoman;
-extern SFG_StrokeFont fgStrokeMonoRoman;
-
+SFG_Font fgFontFixed8x13 = { "-misc-fixed-medium-r-normal--13-120-75-75-C-80-iso8859-1", 256, 14, {NULL}, 0, 3 };
+SFG_Font fgFontFixed9x15 = { "-misc-fixed-medium-r-normal--15-140-75-75-C-90-iso8859-1", 256, 16, {NULL}, 0, 4 };
+SFG_Font fgFontHelvetica10 = { "-adobe-helvetica-medium-r-normal--10-100-75-75-p-56-iso8859-1", 256, 14, {NULL}, 0, 3 };
+SFG_Font fgFontHelvetica12 = { "-adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1", 256, 16, {NULL}, 0, 4 };
+SFG_Font fgFontHelvetica18 = { "-adobe-helvetica-medium-r-normal--18-180-75-75-p-98-iso8859-1", 256, 23, {NULL}, 0, 5 };
+SFG_Font fgFontTimesRoman10 = { "-adobe-times-medium-r-normal--10-100-75-75-p-54-iso8859-1", 256, 14, {NULL}, 0, 4 };
+SFG_Font fgFontTimesRoman24 = { "-adobe-times-medium-r-normal--24-240-75-75-p-124-iso8859-1", 256, 29, {NULL}, 0, 7 };
 
 /* -- PRIVATE FUNCTIONS ---------------------------------------------------- */
 
@@ -58,21 +51,6 @@ extern SFG_StrokeFont fgStrokeMonoRoman;
  */
 SFG_Font* fghFontByID( void* font )
 {
-    if( font == GLUT_BITMAP_8_BY_13        )
-        return &fgFontFixed8x13;
-    if( font == GLUT_BITMAP_9_BY_15        )
-        return &fgFontFixed9x15;
-    if( font == GLUT_BITMAP_HELVETICA_10   )
-        return &fgFontHelvetica10;
-    if( font == GLUT_BITMAP_HELVETICA_12   )
-        return &fgFontHelvetica12;
-    if( font == GLUT_BITMAP_HELVETICA_18   )
-        return &fgFontHelvetica18;
-    if( font == GLUT_BITMAP_TIMES_ROMAN_10 )
-        return &fgFontTimesRoman10;
-    if( font == GLUT_BITMAP_TIMES_ROMAN_24 )
-        return &fgFontTimesRoman24;
-
     return 0;
 }
 
@@ -82,11 +60,6 @@ SFG_Font* fghFontByID( void* font )
  */
 static SFG_StrokeFont* fghStrokeByID( void* font )
 {
-    if( font == GLUT_STROKE_ROMAN      )
-        return &fgStrokeRoman;
-    if( font == GLUT_STROKE_MONO_ROMAN )
-        return &fgStrokeMonoRoman;
-
     return 0;
 }
 

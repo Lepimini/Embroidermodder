@@ -33,6 +33,14 @@
 #include <windows.h>
 #endif
 
+#if __APPLE__
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
+
 #include "GL/freeglut.h"
 
 #include "embroidermodder.h"
@@ -41,7 +49,6 @@
 void clearSelection(void);
 circle_args circle_init(void);
 
-void right_click_menu(void);
 quad make_texture(xpm_texture texture);
 
 widget *make_widget(float width, float height);
@@ -54,6 +61,8 @@ int get_ini_int(char *key, int default_value);
 float get_ini_float(char *key, float default_value);
 int embClamp(int lower, int x, int upper);
 
+void mouse_callback(int button, int state, int x, int y);
+
 /* DATA SECTION */
 int debug_mode = 1;
 quad quads[N_TEXTURES];
@@ -65,6 +74,7 @@ int window_height = 480;
 float mouse[2];
 int mouse_x = 0;
 int mouse_y = 0;
+int action_id = -1;
 char undo_history[1000][100];
 int undo_history_length = 0;
 int undo_history_position = 0;
@@ -82,38 +92,41 @@ float aspect = 640.0/480.0;
 float ui_scale = 0.1;
 char new_palette_symbols[] = " .+@#$%&*=-;>,')!";
 int ntextures = 0;
+char user_string[100];
 
 extern int new_palette[17*3];
 extern int open_palette[17*3];
 
-xpm_texture example1 = {
-    0,
-    0,
-    {-1.0, 1.0},
-    128,
-    128,
-    (char*)new_palette_symbols,
-    (int*)new_palette,
-    (char**)new_xpm
-};
-
-xpm_texture example2 = {
-    0,
-    1,
-    {-1.0+0.1, 1.0},
-    128,
-    128,
-    (char*)new_palette_symbols,
-    (int*)open_palette,
-    (char**)open_xpm
+xpm_texture icon_xpm[] = {
+    {
+        0,
+        0,
+        {-1.0, 1.0},
+        128,
+        128,
+        (char*)new_palette_symbols,
+        (int*)new_palette,
+        (char**)new_xpm
+    },
+    {
+        0,
+        1,
+        {-1.0+0.1, 1.0},
+        128,
+        128,
+        (char*)new_palette_symbols,
+        (int*)open_palette,
+        (char**)open_xpm
+    }
 };
 
 /* FUNCTIONS SECTION */
 
 int new_main(int argc, char *argv[])
 {
-    int window;
+    int window, i;
     puts("FreeGLUT3 version of Embroidermodder");
+    sprintf(user_string, "User String");
 
     root = make_widget(1.0, 1.0);
 
@@ -124,8 +137,6 @@ int new_main(int argc, char *argv[])
     window = glutCreateWindow("Embroidermodder 2");
     glClearColor (0.5, 0.5, 0.5, 0.0);
 
-    right_click_menu();
-
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -134,13 +145,16 @@ int new_main(int argc, char *argv[])
     root->right = make_widget(ui_scale, ui_scale);
     root->left->texture_id = 0;
     root->right->texture_id = 1;
-    quads[0] = make_texture(example1);
-    quads[1] = make_texture(example2);
+    for (i=0; i<2; i++) {
+        quads[i] = make_texture(icon_xpm[i]);
+    }
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_FLAT);
     glutDisplayFunc(display);
+    glutIdleFunc(display);
     glutKeyboardFunc(key_handler);
+    glutMouseFunc(mouse_callback);
     glutMainLoop();
     
     free_widget(root);
@@ -178,34 +192,6 @@ void free_widget(widget *w)
     }
     free(w);
 }
-
-void right_click_menu(void)
-{
-    int rightclick_menu;
-    int file_menu, edit_menu, settings_menu, window_menu, help_menu;
-    file_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("New", ACTION_new);
-    glutAddMenuEntry("Open", ACTION_open);
-    glutAddMenuEntry("Save", ACTION_save);
-    glutAddMenuEntry("Save as", ACTION_saveas);
-    glutAddMenuEntry("Exit", ACTION_exit);
-    edit_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    settings_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    window_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    help_menu = glutCreateMenu(menu___);
-    glutAddMenuEntry("Undo", ACTION_undo);
-    rightclick_menu = glutCreateMenu(menu___);
-    glutAddSubMenu("File", file_menu);
-    glutAddSubMenu("Edit", edit_menu);
-    glutAddSubMenu("Settings", settings_menu);
-    glutAddSubMenu("Window", window_menu);
-    glutAddSubMenu("Help", help_menu);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
-}
-
 
 double sgn(double x)
 {
@@ -332,9 +318,15 @@ void menu___(int key)
 
 void display()
 {
-    int i;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    if (action_id >= 0) {
+        printf("%d\n", action_id);
+        action_id = -1;
+    }
+
     draw_widget(root);
+
     glutSwapBuffers();
 }
 
@@ -458,6 +450,26 @@ circle_args circle_init(void)
     setPromptPrefix(qsTr("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "));
     */
     return args;
+}
+
+void mouse_callback(int button, int state, int x, int y)
+{
+    if (button==GLUT_LEFT_BUTTON) {
+        if (state==GLUT_DOWN) {
+            int i;
+            float pos_x = x/(0.5*window_width) - 1.0;
+            float pos_y = -y/(0.5*window_height) + 1.0;
+            mouse_x = x;
+            mouse_y = y;
+            for (i=0; i<2; i++) {
+                if ((quads[i].left < pos_x) && (pos_x < quads[i].right))
+                if ((quads[i].top < pos_y) && (pos_y < quads[i].bottom)) {
+                    action_id = i;
+                    break;
+                }
+            }
+        }
+    }
 }
 
 #if 0

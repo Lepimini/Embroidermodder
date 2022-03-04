@@ -47,7 +47,6 @@ SET(FREEGLUT_SRCS
 	freeglut3/src/fg_cursor.c
 	freeglut3/src/fg_display.c
 	freeglut3/src/fg_ext.c
-	freeglut3/src/fg_font_data.c
 	freeglut3/src/fg_gamemode.c
 	freeglut3/src/fg_geometry.c
 	freeglut3/src/fg_gl2.c
@@ -63,8 +62,6 @@ SET(FREEGLUT_SRCS
 	freeglut3/src/fg_overlay.c
 	freeglut3/src/fg_spaceball.c
 	freeglut3/src/fg_state.c
-	freeglut3/src/fg_stroke_mono_roman.c
-	freeglut3/src/fg_stroke_roman.c
 	freeglut3/src/fg_structure.c
 	freeglut3/src/fg_teapot.c
 	freeglut3/src/fg_teapot_data.h
