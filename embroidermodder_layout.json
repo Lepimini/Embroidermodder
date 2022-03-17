@@ -1,0 +1,32 @@
+{
+    "title": "Embroidermodder 2.0",
+    "width": 640,
+    "height": 480,
+    "menubar": {
+        "File": {
+            "New": "new_file",
+            "Open...": "open_file",
+            "Save...": "save_file",
+            "Save As...": "saveas_file",
+            "Exit": "exit_program"
+        },
+        "Edit": {
+            "Cut": "cut_object",
+            "Copy": "copy_object",
+            "Paste": "paste_object"
+        }
+    },
+    "buttongrid": {
+        "New": {
+            "command": "new_file",
+            "row": 1,
+            "column": 0
+        },
+        "Open": {
+            "command": "open_file",
+            "row": 1,
+            "column": 1
+        }
+    }
+}
+
