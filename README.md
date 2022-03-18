@@ -1,5 +1,7 @@
 # What is Embroidermodder ?
 
+(UNDER MAJOR RESTRUCTURING, PLEASE WAIT FOR VERSION 2)
+
 Embroidermodder is a free machine embroidery application.
 The newest version, Embroidermodder 2 can:
 
@@ -24,13 +26,7 @@ To see what we're focussing on at the moment check this table.
 | Summer Solstice (21st of June) 2022 | Embroidermodder 2 is officially released. |
 | July 2022 | News and Documentation work for Embroidermodder 2 |
 
-## Nightly
-
-We're currently working on a "nightly" build see:
-
-* [Embroidermodder 2.0.0 alpha (linux)](https://github.com/Embroidermodder/Embroidermodder/suites/4828305419/artifacts/136420268)
-
-## Build and Install
+## Install
 
 ### Desktop
 
@@ -38,20 +34,36 @@ On most sytems the command:
 
     python3 -m pip install embroidermodder
 
-will build the most up-to date released version, on Windows this is
+will install the most up-to date released version, on Windows this is
 
     py -m pip install embroidermodder
 
-To run the development version just use
-
-    python3 embroidermodder.py
-
-or on Windows double-click the embroidermodder.py source file.
+Currently this is the 2.0-alpha, which will have a build code of some kind.
 
 ### Mobile
 
-These are currently unsupported, but after the Desktop version is
-released we'll release them.
+These are currently unsupported (see iMobileViewer and Mobileviewer for
+iOS and Android respectively), but after the Desktop version is
+released we'll work on them.
+
+The Mobile version will share some of the UI and all of the backend,
+so development of the Desktop version will help us make both.
+
+## Build
+
+To run the development version without building just use
+
+    python3 embroidermodder/__init__.py
+
+or on Windows double-click the `__init__.py` source file.
+
+To install the development version over your current version we recommend
+
+    python3 -m build
+    python3 -m pip install dist/*.whl --force-reinstall
+
+This may help if you are running tests that require the `embroidermodder`
+command to be in your system `PATH`.
 
 ## Documentation
 
@@ -72,6 +84,9 @@ have really enjoyed them.
 If we do have any arguments please note we have a
 [Code of Conduct](CODE_OF_CONDUCT.md) so there is a consistent policy to
 enforce when dealing with these arguments.
+
+The first thing you should try is building from source using the [build advice](#build)
+above.
 
 ### The Actions System
 
