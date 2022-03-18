@@ -18,8 +18,7 @@ To see what we're focussing on at the moment check this table.
 
 | *Date* | *Event* |
 |----|----|
-| Feb 2022 | An overview of what has changed will be written up for the website as a news update, along with better documentation of libembroidery. |
-| Feb-April | Finish the FreeGLUT 3 conversion |
+| Feb-April | Finish the conversion to Python/Tk |
 | April-May 2022 | Finish all the targets in the Design, or assign them to 2.1. |
 | May-June 2022 | Bugfixing, Testing, QA. libembroidery 1.0 will be released, then updates will slow down and the Embroidermodder 2 development version will be fixed to the API of this version. |
 | Summer Solstice (21st of June) 2022 | Embroidermodder 2 is officially released. |
@@ -33,24 +32,26 @@ We're currently working on a "nightly" build see:
 
 ## Build and Install
 
-### Dependencies
+### Desktop
 
-To build Embroidermodder 2 from source run:
+On most sytems the command:
 
-    ./build.sh --get-dependencies
+    python3 -m pip install embroidermodder
 
-Windows supports Bash out of the box now, but if you don't have it turned on
-there is a batch file with the same commands.
+will build the most up-to date released version, on Windows this is
 
-### Building
+    py -m pip install embroidermodder
 
-Assuming you have the above dependancies these commands should build `embroidermodder`
+To run the development version just use
 
-    ./build.sh
+    python3 embroidermodder.py
 
-with the install argument it will also install the program to user space
+or on Windows double-click the embroidermodder.py source file.
 
-    ./build.sh --install
+### Mobile
+
+These are currently unsupported, but after the Desktop version is
+released we'll release them.
 
 ## Documentation
 
