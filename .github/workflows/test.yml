@@ -15,11 +15,6 @@ jobs:
       run: |
         git clone https://github.com/Embroidermodder/embroidermodder
         cd embroidermodder
-        ./build.sh --get-dependencies
-        ./build.sh --build
+        pip install libembroidery
+        python3 embroidermodder.py
       shell: bash
-    - name: Upload artifact to act as the ${{ matrix.os }} Nightly
-      uses: actions/upload-artifact@v2
-      with:
-        name: embroidermodder_2_alpha_${{ matrix.os }}
-        path: ${{ github.workspace }}/embroidermodder/build
