@@ -9,7 +9,7 @@ setuptools.setup(
     author="The Embroidermodder Team",
     author_email="embroidermodder@gmail.com",
     entry_points={
-        'console_scripts': ['embroidermodder=embroidermodder:main']
+        'console_scripts': ['embroidermodder=embroidermodder:new_file']
     },
     packages=setuptools.find_packages(include=['embroidermodder']),
     install_requires=[

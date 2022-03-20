@@ -53,9 +53,13 @@ so development of the Desktop version will help us make both.
 
 To run the development version without building just use
 
-    python3 embroidermodder/__init__.py
+    python3 -m embroidermodder
 
-or on Windows double-click the `__init__.py` source file.
+or on Windows
+
+    py -m embroidermodder
+
+which will prioritise the local folder over the system one.
 
 To install the development version over your current version we recommend
 
@@ -63,7 +67,8 @@ To install the development version over your current version we recommend
     python3 -m pip install dist/*.whl --force-reinstall
 
 This may help if you are running tests that require the `embroidermodder`
-command to be in your system `PATH`.
+command to be in your system `PATH` or you just want to use the
+latest version before it comes out for some particular feature.
 
 ## Documentation
 
