@@ -482,3 +482,154 @@ layout = {
     }
 }
 
+
+tips = [
+    "we need more tips?",
+    "you can change the color of the display through settings?",
+    "you can hide the scrollbars to increase the viewable area through settings?",
+    "you can change the icon size for increased visibility?",
+    "you can toggle the grid on and off by pressing the button in the statusbar?",
+    "the grid size can be changed to match your hoop size through settings?",
+    "the crosshair size is based on a percentage of your screen size? Setting it to 100 may help you visually line things up better.",
+    "you can pan by pressing the middle mouse button and dragging your mouse across the screen?",
+    "you can open and edit multiple designs simultaneously?",
+    "that many embroidery machines support the .dst format?",
+    "that you can zoom in and out using your mouse wheel?",
+    "that you can use circular and isometric grids?",
+    "about our command line format converter?",
+    "that you can use the 'DAY' and 'NIGHT' commands to quickly switch the view colors to commonly used white or black?",
+    "that you can quickly change the background, crosshair and grid colors using the 'RGB' command?",
+    "\0"
+]
+
+
+details_label_text = [
+    "Total Stitches:",
+    "Real Stitches:",
+    "Jump Stitches:",
+    "Trim Stitches:",
+    "Total Colors:",
+    "Color Changes:",
+    "Left:",
+    "Top:",
+    "Right:",
+    "Bottom:",
+    "Width:",
+    "Height:"
+]
+
+
+obj_names = [
+    "Unknown",
+    "Base",
+    "Arc",
+    "Block",
+    "Circle",
+    "Aligned Dimension",
+    "Angular Dimension",
+    "Arc Length Dimension",
+    "Diameter Dimension",
+    "Leader Dimension",
+    "Linear Dimension",
+    "Ordinate Dimension",
+    "Radius Dimension",
+    "Ellipse",
+    "Elliptical Arc",
+    "Rubber",
+    "Grid",
+    "Hatch",
+    "Image",
+    "Infinite Line",
+    "Line",
+    "Path",
+    "Point",
+    "Polygon",
+    "Polyline",
+    "Ray",
+    "Rectangle",
+    "Slot",
+    "Spline",
+    "Multi Line Text",
+    "Single Line Text",
+    "Unknown"
+]
+
+
+toolbar_label = [
+    "File",
+    "Edit",
+    "View",
+    "Zoom",
+    "Pan",
+    "Icon",
+    "Help",
+    "Layer",
+    "Text",
+    "Properties"
+]
+
+
+menu_label = [
+    "&File",
+    "&Edit",
+    "&View",
+    "&Settings",
+    "&Window",
+    "&Help",
+    "Open &Recent",
+    "&Zoom",
+    "&Pan"
+]
+
+
+status_bar_label = [
+    "SNAP",
+    "GRID",
+    "RULER",
+    "ORTHO",
+    "POLAR",
+    "QSNAP",
+    "QTRACK",
+    "LWT"
+]
+
+
+folders = [
+    "",
+    "commands",
+    "help",
+    "icons",
+    "images",
+    "samples",
+    "translations"
+]
+
+
+settings_tab_label = [
+    "General",
+    "Files/Path",
+    "Display",
+    "Open/Save",
+    "Printing",
+    "Snap",
+    "Grid/Ruler",
+    "Ortho/Polar",
+    "QuickSnap",
+    "QuickTrack",
+    "LineWeight",
+    "Selection"
+]
+
+
+origin_string = [
+    "M 0.0 0.5",
+    "A -0.5 -0.5 1.0 1.0 90.0 360.0",
+    "A -0.5 -0.5 1.0 1.0 90.0 -360.0",
+    "L 0.0 -0.5",
+    "A -0.5 -0.5 1.0 1.0 270.0 90.0",
+    "L -0.5 0.0",
+    "A -0.5 -0.5 1.0 1.0 180.0 -90.0",
+    "Z",
+    "\0"
+]
+
