@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+
+r"""
+    Embroidermodder 2.
+
+    ------------------------------------------------------------
+
+    Copyright 2013-2022 The Embroidermodder Team
+    Embroidermodder 2 is Open Source Software.
+    See LICENCE for licensing terms.
+
+    ------------------------------------------------------------
+
+    If the user has never previously loaded the software on this
+    machine, this sets all the defaults for the settings.
+"""
+
+from libembroidery import *
+
+config = {
+    "window_width": 640,
+    "window_height": 480,
+    "window_x": 100,
+    "window_y": 100,
+    "general_icon_size": 16,
+    "general_mdi_bg_use_logo": False,
+    "general_mdi_bg_use_texture": False,
+    "general_mdi_bg_use_color": False,
+    "qsnap_endpoint": False,
+    "qsnap_midpoint": False,
+    "qsnap_center": False,
+    "qsnap_node": False,
+    "qsnap_quadrant": False,
+    "qsnap_intersection": False,
+    "qsnap_extension": False,
+    "qsnap_insertion": False,
+    "qsnap_perpendicular": False,
+    "qsnap_tangent": False,
+    "qsnap_nearest": False,
+    "qsnap_apparent": False,
+    "qsnap_parallel": False,
+    "grid_center_on_origin": False,
+    "grid_center": [0.5, 0.5], # EmbVector(0.5, 0.5)
+    "grid_size": [10.0, 10.0], # EmbVector(10.0, 10.0)
+    "grid_spacing": [10.0, 10.0], # EmbVector(10.0, 10.0)
+    "grid_size_radius": 10.0,
+    "grid_spacing_radius": "",
+    "grid_spacing_angle": "",
+    "ruler_show_on_load": "",
+    "ruler_metric": "",
+    "general_tip_of_the_day": "",
+    "general_system_help_browser": "",
+    "general_check_for_updates": "",
+    "display_use_opengl": "",
+    "display_renderhint_aa": "",
+    "display_renderhint_text_aa": "",
+    "display_renderhint_smooth_pix": "",
+    "display_renderhint_high_aa": "",
+    "display_renderhint_noncosmetic": "",
+    "display_show_scrollbars": "",
+    "display_scrollbar_widget_num": "",
+    "display_zoomscale_in": "",
+    "display_zoomscale_out": "",
+    "display_selectbox_alpha": "",
+    "display_crosshair_percent": "",
+    "opensave_open_thumbnail": "",
+    "opensave_save_thumbnail": "",
+    "opensave_recent_max_files": "",
+    "opensave_trim_dst_num_jumps": "",
+    "printing_use_last_device": "",
+    "printing_disable_bg": "",
+    "grid_show_on_load": "",
+    "grid_show_origin": "",
+    "grid_color_match_crosshair": "",
+    "grid_load_from_file": "",
+    "ruler_pixel_size": "",
+    "qsnap_enabled": "",
+    "qsnap_locator_size": "",
+    "qsnap_aperture_size": "",
+    "lwt_show_lwt": False,
+    "lwt_real_render": False,
+    "lwt_default_lwt": 1.0,
+    "selection_mode_pickfirst": "",
+    "selection_mode_pickadd": "",
+    "selection_mode_pickdrag": "",
+    "selection_grip_size": "",
+    "selection_pickbox_size": "",
+    "text_style_bold": False,
+    "text_style_italic": False,
+    "text_style_underline": False,
+    "text_style_strikethrough": False,
+    "rulerPixelSize": "",
+    "gripSize": "",
+    "pickBoxSize": "",
+    "crosshairSize": "",
+    "shiftKeyPressedState": "",
+    "grippingActive": "",
+    "rapidMoveActive": "",
+    "previewActive": "",
+    "pastingActive": "",
+    "movingActive": "",
+    "selectingActive": "",
+    "zoomWindowActive": "",
+    "panningRealTimeActive": "",
+    "panningPointActive": "",
+    "panningActive": "",
+    "qSnapActive": False,
+    "qSnapToggle": False,
+    "rulerMetric": True,
+    "general_language": "default",
+    "general_icon_theme": "default",
+    "general_mdi_bg_logo": "",
+    "general_mdi_bg_texture": "",
+    "general_mdi_bg_color": "",
+    "general_current_tip": "",
+    "display_crosshair_color": "",
+    "display_bg_color": "",
+    "display_selectbox_left_color": "",
+    "display_selectbox_left_fill": "",
+    "display_selectbox_right_color": "",
+    "display_selectbox_right_fill": "",
+    "display_units": "",
+    "opensave_open_format": "",
+    "opensave_save_format": "",
+    "opensave_recent_directory": "",
+    "printing_default_device": "",
+    "grid_color": "",
+    "ruler_color": "",
+    "qsnap_locator_color": "#FFFFFF",
+    "grid_type": "cartesian",
+    "selection_coolgrip_color": "#FFFFFF",
+    "selection_hotgrip_color": "#FFFFFF",
+    "text_font": "arial"
+}
+
