@@ -17528,12 +17528,6 @@ def nightVision()
     #endif
 
 
-def doNothing():
-    " This function intentionally does nothing. "
-    debug_message("doNothing()")
-
-
-
 def actuator(char *call)
 
     int id
