@@ -20,7 +20,6 @@ r"""
 
 import libembroidery
 
-from .icons import *
 from .data import *
 from .config import *
 
@@ -2381,24 +2380,20 @@ int prompt(str):
             args.mode = args.mode_DISTANCE
             setPromptPrefix(translate("Specify distance: "))
         }
-        else
-        {
+        else:
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
             {
                 alert(translate("Point or option keyword required."))
                 setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
             }
-            else
-            {
+            else:
                 args.pointCX = Number(strList[0])
                 args.pointCY = Number(strList[1])
                 setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", args.pointCX, args.pointCY)
                 vulcanize()
                 return
-            }
-        }
-    }
+
     else if(args.mode == args.mode_DISTANCE)
     {
         if(isNaN(str))
