@@ -712,7 +712,7 @@ layout = {
         "order": ["File", "Edit", "View", "Zoom", "Pan"],
         "File": {
             "New": {
-                "icon": new_xpm,
+                "icon": "new",
                 "command": "new",
                 "row": 1,
                 "column": 0,
@@ -720,7 +720,7 @@ layout = {
                 "tooltip": "Create a new file."
             },
             "Open": {
-                "icon": open_xpm,
+                "icon": "open",
                 "command": "open",
                 "row": 1,
                 "column": 1,
