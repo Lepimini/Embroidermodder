@@ -26,7 +26,7 @@ To see what we're focussing on at the moment check this table.
 | Summer Solstice (21st of June) 2022 | Embroidermodder 2 is officially released. |
 | July 2022 | News and Documentation work for Embroidermodder 2 |
 
-Current PyLint score: -430.03/10.
+Current PyLint score: -345.89/10.
 
 ## Install
 
