@@ -18,6 +18,8 @@ r"""
     attempts.
 """
 
+from .icons import *
+
 """
 
 # LineEdits
@@ -392,17 +394,21 @@ layout = {
     "height": 480,
     "MAX_STRING_LENGTH": 500,
     "menubar": {
+        "order": [
+            "File", "Edit", "View", "Settings", "Window", "Help", "Recent",
+            "Zoom", "Pan"
+        ],
         "File": {
-            "New": "new_file",
-            "Open...": "open_file",
-            "Save...": "save_file",
-            "Save As...": "save_as_file",
-            "Exit": "exit_program"
+            "New": "new",
+            "Open...": "open",
+            "Save...": "save",
+            "Save As...": "saveas",
+            "Exit": "exit"
         },
         "Edit": {
-            "Cut": "cut_object",
-            "Copy": "copy_object",
-            "Paste": "paste_object"
+            "Cut": "cut",
+            "Copy": "copy",
+            "Paste": "paste"
         },
         "View": {
         },
@@ -422,14 +428,19 @@ layout = {
     "toolbar": {
         "File": {
             "New": {
-                "command": "new_file",
+                "icon": new_xpm,
+                "command": "new",
                 "row": 1,
-                "column": 0
+                "column": 0,
+                "statustip": "&New",
+                "tooltip": "Create a new file."
             },
             "Open": {
-                "command": "open_file",
+                "command": "open",
                 "row": 1,
-                "column": 1
+                "column": 1,
+                "statustip": "&Open",
+                "tooltip": "Open an existing file."
             }
         },
         "Edit": {
@@ -479,28 +490,43 @@ layout = {
     "line_edits": {
         "arc_center_x": "",
         "arc_center_y": ""
+    },
+    "shortcuts": {
+        "Ctrl+N": "new",
+        "Ctrl+O": "open",
+        "Ctrl+S": "save",
+        "Ctrl+Shift+S": "saveas",
+        "Ctrl+P": "print",
+        "Ctrl+D": "details",
+        "Ctrl+Q": "exit",
+        "Ctrl+X": "cut",
+        "Ctrl+C": "copy",
+        "Ctrl+V": "paste",
+        "Ctrl+Z": "undo",
+        "F1": "help",
+        "F2": "about"
+    },
+    "tips": [
+        "we need more tips?",
+        "you can change the color of the display through settings?",
+        "you can hide the scrollbars to increase the viewable area through settings?",
+        "you can change the icon size for increased visibility?",
+        "you can toggle the grid on and off by pressing the button in the statusbar?",
+        "the grid size can be changed to match your hoop size through settings?",
+        "the crosshair size is based on a percentage of your screen size? Setting it to 100 may help you visually line things up better.",
+        "you can pan by pressing the middle mouse button and dragging your mouse across the screen?",
+        "you can open and edit multiple designs simultaneously?",
+        "that many embroidery machines support the .dst format?",
+        "that you can zoom in and out using your mouse wheel?",
+        "that you can use circular and isometric grids?",
+        "about our command line format converter?",
+        "that you can use the 'DAY' and 'NIGHT' commands to quickly switch the view colors to commonly used white or black?",
+        "that you can quickly change the background, crosshair and grid colors using the 'RGB' command?",
+    ],
+    "translation_table": {
+    
     }
 }
-
-
-tips = [
-    "we need more tips?",
-    "you can change the color of the display through settings?",
-    "you can hide the scrollbars to increase the viewable area through settings?",
-    "you can change the icon size for increased visibility?",
-    "you can toggle the grid on and off by pressing the button in the statusbar?",
-    "the grid size can be changed to match your hoop size through settings?",
-    "the crosshair size is based on a percentage of your screen size? Setting it to 100 may help you visually line things up better.",
-    "you can pan by pressing the middle mouse button and dragging your mouse across the screen?",
-    "you can open and edit multiple designs simultaneously?",
-    "that many embroidery machines support the .dst format?",
-    "that you can zoom in and out using your mouse wheel?",
-    "that you can use circular and isometric grids?",
-    "about our command line format converter?",
-    "that you can use the 'DAY' and 'NIGHT' commands to quickly switch the view colors to commonly used white or black?",
-    "that you can quickly change the background, crosshair and grid colors using the 'RGB' command?",
-    "\0"
-]
 
 
 details_label_text = [
@@ -553,34 +579,6 @@ obj_names = [
     "Single Line Text",
     "Unknown"
 ]
-
-
-toolbar_label = [
-    "File",
-    "Edit",
-    "View",
-    "Zoom",
-    "Pan",
-    "Icon",
-    "Help",
-    "Layer",
-    "Text",
-    "Properties"
-]
-
-
-menu_label = [
-    "&File",
-    "&Edit",
-    "&View",
-    "&Settings",
-    "&Window",
-    "&Help",
-    "Open &Recent",
-    "&Zoom",
-    "&Pan"
-]
-
 
 status_bar_label = [
     "SNAP",

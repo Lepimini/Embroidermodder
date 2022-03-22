@@ -19,55 +19,10 @@ r"""
 """
 
 import libembroidery
-import json
-import math
 
 from .icons import *
-from .config import config
-from .translation import translation_table
-
-MAX_DISTANCE = 10000000.0
-
-circle_modes = [
-    "1P_RAD", "1P_DIA", "2P", "3P", "TTR"
-]
-
-folders = {
-    "app": "",
-    "commands": "",
-    "help": "",
-    "images": "",
-    "samples": "",
-    "translations": ""
-}
-
-path_types = [
-    "MOVETO",
-    "LINETO",
-    "ARCTO",
-    "ARCMOVETO",
-    "ELLIPSE",
-    "END"
-]
-
-permissions = [
-    "USER", "SYSTEM"
-]
-
-def translate(s):
-    r"""
-    To support other languages we use a simple nested dictionary,
-    the first layer for what the message is and the second for
-    the list of translations.
-    
-    In order to deal with incomplete translations calling the
-    table falls back to returning the string supplied in English.
-    """
-    lang = settings["general_language"] 
-    if s in translation_table.keys():
-        if lang in translation_table[s].keys():
-            return translation_table[s][lang]
-    return s
+from .data import *
+from .config import *
 
 """
 #
@@ -95,145 +50,6 @@ TREBLE_CLEF_MODE_NUM_POINTS        0
 TREBLE_CLEF_MODE_XSCALE            1
 TREBLE_CLEF_MODE_YSCALE            2
 
-#
- * TYPEDEFS
- * ========
- *
- * Action
- *
- * OVERVIEW
- *
- * 
- * 
- *
- * DESCRIPTION OF STRUCT CONTENTS
- *
- * object 
- *     The object flag 
- *
- * icon
- *     The icon index determines which icon from the table is associate with
- *     the action.
- *
- * (Not implemented)
- *     The permissions flag determines whether the user or the system can
- *     run this action.
- *
- *     The mode argument determines what locations in the interface
- *     the action will appear in, for example in mode MODE_TOOLBAR,
- *     the action appears in the toolbars, in MODE_TOOLBAR | MODE_LINE_EDIT_DOUBLE
- *     it also appears as a lineEdit in the property editor expecting a
- *     double as input.
- *
- * abbreviation
- *     .
- *
- * menu_name
- *     .
- *
- * description
- *     .
- *
- * shortcut
- *     .
- *
- * function
- *     The function to call, which only uses global variables, so we can take
- *     a void in, void out pointer.
- *
- *  *
- * FUNCTIONS
- *
- * The action typedef is used in 
- *
- *  */
-
-typedef struct Action 
-    int object
-    *icon
-    # int permissions; */
-    # int mode; */
-    char abbreviation[20]
-    char menu_name[30]
-    char description[100]
-    char shortcut[20]
-    void (*function)()
-} action
-
-# Widget
- *
- * OVERVIEW
- *
- * All buttons, shortcuts, menus and regions of the windows should be widgets.
- *
- * The widgets are stored, accessed and altered via a binary tree where the
- * left side is dominant. 
- *
- * The strength of the new GUI relies heavily on this core concept. All the
- * FreeGLUT 3 calls will happen at the end of calls to the widgets.
- *
- * Perhaps the action system should be connected to this somehow?
- *
- *
- * DESCRIPTION OF STRUCT CONTENTS
- *
- * svg_path
- *     If the widget is a button, it needs a symbol. The svg_path is the path
- *     that draws the symbol using the .
- *
- * width
- *     The width as a proportion of the total width of the parent.
- *     0.1 means 10% of the width of the parent.
- *
- * height
- *     The height as a proportion of the total width of the parent.
- *     0.1 means 10% of the width of the parent.
- *
- * n_children
- *     The number of children of this node, capped to 10 during this stage of
- *     development.
- *
- * children
- *     An array of leaf widgets, as part of the tree of widgets. Fill this entry
- *     first, then the right widget, then the left widget's left widget.
- *
- * position
- *     Relative to its parent, where should the widget go (the top left corner's
- *     offset from the top left corner).
- *
- *
- * FUNCTIONS
- * 
- * widget *make_widget(float width, float height)
- *     Allocate the memory for the widget and initialise all the values.
- *
- * void draw_widget(widget *w)
- *     Recursively draw the widgets starting at the supplied node, so draw
- *     the window is "draw_widget(root);"
- *
- * void free_widget(widget *w)
- *     Recursively free all the widgets starting at the supplied node.
- *
-
-typedef struct Widget_ widget
-
-struct Widget_ 
-    int texture_id
-    EmbVector position
-    float width
-    float height
-    float left
-    float right
-    float top
-    float bottom
-    int n_leaves
-    int size
-    struct Widget_ **leaves
-
-
-# Text Properties
- * ---------------
- */
 
 typedef struct Text_Properties 
     float size
@@ -307,8 +123,6 @@ typedef struct treble_clef_
 } treble_clef
 
 # C Data for embroidermodder
- * --------------------------
- */
 
 extern int *toolbars[], *menus = ""
 
@@ -327,7 +141,6 @@ extern widget *root
 extern int debug_mode
 
 # C functions for embroidermodder
-# -------------------------------
 
 def to_lower(char *, char *)
 def usage()
@@ -429,21 +242,20 @@ def makeLayerCurrent():
 def layerSelector():
 
 
-def designDetails()
+def designDetails():
 
-}
 
-def main_cut()
+def main_cut():
     debug_message("cut()")
-    View* gview = _mainWin->activeView()
-    if (gview) {
+    gview = _mainWin->activeView()
+    if gview:
         gview->cut()
 
 
 def main_copy()
     debug_message("copy()")
-    View* gview = _mainWin->activeView()
-    if (gview) {
+    gview = _mainWin->activeView()
+    if gview:
         gview->copy()
 
 
@@ -561,25 +373,27 @@ def makeLayerActive()
     debug_message("makeLayerActive()")
     debug_message("Implement makeLayerActive.")
 
-def layerManager()
+def layerManager():
     debug_message("layerManager()")
     debug_message("Implement layerManager.")
     /*LayerManager layman( _mainWin,  _mainWin)
     layman.exec()
-    */
-}
 
-def layerPrevious()
+
+def layerPrevious():
     debug_message("layerPrevious()")
     debug_message("Implement layerPrevious.")
+
 
 def zoomRealtime():
     debug_message("zoomRealtime()")
     debug_message("Implement zoomRealtime.")
 
+
 def zoomPrevious():
     debug_message("zoomPrevious()")
     debug_message("Implement zoomPrevious.")
+
 
 def zoomWindow():
     debug_message("zoomWindow()")
@@ -677,7 +491,6 @@ def actuator(char *call):
     }
 }
 
-/* --------------------------------------------------------------- */
 
 def get_n_ints(command, int *out, int n)
 def get_n_floats(command, float *out, int n)
@@ -936,198 +749,31 @@ int ui_palette[17*3] = {
     0xe7, 0xeb, 0xe6,
 ]
 
-/* FUNCTIONS SECTION */
 
-int main(int argc, char *argv[]):
-    int window, i
-    puts("FreeGLUT3 version of Embroidermodder")
-    sprintf(user_string, "User String")
-
-    root = make_widget(1.0, 1.0)
-
-    glutInit(&argc, argv)
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
-    glutInitWindowSize(window_width, window_height)
-    glutInitWindowPosition(100,100)
-    window = glutCreateWindow("Embroidermodder 2")
-    glClearColor (0.5, 0.5, 0.5, 0.0)
-
-    glEnable(GL_DEPTH_TEST)
-    glDepthFunc(GL_LESS)
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
-    glGenTextures(N_TEXTURES, texture)
-    for (i=0; i<N_TEXTURES; i++) {
-        widget *a = make_widget(ui_scale, ui_scale)
-        append_widget(root, a)
-        a->texture_id = i
-    }
-    EmbVector pos
-
-    pos.x = -1.0
-    pos.y = 1.0
-    make_texture(root->leaves[0], new_xpm, pos)
-    pos.x = -1.0+ui_scale
-    make_texture(root->leaves[1], open_xpm, pos)
-    pos.x = -1.0+2*ui_scale
-    make_texture(root->leaves[2], save_xpm, pos)
-    pos.x = -1.0+3*ui_scale
-    make_texture(root->leaves[3], saveas_xpm, pos)
-    pos.x = -1.0+4*ui_scale
-    make_texture(root->leaves[4], print_xpm, pos)
-    /* pos.x = -1.0+5*ui_scale
-    make_texture(root->leaves[5], details_xpm, pos); */
-
-    pos.x = -1.0+6*ui_scale
-    make_texture(root->leaves[6], undo_xpm, pos)
-    pos.x = -1.0+7*ui_scale
-    make_texture(root->leaves[7], redo_xpm, pos)
-
-    pos.x = -1.0+8*ui_scale
-    make_texture(root->leaves[8], cut_xpm, pos)
-    pos.x = -1.0+9*ui_scale
-    make_texture(root->leaves[9], copy_xpm, pos)
-    pos.x = -1.0+10*ui_scale
-    make_texture(root->leaves[10], paste_xpm, pos)
-
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
-    glEnable(GL_TEXTURE_2D)
-    glShadeModel(GL_FLAT)
-    glutDisplayFunc(display)
-    glutIdleFunc(display)
-    glutKeyboardFunc(key_handler)
-    glutMouseFunc(mouse_callback)
-    glutMainLoop()
-    
-    free_widget(root)
-    return 0
-
-widget *make_widget(float width, float height):
-    widget *w = malloc(sizeof(widget))
-    w->n_leaves = 0
-    w->width = width
-    w->height = height
-    w->size = 2
-    w->leaves = (widget *)malloc(w->size*sizeof(widget*))
-    w->texture_id = 0
-    return w
-
-def draw_widget(widget *w):
-    int i
-    for (i=0; i<w->n_leaves; i++) {
-        draw_widget(w->leaves[i]);  
-    }
-    glBindTexture(GL_TEXTURE_2D, texture[w->texture_id])
-    glBegin(GL_QUADS)
-    glTexCoord2f(0.0, 0.0)
-    glVertex2f(w->left, w->top)
-    glTexCoord2f(0.0, 1.0)
-    glVertex2f(w->left, w->bottom)
-    glTexCoord2f(1.0, 1.0)
-    glVertex2f(w->right, w->bottom)
-    glTexCoord2f(1.0, 0.0)
-    glVertex2f(w->right, w->top)
-    glEnd()
-
-def append_widget(widget *w, widget *a):
-    if (w->n_leaves >= w->size) {
-        w->size += 10
-        w->leaves = realloc(w->leaves, w->size*sizeof(widget))
-    }
-    w->leaves[w->n_leaves] = a
-    w->n_leaves++
-
-def pop_widget(widget *w, int i):
-    if (i < w->n_leaves) {
-        free_widget(w->leaves[i])
-        w->leaves[i] = w->leaves[w->n_leaves-1]
-        w->n_leaves--
-    }
-}
-
-def free_widget(widget *w):
-    int i
-    for (i=0; i<w->n_leaves; i++) {
-        free_widget(w->leaves[i])
-    }
-    free(w)
-
-double sgn(double x):
-    if (x > 0.0) return 1.0
-    else if(x < 0.0) return -1.0
-    else return 0.0
-
-double theta(double x):
-    if (x < 0.0) return 0.0
-    else return 1.0
-
-EmbVector unit_vector(float angle):
-    EmbVector u
-    u.x = cos(angle)
-    u.y = sin(angle)
-    return u
-
-EmbVector rotate_vector(EmbVector a, float angle):
-    EmbVector rot
-    EmbVector u = unit_vector(angle)
-    rot.x = a.x*u.x - a.y*u.y
-    rot.y = a.x*u.y + a.y*u.x
-    return rot
-
-EmbVector scale_vector(EmbVector a, float scale):
-    a.x *= scale
-    a.y *= scale
-    return a
-
-EmbVector scale_and_rotate(EmbVector a, float scale, float angle):
-    a = scale_vector(a, scale)
-    a = rotate_vector(a, angle)
-    return a
-
-
-def app_dir(char *output, int folder):
+def app_dir(output, folder):
 #if defined(__unix__) || defined(__linux__)
     char *separator = "/"
 
-    strcpy(output, getenv("HOME"))
+    output = getenv("HOME")
 
     /* On MacOS we set a system "HOME" manually if it is not set. */
-    if (!output) {
+    if !output:
         struct passwd* pwd = getpwuid(getuid())
-        if (pwd) {
+        if pwd:
             output = pwd->pw_dir
-        }
-        else {
+        else:
             printf("ERROR: failed to set HOME.")
-        }
-    }
 
 #else
-    char *separator = "\\"
+    separator = "\\"
 
-    strcpy(output, getenv("HOMEDRIVE"))
-    strcat(output, getenv("HOMEPATH"))
+    output = getenv("HOMEDRIVE") + getenv("HOMEPATH")
 #endif
 
-    strcat(output, separator)
-    strcat(output, ".embroidermodder2")
-    strcat(output, separator)
+    output += separator + ".embroidermodder2" + separator
 
-    if (folder >= 0 && folder < nFolders) {
-        strcat(output, folders[folder])
-        strcat(output, separator)
-    }
-}
-
-/* UTILITY FUNCTIONS FOR ALL SYSTEMS
- * These could be moved to libembroidery.
- */
-def debug_message(format, ...):
-    if (debug_mode) {
-        va_list args
-        va_start(args, format)
-        vprintf(format, args)
-        printf("\n")
-        va_end(args)
+    if folder >= 0 and folder < nFolders:
+        output += folders[folder] + separator
 
 
 int file_exists(char *fname):
@@ -1189,19 +835,6 @@ def make_texture(widget *output, char **icon, EmbVector position):
         GL_RGB, GL_UNSIGNED_BYTE, data)
     ntextures++
 
-
-void
-to_lower(char *dst, char *src):
-    int i
-    for (i=0; i<MAX_STRING_LENGTH; i++) {
-        if (src[i] >= 'A' && src[i] <= 'Z') {
-            dst[i] = src[i] - 'A'
-        }
-        else {
-            dst[i] = src[i]
-        }
-    }
-}
 
 def usage():
     fprintf(stderr,
@@ -17439,8 +17072,8 @@ StatusBar::StatusBar(MainWindow* mw, QWidget *parent) : QStatusBar(parent):
     }
 }
 
-def StatusBar::setMouseCoord(float x, float y):
-    /* TODO: set format from settings (Architectural, Decimal, Engineering, Fractional, Scientific) */
+def StatusBar::setMouseCoord(x, y):
+    # TODO: set format from settings (Architectural, Decimal, Engineering, Fractional, Scientific)
 
     /* Decimal */
     statusBarMouseCoord->setText(QString().setNum(x, 'F', 4) + ", " + QString().setNum(y, 'F', 4)); /*TODO: use precision from unit settings*/
@@ -17449,13 +17082,11 @@ def StatusBar::setMouseCoord(float x, float y):
     /* statusBarMouseCoord->setText(QString().setNum(x, 'E', 4) + ", " + QString().setNum(y, 'E', 4)); */
     /* TODO: use precision from unit settings */
 }
-
-#endif
 """
 
 
 def main_about():
-    debug_message("main_exit()")
+    debug_message("main_about()")
 
     """
     /*TODO: QTabWidget for about dialog*/
@@ -17504,33 +17135,24 @@ def main_about():
     QApplication::restoreOverrideCursor()
 
 
-def dayVision()
-
-    #if 0
-    View* gview = _mainWin->activeView()
-    if (gview) 
-        gview->setBackgroundColor(qRgb(255,255,255)); /*TODO: Make day vision color settings.*/
-        gview->setCrossHairColor(qRgb(0,0,0));        /*TODO: Make day vision color settings.*/
-        gview->setGridColor(qRgb(0,0,0));             /*TODO: Make day vision color settings.*/
-    
-    #endif
+def dayVision():
+    gview = _mainWin->activeView()
+    if gview:
+        gview->setBackgroundColor(qRgb(255,255,255))
+        # TODO: Make day vision color settings.
+        gview->setCrossHairColor(qRgb(0,0,0))
+        gview->setGridColor(qRgb(0,0,0))
 
 
-def nightVision()
-
-    #if 0
-    View* gview = _mainWin->activeView()
+def nightVision():
+    gview = _mainWin->activeView()
     if (gview) 
         gview->setBackgroundColor(qRgb(0,0,0)); /* TODO: Make night vision color settings. */
         gview->setCrossHairColor(qRgb(255,255,255)); /*TODO: Make night vision color settings.*/
         gview->setGridColor(qRgb(255,255,255));      /*TODO: Make night vision color settings.*/
-    
-    #endif
 
 
-def actuator(char *call)
-
-    int id
+def actuator(char *call):
     undo_history_position++
     /* an action has been taken, we are at the current head of the stack */
     undo_history_length = undo_history_position
@@ -18353,864 +17975,6 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle():
         "NULL", 0, "NULL", "NULL", 0, "NULL"
     }
 ]
-
-
-action action_list = {
-    "donothing": {
-        "object": OBJ_TYPE_NULL,
-        "icon": donothing_xpm,
-        "statustip": "&Do Nothing",
-        "tooltip": "Does nothing.",
-        "shortcut": "\\0",
-        "function": do_nothing
-    },
-    "new": {
-        OBJ_TYPE_NULL,
-        new_xpm,
-        "new",
-        "&New",
-        "Create a new file.",
-        "Ctrl+N",
-        new_file
-    },
-    "open": {
-        OBJ_TYPE_NULL,
-        open_xpm,
-        "&Open",
-        "Open an existing file.",
-        "Ctrl+O",
-        open_file
-    },
-    {
-        OBJ_TYPE_NULL,
-        save_xpm,
-        "save",
-        "&Save",
-        "Save the design to disk.",
-        "Ctrl+S",
-        saveFile
-    },
-    {
-        /* 4 */
-        OBJ_TYPE_NULL,
-        saveas_xpm,
-        "saveas",
-        "Save &As",
-        "Save the design under a new name.",
-        "Ctrl+Shift+S",
-        saveAsFile
-    },
-    {
-        /* 5 */
-        OBJ_TYPE_NULL,
-        print_xpm,
-        "print",
-        "&Print",
-        "Print the design.",
-        "Ctrl+P",
-        main_print
-    },
-    {
-        /* 6 */
-        OBJ_TYPE_NULL,
-        designdetails_xpm,
-        "designdetails",
-        "&Details",
-        "Details of the current design.",
-        "Ctrl+D",
-        designDetails
-    },
-    {
-        /* 7 */
-        OBJ_TYPE_NULL,
-        exit_xpm,
-        "exit",
-        "E&xit",
-        "Exit the application.",
-        "Ctrl+Q",
-        main_exit
-    },
-    {
-        /* 8 */
-        OBJ_TYPE_NULL,
-        cut_xpm,
-        "cut",
-        "Cu&t",
-        "Cut the current selection's contents to the clipboard.",
-        "Ctrl+X",
-        main_cut
-    },
-    {
-        /* 9 */
-        OBJ_TYPE_NULL,
-        copy_xpm,
-        "copy",
-        "&Copy",
-        "Copy the current selection's contents to the clipboard.",
-        "Ctrl+C",
-        main_copy
-    },
-    {
-        /* 10 */
-        OBJ_TYPE_NULL,
-        paste_xpm,
-        "paste",
-        "&Paste",
-        "Paste the clipboard's contents into the current selection.",
-        "Ctrl+V",
-        main_paste
-    },
-    {
-        /* 11 */
-        OBJ_TYPE_NULL,
-        undo_xpm,
-        "undo",
-        "&Undo",
-        "Reverses the most recent action.",
-        "Ctrl+Z",
-        main_undo
-    },
-    {
-        /* 12 */
-        OBJ_TYPE_NULL,
-        redo_xpm,
-        "redo",
-        "&Redo",
-        "Reverses the effects of the previous undo action.",
-        "Ctrl+Shift+Z",
-        main_redo
-    },
-    {
-        /* 13 */
-        OBJ_TYPE_NULL,
-        windowclose_xpm,
-        "windowclose",
-        "Cl&ose",
-        "Close the active window.",
-        "\\0",
-        windowClose
-    },
-    {
-        /* 14 */
-        OBJ_TYPE_NULL,
-        windowcloseall_xpm,
-        "windowcloseall",
-        "Close &All",
-        "Close all the windows.",
-        "\\0",
-        windowCloseAll
-    },
-    {
-        /* 15 */
-        OBJ_TYPE_NULL,
-        windowcascade_xpm,
-        "windowcascade",
-        "&Cascade",
-        "Cascade the windows.",
-        "\\0",
-        windowCascade
-    },
-    {
-        /* 16 */
-        OBJ_TYPE_NULL,
-        windowtile_xpm,
-        "windowtile",
-        "&Tile",
-        "Tile the windows.",
-        "\\0",
-        windowTile
-    },
-    {
-        OBJ_TYPE_NULL,
-        windownext_xpm,
-        "windownext",
-        "Ne&xt",
-        "Move the focus to the next window.",
-        "\\0",
-        windowNext
-    },
-    {
-        OBJ_TYPE_NULL,
-        windowprevious_xpm,
-        "windowprevious",
-        "Pre&vious",
-        "Move the focus to the previous window.",
-        "\\0",
-        windowPrevious
-    },
-    {
-        OBJ_TYPE_NULL,
-        "icon": help_xpm,
-        "help",
-        "&Help",
-        "Displays help.",
-        "F1",
-        main_help
-    },
-    "changelog": {
-        OBJ_TYPE_NULL,
-        "icon": changelog_xpm,
-        "&Changelog",
-        "Describes new features in this product.",
-        "\\0",
-        changelog
-    },
-    "tipoftheday": {
-        OBJ_TYPE_NULL,
-        "icon": tipoftheday_xpm,
-        "&Tip Of The Day",
-        "Displays a dialog with useful tips",
-        "\\0",
-        tipOfTheDay
-    },
-    "about": {
-        OBJ_TYPE_NULL,
-        "icon": about_xpm,
-        "&About Embroidermodder 2",
-        "Displays information about this product.",
-        "F2",
-        main_about
-    },
-    {
-        OBJ_TYPE_NULL,
-        "icon": whatsthis_xpm,
-        "whatsthis",
-        "&What's This?",
-        "What's This? Context Help!",
-        shortcuts: [],
-        whatsthisContextHelp
-    },
-    {
-        OBJ_TYPE_NULL,
-        "icon": icon16_xpm,
-        "icon16",
-        "Icon&16",
-        "Sets the toolbar icon size to 16x16.",
-        shortcuts: [],
-        icon16
-    },
-    "icon24": {
-        "objects": OBJ_TYPE_NULL,
-        "icon": icon24_xpm,
-        "statustip": "Icon&24",
-        "tooltip": "Sets the toolbar icon size to 24x24.",
-        "shortcuts": [],
-        "function": icon24
-    },
-    {
-        OBJ_TYPE_NULL,
-        icon32_xpm,
-        "icon32",
-        "Icon&32",
-        "Sets the toolbar icon size to 32x32.",
-        shortcuts: [],
-        icon32
-    },
-    {
-        OBJ_TYPE_NULL,
-        icon48_xpm,
-        "icon48",
-        "Icon&48",
-        "Sets the toolbar icon size to 48x48.",
-        shortcuts: [],
-        icon48
-    },
-    {
-        OBJ_TYPE_NULL,
-        icon64_xpm,
-        "icon64",
-        "Icon&64",
-        "Sets the toolbar icon size to 64x64.",
-        "\\0",
-        icon64
-    },
-    {
-        OBJ_TYPE_NULL,
-        icon128_xpm,
-        "icon128",
-        "Icon12&8",
-        "Sets the toolbar icon size to 128x128.",
-        "\\0",
-        icon128
-    },
-    {
-        OBJ_TYPE_NULL,
-        settingsdialog_xpm,
-        "settingsdialog",
-        "&Settings",
-        "Configure settings specific to this product.",
-        "\\0",
-        settingsDialog
-    },
-    {
-        OBJ_TYPE_NULL,
-        makelayercurrent_xpm,
-        "makelayercurrent",
-        "&Make Layer Active",
-        "Makes the layer of a selected object the active layer",
-        "\\0",
-        makeLayerCurrent
-    },
-    {
-        OBJ_TYPE_NULL,
-        layers_xpm,
-        "layers",
-        "&Layers",
-        "Manages layers and layer properties:  LAYER",
-        "\\0",
-        layerManager
-    },
-    {
-        OBJ_TYPE_NULL,
-        layerselector_xpm,
-        "layerselector",
-        "&Layer Selector",
-        "Dropdown selector for changing the current layer",
-        "\\0",
-        layerSelector
-    },
-    {
-        OBJ_TYPE_NULL,
-        layerprevious_xpm,
-        "layerprevious",
-        "&Layer Previous",
-        "Restores the previous layer settings:  LAYERP",
-        "\\0",
-        layerPrevious
-    },
-    {
-        OBJ_TYPE_NULL,
-        colorselector_xpm,
-        "colorselector",
-        "&Color Selector",
-        "Dropdown selector for changing the current thread color",
-        "\\0",
-        colorSelector
-    },
-    {
-        OBJ_TYPE_NULL,
-        linetypeselector_xpm,
-        "linetypeselector",
-        "&Stitchtype Selector",
-        "Dropdown selector for changing the current stitch type",
-        "\\0",
-        lineTypeSelector
-    },
-    {
-        OBJ_TYPE_NULL,
-        lineweightselector_xpm,
-        "lineweightselector",
-        "&Threadweight Selector",
-        "Dropdown selector for changing the current thread weight",
-        "\\0",
-        lineWeightSelector
-    },
-    {
-        OBJ_TYPE_NULL,
-        hidealllayers_xpm,
-        "hidealllayers",
-        "&Hide All Layers",
-        "Turns the visibility off for all layers in the current drawing:  HIDEALL",
-        "\\0",
-        hideAllLayers
-    },
-    {
-        OBJ_TYPE_NULL,
-        showalllayers_xpm,
-        "showalllayers",
-        "&Show All Layers",
-        "Turns the visibility on for all layers in the current drawing:  SHOWALL",
-        "\\0",
-        showAllLayers
-    },
-    {
-        OBJ_TYPE_NULL,
-        freezealllayers_xpm,
-        "freezealllayers",
-        "&Freeze All Layers",
-        "Freezes all layers in the current drawing:  FREEZEALL",
-        "\\0",
-        freezeAllLayers
-    },
-    {
-        OBJ_TYPE_NULL,
-        thawalllayers_xpm,
-        "thawalllayers",
-        "&Thaw All Layers",
-        "Thaws all layers in the current drawing:  THAWALL",
-        "\\0",
-        thawAllLayers
-    },
-    {
-        OBJ_TYPE_NULL,
-        lockalllayers_xpm,
-        "lockalllayers",
-        "&Lock All Layers",
-        "Locks all layers in the current drawing:  LOCKALL",
-        "\\0",
-        lockAllLayers
-    },
-    {
-        OBJ_TYPE_NULL,
-        unlockalllayers_xpm,
-        "unlockalllayers",
-        "&Unlock All Layers",
-        "Unlocks all layers in the current drawing:  UNLOCKALL",
-        "\\0",
-        unlockAllLayers
-    },
-    {
-        OBJ_TYPE_NULL,
-        textbold_xpm,
-        "textbold",
-        "&Bold Text",
-        "Sets text to be bold.",
-        "\\0",
-        textBold
-    },
-    {
-        OBJ_TYPE_NULL,
-        textitalic_xpm,
-        "textitalic",
-        "&Italic Text",
-        "Sets text to be italic.",
-        "\\0",
-        textItalic
-    },
-    {
-        OBJ_TYPE_NULL,
-        textoverline_xpm,
-        "textunderline",
-        "&Underline Text",
-        "Sets text to be underlined.",
-        "\\0",
-        textOverline
-    },
-    {
-        OBJ_TYPE_NULL,
-        textstrikeout_xpm,
-        "textstrikeout",
-        "&StrikeOut Text",
-        "Sets text to be striked out.",
-        "\\0",
-        textStrikeout
-    },
-    {
-        OBJ_TYPE_NULL,
-        textoverline_xpm,
-        "textoverline",
-        "&Overline Text",
-        "Sets text to be overlined.",
-        "\\0",
-        textOverline
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomrealtime_xpm,
-        "zoomrealtime",
-        "Zoom &Realtime",
-        "Zooms to increase or decrease the apparent size of objects in the current viewport.",
-        "\\0",
-        zoomRealtime
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomprevious_xpm,
-        "zoomprevious",
-        "Zoom &Previous",
-        "Zooms to display the previous view.",
-        "\\0",
-        zoomPrevious
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomwindow_xpm,
-        "zoomwindow",
-        "Zoom &Window",
-        "Zooms to display an area specified by a rectangular window.",
-        "\\0",
-        zoomWindow
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomdynamic_xpm,
-        "zoomdynamic",
-        "Zoom &Dynamic",
-        "Zooms to display the generated portion of the drawing.",
-        "\\0",
-        zoomDynamic
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomscale_xpm,
-        "zoomscale",
-        "Zoom &Scale",
-        "Zooms the display using a specified scale factor.",
-        "\\0",
-        zoomScale
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomcenter_xpm,
-        "zoomcenter",
-        "Zoom &Center",
-        "Zooms to display a view specified by a center point and magnification or height.",
-        "\\0",
-        zoomCenter
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomin_xpm,
-        "zoomin",
-        "Zoom &In",
-        "Zooms to increase the apparent size of objects.",
-        "\\0",
-        zoomIn
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomout_xpm,
-        "zoomout",
-        "Zoom &Out",
-        "Zooms to decrease the apparent size of objects.",
-        "\\0",
-        zoomOut
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomselected_xpm,
-        "zoomselected",
-        "Zoom Selec&ted",
-        "Zooms to display the selected objects.",
-        "\\0",
-        zoomSelected
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomall_xpm,
-        "zoomall",
-        "Zoom &All",
-        "Zooms to display the drawing extents or the grid limits.",
-        "\\0",
-        zoomAll
-    },
-    {
-        OBJ_TYPE_NULL,
-        zoomextents_xpm,
-        "zoomextents",
-        "Zoom &Extents",
-        "Zooms to display the drawing extents.",
-        "\\0",
-        zoomExtents
-    },
-    {
-        OBJ_TYPE_NULL,
-        panrealtime_xpm,
-        "panrealtime",
-        "&Pan Realtime",
-        "Moves the view in the current viewport.",
-        "\\0",
-        panrealtime
-    },
-    {
-        OBJ_TYPE_NULL,
-        panpoint_xpm,
-        "panpoint",
-        "&Pan Point",
-        "Moves the view by the specified distance.",
-        "\\0",
-        panpoint
-    },
-    {
-        OBJ_TYPE_NULL,
-        panleft_xpm,
-        "panleft",
-        "&Pan Left",
-        "Moves the view to the left.",
-        "\\0",
-        panLeft
-    },
-    {
-        OBJ_TYPE_NULL,
-        panright_xpm,
-        "panright",
-        "&Pan Right",
-        "Moves the view to the right.",
-        "\\0",
-        panRight
-    },
-    {
-        OBJ_TYPE_NULL,
-        panup_xpm,
-        "panup",
-        "&Pan Up",
-        "Moves the view up.",
-        "\\0",
-        panUp
-    },
-    {
-        OBJ_TYPE_NULL,
-        pandown_xpm,
-        "pandown",
-        "&Pan Down",
-        "Moves the view down.",
-        "\\0",
-        panDown
-    },
-    {
-        OBJ_TYPE_NULL,
-        day_xpm,
-        "day",
-        "&Day",
-        "Updates the current view using day vision settings.",
-        "\\0",
-        dayVision
-    },
-    {
-        OBJ_TYPE_NULL,
-        night_xpm,
-        "night",
-        "&Night",
-        "Updates the current view using night vision settings.",
-        "\\0",
-        nightVision
-    },
-    {
-        OBJ_TYPE_NULL,
-        circle_xpm,
-        "circle",
-        "&Circle",
-        "Creates a circle:  CIRCLE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        line_xpm,
-        "line",
-        "&Line",
-        "Creates straight line segments:  LINE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        distance_xpm,
-        "distance",
-        "&Distance",
-        "Measures the distance and angle between two points:  DIST",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        dolphin_xpm,
-        "dolphin",
-        "&Dolphin",
-        "Creates a dolphin:  DOLPHIN",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        ellipse_xpm,
-        "ellipse",
-        "&Ellipse",
-        "Creates a ellipse:  ELLIPSE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        erase_xpm,
-        "delete",
-        "D&elete",
-        "Removes objects from a drawing:  DELETE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        heart_xpm,
-        "heart",
-        "&Heart",
-        "Creates a heart:  HEART",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        locatepoint_xpm,
-        "locatepoint",
-        "&Locate Point",
-        "Displays the coordinate values of a location:  ID",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        donothing_xpm,
-        "trebleclef",
-        "TrebleClef",
-        "Creates a treble clef:  TREBLECLEF",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        path_xpm,
-        "path",
-        "&Path",
-        "Creates a 2D path:  PATH",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        donothing_xpm,
-        "platform",
-        "&Platform",
-        "List which platform is in use:  PLATFORM",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        point_xpm,
-        "point",
-        "&Point",
-        "Creates multiple points:  POINT",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        polygon_xpm,
-        "polygon",
-        "Pol&ygon",
-        "Creates a regular polygon:  POLYGON",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        polyline_xpm,
-        "polyline",
-        "&Polyline",
-        "Creates a 2D polyline:  PLINE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        quickleader_xpm,
-        "quickleader",
-        "&QuickLeader",
-        "Creates a leader and annotation:  QUICKLEADER",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        rectangle_xpm,
-        "rectangle",
-        "&Rectangle",
-        "Creates a rectangular polyline: RECTANGLE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        rgb_xpm,
-        "rgb",
-        "&RGB",
-        "Updates the current view colors:  RGB",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        move_xpm,
-        "move",
-        "&Move",
-        "Displaces objects a specified distance in a specified direction: MOVE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        rotate_xpm,
-        "rotate",
-        "&Rotate",
-        "Rotates objects about a base point:  ROTATE",
-        "\\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        sandbox_xpm,
-        "sandbox",
-        "Sandbox",
-        "A sandbox to play in:  SANDBOX",
-        "\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        scale_xpm,
-        "scale",
-        "Sca&le",
-        "Enlarges or reduces objects proportionally in the X, Y, and Z directions:  SCALE",
-        "\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        donothing_xpm,
-        "selectall",
-        "&Select All",
-        "Selects all objects:  SELECTALL",
-        "\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        singlelinetext_xpm,
-        "singlelinetext",
-        "&Single Line Text",
-        "Creates single-line text objects:  TEXT",
-        "\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        snowflake_xpm,
-        "snowflake",
-        "&Snowflake",
-        "Creates a snowflake:  SNOWFLAKE",
-        "\0",
-        doNothing
-    },
-    {
-        OBJ_TYPE_NULL,
-        star_xpm,
-        "star",
-        "&Star",
-        "Creates a star:  STAR",
-        "\0",
-        doNothing
-    },
-    {
-        /* end symbol */
-        OBJ_TYPE_NULL,
-        donothing_xpm,
-        "\0",
-        "\0",
-        "\0",
-        "\0",
-        doNothing
-    }
-}
 
 
     There are 4 regions managed as views, .
