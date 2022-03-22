@@ -426,6 +426,7 @@ layout = {
         }
     },
     "toolbar": {
+        "order": ["File", "Edit", "View", "Zoom", "Pan"],
         "File": {
             "New": {
                 "icon": new_xpm,
@@ -436,6 +437,7 @@ layout = {
                 "tooltip": "Create a new file."
             },
             "Open": {
+                "icon": open_xpm,
                 "command": "open",
                 "row": 1,
                 "column": 1,
@@ -627,7 +629,6 @@ origin_string = [
     "A -0.5 -0.5 1.0 1.0 270.0 90.0",
     "L -0.5 0.0",
     "A -0.5 -0.5 1.0 1.0 180.0 -90.0",
-    "Z",
-    "\0"
+    "Z"
 ]
 

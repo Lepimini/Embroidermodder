@@ -1112,9 +1112,12 @@ def build_menubar(root, menu_layout):
 
 def build_buttongrid(root, button_layout):
     r"""
+    Create the toolbars in the order given by the "order" list.
     """
-    new_button = tk.Button(root, text="New", command=new_file)
-    open_button = tk.Button(root, text="Open", command=open_file)
-    new_button.grid(row=1, column=0)
-    open_button.grid(row=1, column=1)
+    for toolbar in button_layout["order"]:
+        for button in button_layout[toolbar].keys():
+            B = button_layout[toolbar][button]
+            cmd = action_map[B["command"]]
+            button_ = tk.Button(root, text=button, command=cmd)
+            button_.grid(row=B["row"], column=B["column"])
 

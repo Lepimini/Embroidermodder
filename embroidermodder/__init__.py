@@ -867,13 +867,13 @@ def clearSelection():
 circle_args circle_init():
     clearSelection()
     circle_args args
-    args.mode = circle_mode_1P_RAD
-    args.x1 = MAX_DISTANCE+1.0
-    args.y1 = MAX_DISTANCE+1.0
-    args.x2 = MAX_DISTANCE+1.0
-    args.y2 = MAX_DISTANCE+1.0
-    args.x3 = MAX_DISTANCE+1.0
-    args.y3 = MAX_DISTANCE+1.0
+    self.mode = circle_mode_1P_RAD
+    self.x1 = MAX_DISTANCE+1.0
+    self.y1 = MAX_DISTANCE+1.0
+    self.x2 = MAX_DISTANCE+1.0
+    self.y2 = MAX_DISTANCE+1.0
+    self.x3 = MAX_DISTANCE+1.0
+    self.y3 = MAX_DISTANCE+1.0
     /*
     setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
     */
@@ -901,54 +901,54 @@ def mouse_callback(int button, int state, int x, int y):
 
 #if 0
 int circle_click(circle_args *args, float x, float y):
-    if (args.mode == args.mode_1P_RAD) {
-        if(isNaN(args.x1)) {
-            args.x1 = x
-            args.y1 = y
-            args.cx = x
-            args.cy = y
+    if (self.mode == self.mode_1P_RAD) {
+        if(isNaN(self.x1)) {
+            self.x1 = x
+            self.y1 = y
+            self.cx = x
+            self.cy = y
             addRubber("CIRCLE")
             setRubberMode("CIRCLE_1P_RAD")
-            setRubberPoint("CIRCLE_CENTER", args.cx, args.cy)
+            setRubberPoint("CIRCLE_CENTER", self.cx, self.cy)
             appendPromptHistory()
             setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
         }
         else {
-            args.x2 = x
-            args.y2 = y
-            setRubberPoint("CIRCLE_RADIUS", args.x2, args.y2)
+            self.x2 = x
+            self.y2 = y
+            setRubberPoint("CIRCLE_RADIUS", self.x2, self.y2)
             vulcanize()
             appendPromptHistory()
             return
         }
     }
-    else if(args.mode == circle_mode_1P_DIA) {
-        if(isNaN(args.x1)) {
+    else if(self.mode == circle_mode_1P_DIA) {
+        if(isNaN(self.x1)) {
             error("CIRCLE", translate("This should never happen."))
         }
         else {
-            args.x2 = x
-            args.y2 = y
-            setRubberPoint("CIRCLE_DIAMETER", args.x2, args.y2)
+            self.x2 = x
+            self.y2 = y
+            setRubberPoint("CIRCLE_DIAMETER", self.x2, self.y2)
             vulcanize()
             appendPromptHistory()
             return
         }
     }
-    else if(args.mode == args.mode_2P) {
-        if(isNaN(args.x1)) {
-            args.x1 = x
-            args.y1 = y
+    else if(self.mode == self.mode_2P) {
+        if(isNaN(self.x1)) {
+            self.x1 = x
+            self.y1 = y
             addRubber("CIRCLE")
             setRubberMode("CIRCLE_2P")
-            setRubberPoint("CIRCLE_TAN1", args.x1, args.y1)
+            setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
             appendPromptHistory()
             setPromptPrefix(translate("Specify second end point of circle's diameter: "))
         }
-        else if(isNaN(args.x2)) {
-            args.x2 = x
-            args.y2 = y
-            setRubberPoint("CIRCLE_TAN2", args.x2, args.y2)
+        else if(isNaN(self.x2)) {
+            self.x2 = x
+            self.y2 = y
+            setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
             vulcanize()
             appendPromptHistory()
             return
@@ -957,27 +957,27 @@ int circle_click(circle_args *args, float x, float y):
             error("CIRCLE", translate("This should never happen."))
         }
     }
-    else if(args.mode == args.mode_3P) {
-        if(isNaN(args.x1)) {
-            args.x1 = x
-            args.y1 = y
+    else if(self.mode == self.mode_3P) {
+        if(isNaN(self.x1)) {
+            self.x1 = x
+            self.y1 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify second point on circle: "))
         }
-        else if(isNaN(args.x2)) {
-            args.x2 = x
-            args.y2 = y
+        else if(isNaN(self.x2)) {
+            self.x2 = x
+            self.y2 = y
             addRubber("CIRCLE")
             setRubberMode("CIRCLE_3P")
-            setRubberPoint("CIRCLE_TAN1", args.x1, args.y1)
-            setRubberPoint("CIRCLE_TAN2", args.x2, args.y2)
+            setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
+            setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
             appendPromptHistory()
             setPromptPrefix(translate("Specify third point on circle: "))
         }
-        else if(isNaN(args.x3)) {
-            args.x3 = x
-            args.y3 = y
-            setRubberPoint("CIRCLE_TAN3", args.x3, args.y3)
+        else if(isNaN(self.x3)) {
+            self.x3 = x
+            self.y3 = y
+            setRubberPoint("CIRCLE_TAN3", self.x3, self.y3)
             vulcanize()
             appendPromptHistory()
             return
@@ -986,22 +986,22 @@ int circle_click(circle_args *args, float x, float y):
             error("CIRCLE", translate("This should never happen."))
         }
     }
-    else if(args.mode == args.mode_TTR) {
-        if (isNaN(args.x1)) {
-            args.x1 = x
-            args.y1 = y
+    else if(self.mode == self.mode_TTR) {
+        if (isNaN(self.x1)) {
+            self.x1 = x
+            self.y1 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify point on object for second tangent of circle: "))
         }
-        else if (isNaN(args.x2)) {
-            args.x2 = x
-            args.y2 = y
+        else if (isNaN(self.x2)) {
+            self.x2 = x
+            self.y2 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify radius of circle: "))
         }
-        else if (isNaN(args.x3)) {
-            args.x3 = x
-            args.y3 = y
+        else if (isNaN(self.x3)) {
+            self.x3 = x
+            self.y3 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify second point: "))
         }
@@ -1012,21 +1012,21 @@ int circle_click(circle_args *args, float x, float y):
     return 0
 
 int circle_prompt(circle_args args, char *str):
-    if (args.mode == args.mode_1P_RAD) {
-        if (isNaN(args.x1)) {
+    if (self.mode == self.mode_1P_RAD) {
+        if (isNaN(self.x1)) {
             /* TODO: Probably should add additional qsTr calls here. */
             if (!strcmp(str, "2P")) {
-                args.mode = args.mode_2P
+                self.mode = self.mode_2P
                 setPromptPrefix(translate("Specify first end point of circle's diameter: "))
             }
             /* TODO: Probably should add additional qsTr calls here. */
             else if (!strcmp(str, "3P")) {
-                args.mode = args.mode_3P
+                self.mode = self.mode_3P
                 setPromptPrefix(translate("Specify first point of circle: "))
             }
             /* TODO: Probably should add additional qsTr calls here. */
             else if (!strcmp(str, "T") || !strcmp(str, "TTR")) {
-                args.mode = args.mode_TTR
+                self.mode = self.mode_TTR
                 setPromptPrefix(translate("Specify point on object for first tangent of circle: "))
             }
             else {
@@ -1036,13 +1036,13 @@ int circle_prompt(circle_args args, char *str):
                     setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
                 }
                 else {
-                    args.x1 = Number(strList[0])
-                    args.y1 = Number(strList[1])
-                    args.cx = args.x1
-                    args.cy = args.y1
+                    self.x1 = Number(strList[0])
+                    self.y1 = Number(strList[1])
+                    self.cx = self.x1
+                    self.cy = self.y1
                     addRubber("CIRCLE")
                     setRubberMode("CIRCLE_1P_RAD")
-                    setRubberPoint("CIRCLE_CENTER", args.cx, args.cy)
+                    setRubberPoint("CIRCLE_CENTER", self.cx, self.cy)
                     setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
                 }
             }
@@ -1050,7 +1050,7 @@ int circle_prompt(circle_args args, char *str):
         else {
             /* TODO: Probably should add additional qsTr calls here. */
             if (!strcmp(str, "D") || !strcmp(str, "DIAMETER")) {
-                args.mode = circle_mode_1P_DIA
+                self.mode = circle_mode_1P_DIA
                 setRubberMode("CIRCLE_1P_DIA")
                 setPromptPrefix(translate("Specify diameter of circle: "))
             }
@@ -1061,21 +1061,21 @@ int circle_prompt(circle_args args, char *str):
                     setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
                 }
                 else {
-                    args.rad = num
-                    args.x2 = args.x1 + args.rad
-                    args.y2 = args.y1
-                    setRubberPoint("CIRCLE_RADIUS", args.x2, args.y2)
+                    self.rad = num
+                    self.x2 = self.x1 + self.rad
+                    self.y2 = self.y1
+                    setRubberPoint("CIRCLE_RADIUS", self.x2, self.y2)
                     vulcanize()
                     return
                 }
             }
         }
     }
-    else if (args.mode == circle_mode_1P_DIA) {
-        if (isNaN(args.x1)) {
+    else if (self.mode == circle_mode_1P_DIA) {
+        if (isNaN(self.x1)) {
             error("CIRCLE", translate("This should never happen."))
         }
-        if (isNaN(args.x2)) {
+        if (isNaN(self.x2)) {
             var num = Number(str)
             if(isNaN(num))
             {
@@ -1084,10 +1084,10 @@ int circle_prompt(circle_args args, char *str):
             }
             else
             {
-                args.dia = num
-                args.x2 = args.x1 + args.dia
-                args.y2 = args.y1
-                setRubberPoint("CIRCLE_DIAMETER", args.x2, args.y2)
+                self.dia = num
+                self.x2 = self.x1 + self.dia
+                self.y2 = self.y1
+                setRubberPoint("CIRCLE_DIAMETER", self.x2, self.y2)
                 vulcanize()
                 return
             }
@@ -1097,47 +1097,47 @@ int circle_prompt(circle_args args, char *str):
             error("CIRCLE", translate("This should never happen."))
         }
     }
-    else if(args.mode == args.mode_2P)
+    else if(self.mode == self.mode_2P)
     {
-        if(isNaN(args.x1))
+        if(isNaN(self.x1))
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first end point of circle's diameter: "))
             else:
-                args.x1 = Number(strList[0])
-                args.y1 = Number(strList[1])
+                self.x1 = Number(strList[0])
+                self.y1 = Number(strList[1])
                 addRubber("CIRCLE")
                 setRubberMode("CIRCLE_2P")
-                setRubberPoint("CIRCLE_TAN1", args.x1, args.y1)
+                setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
                 setPromptPrefix(translate("Specify second end point of circle's diameter: "))
-        elif(isNaN(args.x2)):
+        elif(isNaN(self.x2)):
             strList = str.split(",")
             if isNaN(strList[0]) or isNaN(strList[1]):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify second end point of circle's diameter: "))
             else:
-                args.x2 = Number(strList[0])
-                args.y2 = Number(strList[1])
-                setRubberPoint("CIRCLE_TAN2", args.x2, args.y2)
+                self.x2 = Number(strList[0])
+                self.y2 = Number(strList[1])
+                setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
                 vulcanize()
                 return
         else:
             error("CIRCLE", translate("This should never happen."))
 
-    else if(args.mode == args.mode_3P):
-        if(isNaN(args.x1)):
+    else if(self.mode == self.mode_3P):
+        if(isNaN(self.x1)):
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first point of circle: "))
             else:
-                args.x1 = Number(strList[0])
-                args.y1 = Number(strList[1])
+                self.x1 = Number(strList[0])
+                self.y1 = Number(strList[1])
                 setPromptPrefix(translate("Specify second point of circle: "))
 
-        elif(isNaN(args.x2)):
+        elif(isNaN(self.x2)):
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1147,25 +1147,25 @@ int circle_prompt(circle_args args, char *str):
             }
             else
             {
-                args.x2 = Number(strList[0])
-                args.y2 = Number(strList[1])
+                self.x2 = Number(strList[0])
+                self.y2 = Number(strList[1])
                 addRubber("CIRCLE")
                 setRubberMode("CIRCLE_3P")
-                setRubberPoint("CIRCLE_TAN1", args.x1, args.y1)
-                setRubberPoint("CIRCLE_TAN2", args.x2, args.y2)
+                setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
+                setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
                 setPromptPrefix(translate("Specify third point of circle: "))
             }
         }
-        else if(isNaN(args.x3)) {
+        else if(isNaN(self.x3)) {
             var strList = str.split(",")
             if (isNaN(strList[0]) || isNaN(strList[1])) {
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify third point of circle: "))
             }
             else {                
-                args.x3 = Number(strList[0])
-                args.y3 = Number(strList[1])
-                setRubberPoint("CIRCLE_TAN3", args.x3, args.y3)
+                self.x3 = Number(strList[0])
+                self.y3 = Number(strList[1])
+                setRubberPoint("CIRCLE_TAN3", self.x3, self.y3)
                 vulcanize()
                 return
             }
@@ -1176,7 +1176,7 @@ int circle_prompt(circle_args args, char *str):
         }
         
     }
-    else if(args.mode == args.mode_TTR) {
+    else if(self.mode == self.mode_TTR) {
         todo("CIRCLE", "prompt() for TTR")
     }
     return 0
@@ -1196,7 +1196,7 @@ class line():
             self.y1 = y
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.x1, args.y1)
+            setRubberPoint("LINE_START", self.x1, self.y1)
             appendPromptHistory()
             setPromptPrefix(translate("Specify second point: "))
         else:
@@ -1207,17 +1207,17 @@ class line():
 
 int prompt(str):
     var strList = str.split(",")
-    if (isNaN(args.x1)) {
+    if (isNaN(self.x1)) {
         if (isNaN(strList[0]) || isNaN(strList[1])) {
             alert(translate("Requires numeric distance or two points."))
             setPromptPrefix(translate("Specify first point: "))
         }
         else {
-            args.x1 = Number(strList[0])
-            args.y1 = Number(strList[1])
+            self.x1 = Number(strList[0])
+            self.y1 = Number(strList[1])
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.x1, args.y1)
+            setRubberPoint("LINE_START", self.x1, self.y1)
             setPromptPrefix(translate("Specify second point: "))
         }
     }
@@ -1230,8 +1230,8 @@ int prompt(str):
         }
         else
         {
-            args.x2 = Number(strList[0])
-            args.y2 = Number(strList[1])
+            self.x2 = Number(strList[0])
+            self.y2 = Number(strList[1])
             reportDistance()
             return
         }
@@ -1250,11 +1250,11 @@ int prompt(str):
  */
 
 int reportDistance():
-    var dx = args.x2 - args.x1
-    var dy = args.y2 - args.y1
+    var dx = self.x2 - self.x1
+    var dy = self.y2 - self.y1
 
-    var dist = calculateDistance(args.x1,args.y1,args.x2, args.y2)
-    var angle = calculateAngle(args.x1,args.y1,args.x2, args.y2)
+    var dist = calculateDistance(self.x1,self.y1,self.x2, self.y2)
+    var angle = calculateAngle(self.x1,self.y1,self.x2, self.y2)
 
     setPromptPrefix(translate("Distance") + " = " + dist.toString() + ", " + translate("Angle") + " = " + angle.toString())
     appendPromptHistory()
@@ -1266,17 +1266,17 @@ int reportDistance():
 dolphin_args dolphin_init():
     dolphin_args args
     clearSelection()
-    args.numPoints = 512; /*Default //TODO: min:64 max:8192*/
-    args.cx = MAX_DISTANCE+1.0
-    args.cy = MAX_DISTANCE+1.0
-    args.sx = 0.04; /*Default*/
-    args.sy = 0.04; /*Default*/
-    args.mode = DOLPHIN_MODE_NUM_POINTS
+    self.numPoints = 512; /*Default //TODO: min:64 max:8192*/
+    self.cx = MAX_DISTANCE+1.0
+    self.cy = MAX_DISTANCE+1.0
+    self.sx = 0.04; /*Default*/
+    self.sy = 0.04; /*Default*/
+    self.mode = DOLPHIN_MODE_NUM_POINTS
 
 
     addRubber("POLYGON")
     setRubberMode("POLYGON")
-    updateDolphin(args, args.numPoints, args.sx, args.sy)
+    updateDolphin(args, self.numPoints, self.sx, self.sy)
     spareRubber("POLYGON")
     return args
 #endif
@@ -1427,43 +1427,43 @@ int dolphin_update(dolphin_args args, int numPts, float xScale, float yScale):
 ellipse_args ellipse_init():
     ellipse_args args
     clearSelection()
-    args.mode = ELLIPSE_MAJORDIAMETER_MINORRADIUS
-    args.point1 = {NaN, NaN]
-    args.point2 = {NaN, NaN]
-    args.point3 = {NaN, NaN]
+    self.mode = ELLIPSE_MAJORDIAMETER_MINORRADIUS
+    self.point1 = {NaN, NaN]
+    self.point2 = {NaN, NaN]
+    self.point3 = {NaN, NaN]
     setPromptPrefix(translate("Specify first axis start point or [Center]: "))
     return args
 
 int ellipse_click(EmbVector point):
-    if (args.mode == ELLIPSE_MAJORDIAMETER_MINORRADIUS) {
-        if (isNaN(args.x1)) {
-            args.point1 = point
+    if (self.mode == ELLIPSE_MAJORDIAMETER_MINORRADIUS) {
+        if (isNaN(self.x1)) {
+            self.point1 = point
             addRubber("ELLIPSE")
             setRubberMode("ELLIPSE_LINE")
-            setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1)
+            setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
             appendPromptHistory()
             setPromptPrefix(translate("Specify first axis end point: "))
         }
-        else if (isNaN(args.x2)) {
-            args.point2 = point
-            args.cx = (args.x1 + args.x2)/2.0
-            args.cy = (args.y1 + args.y2)/2.0
-            args.width = calculateDistance(args.x1, args.y1, args.x2, args.y2)
-            args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2)
+        else if (isNaN(self.x2)) {
+            self.point2 = point
+            self.cx = (self.x1 + self.x2)/2.0
+            self.cy = (self.y1 + self.y2)/2.0
+            self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)
+            self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
             setRubberMode("ELLIPSE_MAJORDIAMETER_MINORRADIUS")
-            setRubberPoint("ELLIPSE_AXIS1_POINT1", args.x1, args.y1)
-            setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2)
-            setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy)
-            setRubberPoint("ELLIPSE_WIDTH", args.width, 0)
-            setRubberPoint("ELLIPSE_ROT", args.rot, 0)
+            setRubberPoint("ELLIPSE_AXIS1_POINT1", self.x1, self.y1)
+            setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
+            setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
+            setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
+            setRubberPoint("ELLIPSE_ROT", self.rot, 0)
             appendPromptHistory()
             setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
         }
-        else if (isNaN(args.x3)) {
-            args.x3 = x
-            args.y3 = y
-            args.height = perpendicularDistance(args.x3, args.y3, args.x1, args.y1, args.x2, args.y2)*2.0
-            setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3)
+        else if (isNaN(self.x3)) {
+            self.x3 = x
+            self.y3 = y
+            self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
+            setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
             vulcanize()
             appendPromptHistory()
             return
@@ -1472,36 +1472,36 @@ int ellipse_click(EmbVector point):
             error("ELLIPSE", translate("This should never happen."))
         }
     }
-    else if (args.mode == ELLIPSE_MAJORRADIUS_MINORRADIUS) {
-        if (isNaN(args.x1)) {
-            args.x1 = x
-            args.y1 = y
-            args.cx = args.x1
-            args.cy = args.y1
+    else if (self.mode == ELLIPSE_MAJORRADIUS_MINORRADIUS) {
+        if (isNaN(self.x1)) {
+            self.x1 = x
+            self.y1 = y
+            self.cx = self.x1
+            self.cy = self.y1
             addRubber("ELLIPSE")
             setRubberMode("ELLIPSE_LINE")
-            setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1)
-            setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy)
+            setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
+            setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
             appendPromptHistory()
             setPromptPrefix(translate("Specify first axis end point: "))
         }
-        else if(isNaN(args.x2)) {
-            args.x2 = x
-            args.y2 = y
-            args.width = calculateDistance(args.cx, args.cy, args.x2, args.y2)*2.0
-            args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2)
+        else if(isNaN(self.x2)) {
+            self.x2 = x
+            self.y2 = y
+            self.width = calculateDistance(self.cx, self.cy, self.x2, self.y2)*2.0
+            self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
             setRubberMode("ELLIPSE_MAJORRADIUS_MINORRADIUS")
-            setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2)
-            setRubberPoint("ELLIPSE_WIDTH", args.width, 0)
-            setRubberPoint("ELLIPSE_ROT", args.rot, 0)
+            setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
+            setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
+            setRubberPoint("ELLIPSE_ROT", self.rot, 0)
             appendPromptHistory()
             setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
         }
-        else if(isNaN(args.x3)) {
-            args.x3 = x
-            args.y3 = y
-            args.height = perpendicularDistance(args.x3, args.y3, args.cx, args.cy, args.x2, args.y2)*2.0
-            setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3)
+        else if(isNaN(self.x3)) {
+            self.x3 = x
+            self.y3 = y
+            self.height = perpendicularDistance(self.x3, self.y3, self.cx, self.cy, self.x2, self.y2)*2.0
+            setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
             vulcanize()
             appendPromptHistory()
             return
@@ -1510,17 +1510,17 @@ int ellipse_click(EmbVector point):
             error("ELLIPSE", translate("This should never happen."))
         }
     }
-    else if(args.mode == args.mode_ELLIPSE_ROTATION) {
-        if (isNaN(args.x1)) {
+    else if(self.mode == self.mode_ELLIPSE_ROTATION) {
+        if (isNaN(self.x1)) {
             error("ELLIPSE", translate("This should never happen."))
         }
-        else if (isNaN(args.x2)) {
+        else if (isNaN(self.x2)) {
             error("ELLIPSE", translate("This should never happen."))
         }
-        else if(isNaN(args.x3)) {
-            var angle = calculateAngle(args.cx, args.cy, x, y)
-            args.height = cos(angle*embConstantPi/180.0)*args.width
-            addEllipse(args.cx, args.cy, args.width, args.height, args.rot, false)
+        else if(isNaN(self.x3)) {
+            var angle = calculateAngle(self.cx, self.cy, x, y)
+            self.height = cos(angle*embConstantPi/180.0)*self.width
+            addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
             appendPromptHistory()
             return
         }
@@ -1528,13 +1528,13 @@ int ellipse_click(EmbVector point):
 }
 
 int ellipse_prompt(str):
-    if(args.mode == args.mode_MAJORDIAMETER_MINORRADIUS)
+    if(self.mode == self.mode_MAJORDIAMETER_MINORRADIUS)
     {
-        if(isNaN(args.x1))
+        if(isNaN(self.x1))
         {
             if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args.mode = args.mode_MAJORRADIUS_MINORRADIUS
+                self.mode = self.mode_MAJORRADIUS_MINORRADIUS
                 setPromptPrefix(translate("Specify center point: "))
             }
             else
@@ -1547,16 +1547,16 @@ int ellipse_prompt(str):
                 }
                 else
                 {
-                    args.x1 = Number(strList[0])
-                    args.y1 = Number(strList[1])
+                    self.x1 = Number(strList[0])
+                    self.y1 = Number(strList[1])
                     addRubber("ELLIPSE")
                     setRubberMode("ELLIPSE_LINE")
-                    setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1)
+                    setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
                     setPromptPrefix(translate("Specify first axis end point: "))
                 }
             }
         }
-        else if(isNaN(args.x2))
+        else if(isNaN(self.x2))
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1566,26 +1566,26 @@ int ellipse_prompt(str):
             }
             else
             {
-                args.x2 = Number(strList[0])
-                args.y2 = Number(strList[1])
-                args.cx = (args.x1 + args.x2)/2.0
-                args.cy = (args.y1 + args.y2)/2.0
-                args.width = calculateDistance(args.x1, args.y1, args.x2, args.y2)
-                args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2)
+                self.x2 = Number(strList[0])
+                self.y2 = Number(strList[1])
+                self.cx = (self.x1 + self.x2)/2.0
+                self.cy = (self.y1 + self.y2)/2.0
+                self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)
+                self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
                 setRubberMode("ELLIPSE_MAJORDIAMETER_MINORRADIUS")
-                setRubberPoint("ELLIPSE_AXIS1_POINT1", args.x1, args.y1)
-                setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2)
-                setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy)
-                setRubberPoint("ELLIPSE_WIDTH", args.width, 0)
-                setRubberPoint("ELLIPSE_ROT", args.rot, 0)
+                setRubberPoint("ELLIPSE_AXIS1_POINT1", self.x1, self.y1)
+                setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
+                setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
+                setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
+                setRubberPoint("ELLIPSE_ROT", self.rot, 0)
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
             }
         }
-        else if(isNaN(args.x3))
+        else if(isNaN(self.x3))
         {
             if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args.mode = args.mode_ELLIPSE_ROTATION
+                self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify rotation: "))
             }
             else
@@ -1598,19 +1598,19 @@ int ellipse_prompt(str):
                 }
                 else
                 {
-                    args.x3 = Number(strList[0])
-                    args.y3 = Number(strList[1])
-                    args.height = perpendicularDistance(args.x3, args.y3, args.x1, args.y1, args.x2, args.y2)*2.0
-                    setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3)
+                    self.x3 = Number(strList[0])
+                    self.y3 = Number(strList[1])
+                    self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
+                    setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
                     vulcanize()
                     return
                 }
             }
         }
     }
-    else if(args.mode == args.mode_MAJORRADIUS_MINORRADIUS)
+    else if(self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
     {
-        if(isNaN(args.x1))
+        if(isNaN(self.x1))
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1620,18 +1620,18 @@ int ellipse_prompt(str):
             }
             else
             {
-                args.x1 = Number(strList[0])
-                args.y1 = Number(strList[1])
-                args.cx = args.x1
-                args.cy = args.y1
+                self.x1 = Number(strList[0])
+                self.y1 = Number(strList[1])
+                self.cx = self.x1
+                self.cy = self.y1
                 addRubber("ELLIPSE")
                 setRubberMode("ELLIPSE_LINE")
-                setRubberPoint("ELLIPSE_LINE_POINT1", args.x1, args.y1)
-                setRubberPoint("ELLIPSE_CENTER", args.cx, args.cy)
+                setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
+                setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
                 setPromptPrefix(translate("Specify first axis end point: "))
             }
         }
-        else if(isNaN(args.x2))
+        else if(isNaN(self.x2))
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1641,22 +1641,22 @@ int ellipse_prompt(str):
             }
             else
             {
-                args.x2 = Number(strList[0])
-                args.y2 = Number(strList[1])
-                args.width = calculateDistance(args.x1, args.y1, args.x2, args.y2)*2.0
-                args.rot = calculateAngle(args.x1, args.y1, args.x2, args.y2)
+                self.x2 = Number(strList[0])
+                self.y2 = Number(strList[1])
+                self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)*2.0
+                self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
                 setRubberMode("ELLIPSE_MAJORRADIUS_MINORRADIUS")
-                setRubberPoint("ELLIPSE_AXIS1_POINT2", args.x2, args.y2)
-                setRubberPoint("ELLIPSE_WIDTH", args.width, 0)
-                setRubberPoint("ELLIPSE_ROT", args.rot, 0)
+                setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
+                setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
+                setRubberPoint("ELLIPSE_ROT", self.rot, 0)
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
             }
         }
-        else if(isNaN(args.x3))
+        else if(isNaN(self.x3))
         {
             if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args.mode = args.mode_ELLIPSE_ROTATION
+                self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify ellipse rotation: "))
             }
             else
@@ -1669,27 +1669,27 @@ int ellipse_prompt(str):
                 }
                 else
                 {
-                    args.x3 = Number(strList[0])
-                    args.y3 = Number(strList[1])
-                    args.height = perpendicularDistance(args.x3, args.y3, args.x1, args.y1, args.x2, args.y2)*2.0
-                    setRubberPoint("ELLIPSE_AXIS2_POINT2", args.x3, args.y3)
+                    self.x3 = Number(strList[0])
+                    self.y3 = Number(strList[1])
+                    self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
+                    setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
                     vulcanize()
                     return
                 }
             }
         }
     }
-    else if(args.mode == args.mode_ELLIPSE_ROTATION)
+    else if(self.mode == self.mode_ELLIPSE_ROTATION)
     {
-        if(isNaN(args.x1))
+        if(isNaN(self.x1))
         {
             error("ELLIPSE", translate("This should never happen."))
         }
-        else if(isNaN(args.x2))
+        else if(isNaN(self.x2))
         {
             error("ELLIPSE", translate("This should never happen."))
         }
-        else if(isNaN(args.x3))
+        else if(isNaN(self.x3))
         {
             if(isNaN(str))
             {
@@ -1699,8 +1699,8 @@ int ellipse_prompt(str):
             else
             {
                 var angle = Number(str)
-                args.height = cos(angle*embConstantPi/180.0)*args.width
-                addEllipse(args.cx, args.cy, args.width, args.height, args.rot, false)
+                self.height = cos(angle*embConstantPi/180.0)*self.width
+                addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
                 return
             }
         }
@@ -1710,32 +1710,32 @@ int ellipse_prompt(str):
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.numPoints = 512; /*Default //TODO: min:64 max:8192*/
-args.cx
-args.cy
-args.sx = 1.0
-args.sy = 1.0
-args.numPoints
-args.mode
+self.numPoints = 512; /*Default //TODO: min:64 max:8192*/
+self.cx
+self.cy
+self.sx = 1.0
+self.sy = 1.0
+self.numPoints
+self.mode
 
 /*enums*/
-args.mode_NUM_POINTS = 0
-args.mode_STYLE      = 1
-args.mode_XSCALE     = 2
-args.mode_YSCALE     = 3
+self.mode_NUM_POINTS = 0
+self.mode_STYLE      = 1
+self.mode_XSCALE     = 2
+self.mode_YSCALE     = 3
 
 int init():
     clearSelection()
-    args.cx = MAX_DISTANCE+1.0
-    args.cy = MAX_DISTANCE+1.0
-    args.mode = args.mode_NUM_POINTS
+    self.cx = MAX_DISTANCE+1.0
+    self.cy = MAX_DISTANCE+1.0
+    self.mode = self.mode_NUM_POINTS
 
     /*Heart4: 10.0 / 512*/
     /*Heart5: 1.0 / 512*/
 
     addRubber("POLYGON")
     setRubberMode("POLYGON")
-    updateHeart("HEART5", args.numPoints, args.sx, args.sy)
+    updateHeart("HEART5", self.numPoints, self.sx, self.sy)
     spareRubber("POLYGON")
     return
 
@@ -1772,32 +1772,32 @@ int updateHeart(style, numPts, xScale, yScale):
 /*Command: Line*/
 
 var global = {}; /*Required*/
-args.firstRun
-args.firstX
-args.firstY
-args.prevX
-args.prevY
+self.firstRun
+self.firstX
+self.firstY
+self.prevX
+self.prevY
 
 int init():
     clearSelection()
-    args.firstRun = true
-    args.firstX = MAX_DISTANCE+1.0
-    args.firstY = MAX_DISTANCE+1.0
-    args.prevX = MAX_DISTANCE+1.0
-    args.prevY = MAX_DISTANCE+1.0
+    self.firstRun = true
+    self.firstX = MAX_DISTANCE+1.0
+    self.firstY = MAX_DISTANCE+1.0
+    self.prevX = MAX_DISTANCE+1.0
+    self.prevY = MAX_DISTANCE+1.0
     setPromptPrefix(translate("Specify first point: "))
 
 int click(x, y):
-    if(args.firstRun)
+    if(self.firstRun)
     {
-        args.firstRun = false
-        args.firstX = x
-        args.firstY = y
-        args.prevX = x
-        args.prevY = y
+        self.firstRun = false
+        self.firstX = x
+        self.firstY = y
+        self.prevX = x
+        self.prevY = y
         addRubber("LINE")
         setRubberMode("LINE")
-        setRubberPoint("LINE_START", args.firstX, args.firstY)
+        setRubberPoint("LINE_START", self.firstX, self.firstY)
         appendPromptHistory()
         setPromptPrefix(translate("Specify next point or [Undo]: "))
     }
@@ -1809,13 +1809,13 @@ int click(x, y):
         setRubberMode("LINE")
         setRubberPoint("LINE_START", x, y)
         appendPromptHistory()
-        args.prevX = x
-        args.prevY = y
+        self.prevX = x
+        self.prevY = y
     }
 }
 
 int prompt(str):
-    if(args.firstRun)
+    if(self.firstRun)
     {
         var strList = str.split(",")
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -1825,14 +1825,14 @@ int prompt(str):
         }
         else
         {
-            args.firstRun = false
-            args.firstX = Number(strList[0])
-            args.firstY = Number(strList[1])
-            args.prevX = args.firstX
-            args.prevY = args.firstY
+            self.firstRun = false
+            self.firstX = Number(strList[0])
+            self.firstY = Number(strList[1])
+            self.prevX = self.firstX
+            self.prevY = self.firstY
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.firstX, args.firstY)
+            setRubberPoint("LINE_START", self.firstX, self.firstY)
             setPromptPrefix(translate("Specify next point or [Undo]: "))
         }
     }
@@ -1859,8 +1859,8 @@ int prompt(str):
                 addRubber("LINE")
                 setRubberMode("LINE")
                 setRubberPoint("LINE_START", x, y)
-                args.prevX = x
-                args.prevY = y
+                self.prevX = x
+                self.prevY = y
                 setPromptPrefix(translate("Specify next point or [Undo]: "))
             }
         }
@@ -1897,132 +1897,102 @@ int prompt(str):
 
 --------------------------------------------------------------------------------
 
-var global = {}; /*Required*/
-args.firstRun
-args.baseX
-args.baseY
-args.destX
-args.destY
-args.deltaX
-args.deltaY
+def init():
+    self.firstRun = true
+    self.baseX  = MAX_DISTANCE+1.0
+    self.baseY  = MAX_DISTANCE+1.0
+    self.destX  = MAX_DISTANCE+1.0
+    self.destY  = MAX_DISTANCE+1.0
+    self.deltaX = MAX_DISTANCE+1.0
+    self.deltaY = MAX_DISTANCE+1.0
 
-int init():
-    args.firstRun = true
-    args.baseX  = MAX_DISTANCE+1.0
-    args.baseY  = MAX_DISTANCE+1.0
-    args.destX  = MAX_DISTANCE+1.0
-    args.destY  = MAX_DISTANCE+1.0
-    args.deltaX = MAX_DISTANCE+1.0
-    args.deltaY = MAX_DISTANCE+1.0
-
-    if(numSelected() <= 0)
-    {
+    if numSelected() <= 0:
         /*TODO: Prompt to select objects if nothing is preselected*/
         alert(translate("Preselect objects before invoking the move command."))
         return
         messageBox("information", translate("Move Preselect"), translate("Preselect objects before invoking the move command."))
-    }
-    else
-    {
+    else:
         setPromptPrefix(translate("Specify base point: "))
-    }
-}
 
 int click(x, y):
-    if(args.firstRun)
-    {
-        args.firstRun = false
-        args.baseX = x
-        args.baseY = y
+    if self.firstRun:
+        self.firstRun = false
+        self.baseX = x
+        self.baseY = y
         addRubber("LINE")
         setRubberMode("LINE")
-        setRubberPoint("LINE_START", args.baseX, args.baseY)
-        previewOn("SELECTED", "MOVE", args.baseX, args.baseY, 0)
+        setRubberPoint("LINE_START", self.baseX, self.baseY)
+        previewOn("SELECTED", "MOVE", self.baseX, self.baseY, 0)
         appendPromptHistory()
         setPromptPrefix(translate("Specify destination point: "))
-    }
-    else
-    {
-        args.destX = x
-        args.destY = y
-        args.deltaX = args.destX - args.baseX
-        args.deltaY = args.destY - args.baseY
-        moveSelected(args.deltaX, args.deltaY)
+    else:
+        self.destX = x
+        self.destY = y
+        self.deltaX = self.destX - self.baseX
+        self.deltaY = self.destY - self.baseY
+        moveSelected(self.deltaX, self.deltaY)
         previewOff()
         return
-    }
-}
 
-int prompt(str):
-    if(args.firstRun)
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify base point: "))
-        }
-        else
-        {
-            args.firstRun = false
-            args.baseX = Number(strList[0])
-            args.baseY = Number(strList[1])
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.baseX, args.baseY)
-            previewOn("SELECTED", "MOVE", args.baseX, args.baseY, 0)
-            setPromptPrefix(translate("Specify destination point: "))
-        }
-    }
-    else
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify destination point: "))
-        }
-        else
-        {
-            args.destX = Number(strList[0])
-            args.destY = Number(strList[1])
-            args.deltaX = args.destX - args.baseX
-            args.deltaY = args.destY - args.baseY
-            moveSelected(args.deltaX, args.deltaY)
-            previewOff()
-            return
-        }
-    }
-}
+
+    def prompt(self, str):
+        if self.firstRun:
+            var strList = str.split(",")
+            if(isNaN(strList[0]) || isNaN(strList[1])):
+                alert(translate("Invalid point."))
+                setPromptPrefix(translate("Specify base point: "))
+            else:
+                self.firstRun = false
+                self.baseX = Number(strList[0])
+                self.baseY = Number(strList[1])
+                addRubber("LINE")
+                setRubberMode("LINE")
+                setRubberPoint("LINE_START", self.baseX, self.baseY)
+                previewOn("SELECTED", "MOVE", self.baseX, self.baseY, 0)
+                setPromptPrefix(translate("Specify destination point: "))
+
+        else:
+            var strList = str.split(",")
+            if(isNaN(strList[0]) || isNaN(strList[1])):
+                alert(translate("Invalid point."))
+                setPromptPrefix(translate("Specify destination point: "))
+            else:
+                self.destX = Number(strList[0])
+                self.destY = Number(strList[1])
+                self.deltaX = self.destX - self.baseX
+                self.deltaY = self.destY - self.baseY
+                moveSelected(self.deltaX, self.deltaY)
+                previewOff()
+                return
 
 --------------------------------------------------------------------------------
 
 /*TODO: The path command is currently broken*/
 
 var global = {}; /*Required*/
-args.firstRun
-args.firstX
-args.firstY
-args.prevX
-args.prevY
+self.firstRun
+self.firstX
+self.firstY
+self.prevX
+self.prevY
 
 int init():
     clearSelection()
-    args.firstRun = true
-    args.firstX = MAX_DISTANCE+1.0
-    args.firstY = MAX_DISTANCE+1.0
-    args.prevX = MAX_DISTANCE+1.0
-    args.prevY = MAX_DISTANCE+1.0
+    self.firstRun = true
+    self.firstX = MAX_DISTANCE+1.0
+    self.firstY = MAX_DISTANCE+1.0
+    self.prevX = MAX_DISTANCE+1.0
+    self.prevY = MAX_DISTANCE+1.0
     setPromptPrefix(translate("Specify start point: "))
 
 int click(x, y):
-    if(args.firstRun)
+    if(self.firstRun)
     {
-        args.firstRun = false
-        args.firstX = x
-        args.firstY = y
-        args.prevX = x
-        args.prevY = y
+        self.firstRun = false
+        self.firstX = x
+        self.firstY = y
+        self.prevX = x
+        self.prevY = y
         addPath(x,y)
         appendPromptHistory()
         setPromptPrefix(translate("Specify next point or [Arc/Undo]: "))
@@ -2031,8 +2001,8 @@ int click(x, y):
     {
         appendPromptHistory()
         appendLineToPath(x,y)
-        args.prevX = x
-        args.prevY = y
+        self.prevX = x
+        self.prevY = y
     }
 }
 
@@ -2057,25 +2027,20 @@ int prompt(str):
         {
             var x = Number(strList[0])
             var y = Number(strList[1])
-            if(args.firstRun)
+            if(self.firstRun)
             {
-                args.firstRun = false
-                args.firstX = x
-                args.firstY = y
-                args.prevX = x
-                args.prevY = y
+                self.firstRun = false
+                self.firstX = x
+                self.firstY = y
+                self.prevX = x
+                self.prevY = y
                 addPath(x,y)
                 setPromptPrefix(translate("Specify next point or [Arc/Undo]: "))
-            }
             else
-            {
                 appendLineToPath(x,y)
-                args.prevX = x
-                args.prevY = y
-            }
-        }
-    }
-}
+                self.prevX = x
+                self.prevY = y
+
 
 int init():
     clearSelection()
@@ -2089,18 +2054,18 @@ int reportPlatform():
 /* ------------------------------------------------------------------------- */
 
 var global = {}; /*Required*/
-args.firstRun
+self.firstRun
 
 int point_init():
     clearSelection()
-    args.firstRun = true
+    self.firstRun = true
     setPromptPrefix("TODO: Current point settings: PDMODE=?  PDSIZE=?"); /*TODO: qsTr needed here when complete*/
     appendPromptHistory()
     setPromptPrefix(translate("Specify first point: "))
 
 int point_click(x, y):
-    if(args.firstRun) {
-        args.firstRun = false
+    if(self.firstRun) {
+        self.firstRun = false
         appendPromptHistory()
         setPromptPrefix(translate("Specify next point: "))
         addPoint(x,y)
@@ -2112,31 +2077,27 @@ int point_click(x, y):
 }
 
 int prompt(str):
-    if (args.firstRun) {
+    if (self.firstRun) {
         if(str == "M" || str == "MODE") {
             /*TODO: Probably should add additional qsTr calls here.*/
             todo("POINT", "prompt() for PDMODE")
         }
-        else if(str == "S" || str == "SIZE") {
+        else if(str == "S" or str == "SIZE") {
             /*TODO: Probably should add additional qsTr calls here.*/
             todo("POINT", "prompt() for PDSIZE")
         }
         var strList = str.split(",")
-        if (isNaN(strList[0]) || isNaN(strList[1])) {
+        if isNaN(strList[0]) or isNaN(strList[1]):
             alert(translate("Invalid point."))
             setPromptPrefix(translate("Specify first point: "))
-        }
-        else
-        {
-            args.firstRun = false
-            var x = Number(strList[0])
-            var y = Number(strList[1])
+        else:
+            self.firstRun = false
+            x = Number(strList[0])
+            y = Number(strList[1])
             setPromptPrefix(translate("Specify next point: "))
             addPoint(x,y)
-        }
-    }
-    else
-    {
+
+    else:
         var strList = str.split(",")
         if(isNaN(strList[0]) || isNaN(strList[1]))
         {
@@ -2154,86 +2115,75 @@ int prompt(str):
 
 --------------------------------------------------------------------------------
 
-var global = {}; /*Required*/
-args.centerX
-args.centerY
-args.sideX1
-args.sideY1
-args.sideX2
-args.sideY2
-args.pointIX
-args.pointIY
-args.pointCX
-args.pointCY
-args.polyType = "Inscribed"; /*Default*/
-args.numSides = 4;           /*Default*/
-args.mode
 
-
-int init():
-    clearSelection()
-    args.center.x = MAX_DISTANCE+1.0
-    args.center.y = MAX_DISTANCE+1.0
-    args.sideX1  = MAX_DISTANCE+1.0
-    args.sideY1  = MAX_DISTANCE+1.0
-    args.sideX2  = MAX_DISTANCE+1.0
-    args.sideY2  = MAX_DISTANCE+1.0
-    args.pointIX = MAX_DISTANCE+1.0
-    args.pointIY = MAX_DISTANCE+1.0
-    args.pointCX = MAX_DISTANCE+1.0
-    args.pointCY = MAX_DISTANCE+1.0
-    args.mode = #define POLYGON_NUM_SIDES
-    setPromptPrefix(translate("Enter number of sides") + " {" + args.numSides.toString() + "}: ")
+class Polygon():
+    int __init__(self):
+        clearSelection()
+        self.center.x = MAX_DISTANCE+1.0
+        self.center.y = MAX_DISTANCE+1.0
+        self.sideX1  = MAX_DISTANCE+1.0
+        self.sideY1  = MAX_DISTANCE+1.0
+        self.sideX2  = MAX_DISTANCE+1.0
+        self.sideY2  = MAX_DISTANCE+1.0
+        self.pointIX = MAX_DISTANCE+1.0
+        self.pointIY = MAX_DISTANCE+1.0
+        self.pointCX = MAX_DISTANCE+1.0
+        self.pointCY = MAX_DISTANCE+1.0
+        self.polyType = "Inscribed"
+        self.numSides = 4
+        self.mode = "POLYGON_NUM_SIDES"
+        setPromptPrefix(translate("Enter number of sides") + " {" + self.numSides.toString() + "}: ")
+        return self
 
 int click(x, y):
-    if (args.mode == POLYGON_NUM_SIDES) {
+    if (self.mode == POLYGON_NUM_SIDES) {
         /*Do nothing, the prompt controls this.*/
     }
-    else if (args.mode == POLYGON_CENTER_PT) {
-        args.centerX = x
-        args.centerY = y
-        args.mode = args.mode_POLYTYPE
+    else if (self.mode == POLYGON_CENTER_PT) {
+        self.centerX = x
+        self.centerY = y
+        self.mode = self.mode_POLYTYPE
         appendPromptHistory()
-        setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + args.polyType + "}: ")
+        setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
     }
-    else if(args.mode == args.mode_POLYTYPE)
+    else if(self.mode == self.mode_POLYTYPE)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args.mode == args.mode_INSCRIBE)
+    else if(self.mode == self.mode_INSCRIBE)
     {
-        args.pointIX = x
-        args.pointIY = y
-        setRubberPoint("POLYGON_INSCRIBE_POINT", args.pointIX, args.pointIY)
+        self.pointIX = x
+        self.pointIY = y
+        setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
         vulcanize()
         appendPromptHistory()
         return
     }
-    else if(args.mode == args.mode_CIRCUMSCRIBE)
+    else if(self.mode == self.mode_CIRCUMSCRIBE)
     {
-        args.pointCX = x
-        args.pointCY = y
-        setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", args.pointCX, args.pointCY)
+        self.pointCX = x
+        self.pointCY = y
+        setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
         vulcanize()
         appendPromptHistory()
         return
     }
-    else if(args.mode == args.mode_DISTANCE)
+    else if(self.mode == self.mode_DISTANCE)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args.mode == args.mode_SIDE_LEN)
+    else if(self.mode == self.mode_SIDE_LEN)
     {
         todo("POLYGON", "Sidelength mode")
     }
 
 int prompt(str):
-    if(args.mode == args.mode_NUM_SIDES)
+    if(self.mode == self.mode_NUM_SIDES)
     {
-        if(str == "" && args.numSides >= 3 && args.numSides <= 1024)
+        if(str == "" && self.numSides >= 3 && self.numSides <= 1024)
         {
             setPromptPrefix(translate("Specify center point or [Sidelength]: "))
-            args.mode = args.mode_CENTER_PT
+            self.mode = self.mode_CENTER_PT
         }
         else
         {
@@ -2241,21 +2191,21 @@ int prompt(str):
             if(isNaN(tmp) || !isInt(tmp) || tmp < 3 || tmp > 1024)
             {
                 alert(translate("Requires an integer between 3 and 1024."))
-                setPromptPrefix(translate("Enter number of sides") + " {" + args.numSides.toString() + "}: ")
+                setPromptPrefix(translate("Enter number of sides") + " {" + self.numSides.toString() + "}: ")
             }
             else
             {
-                args.numSides = tmp
+                self.numSides = tmp
                 setPromptPrefix(translate("Specify center point or [Sidelength]: "))
-                args.mode = args.mode_CENTER_PT
+                self.mode = self.mode_CENTER_PT
             }
         }
     }
-    else if(args.mode == args.mode_CENTER_PT)
+    else if(self.mode == self.mode_CENTER_PT)
     {
         if(str == "S" || str == "SIDELENGTH") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SIDE_LEN
+            self.mode = self.mode_SIDE_LEN
             setPromptPrefix(translate("Specify start point: "))
         }
         else
@@ -2268,74 +2218,51 @@ int prompt(str):
             }
             else
             {
-                args.centerX = Number(strList[0])
-                args.centerY = Number(strList[1])
-                args.mode = args.mode_POLYTYPE
-                setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + args.polyType + "}: ")
-            }
-        }
-    }
-    else if(args.mode == args.mode_POLYTYPE)
-    {
-        if(str == "I"        ||
-           str == "IN"       ||
-           str == "INS"      ||
-           str == "INSC"     ||
-           str == "INSCR"    ||
-           str == "INSCRI"   ||
-           str == "INSCRIB"  ||
-           str == "INSCRIBE" ||
-           str == "INSCRIBED") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            args.mode = args.mode_INSCRIBE
-            args.polyType = "Inscribed"
+                self.centerX = Number(strList[0])
+                self.centerY = Number(strList[1])
+                self.mode = self.mode_POLYTYPE
+                setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
+
+    elif self.mode == "POLYTYPE":
+        if str == "INSCRIBED"[len(str)]:
+            # TODO: Probably should add additional translate calls here.
+            self.mode = self.mode_INSCRIBE
+            self.polyType = "Inscribed"
             setPromptPrefix(translate("Specify polygon corner point or [Distance]: "))
             addRubber("POLYGON")
             setRubberMode("POLYGON_INSCRIBE")
-            setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY)
-            setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0)
+            setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
+            setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
         }
-        else if(str == "C"            ||
-                str == "CI"           ||
-                str == "CIR"          ||
-                str == "CIRC"         ||
-                str == "CIRCU"        ||
-                str == "CIRCUM"       ||
-                str == "CIRCUMS"      ||
-                str == "CIRCUMSC"     ||
-                str == "CIRCUMSCR"    ||
-                str == "CIRCUMSCRI"   ||
-                str == "CIRCUMSCRIB"  ||
-                str == "CIRCUMSCRIBE" ||
-                str == "CIRCUMSCRIBED") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            args.mode = args.mode_CIRCUMSCRIBE
-            args.polyType = "Circumscribed"
+        elif str == "CIRCUMSCRIBED"[len(str)]:
+            # TODO: Probably should add additional translate calls here.
+            self.mode = self.mode_CIRCUMSCRIBE
+            self.polyType = "Circumscribed"
             setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
             addRubber("POLYGON")
             setRubberMode("POLYGON_CIRCUMSCRIBE")
-            setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY)
-            setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0)
+            setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
+            setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
         }
         else if(str == "")
         {
-            if(args.polyType == "Inscribed")
+            if(self.polyType == "Inscribed")
             {
-                args.mode = args.mode_INSCRIBE
+                self.mode = self.mode_INSCRIBE
                 setPromptPrefix(translate("Specify polygon corner point or [Distance]: "))
                 addRubber("POLYGON")
                 setRubberMode("POLYGON_INSCRIBE")
-                setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY)
-                setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0)
+                setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
+                setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
             }
-            else if(args.polyType == "Circumscribed")
+            else if(self.polyType == "Circumscribed")
             {
-                args.mode = args.mode_CIRCUMSCRIBE
+                self.mode = self.mode_CIRCUMSCRIBE
                 setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
                 addRubber("POLYGON")
                 setRubberMode("POLYGON_CIRCUMSCRIBE")
-                setRubberPoint("POLYGON_CENTER", args.centerX, args.centerY)
-                setRubberPoint("POLYGON_NUM_SIDES", args.numSides, 0)
+                setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
+                setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
             }
             else
             {
@@ -2345,14 +2272,12 @@ int prompt(str):
         else
         {
             alert(translate("Invalid option keyword."))
-            setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + args.polyType + "}: ")
-        }
-    }
-    else if(args.mode == args.mode_INSCRIBE)
-    {
+            setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
+
+    else if(self.mode == self.mode_INSCRIBE):
         if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_DISTANCE
+            self.mode = self.mode_DISTANCE
             setPromptPrefix(translate("Specify distance: "))
         }
         else
@@ -2365,19 +2290,16 @@ int prompt(str):
             }
             else
             {
-                args.pointIX = Number(strList[0])
-                args.pointIY = Number(strList[1])
-                setRubberPoint("POLYGON_INSCRIBE_POINT", args.pointIX, args.pointIY)
+                self.pointIX = Number(strList[0])
+                self.pointIY = Number(strList[1])
+                setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
                 vulcanize()
                 return
-            }
-        }
-    }
-    else if(args.mode == args.mode_CIRCUMSCRIBE)
-    {
+
+    else if(self.mode == self.mode_CIRCUMSCRIBE):
         if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_DISTANCE
+            self.mode = self.mode_DISTANCE
             setPromptPrefix(translate("Specify distance: "))
         }
         else:
@@ -2388,95 +2310,73 @@ int prompt(str):
                 setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
             }
             else:
-                args.pointCX = Number(strList[0])
-                args.pointCY = Number(strList[1])
-                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", args.pointCX, args.pointCY)
+                self.pointCX = Number(strList[0])
+                self.pointCY = Number(strList[1])
+                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
                 vulcanize()
                 return
 
-    else if(args.mode == args.mode_DISTANCE)
-    {
-        if(isNaN(str))
-        {
+    else if(self.mode == self.mode_DISTANCE):
+        if(isNaN(str)):
             alert(translate("Requires valid numeric distance."))
             setPromptPrefix(translate("Specify distance: "))
-        }
-        else
-        {
-            if(args.polyType == "Inscribed")
+        else:
+            if(self.polyType == "Inscribed")
             {
-                args.pointIX = args.centerX
-                args.pointIY = args.centerY + Number(str)
-                setRubberPoint("POLYGON_INSCRIBE_POINT", args.pointIX, args.pointIY)
+                self.pointIX = self.centerX
+                self.pointIY = self.centerY + Number(str)
+                setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
                 vulcanize()
                 return
             }
-            else if(args.polyType == "Circumscribed")
-            {
-                args.pointCX = args.centerX
-                args.pointCY = args.centerY + Number(str)
-                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", args.pointCX, args.pointCY)
+            else if(self.polyType == "Circumscribed"):
+                self.pointCX = self.centerX
+                self.pointCY = self.centerY + Number(str)
+                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
                 vulcanize()
                 return
-            }
-            else
-            {
+            else:
                 error("POLYGON", translate("Polygon type is not Inscribed or Circumscribed."))
-            }
-        }
-    }
-    else if(args.mode == args.mode_SIDE_LEN)
-    {
+
+    else if(self.mode == self.mode_SIDE_LEN):
         todo("POLYGON", "Sidelength mode")
-    }
 
 --------------------------------------------------------------------------------
 
-var global = {}; /*Required*/
-args.firstRun
-args.firstX
-args.firstY
-args.prevX
-args.prevY
-args.num
-
 int init():
     clearSelection()
-    args.firstRun = true
-    args.firstX = MAX_DISTANCE+1.0
-    args.firstY = MAX_DISTANCE+1.0
-    args.prevX = MAX_DISTANCE+1.0
-    args.prevY = MAX_DISTANCE+1.0
-    args.num = 0
+    self.firstRun = true
+    self.firstX = MAX_DISTANCE+1.0
+    self.firstY = MAX_DISTANCE+1.0
+    self.prevX = MAX_DISTANCE+1.0
+    self.prevY = MAX_DISTANCE+1.0
+    self.num = 0
     setPromptPrefix(translate("Specify first point: "))
 
 int click(x, y):
-    if(args.firstRun)
-    {
-        args.firstRun = false
-        args.firstX = x
-        args.firstY = y
-        args.prevX = x
-        args.prevY = y
+    if(self.firstRun):
+        self.firstRun = false
+        self.firstX = x
+        self.firstY = y
+        self.prevX = x
+        self.prevY = y
         addRubber("POLYLINE")
         setRubberMode("POLYLINE")
-        setRubberPoint("POLYLINE_POINT_0", args.firstX, args.firstY)
+        setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
         appendPromptHistory()
         setPromptPrefix(translate("Specify next point or [Undo]: "))
     }
-    else
-    {
-        args.num++
-        setRubberPoint("POLYLINE_POINT_" + args.num.toString(), x, y)
-        setRubberText("POLYLINE_NUM_POINTS", args.num.toString())
+    else:
+        self.num += 1
+        setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
+        setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
         spareRubber("POLYLINE")
         appendPromptHistory()
-        args.prevX = x
-        args.prevY = y
-    }
+        self.prevX = x
+        self.prevY = y
 
 int prompt(str):
-    if(args.firstRun)
+    if(self.firstRun)
     {
         var strList = str.split(",")
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -2486,14 +2386,14 @@ int prompt(str):
         }
         else
         {
-            args.firstRun = false
-            args.firstX = Number(strList[0])
-            args.firstY = Number(strList[1])
-            args.prevX = args.firstX
-            args.prevY = args.firstY
+            self.firstRun = false
+            self.firstX = Number(strList[0])
+            self.firstY = Number(strList[1])
+            self.prevX = self.firstX
+            self.prevY = self.firstY
             addRubber("POLYLINE")
             setRubberMode("POLYLINE")
-            setRubberPoint("POLYLINE_POINT_0", args.firstX, args.firstY)
+            setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
             setPromptPrefix(translate("Specify next point or [Undo]: "))
         }
     }
@@ -2515,115 +2415,96 @@ int prompt(str):
             {
                 var x = Number(strList[0])
                 var y = Number(strList[1])
-                args.num++
-                setRubberPoint("POLYLINE_POINT_" + args.num.toString(), x, y)
-                setRubberText("POLYLINE_NUM_POINTS", args.num.toString())
+                self.num++
+                setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
+                setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
                 spareRubber("POLYLINE")
-                args.prevX = x
-                args.prevY = y
+                self.prevX = x
+                self.prevY = y
                 setPromptPrefix(translate("Specify next point or [Undo]: "))
-            }
-        }
-    }
 
 --------------------------------------------------------------------------------
 
-var global = {}; /*Required*/
-args.x1
-args.y1
-args.x2
-args.y2
+class DimLeader():
+    " TODO: Adding the text is not complete yet. "
 
-/*TODO: Adding the text is not complete yet.*/
+    def __init__(self):
+        clearSelection()
+        self.x1 = MAX_DISTANCE+1.0
+        self.y1 = MAX_DISTANCE+1.0
+        self.x2 = MAX_DISTANCE+1.0
+        self.y2 = MAX_DISTANCE+1.0
+        setPromptPrefix(translate("Specify first point: "))
+        return self
 
-int init():
-    clearSelection()
-    args.x1 = MAX_DISTANCE+1.0
-    args.y1 = MAX_DISTANCE+1.0
-    args.x2 = MAX_DISTANCE+1.0
-    args.y2 = MAX_DISTANCE+1.0
-    setPromptPrefix(translate("Specify first point: "))
+    def click(self, x, y):
+        if isNaN(self.x1):
+            self.x1 = x
+            self.y1 = y
+            addRubber("DIMLEADER")
+            setRubberMode("DIMLEADER_LINE")
+            setRubberPoint("DIMLEADER_LINE_START", self.x1, self.y1)
+            appendPromptHistory()
+            setPromptPrefix(translate("Specify second point: "))
+        else:
+            self.x2 = x
+            self.y2 = y
+            setRubberPoint("DIMLEADER_LINE_END", self.x2, self.y2)
+            vulcanize()
+            appendPromptHistory()
 
-int click(x, y):
-    if(isNaN(args.x1))
-    {
-        args.x1 = x
-        args.y1 = y
-        addRubber("DIMLEADER")
-        setRubberMode("DIMLEADER_LINE")
-        setRubberPoint("DIMLEADER_LINE_START", args.x1, args.y1)
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify second point: "))
-    }
-    else
-    {
-        args.x2 = x
-        args.y2 = y
-        setRubberPoint("DIMLEADER_LINE_END", args.x2, args.y2)
-        vulcanize()
-        appendPromptHistory()
-        return
-    }
-
-int prompt(str):
-    var strList = str.split(",")
-    if(isNaN(args.x1))
+    def prompt(str):
+        var strList = str.split(",")
+        if(isNaN(self.x1))
     {
         if(isNaN(strList[0]) || isNaN(strList[1]))
         {
             alert(translate("Requires two points."))
             setPromptPrefix(translate("Specify first point: "))
         }
-        else
-        {
-            args.x1 = Number(strList[0])
-            args.y1 = Number(strList[1])
+        else:
+            self.x1 = Number(strList[0])
+            self.y1 = Number(strList[1])
             addRubber("DIMLEADER")
             setRubberMode("DIMLEADER_LINE")
-            setRubberPoint("DIMLEADER_LINE_START", args.x1, args.y1)
+            setRubberPoint("DIMLEADER_LINE_START", self.x1, self.y1)
             setPromptPrefix(translate("Specify second point: "))
-        }
-    }
-    else
-    {
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
+
+    else:
+        if isNaN(strList[0]) or isNaN(strList[1]):
             alert(translate("Requires two points."))
             setPromptPrefix(translate("Specify second point: "))
-        }
-        else
-        {
-            args.x2 = Number(strList[0])
-            args.y2 = Number(strList[1])
-            setRubberPoint("DIMLEADER_LINE_END", args.x2, args.y2)
+        else:
+            self.x2 = Number(strList[0])
+            self.y2 = Number(strList[1])
+            setRubberPoint("DIMLEADER_LINE_END", self.x2, self.y2)
             vulcanize()
             return
-        }
-    }
+
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.newRect
-args.x1
-args.y1
-args.x2
-args.y2
+self.newRect
+self.x1
+self.y1
+self.x2
+self.y2
 
 int init():
     clearSelection()
-    args.newRect = true
-    args.x1 = MAX_DISTANCE+1.0
-    args.y1 = MAX_DISTANCE+1.0
-    args.x2 = MAX_DISTANCE+1.0
-    args.y2 = MAX_DISTANCE+1.0
+    self.newRect = true
+    self.x1 = MAX_DISTANCE+1.0
+    self.y1 = MAX_DISTANCE+1.0
+    self.x2 = MAX_DISTANCE+1.0
+    self.y2 = MAX_DISTANCE+1.0
     setPromptPrefix(translate("Specify first corner point or [Chamfer/Fillet]: "))
 
 int click(x, y):
-    if(args.newRect)
+    if(self.newRect)
     {
-        args.newRect = false
-        args.x1 = x
-        args.y1 = y
+        self.newRect = false
+        self.x1 = x
+        self.y1 = y
         addRubber("RECTANGLE")
         setRubberMode("RECTANGLE")
         setRubberPoint("RECTANGLE_START", x, y)
@@ -2631,9 +2512,9 @@ int click(x, y):
     }
     else
     {
-        args.newRect = true
-        args.x2 = x
-        args.y2 = y
+        self.newRect = true
+        self.x2 = x
+        self.y2 = y
         setRubberPoint("RECTANGLE_END", x, y)
         vulcanize()
         return
@@ -2664,11 +2545,11 @@ int prompt(str):
         {
             var x = Number(strList[0])
             var y = Number(strList[1])
-            if(args.newRect)
+            if(self.newRect)
             {
-                args.newRect = false
-                args.x1 = x
-                args.y1 = y
+                self.newRect = false
+                self.x1 = x
+                self.y1 = y
                 addRubber("RECTANGLE")
                 setRubberMode("RECTANGLE")
                 setRubberPoint("RECTANGLE_START", x, y)
@@ -2676,9 +2557,9 @@ int prompt(str):
             }
             else
             {
-                args.newRect = true
-                args.x2 = x
-                args.y2 = y
+                self.newRect = true
+                self.x2 = x
+                self.y2 = y
                 setRubberPoint("RECTANGLE_END", x, y)
                 vulcanize()
                 return
@@ -2689,29 +2570,29 @@ int prompt(str):
 ---------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.mode
+self.mode
 
 /*enums*/
-args.mode_BACKGROUND = 0
-args.mode_CROSSHAIR  = 1
-args.mode_GRID       = 2
+self.mode_BACKGROUND = 0
+self.mode_CROSSHAIR  = 1
+self.mode_GRID       = 2
 
 int init():
     clearSelection()
-    args.mode = args.mode_BACKGROUND
+    self.mode = self.mode_BACKGROUND
     setPromptPrefix(translate("Enter RED,GREEN,BLUE values for background or [Crosshair/Grid]: "))
 
 int prompt(str):
-    if(args.mode == args.mode_BACKGROUND)
+    if(self.mode == self.mode_BACKGROUND)
     {
         if(str == "C" || str == "CROSSHAIR") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_CROSSHAIR
+            self.mode = self.mode_CROSSHAIR
             setPromptPrefix(translate("Specify crosshair color: "))
         }
         else if(str == "G" || str == "GRID") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_GRID
+            self.mode = self.mode_GRID
             setPromptPrefix(translate("Specify grid color: "))
         }
         else
@@ -2732,7 +2613,7 @@ int prompt(str):
             }
         }
     }
-    else if(args.mode == args.mode_CROSSHAIR)
+    else if(self.mode == self.mode_CROSSHAIR)
     {
         var strList = str.split(",")
         var r = Number(strList[0])
@@ -2749,7 +2630,7 @@ int prompt(str):
             return
         }
     }
-    else if(args.mode == args.mode_GRID)
+    else if(self.mode == self.mode_GRID)
     {
         var strList = str.split(",")
         var r = Number(strList[0])
@@ -2764,56 +2645,55 @@ int prompt(str):
         {
             setGridColor(r,g,b)
             return
-        }
-    }
 
-int validRGB(r, g, b):
-    if(isNaN(r)) return false
-    if(isNaN(g)) return false
-    if(isNaN(b)) return false
-    if(r < 0 || r > 255) return false
-    if(g < 0 || g > 255) return false
-    if(b < 0 || b > 255) return false
-    return true
+
+def validRGB(r, g, b):
+    if isNaN(r): return False
+    if isNaN(g): return False
+    if isNaN(b): return False
+    if r < 0 or r > 255: return False
+    if g < 0 or g > 255: return False
+    if b < 0 or b > 255: return False
+    return True
 
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.firstRun
-args.baseX
-args.baseY
-args.destX
-args.destY
-args.angle
+self.firstRun
+self.baseX
+self.baseY
+self.destX
+self.destY
+self.angle
 
-args.baseRX
-args.baseRY
-args.destRX
-args.destRY
-args.angleRef
-args.angleNew
+self.baseRX
+self.baseRY
+self.destRX
+self.destRY
+self.angleRef
+self.angleNew
 
-args.mode
+self.mode
 
 /*enums*/
-args.mode_NORMAL    = 0
-args.mode_REFERENCE = 1
+self.mode_NORMAL    = 0
+self.mode_REFERENCE = 1
 
 int init():
-    args.mode = args.mode_NORMAL
-    args.firstRun = true
-    args.baseX = MAX_DISTANCE+1.0
-    args.baseY = MAX_DISTANCE+1.0
-    args.destX = MAX_DISTANCE+1.0
-    args.destY = MAX_DISTANCE+1.0
-    args.angle = MAX_DISTANCE+1.0
+    self.mode = self.mode_NORMAL
+    self.firstRun = true
+    self.baseX = MAX_DISTANCE+1.0
+    self.baseY = MAX_DISTANCE+1.0
+    self.destX = MAX_DISTANCE+1.0
+    self.destY = MAX_DISTANCE+1.0
+    self.angle = MAX_DISTANCE+1.0
 
-    args.baseRX   = MAX_DISTANCE+1.0
-    args.baseRY   = MAX_DISTANCE+1.0
-    args.destRX   = MAX_DISTANCE+1.0
-    args.destRY   = MAX_DISTANCE+1.0
-    args.angleRef = MAX_DISTANCE+1.0
-    args.angleNew = MAX_DISTANCE+1.0
+    self.baseRX   = MAX_DISTANCE+1.0
+    self.baseRY   = MAX_DISTANCE+1.0
+    self.destRX   = MAX_DISTANCE+1.0
+    self.destRY   = MAX_DISTANCE+1.0
+    self.angleRef = MAX_DISTANCE+1.0
+    self.angleNew = MAX_DISTANCE+1.0
 
     if(numSelected() <= 0)
     {
@@ -2828,66 +2708,66 @@ int init():
     }
 
 int click(x, y):
-    if(args.mode == args.mode_NORMAL)
+    if(self.mode == self.mode_NORMAL)
     {
-        if(args.firstRun)
+        if(self.firstRun)
         {
-            args.firstRun = false
-            args.baseX = x
-            args.baseY = y
+            self.firstRun = false
+            self.baseX = x
+            self.baseY = y
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.baseX, args.baseY)
-            previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, 0)
+            setRubberPoint("LINE_START", self.baseX, self.baseY)
+            previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, 0)
             appendPromptHistory()
             setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
         }
         else
         {
-            args.destX = x
-            args.destY = y
-            args.angle = calculateAngle(args.baseX, args.baseY, args.destX, args.destY)
+            self.destX = x
+            self.destY = y
+            self.angle = calculateAngle(self.baseX, self.baseY, self.destX, self.destY)
             appendPromptHistory()
-            rotateSelected(args.baseX, args.baseY, args.angle)
+            rotateSelected(self.baseX, self.baseY, self.angle)
             previewOff()
             return
         }
     }
-    else if(args.mode == args.mode_REFERENCE)
+    else if(self.mode == self.mode_REFERENCE)
     {
-        if(isNaN(args.baseRX))
+        if(isNaN(self.baseRX))
         {
-            args.baseRX = x
-            args.baseRY = y
+            self.baseRX = x
+            self.baseRY = y
             appendPromptHistory()
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.baseRX, args.baseRY)
+            setRubberPoint("LINE_START", self.baseRX, self.baseRY)
             setPromptPrefix(translate("Specify second point: "))
         }
-        else if(isNaN(args.destRX))
+        else if(isNaN(self.destRX))
         {
-            args.destRX = x
-            args.destRY = y
-            args.angleRef = calculateAngle(args.baseRX, args.baseRY, args.destRX, args.destRY)
-            setRubberPoint("LINE_START", args.baseX, args.baseY)
-            previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef)
+            self.destRX = x
+            self.destRY = y
+            self.angleRef = calculateAngle(self.baseRX, self.baseRY, self.destRX, self.destRY)
+            setRubberPoint("LINE_START", self.baseX, self.baseY)
+            previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
             appendPromptHistory()
             setPromptPrefix(translate("Specify the new angle: "))
         }
-        else if(isNaN(args.angleNew))
+        else if(isNaN(self.angleNew))
         {
-            args.angleNew = calculateAngle(args.baseX, args.baseY, x, y)
-            rotateSelected(args.baseX, args.baseY, args.angleNew - args.angleRef)
+            self.angleNew = calculateAngle(self.baseX, self.baseY, x, y)
+            rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
             previewOff()
             return
         }
     }
 
 int prompt(str):
-    if(args.mode == args.mode_NORMAL)
+    if(self.mode == self.mode_NORMAL)
     {
-        if(args.firstRun)
+        if(self.firstRun)
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -2897,13 +2777,13 @@ int prompt(str):
             }
             else
             {
-                args.firstRun = false
-                args.baseX = Number(strList[0])
-                args.baseY = Number(strList[1])
+                self.firstRun = false
+                self.baseX = Number(strList[0])
+                self.baseY = Number(strList[1])
                 addRubber("LINE")
                 setRubberMode("LINE")
-                setRubberPoint("LINE_START", args.baseX, args.baseY)
-                previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, 0)
+                setRubberPoint("LINE_START", self.baseX, self.baseY)
+                previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, 0)
                 setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
             }
         }
@@ -2911,7 +2791,7 @@ int prompt(str):
         {
             if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args.mode = args.mode_REFERENCE
+                self.mode = self.mode_REFERENCE
                 setPromptPrefix(translate("Specify the reference angle") + " {0.00}: ")
                 clearRubber()
                 previewOff()
@@ -2925,17 +2805,17 @@ int prompt(str):
                 }
                 else
                 {
-                    args.angle = Number(str)
-                    rotateSelected(args.baseX, args.baseY, args.angle)
+                    self.angle = Number(str)
+                    rotateSelected(self.baseX, self.baseY, self.angle)
                     previewOff()
                     return
                 }
             }
         }
     }
-    else if(args.mode == args.mode_REFERENCE)
+    else if(self.mode == self.mode_REFERENCE)
     {
-        if(isNaN(args.baseRX))
+        if(isNaN(self.baseRX))
         {
             if(isNaN(str))
             {
@@ -2947,31 +2827,31 @@ int prompt(str):
                 }
                 else
                 {
-                    args.baseRX = Number(strList[0])
-                    args.baseRY = Number(strList[1])
+                    self.baseRX = Number(strList[0])
+                    self.baseRY = Number(strList[1])
                     addRubber("LINE")
                     setRubberMode("LINE")
-                    setRubberPoint("LINE_START", args.baseRX, args.baseRY)
+                    setRubberPoint("LINE_START", self.baseRX, self.baseRY)
                     setPromptPrefix(translate("Specify second point: "))
                 }
             }
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                args.baseRX = 0.0
-                args.baseRY = 0.0
-                args.destRX = 0.0
-                args.destRY = 0.0
+                self.baseRX = 0.0
+                self.baseRY = 0.0
+                self.destRX = 0.0
+                self.destRY = 0.0
                 /*The reference angle is what we will use later.*/
-                args.angleRef = Number(str)
+                self.angleRef = Number(str)
                 addRubber("LINE")
                 setRubberMode("LINE")
-                setRubberPoint("LINE_START", args.baseX, args.baseY)
-                previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef)
+                setRubberPoint("LINE_START", self.baseX, self.baseY)
+                previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
                 setPromptPrefix(translate("Specify the new angle: "))
             }
         }
-        else if(isNaN(args.destRX))
+        else if(isNaN(self.destRX))
         {
             if(isNaN(str))
             {
@@ -2983,28 +2863,28 @@ int prompt(str):
                 }
                 else
                 {
-                    args.destRX = Number(strList[0])
-                    args.destRY = Number(strList[1])
-                    args.angleRef = calculateAngle(args.baseRX, args.baseRY, args.destRX, args.destRY)
-                    previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef)
-                    setRubberPoint("LINE_START", args.baseX, args.baseY)
+                    self.destRX = Number(strList[0])
+                    self.destRY = Number(strList[1])
+                    self.angleRef = calculateAngle(self.baseRX, self.baseRY, self.destRX, self.destRY)
+                    previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
+                    setRubberPoint("LINE_START", self.baseX, self.baseY)
                     setPromptPrefix(translate("Specify the new angle: "))
                 }
             }
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                args.baseRX = 0.0
-                args.baseRY = 0.0
-                args.destRX = 0.0
-                args.destRY = 0.0
+                self.baseRX = 0.0
+                self.baseRY = 0.0
+                self.destRX = 0.0
+                self.destRY = 0.0
                 /*The reference angle is what we will use later.*/
-                args.angleRef = Number(str)
-                previewOn("SELECTED", "ROTATE", args.baseX, args.baseY, args.angleRef)
+                self.angleRef = Number(str)
+                previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
                 setPromptPrefix(translate("Specify the new angle: "))
             }
         }
-        else if(isNaN(args.angleNew))
+        else if(isNaN(self.angleNew))
         {
             if(isNaN(str))
             {
@@ -3018,27 +2898,25 @@ int prompt(str):
                 {
                     var x = Number(strList[0])
                     var y = Number(strList[1])
-                    args.angleNew = calculateAngle(args.baseX, args.baseY, x, y)
-                    rotateSelected(args.baseX, args.baseY, args.angleNew - args.angleRef)
+                    self.angleNew = calculateAngle(self.baseX, self.baseY, x, y)
+                    rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
                     previewOff()
                     return
                 }
             }
             else
             {
-                args.angleNew = Number(str)
-                rotateSelected(args.baseX, args.baseY, args.angleNew - args.angleRef)
+                self.angleNew = Number(str)
+                rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
                 previewOff()
                 return
-            }
-        }
-    }
+
 
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.test1
-args.test2
+self.test1
+self.test2
 
 int init():
     /*Report number of pre-selected objects*/
@@ -3102,41 +2980,41 @@ int init():
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.firstRun
-args.baseX
-args.baseY
-args.destX
-args.destY
-args.factor
+self.firstRun
+self.baseX
+self.baseY
+self.destX
+self.destY
+self.factor
 
-args.baseRX
-args.baseRY
-args.destRX
-args.destRY
-args.factorRef
-args.factorNew
+self.baseRX
+self.baseRY
+self.destRX
+self.destRY
+self.factorRef
+self.factorNew
 
-args.mode
+self.mode
 
 /*enums*/
-args.mode_NORMAL    = 0
-args.mode_REFERENCE = 1
+self.mode_NORMAL    = 0
+self.mode_REFERENCE = 1
 
 int __init__():
-    args.mode = args.mode_NORMAL
-    args.firstRun = true
-    args.baseX  = MAX_DISTANCE+1.0
-    args.baseY  = MAX_DISTANCE+1.0
-    args.destX  = MAX_DISTANCE+1.0
-    args.destY  = MAX_DISTANCE+1.0
-    args.factor = MAX_DISTANCE+1.0
+    self.mode = self.mode_NORMAL
+    self.firstRun = true
+    self.baseX  = MAX_DISTANCE+1.0
+    self.baseY  = MAX_DISTANCE+1.0
+    self.destX  = MAX_DISTANCE+1.0
+    self.destY  = MAX_DISTANCE+1.0
+    self.factor = MAX_DISTANCE+1.0
 
-    args.baseRX    = MAX_DISTANCE+1.0
-    args.baseRY    = MAX_DISTANCE+1.0
-    args.destRX    = MAX_DISTANCE+1.0
-    args.destRY    = MAX_DISTANCE+1.0
-    args.factorRef = MAX_DISTANCE+1.0
-    args.factorNew = MAX_DISTANCE+1.0
+    self.baseRX    = MAX_DISTANCE+1.0
+    self.baseRY    = MAX_DISTANCE+1.0
+    self.destRX    = MAX_DISTANCE+1.0
+    self.destRY    = MAX_DISTANCE+1.0
+    self.factorRef = MAX_DISTANCE+1.0
+    self.factorNew = MAX_DISTANCE+1.0
 
     if(numSelected() <= 0)
     {
@@ -3151,77 +3029,77 @@ int __init__():
     }
 
 int click(x, y):
-    if(args.mode == args.mode_NORMAL)
+    if(self.mode == self.mode_NORMAL)
     {
-        if(args.firstRun)
+        if(self.firstRun)
         {
-            args.firstRun = false
-            args.baseX = x
-            args.baseY = y
+            self.firstRun = false
+            self.baseX = x
+            self.baseY = y
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.baseX, args.baseY)
-            previewOn("SELECTED", "SCALE", args.baseX, args.baseY, 1)
+            setRubberPoint("LINE_START", self.baseX, self.baseY)
+            previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
             appendPromptHistory()
             setPromptPrefix(translate("Specify scale factor or [Reference]: "))
         }
         else
         {
-            args.destX = x
-            args.destY = y
-            args.factor = calculateDistance(args.baseX, args.baseY, args.destX, args.destY)
+            self.destX = x
+            self.destY = y
+            self.factor = calculateDistance(self.baseX, self.baseY, self.destX, self.destY)
             appendPromptHistory()
-            scaleSelected(args.baseX, args.baseY, args.factor)
+            scaleSelected(self.baseX, self.baseY, self.factor)
             previewOff()
             return
         }
     }
-    else if(args.mode == args.mode_REFERENCE)
+    else if(self.mode == self.mode_REFERENCE)
     {
-        if(isNaN(args.baseRX))
+        if(isNaN(self.baseRX))
         {
-            args.baseRX = x
-            args.baseRY = y
+            self.baseRX = x
+            self.baseRY = y
             appendPromptHistory()
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.baseRX, args.baseRY)
+            setRubberPoint("LINE_START", self.baseRX, self.baseRY)
             setPromptPrefix(translate("Specify second point: "))
         }
-        else if(isNaN(args.destRX))
+        else if(isNaN(self.destRX))
         {
-            args.destRX = x
-            args.destRY = y
-            args.factorRef = calculateDistance(args.baseRX, args.baseRY, args.destRX, args.destRY)
-            if(args.factorRef <= 0.0)
+            self.destRX = x
+            self.destRY = y
+            self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
+            if(self.factorRef <= 0.0)
             {
-                args.destRX    = MAX_DISTANCE+1.0
-                args.destRY    = MAX_DISTANCE+1.0
-                args.factorRef = MAX_DISTANCE+1.0
+                self.destRX    = MAX_DISTANCE+1.0
+                self.destRY    = MAX_DISTANCE+1.0
+                self.factorRef = MAX_DISTANCE+1.0
                 alert(translate("Value must be positive and nonzero."))
                 setPromptPrefix(translate("Specify second point: "))
             }
             else
             {
                 appendPromptHistory()
-                setRubberPoint("LINE_START", args.baseX, args.baseY)
-                previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef)
+                setRubberPoint("LINE_START", self.baseX, self.baseY)
+                previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                 setPromptPrefix(translate("Specify new length: "))
             }
         }
-        else if(isNaN(args.factorNew))
+        else if(isNaN(self.factorNew))
         {
-            args.factorNew = calculateDistance(args.baseX, args.baseY, x, y)
-            if(args.factorNew <= 0.0)
+            self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
+            if(self.factorNew <= 0.0)
             {
-                args.factorNew = MAX_DISTANCE+1.0
+                self.factorNew = MAX_DISTANCE+1.0
                 alert(translate("Value must be positive and nonzero."))
                 setPromptPrefix(translate("Specify new length: "))
             }
             else
             {
                 appendPromptHistory()
-                scaleSelected(args.baseX, args.baseY, args.factorNew/args.factorRef)
+                scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
                 previewOff()
                 return
             }
@@ -3229,9 +3107,9 @@ int click(x, y):
     }
 
 int prompt(str):
-    if(args.mode == args.mode_NORMAL)
+    if(self.mode == self.mode_NORMAL)
     {
-        if(args.firstRun)
+        if(self.firstRun)
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -3241,13 +3119,13 @@ int prompt(str):
             }
             else
             {
-                args.firstRun = false
-                args.baseX = Number(strList[0])
-                args.baseY = Number(strList[1])
+                self.firstRun = false
+                self.baseX = Number(strList[0])
+                self.baseY = Number(strList[1])
                 addRubber("LINE")
                 setRubberMode("LINE")
-                setRubberPoint("LINE_START", args.baseX, args.baseY)
-                previewOn("SELECTED", "SCALE", args.baseX, args.baseY, 1)
+                setRubberPoint("LINE_START", self.baseX, self.baseY)
+                previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
                 setPromptPrefix(translate("Specify scale factor or [Reference]: "))
             }
         }
@@ -3255,7 +3133,7 @@ int prompt(str):
         {
             if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args.mode = args.mode_REFERENCE
+                self.mode = self.mode_REFERENCE
                 setPromptPrefix(translate("Specify reference length") + " {1}: ")
                 clearRubber()
                 previewOff()
@@ -3269,17 +3147,17 @@ int prompt(str):
                 }
                 else
                 {
-                    args.factor = Number(str)
-                    scaleSelected(args.baseX, args.baseY, args.factor)
+                    self.factor = Number(str)
+                    scaleSelected(self.baseX, self.baseY, self.factor)
                     previewOff()
                     return
                 }
             }
         }
     }
-    else if(args.mode == args.mode_REFERENCE)
+    else if(self.mode == self.mode_REFERENCE)
     {
-        if(isNaN(args.baseRX))
+        if(isNaN(self.baseRX))
         {
             if(isNaN(str))
             {
@@ -3291,30 +3169,30 @@ int prompt(str):
                 }
                 else
                 {
-                    args.baseRX = Number(strList[0])
-                    args.baseRY = Number(strList[1])
+                    self.baseRX = Number(strList[0])
+                    self.baseRY = Number(strList[1])
                     addRubber("LINE")
                     setRubberMode("LINE")
-                    setRubberPoint("LINE_START", args.baseRX, args.baseRY)
+                    setRubberPoint("LINE_START", self.baseRX, self.baseRY)
                     setPromptPrefix(translate("Specify second point: "))
                 }
             }
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                args.baseRX = 0.0
-                args.baseRY = 0.0
-                args.destRX = 0.0
-                args.destRY = 0.0
+                self.baseRX = 0.0
+                self.baseRY = 0.0
+                self.destRX = 0.0
+                self.destRY = 0.0
                 /*The reference length is what we will use later.*/
-                args.factorRef = Number(str)
-                if(args.factorRef <= 0.0)
+                self.factorRef = Number(str)
+                if(self.factorRef <= 0.0)
                 {
-                    args.baseRX    = MAX_DISTANCE+1.0
-                    args.baseRY    = MAX_DISTANCE+1.0
-                    args.destRX    = MAX_DISTANCE+1.0
-                    args.destRY    = MAX_DISTANCE+1.0
-                    args.factorRef = MAX_DISTANCE+1.0
+                    self.baseRX    = MAX_DISTANCE+1.0
+                    self.baseRY    = MAX_DISTANCE+1.0
+                    self.destRX    = MAX_DISTANCE+1.0
+                    self.destRY    = MAX_DISTANCE+1.0
+                    self.factorRef = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
                     setPromptPrefix(translate("Specify reference length") + " {1}: ")
                 }
@@ -3322,13 +3200,13 @@ int prompt(str):
                 {
                     addRubber("LINE")
                     setRubberMode("LINE")
-                    setRubberPoint("LINE_START", args.baseX, args.baseY)
-                    previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef)
+                    setRubberPoint("LINE_START", self.baseX, self.baseY)
+                    previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                     setPromptPrefix(translate("Specify new length: "))
                 }
             }
         }
-        else if(isNaN(args.destRX))
+        else if(isNaN(self.destRX))
         {
             if(isNaN(str))
             {
@@ -3340,21 +3218,21 @@ int prompt(str):
                 }
                 else
                 {
-                    args.destRX = Number(strList[0])
-                    args.destRY = Number(strList[1])
-                    args.factorRef = calculateDistance(args.baseRX, args.baseRY, args.destRX, args.destRY)
-                    if(args.factorRef <= 0.0)
+                    self.destRX = Number(strList[0])
+                    self.destRY = Number(strList[1])
+                    self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
+                    if(self.factorRef <= 0.0)
                     {
-                        args.destRX    = MAX_DISTANCE+1.0
-                        args.destRY    = MAX_DISTANCE+1.0
-                        args.factorRef = MAX_DISTANCE+1.0
+                        self.destRX    = MAX_DISTANCE+1.0
+                        self.destRY    = MAX_DISTANCE+1.0
+                        self.factorRef = MAX_DISTANCE+1.0
                         alert(translate("Value must be positive and nonzero."))
                         setPromptPrefix(translate("Specify second point: "))
                     }
                     else
                     {
-                        setRubberPoint("LINE_START", args.baseX, args.baseY)
-                        previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef)
+                        setRubberPoint("LINE_START", self.baseX, self.baseY)
+                        previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                         setPromptPrefix(translate("Specify new length: "))
                     }
                 }
@@ -3362,29 +3240,29 @@ int prompt(str):
             else
             {
                 /*The base and dest values are only set here to advance the command.*/
-                args.baseRX = 0.0
-                args.baseRY = 0.0
-                args.destRX = 0.0
-                args.destRY = 0.0
+                self.baseRX = 0.0
+                self.baseRY = 0.0
+                self.destRX = 0.0
+                self.destRY = 0.0
                 /*The reference length is what we will use later.*/
-                args.factorRef = Number(str)
-                if(args.factorRef <= 0.0)
+                self.factorRef = Number(str)
+                if(self.factorRef <= 0.0)
                 {
-                    args.destRX    = MAX_DISTANCE+1.0
-                    args.destRY    = MAX_DISTANCE+1.0
-                    args.factorRef = MAX_DISTANCE+1.0
+                    self.destRX    = MAX_DISTANCE+1.0
+                    self.destRY    = MAX_DISTANCE+1.0
+                    self.factorRef = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
                     setPromptPrefix(translate("Specify second point: "))
                 }
                 else
                 {
-                    setRubberPoint("LINE_START", args.baseX, args.baseY)
-                    previewOn("SELECTED", "SCALE", args.baseX, args.baseY, args.factorRef)
+                    setRubberPoint("LINE_START", self.baseX, self.baseY)
+                    previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                     setPromptPrefix(translate("Specify new length: "))
                 }
             }
         }
-        else if(isNaN(args.factorNew))
+        else if(isNaN(self.factorNew))
         {
             if(isNaN(str))
             {
@@ -3398,16 +3276,16 @@ int prompt(str):
                 {
                     var x = Number(strList[0])
                     var y = Number(strList[1])
-                    args.factorNew = calculateDistance(args.baseX, args.baseY, x, y)
-                    if(args.factorNew <= 0.0)
+                    self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
+                    if(self.factorNew <= 0.0)
                     {
-                        args.factorNew = MAX_DISTANCE+1.0
+                        self.factorNew = MAX_DISTANCE+1.0
                         alert(translate("Value must be positive and nonzero."))
                         setPromptPrefix(translate("Specify new length: "))
                     }
                     else
                     {
-                        scaleSelected(args.baseX, args.baseY, args.factorNew/args.factorRef)
+                        scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
                         previewOff()
                         return
                     }
@@ -3415,16 +3293,16 @@ int prompt(str):
             }
             else
             {
-                args.factorNew = Number(str)
-                if(args.factorNew <= 0.0)
+                self.factorNew = Number(str)
+                if(self.factorNew <= 0.0)
                 {
-                    args.factorNew = MAX_DISTANCE+1.0
+                    self.factorNew = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
                     setPromptPrefix(translate("Specify new length: "))
                 }
                 else
                 {
-                    scaleSelected(args.baseX, args.baseY, args.factorNew/args.factorRef)
+                    scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
                     previewOff()
                     return
                 }
@@ -3435,71 +3313,71 @@ int prompt(str):
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.text
-args.textX
-args.textY
-args.textJustify
-args.textFont
-args.textHeight
-args.textRotation
-args.mode
+self.text
+self.textX
+self.textY
+self.textJustify
+self.textFont
+self.textHeight
+self.textRotation
+self.mode
 
 /*enums*/
-args.mode_JUSTIFY = 0
-args.mode_SETFONT = 1
-args.mode_SETGEOM = 2
-args.mode_RAPID   = 3
+self.mode_JUSTIFY = 0
+self.mode_SETFONT = 1
+self.mode_SETGEOM = 2
+self.mode_RAPID   = 3
 
 int init():
     clearSelection()
-    args.text = ""
-    args.textX = MAX_DISTANCE+1.0
-    args.textY = MAX_DISTANCE+1.0
-    args.textJustify = "Left"
-    args.textFont = textFont()
-    args.textHeight = MAX_DISTANCE+1.0
-    args.textRotation = MAX_DISTANCE+1.0
-    args.mode = args.mode_SETGEOM
-    setPromptPrefix(translate("Current font: ") + "{" + args.textFont + "} " + translate("Text height: ") + "{" +  textSize() + "}")
+    self.text = ""
+    self.textX = MAX_DISTANCE+1.0
+    self.textY = MAX_DISTANCE+1.0
+    self.textJustify = "Left"
+    self.textFont = textFont()
+    self.textHeight = MAX_DISTANCE+1.0
+    self.textRotation = MAX_DISTANCE+1.0
+    self.mode = self.mode_SETGEOM
+    setPromptPrefix(translate("Current font: ") + "{" + self.textFont + "} " + translate("Text height: ") + "{" +  textSize() + "}")
     appendPromptHistory()
     setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
 
 int click(x, y):
-    if(args.mode == args.mode_SETGEOM)
+    if(self.mode == self.mode_SETGEOM)
     {
-        if(isNaN(args.textX))
+        if(isNaN(self.textX))
         {
-            args.textX = x
-            args.textY = y
+            self.textX = x
+            self.textY = y
             addRubber("LINE")
             setRubberMode("LINE")
-            setRubberPoint("LINE_START", args.textX, args.textY)
+            setRubberPoint("LINE_START", self.textX, self.textY)
             appendPromptHistory()
             setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
         }
-        else if(isNaN(args.textHeight))
+        else if(isNaN(self.textHeight))
         {
-            args.textHeight = calculateDistance(args.textX, args.textY, x, y)
-            setTextSize(args.textHeight)
+            self.textHeight = calculateDistance(self.textX, self.textY, x, y)
+            setTextSize(self.textHeight)
             appendPromptHistory()
             setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
         }
-        else if(isNaN(args.textRotation))
+        else if(isNaN(self.textRotation))
         {
-            args.textRotation = calculateAngle(args.textX, args.textY, x, y)
-            setTextAngle(args.textRotation)
+            self.textRotation = calculateAngle(self.textX, self.textY, x, y)
+            setTextAngle(self.textRotation)
             appendPromptHistory()
             setPromptPrefix(translate("Enter text: "))
-            args.mode = args.mode_RAPID
+            self.mode = self.mode_RAPID
             enablePromptRapidFire()
             clearRubber()
             addRubber("TEXTSINGLE")
             setRubberMode("TEXTSINGLE")
-            setRubberPoint("TEXT_POINT", args.textX, args.textY)
-            setRubberPoint("TEXT_HEIGHT_ROTATION", args.textHeight, args.textRotation)
-            setRubberText("TEXT_FONT", args.textFont)
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
-            setRubberText("TEXT_RAPID", args.text)
+            setRubberPoint("TEXT_POINT", self.textX, self.textY)
+            setRubberPoint("TEXT_HEIGHT_ROTATION", self.textHeight, self.textRotation)
+            setRubberText("TEXT_FONT", self.textFont)
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
+            setRubberText("TEXT_RAPID", self.text)
         }
         else
         {
@@ -3508,104 +3386,104 @@ int click(x, y):
     }
 
 int prompt(str):
-    if(args.mode == args.mode_JUSTIFY)
+    if(self.mode == self.mode_JUSTIFY)
     {
         if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Center"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Center"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify center point of text or [Justify/Setfont]: "))
         }
         else if(str == "R" || str == "RIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Right"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Right"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify right-end point of text or [Justify/Setfont]: "))
         }
         else if(str == "A" || str == "ALIGN") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Aligned"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Aligned"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
         }
         else if(str == "M" || str == "MIDDLE") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Middle"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Middle"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle point of text or [Justify/Setfont]: "))
         }
         else if(str == "F" || str == "FIT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Fit"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Fit"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
         }
         else if(str == "TL" || str == "TOPLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Top Left"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Top Left"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-left point of text or [Justify/Setfont]: "))
         }
         else if(str == "TC" || str == "TOPCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Top Center"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Top Center"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-center point of text or [Justify/Setfont]: "))
         }
         else if(str == "TR" || str == "TOPRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Top Right"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Top Right"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-right point of text or [Justify/Setfont]: "))
         }
         else if(str == "ML" || str == "MIDDLELEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Middle Left"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Middle Left"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-left point of text or [Justify/Setfont]: "))
         }
         else if(str == "MC" || str == "MIDDLECENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Middle Center"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Middle Center"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-center point of text or [Justify/Setfont]: "))
         }
         else if(str == "MR" || str == "MIDDLERIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Middle Right"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Middle Right"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-right point of text or [Justify/Setfont]: "))
         }
         else if(str == "BL" || str == "BOTTOMLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Bottom Left"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Bottom Left"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-left point of text or [Justify/Setfont]: "))
         }
         else if(str == "BC" || str == "BOTTOMCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Bottom Center"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Bottom Center"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-center point of text or [Justify/Setfont]: "))
         }
         else if(str == "BR" || str == "BOTTOMRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
-            args.mode = args.mode_SETGEOM
-            args.textJustify = "Bottom Right"
-            setRubberText("TEXT_JUSTIFY", args.textJustify)
+            self.mode = self.mode_SETGEOM
+            self.textJustify = "Bottom Right"
+            setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-right point of text or [Justify/Setfont]: "))
         }
         else
@@ -3614,26 +3492,26 @@ int prompt(str):
             setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
         }
     }
-    else if(args.mode == args.mode_SETFONT)
+    else if(self.mode == self.mode_SETFONT)
     {
-        args.mode = args.mode_SETGEOM
-        args.textFont = str
-        setRubberText("TEXT_FONT", args.textFont)
-        setTextFont(args.textFont)
+        self.mode = self.mode_SETGEOM
+        self.textFont = str
+        setRubberText("TEXT_FONT", self.textFont)
+        setTextFont(self.textFont)
         setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
     }
-    else if(args.mode == args.mode_SETGEOM)
+    else if(self.mode == self.mode_SETGEOM)
     {
-        if(isNaN(args.textX))
+        if(isNaN(self.textX))
         {
             if(str == "J" || str == "JUSTIFY") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args.mode = args.mode_JUSTIFY
+                self.mode = self.mode_JUSTIFY
                 setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
             }
             else if(str == "S" || str == "SETFONT") /*TODO: Probably should add additional qsTr calls here.*/
             {
-                args.mode = args.mode_SETFONT
+                self.mode = self.mode_SETFONT
                 setPromptPrefix(translate("Specify font name: "))
             }
             else
@@ -3646,20 +3524,20 @@ int prompt(str):
                 }
                 else
                 {
-                    args.textX = Number(strList[0])
-                    args.textY = Number(strList[1])
+                    self.textX = Number(strList[0])
+                    self.textY = Number(strList[1])
                     addRubber("LINE")
                     setRubberMode("LINE")
-                    setRubberPoint("LINE_START", args.textX, args.textY)
+                    setRubberPoint("LINE_START", self.textX, self.textY)
                     setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
                 }
             }
         }
-        else if(isNaN(args.textHeight))
+        else if(isNaN(self.textHeight))
         {
             if(str == "")
             {
-                args.textHeight = textSize()
+                self.textHeight = textSize()
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
             }
             else if(isNaN(str))
@@ -3669,27 +3547,27 @@ int prompt(str):
             }
             else
             {
-                args.textHeight = Number(str)
-                setTextSize(args.textHeight)
+                self.textHeight = Number(str)
+                setTextSize(self.textHeight)
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
             }
         }
-        else if(isNaN(args.textRotation))
+        else if(isNaN(self.textRotation))
         {
             if(str == "")
             {
-                args.textRotation = textAngle()
+                self.textRotation = textAngle()
                 setPromptPrefix(translate("Enter text: "))
-                args.mode = args.mode_RAPID
+                self.mode = self.mode_RAPID
                 enablePromptRapidFire()
                 clearRubber()
                 addRubber("TEXTSINGLE")
                 setRubberMode("TEXTSINGLE")
-                setRubberPoint("TEXT_POINT", args.textX, args.textY)
-                setRubberPoint("TEXT_HEIGHT_ROTATION", args.textHeight, args.textRotation)
-                setRubberText("TEXT_FONT", args.textFont)
-                setRubberText("TEXT_JUSTIFY", args.textJustify)
-                setRubberText("TEXT_RAPID", args.text)
+                setRubberPoint("TEXT_POINT", self.textX, self.textY)
+                setRubberPoint("TEXT_HEIGHT_ROTATION", self.textHeight, self.textRotation)
+                setRubberText("TEXT_FONT", self.textFont)
+                setRubberText("TEXT_JUSTIFY", self.textJustify)
+                setRubberText("TEXT_RAPID", self.text)
             }
             else if(isNaN(str))
             {
@@ -3698,19 +3576,19 @@ int prompt(str):
             }
             else
             {
-                args.textRotation = Number(str)
-                setTextAngle(args.textRotation)
+                self.textRotation = Number(str)
+                setTextAngle(self.textRotation)
                 setPromptPrefix(translate("Enter text: "))
-                args.mode = args.mode_RAPID
+                self.mode = self.mode_RAPID
                 enablePromptRapidFire()
                 clearRubber()
                 addRubber("TEXTSINGLE")
                 setRubberMode("TEXTSINGLE")
-                setRubberPoint("TEXT_POINT", args.textX, args.textY)
-                setRubberPoint("TEXT_HEIGHT_ROTATION", args.textHeight, args.textRotation)
-                setRubberText("TEXT_FONT", args.textFont)
-                setRubberText("TEXT_JUSTIFY", args.textJustify)
-                setRubberText("TEXT_RAPID", args.text)
+                setRubberPoint("TEXT_POINT", self.textX, self.textY)
+                setRubberPoint("TEXT_HEIGHT_ROTATION", self.textHeight, self.textRotation)
+                setRubberText("TEXT_FONT", self.textFont)
+                setRubberText("TEXT_JUSTIFY", self.textJustify)
+                setRubberText("TEXT_RAPID", self.text)
             }
         }
         else
@@ -3718,11 +3596,11 @@ int prompt(str):
             /*Do nothing, as we are in rapidFire mode now.*/
         }
     }
-    else if(args.mode == args.mode_RAPID)
+    else if(self.mode == self.mode_RAPID)
     {
         if(str == "RAPID_ENTER")
         {
-            if(args.text == "")
+            if(self.text == "")
             {
                 return
             }
@@ -3734,36 +3612,36 @@ int prompt(str):
         }
         else
         {
-            args.text = str
-            setRubberText("TEXT_RAPID", args.text)
+            self.text = str
+            setRubberText("TEXT_RAPID", self.text)
         }
     }
 
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.numPoints = 2048; /*Default //TODO: min:64 max:8192*/
-args.cx
-args.cy
-args.sx = 0.04; /*Default*/
-args.sy = 0.04; /*Default*/
-args.numPoints
-args.mode
+self.numPoints = 2048; /*Default //TODO: min:64 max:8192*/
+self.cx
+self.cy
+self.sx = 0.04; /*Default*/
+self.sy = 0.04; /*Default*/
+self.numPoints
+self.mode
 
 /*enums*/
-args.mode_NUM_POINTS = 0
-args.mode_XSCALE     = 1
-args.mode_YSCALE     = 2
+self.mode_NUM_POINTS = 0
+self.mode_XSCALE     = 1
+self.mode_YSCALE     = 2
 
 int init():
     clearSelection()
-    args.cx = MAX_DISTANCE+1.0
-    args.cy = MAX_DISTANCE+1.0
-    args.mode = args.mode_NUM_POINTS
+    self.cx = MAX_DISTANCE+1.0
+    self.cy = MAX_DISTANCE+1.0
+    self.mode = self.mode_NUM_POINTS
 
     addRubber("POLYGON")
     setRubberMode("POLYGON")
-    updateSnowflake(args.numPoints, args.sx, args.sy)
+    updateSnowflake(self.numPoints, self.sx, self.sy)
     spareRubber("POLYGON")
     return
 
@@ -4426,91 +4304,91 @@ sin(263*t+2/7)-
 --------------------------------------------------------------------------------
 
 var global = {}; /*Required*/
-args.numPoints = 5; /*Default*/
-args.cx
-args.cy
-args.x1
-args.y1
-args.x2
-args.y2
-args.mode
+self.numPoints = 5; /*Default*/
+self.cx
+self.cy
+self.x1
+self.y1
+self.x2
+self.y2
+self.mode
 
 /*enums*/
-args.mode_NUM_POINTS = 0
-args.mode_CENTER_PT  = 1
-args.mode_RAD_OUTER  = 2
-args.mode_RAD_INNER  = 3
+self.mode_NUM_POINTS = 0
+self.mode_CENTER_PT  = 1
+self.mode_RAD_OUTER  = 2
+self.mode_RAD_INNER  = 3
 
 int init():
     clearSelection()
-    args.cx       = MAX_DISTANCE+1.0
-    args.cy       = MAX_DISTANCE+1.0
-    args.x1       = MAX_DISTANCE+1.0
-    args.y1       = MAX_DISTANCE+1.0
-    args.x2       = MAX_DISTANCE+1.0
-    args.y2       = MAX_DISTANCE+1.0
-    args.mode = args.mode_NUM_POINTS
-    setPromptPrefix(translate("Enter number of star points") + " {" + args.numPoints.toString() + "}: ")
+    self.cx       = MAX_DISTANCE+1.0
+    self.cy       = MAX_DISTANCE+1.0
+    self.x1       = MAX_DISTANCE+1.0
+    self.y1       = MAX_DISTANCE+1.0
+    self.x2       = MAX_DISTANCE+1.0
+    self.y2       = MAX_DISTANCE+1.0
+    self.mode = self.mode_NUM_POINTS
+    setPromptPrefix(translate("Enter number of star points") + " {" + self.numPoints.toString() + "}: ")
 
 int click(x, y):
-    if(args.mode == args.mode_NUM_POINTS)
+    if(self.mode == self.mode_NUM_POINTS)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args.mode == args.mode_CENTER_PT)
+    else if(self.mode == self.mode_CENTER_PT)
     {
-        args.cx = x
-        args.cy = y
-        args.mode = args.mode_RAD_OUTER
+        self.cx = x
+        self.cy = y
+        self.mode = self.mode_RAD_OUTER
         setPromptPrefix(translate("Specify outer radius of star: "))
         addRubber("POLYGON")
         setRubberMode("POLYGON")
-        updateStar(args.cx, args.cy)
+        updateStar(self.cx, self.cy)
         enableMoveRapidFire()
     }
-    else if(args.mode == args.mode_RAD_OUTER)
+    else if(self.mode == self.mode_RAD_OUTER)
     {
-        args.x1 = x
-        args.y1 = y
-        args.mode = args.mode_RAD_INNER
+        self.x1 = x
+        self.y1 = y
+        self.mode = self.mode_RAD_INNER
         setPromptPrefix(translate("Specify inner radius of star: "))
-        updateStar(args.x1, args.y1)
+        updateStar(self.x1, self.y1)
     }
-    else if(args.mode == args.mode_RAD_INNER)
+    else if(self.mode == self.mode_RAD_INNER)
     {
-        args.x2 = x
-        args.y2 = y
+        self.x2 = x
+        self.y2 = y
         disableMoveRapidFire()
-        updateStar(args.x2, args.y2)
+        updateStar(self.x2, self.y2)
         spareRubber("POLYGON")
         return
     }
 
 int move(x, y):
-    if(args.mode == args.mode_NUM_POINTS)
+    if(self.mode == self.mode_NUM_POINTS)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(args.mode == args.mode_CENTER_PT)
+    else if(self.mode == self.mode_CENTER_PT)
     {
         /*Do nothing, prompt and click controls this.*/
     }
-    else if(args.mode == args.mode_RAD_OUTER)
+    else if(self.mode == self.mode_RAD_OUTER)
     {
         updateStar(x, y)
     }
-    else if(args.mode == args.mode_RAD_INNER)
+    else if(self.mode == self.mode_RAD_INNER)
     {
         updateStar(x, y)
     }
 
 int prompt(str):
-    if(args.mode == args.mode_NUM_POINTS)
+    if(self.mode == self.mode_NUM_POINTS)
     {
-        if(str == "" && args.numPoints >= 3 && args.numPoints <= 1024)
+        if(str == "" && self.numPoints >= 3 && self.numPoints <= 1024)
         {
             setPromptPrefix(translate("Specify center point: "))
-            args.mode = args.mode_CENTER_PT
+            self.mode = self.mode_CENTER_PT
         }
         else
         {
@@ -4518,17 +4396,17 @@ int prompt(str):
             if(isNaN(tmp) || !isInt(tmp) || tmp < 3 || tmp > 1024)
             {
                 alert(translate("Requires an integer between 3 and 1024."))
-                setPromptPrefix(translate("Enter number of star points") + " {" + args.numPoints.toString() + "}: ")
+                setPromptPrefix(translate("Enter number of star points") + " {" + self.numPoints.toString() + "}: ")
             }
             else
             {
-                args.numPoints = tmp
+                self.numPoints = tmp
                 setPromptPrefix(translate("Specify center point: "))
-                args.mode = args.mode_CENTER_PT
+                self.mode = self.mode_CENTER_PT
             }
         }
     }
-    else if(args.mode == args.mode_CENTER_PT)
+    else if(self.mode == self.mode_CENTER_PT)
     {
         var strList = str.split(",")
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -4537,9 +4415,9 @@ int prompt(str):
             setPromptPrefix(translate("Specify center point: "))
         }
         else:
-            args.cx = Number(strList[0])
-            args.cy = Number(strList[1])
-            args.mode = args.mode_RAD_OUTER
+            self.cx = Number(strList[0])
+            self.cy = Number(strList[1])
+            self.mode = self.mode_RAD_OUTER
             setPromptPrefix(translate("Specify outer radius of star: "))
             addRubber("POLYGON")
             setRubberMode("POLYGON")
@@ -4552,13 +4430,13 @@ int prompt(str):
             alert(translate("Invalid point."))
             setPromptPrefix(translate("Specify outer radius of star: "))
         else:
-            args.x1 = Number(strList[0])
-            args.y1 = Number(strList[1])
-            args.mode = args.mode_RAD_INNER
+            self.x1 = Number(strList[0])
+            self.y1 = Number(strList[1])
+            self.mode = self.mode_RAD_INNER
             setPromptPrefix(translate("Specify inner radius of star: "))
             updateStar(qsnapX(), qsnapY())
 
-    else if(args.mode == args.mode_RAD_INNER)
+    else if(self.mode == self.mode_RAD_INNER)
     {
         var strList = str.split(",")
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -4568,10 +4446,10 @@ int prompt(str):
         }
         else
         {
-            args.x2 = Number(strList[0])
-            args.y2 = Number(strList[1])
+            self.x2 = Number(strList[0])
+            self.y2 = Number(strList[1])
             disableMoveRapidFire()
-            updateStar(args.x2, args.y2)
+            updateStar(self.x2, self.y2)
             spareRubber("POLYGON")
             return
         }
@@ -4582,23 +4460,23 @@ int updateStar(x, y):
     var distInner
     var angOuter
 
-    if(args.mode == args.mode_RAD_OUTER)
+    if(self.mode == self.mode_RAD_OUTER)
     {
-        angOuter = calculateAngle(args.cx, args.cy, x, y)
-        distOuter = calculateDistance(args.cx, args.cy, x, y)
+        angOuter = calculateAngle(self.cx, self.cy, x, y)
+        distOuter = calculateDistance(self.cx, self.cy, x, y)
         distInner = distOuter/2.0
     }
-    else if(args.mode == args.mode_RAD_INNER)
+    else if(self.mode == self.mode_RAD_INNER)
     {
-        angOuter = calculateAngle(args.cx, args.cy, args.x1, args.y1)
-        distOuter = calculateDistance(args.cx, args.cy, args.x1, args.y1)
-        distInner = calculateDistance(args.cx, args.cy, x, y)
+        angOuter = calculateAngle(self.cx, self.cy, self.x1, self.y1)
+        distOuter = calculateDistance(self.cx, self.cy, self.x1, self.y1)
+        distInner = calculateDistance(self.cx, self.cy, x, y)
     }
 
     /*Calculate the Star Points*/
-    var angInc = 360.0/(args.numPoints*2)
+    var angInc = 360.0/(self.numPoints*2)
     var odd = true
-    for(var i = 0; i < args.numPoints*2; i++)
+    for(var i = 0; i < self.numPoints*2; i++)
     {
         var xx
         var yy
@@ -4613,9 +4491,9 @@ int updateStar(x, y):
             yy = distInner*sin((angOuter+(angInc*i))*embConstantPi/180.0)
         }
         odd = !odd
-        setRubberPoint("POLYGON_POINT_" + i.toString(), args.cx + xx, args.cy + yy)
+        setRubberPoint("POLYGON_POINT_" + i.toString(), self.cx + xx, self.cy + yy)
     }
-    setRubberText("POLYGON_NUM_POINTS", (args.numPoints*2 - 1).toString())
+    setRubberText("POLYGON_NUM_POINTS", (self.numPoints*2 - 1).toString())
 
     "menu-name": "None",
     "menu-position": 0,
@@ -4653,16 +4531,16 @@ int prompt(str):
 def treble_clef_init():
     treble_clef global
     clearSelection()
-    args.cx = MAX_DISTANCE+1.0
-    args.cy = MAX_DISTANCE+1.0
-    args.numPoints = 1024; /*Default //TODO: min:64 max:8192*/
-    args.sx = 0.04; /*Default*/
-    args.sy = 0.04; /*Default*/
-    args.mode = TREBLE_CLEF_MODE_NUM_POINTS
+    self.cx = MAX_DISTANCE+1.0
+    self.cy = MAX_DISTANCE+1.0
+    self.numPoints = 1024; /*Default //TODO: min:64 max:8192*/
+    self.sx = 0.04; /*Default*/
+    self.sy = 0.04; /*Default*/
+    self.mode = TREBLE_CLEF_MODE_NUM_POINTS
 
     addRubber("POLYGON")
     setRubberMode("POLYGON")
-    updateClef(args.numPoints, args.sx, args.sy)
+    updateClef(self.numPoints, self.sx, self.sy)
     spareRubber("POLYGON")
     return
 
@@ -10697,115 +10575,15 @@ def Settings_Dialog::comboBoxSelectionHotGripColorCurrentIndexChanged(int index)
 }
 
 def Settings_Dialog::acceptChanges():
-    dialog.general_mdi_bg_use_logo = preview.general_mdi_bg_use_logo
-    dialog.general_mdi_bg_use_texture = preview.general_mdi_bg_use_texture
-    dialog.general_mdi_bg_use_color = preview.general_mdi_bg_use_color
-    strcpy(dialog.general_mdi_bg_logo, accept_.general_mdi_bg_logo)
-    strcpy(dialog.general_mdi_bg_texture, accept_.general_mdi_bg_texture)
-    dialog.general_mdi_bg_color = accept_.general_mdi_bg_color
-    dialog.display_show_scrollbars = preview.display_show_scrollbars
-    dialog.display_crosshair_color = accept_.display_crosshair_color
-    dialog.display_bg_color = accept_.display_bg_color
-    dialog.display_selectbox_left_color = accept_.display_selectbox_left_color
-    dialog.display_selectbox_left_fill = accept_.display_selectbox_left_fill
-    dialog.display_selectbox_right_color = accept_.display_selectbox_right_color
-    dialog.display_selectbox_right_fill = accept_.display_selectbox_right_fill
-    dialog.display_selectbox_alpha = preview.display_selectbox_alpha
-    if (dialog.grid_color_match_crosshair) {
-        dialog.grid_color = accept_.display_crosshair_color
-    }
-    else {
-        dialog.grid_color = accept_.grid_color
-    }
-    dialog.ruler_color = accept_.ruler_color
-    dialog.lwt_show_lwt = preview.lwt_show_lwt
-    dialog.lwt_real_render = preview.lwt_real_render
+    for k in preview.keys():
+        dialog[k] = preview[k]
+    for k in accept_.keys():
+        dialog[k] = preview[k]
 
-    strcpy(settings.general_language, dialog.general_language)
-    strcpy(settings.general_icon_theme, dialog.general_icon_theme)
-    settings.general_icon_size = dialog.general_icon_size
-    settings.general_mdi_bg_use_logo = dialog.general_mdi_bg_use_logo
-    settings.general_mdi_bg_use_texture = dialog.general_mdi_bg_use_texture
-    settings.general_mdi_bg_use_color = dialog.general_mdi_bg_use_color
-    strcpy(settings.general_mdi_bg_logo, dialog.general_mdi_bg_logo)
-    strcpy(settings.general_mdi_bg_texture, dialog.general_mdi_bg_texture)
-    settings.general_mdi_bg_color = dialog.general_mdi_bg_color
-    settings.general_tip_of_the_day = dialog.general_tip_of_the_day
-    /*TODO: settings.GeneralSystemHelpBrowser = dialog.general_system_help_browser;*/
-    settings.display_use_opengl = dialog.display_use_opengl
-    settings.display_renderhint_aa = dialog.display_renderhint_aa
-    settings.display_renderhint_text_aa = dialog.display_renderhint_text_aa
-    settings.display_renderhint_smooth_pix = dialog.display_renderhint_smooth_pix
-    settings.display_renderhint_high_aa = dialog.display_renderhint_high_aa
-    settings.display_renderhint_noncosmetic = dialog.display_renderhint_noncosmetic
-    settings.display_show_scrollbars = dialog.display_show_scrollbars
-    settings.display_scrollbar_widget_num = dialog.display_scrollbar_widget_num
-    settings.display_crosshair_color = dialog.display_crosshair_color
-    settings.display_bg_color = dialog.display_bg_color
-    settings.display_selectbox_left_color = dialog.display_selectbox_left_color
-    settings.display_selectbox_left_fill = dialog.display_selectbox_left_fill
-    settings.display_selectbox_right_color = dialog.display_selectbox_right_color
-    settings.display_selectbox_right_fill = dialog.display_selectbox_right_fill
-    settings.display_selectbox_alpha = dialog.display_selectbox_alpha
-    settings.display_zoomscale_in = dialog.display_zoomscale_in
-    settings.display_zoomscale_out = dialog.display_zoomscale_out
-    /*TODO: settings.DisplayCrossHairPercent(dialog.display_crosshair_percent);*/
-    /*TODO: settings.DisplayUnits(dialog.display_units);*/
-    /*TODO: settings.PromptSaveHistoryFilename(dialog.prompt_save_history_filename);*/
-    /*TODO: settings.open_format(dialog.opensave_open_format);*/
-    /*TODO: settings.open_thumbnail(dialog.opensave_open_thumbnail);*/
-    /*TODO: settings.save_format = dialog.opensave_save_format);*/
-    /*TODO: settings.save_thumbnail = dialog.opensave_save_thumbnail);*/
-    settings.opensave_recent_max_files = dialog.opensave_recent_max_files
-    settings.opensave_trim_dst_num_jumps = dialog.opensave_trim_dst_num_jumps
-    /*TODO: settings.PrintingDefaultDevice = dialog.printing_default_device;*/
-    /*TODO: settings.PrintingUseLastDevice = dialog.printing_use_last_device;*/
-    settings.printing_disable_bg = dialog.printing_disable_bg
-    settings.grid_show_on_load = dialog.grid_show_on_load
-    settings.grid_show_origin = dialog.grid_show_origin
-    settings.grid_color_match_crosshair = dialog.grid_color_match_crosshair
-    settings.grid_color = dialog.grid_color
-    /*TODO: settings.GridLoadFromFile = dialog.grid_load_from_file;*/
-    strcpy(settings.grid_type, dialog.grid_type)
-    settings.grid_center_on_origin = dialog.grid_center_on_origin
-    settings.grid_center = dialog.grid_center
-    settings.grid_size = dialog.grid_size
-    settings.grid_spacing = dialog.grid_spacing
-    settings.grid_size_radius = dialog.grid_size_radius
-    settings.grid_spacing_radius = dialog.grid_spacing_radius
-    settings.grid_spacing_angle = dialog.grid_spacing_angle
-    settings.ruler_show_on_load = dialog.ruler_show_on_load
-    settings.ruler_metric = dialog.ruler_metric
-    settings.ruler_color = dialog.ruler_color
-    settings.ruler_pixel_size = dialog.ruler_pixel_size
-    /*TODO: settings.qsnap_enabled = dialog.qsnap_enabled;*/
-    settings.qsnap_locator_color = dialog.qsnap_locator_color
-    settings.qsnap_locator_size = dialog.qsnap_locator_size
-    settings.qsnap_aperture_size = dialog.qsnap_aperture_size
-    settings.qsnap_endpoint = dialog.qsnap_endpoint
-    settings.qsnap_midpoint = dialog.qsnap_midpoint
-    settings.qsnap_center = dialog.qsnap_center
-    settings.qsnap_node = dialog.qsnap_node
-    settings.qsnap_quadrant = dialog.qsnap_quadrant
-    settings.qsnap_intersection = dialog.qsnap_intersection
-    settings.qsnap_extension = dialog.qsnap_extension
-    settings.qsnap_insertion = dialog.qsnap_insertion
-    settings.qsnap_perpendicular = dialog.qsnap_perpendicular
-    settings.qsnap_tangent = dialog.qsnap_tangent
-    settings.qsnap_nearest = dialog.qsnap_nearest
-    settings.qsnap_apparent = dialog.qsnap_apparent
-    settings.qsnap_parallel = dialog.qsnap_parallel
-    settings.lwt_show_lwt = dialog.lwt_show_lwt
-    settings.lwt_real_render = dialog.lwt_real_render
-    settings.selection_mode_pickfirst = dialog.selection_mode_pickfirst
-    settings.selection_mode_pickadd = dialog.selection_mode_pickadd
-    settings.selection_mode_pickdrag = dialog.selection_mode_pickdrag
-    settings.selection_coolgrip_color = dialog.selection_coolgrip_color
-    settings.selection_hotgrip_color = dialog.selection_hotgrip_color
-    settings.selection_grip_size = dialog.selection_grip_size
-    settings.selection_pickbox_size = dialog.selection_pickbox_size
+    if dialog["grid_color_match_crosshair"]:
+        dialog["grid_color"] = accept_["display_crosshair_color"]
 
-    /*Make sure the user sees the changes applied immediately*/
+    # Make sure the user sees the changes applied immediately.
     mainWin->mdiArea->useBackgroundLogo(dialog.general_mdi_bg_use_logo)
     mainWin->mdiArea->useBackgroundTexture(dialog.general_mdi_bg_use_texture)
     mainWin->mdiArea->useBackgroundColor(dialog.general_mdi_bg_use_color)
