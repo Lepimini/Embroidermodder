@@ -22,6 +22,289 @@ from .icons import *
 
 """
 
+file_toolbar = [
+    ACTION_new,
+    ACTION_open,
+    ACTION_save,
+    ACTION_saveas,
+    ACTION_print,
+    ACTION_designdetails,
+    -1,
+    ACTION_help,
+    -2
+]
+
+
+edit_toolbar = [
+    ACTION_undo,
+    ACTION_redo,
+    -1,
+    ACTION_cut,
+    ACTION_copy,
+    ACTION_paste,
+    -2
+]
+
+
+view_toolbar = [
+    ACTION_day,
+    ACTION_night,
+    -2
+]
+
+
+int pan_toolbar[] = {
+    ACTION_panrealtime,
+    ACTION_panpoint,
+    -1,
+    ACTION_panleft,
+    ACTION_panright,
+    ACTION_panup,
+    ACTION_pandown,
+    -2
+]
+
+int icon_toolbar[] = {
+    ACTION_icon16,
+    ACTION_icon24,
+    ACTION_icon32,
+    ACTION_icon48,
+    ACTION_icon64,
+    ACTION_icon128,
+    -2
+]
+
+int help_toolbar[] = {
+    ACTION_help,
+    -1,
+    ACTION_changelog,
+    -1,
+    ACTION_about,
+    -1,
+    ACTION_whatsthis,
+    -2
+]
+
+int zoom_toolbar[] = {
+    ACTION_zoomwindow,
+    ACTION_zoomdynamic,
+    ACTION_zoomscale,
+    -1,
+    ACTION_zoomcenter,
+    ACTION_zoomin,
+    ACTION_zoomout,
+    -1,
+    ACTION_zoomselected,
+    ACTION_zoomall,
+    ACTION_zoomextents,
+    -2
+]
+
+int layer_toolbar[] = {
+    -2
+]
+
+int text_toolbar[] = {
+    -2
+]
+
+int properties_toolbar[] = {
+    -2
+]
+
+int *toolbars[] = {
+    file_toolbar,
+    edit_toolbar,
+    view_toolbar,
+    zoom_toolbar,
+    pan_toolbar,
+    icon_toolbar,
+    help_toolbar,
+    layer_toolbar,
+    text_toolbar,
+    properties_toolbar
+]
+
+
+int file_menu[] = {
+    ACTION_new,
+    ACTION_open,
+    ACTION_save,
+    ACTION_saveas,
+    ACTION_print,
+    ACTION_designdetails,
+    -1,
+    ACTION_help,
+    -1,
+    ACTION_exit,
+    -2
+]
+
+int edit_menu[] = {
+    ACTION_undo,
+    ACTION_redo,
+    -1,
+    ACTION_cut,
+    ACTION_copy,
+    ACTION_paste,
+    -2
+]
+
+int view_menu[] = {
+    ACTION_day,
+    ACTION_night,
+    -2
+]
+
+int pan_menu[] = {
+    ACTION_panrealtime,
+    ACTION_panpoint,
+    -1,
+    ACTION_panleft,
+    ACTION_panright,
+    ACTION_panup,
+    ACTION_pandown,
+    -2
+]
+
+int icon_menu[] = {
+    ACTION_icon16,
+    ACTION_icon24,
+    ACTION_icon32,
+    ACTION_icon48,
+    ACTION_icon64,
+    ACTION_icon128,
+    -2
+]
+
+int help_menu[] = {
+    ACTION_help,
+    -1,
+    ACTION_changelog,
+    -1,
+    ACTION_tipoftheday,
+    -1,
+    ACTION_about,
+    -1,
+    ACTION_whatsthis,
+    -2
+]
+
+int zoom_menu[] = {
+    ACTION_zoomwindow,
+    ACTION_zoomdynamic,
+    ACTION_zoomscale,
+    -1,
+    ACTION_zoomcenter,
+    ACTION_zoomin,
+    ACTION_zoomout,
+    -1,
+    ACTION_zoomselected,
+    ACTION_zoomall,
+    ACTION_zoomextents,
+    -2
+]
+
+int settings_menu[] = {
+    ACTION_settingsdialog,
+    -1,
+    -2
+]
+
+int recent_menu[] = {
+    -1,
+    -2
+]
+
+int window_menu[] = {
+    -1,
+    -2
+]
+
+int *menus[] = {
+    file_menu,
+    edit_menu,
+    view_menu,
+    settings_menu,
+    window_menu,
+    help_menu,
+    recent_menu,
+    zoom_menu,
+    pan_menu
+]
+
+float symbol_scale = 0.01
+
+/* Symbols use the SVG path syntax.
+ *
+ * In theory, we could combine the icons and symbols systems,
+ * since they could be rendered once and stored as icons in Qt.
+ * (Or as textures in FreeGLUT.)
+ *
+ * Also we want to render the patterns themselves using SVG
+ * syntax, so it would save on repeated work overall.
+ */
+symbol_list[] = {
+    /* 0 */ "icon 0",
+    /* 1 */ "M 5 100 L 45 100 M 0 25 L 25 0 L 25 100",
+    /* 2 */ "icon 2",
+    /* 3 */ "icon 3",
+    /* 4 */ "M 50 100 L 50 0 L 0 50 L 50 50",
+    /* 5 */ "icon 5",
+    /* 6 */ "icon 6",
+    /* 7 */ "M 0 0 L 50 0 L 25 75 L 25 100",
+    /* 8 */ "icon 8",
+    /* 9 */ "icon 9",
+    /* - */ "M 0 50 L 50 50",
+    /* ' */ "M 25 100 L 25 25",
+    /* " */ "M 10 0 L 10 25 M 40 0 L 40 25"
+]
+
+path_symbol icon_zero[] = {
+    /* path.addEllipse(QPointF(x+0.25*xScale, y-0.50*yScale), 0.25*xScale, 0.50*yScale);*/
+    M 0 -0.75
+    L 0 -0.25
+    A 0 -0.5 0.5 0.5 180.0 180.0
+    L 0.5, -0.75
+    A 0 -1.0, 0.5, 0.5, 0.0, 180.0
+]
+
+path_symbol icon_two[] = {
+    {PATHS_MOVETO, 0 -0.75
+    A {0.45, 1.00, 0.50, 180.00, -216.87
+    L 0 0.0
+    L {0.50, 0.0
+]
+
+path_symbol icon_three[] = {
+    {PATHS_ARCMOVETO, 0 -0.50, 0.50, 0.50, 195.00
+    A 0 -0.50, 0.50, 195.00, 255.00
+    A 0 -0.50, 0.50, 270.00, 255.00
+]
+
+path_symbol icon_five[] = {
+    M 50 0 L 0 0 L 0 50 L 25 50 A 0.0, -0.5 0.5 0.5 90.0 -180.0 L 0 0
+]
+
+path_symbol icon_six[] = {
+    path.addEllipse(QPointF(x+0.25*xScale, y-0.25*yScale), 0.25*xScale, 0.25*yScale)
+    M 0 75 L 0 25
+    path.arcTo(x+0.00*xScale, y-1.00*yScale, 0.50*xScale, 0.50*yScale, 180.00, -140.00)
+]
+
+path_symbol icon_eight[] = {
+    path.addEllipse(QPointF(x+0.25*xScale, y-0.25*yScale), 0.25*xScale, 0.25*yScale)
+    path.addEllipse(QPointF(x+0.25*xScale, y-0.75*yScale), 0.25*xScale, 0.25*yScale)
+]
+
+path_symbol icon_nine[] = {
+    path.addEllipse(QPointF(x+0.25*xScale, y-0.75*yScale), 0.25*xScale, 0.25*yScale)
+    M 0.50*xScale, y-0.75*yScale)
+    L x+0.50*xScale, y-0.25*yScale)
+    path.arcTo(x+0.00*xScale, y-0.50*yScale, 0.50*xScale, 0.50*yScale, 0.00, -140.00)
+]
+
+
 # LineEdits
 ARC_CENTER_X                   0
 ARC_CENTER_Y                   1

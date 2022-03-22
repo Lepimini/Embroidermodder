@@ -84,26 +84,38 @@ def copy_object():
 
 
 def paste_object():
+    r"""
+    """
     debug_message("paste")
 
 
 def icon16():
+    r"""
+    """
     debug_message("icon16()")
 
 
 def icon24():
+    r"""
+    """
     debug_message("icon24()")
 
 
 def icon32():
+    r"""
+    """
     debug_message("icon32()")
 
 
 def icon48():
+    r"""
+    """
     debug_message("icon48()")
 
 
 def icon64():
+    r"""
+    """
     debug_message("icon64()")
 
 
@@ -119,16 +131,232 @@ def main_print():
     debug_message("print()")
 
 
+def main_redo():
+    r"""
+    """
+    debug_message("copy()")
+    #View* gview = _mainWin->activeView()
+    #if (gview) {
+    #    gview->copy()
+
+
+def main_undo():
+    r"""
+    """
+    debug_message("main_paste()")
+    #View* gview = _mainWin->activeView()
+    #if gview:
+    #    gview->paste()
+
+
+def tipOfTheDay():
+    r"""
+    """
+    debug_message("main_paste()")
+
+
+def changelog():
+    r"""
+    """
+    debug_message("changelog()")
+
+    # display in a custom widget instead
+    #
+    # QUrl changelogURL("help/changelog.html")
+    # QDesktopServices::openUrl(changelogURL)
+
+
+def show_all_layers():
+    r"""
+    """
+    return
+
+
+def freezeAllLayers():
+    r"""
+    """
+    return
+
+
+def thawAllLayers():
+    r"""
+    """
+    debug_message("thawAllLayers()")
+
+
+def lockAllLayers():
+    r"""
+    """
+    debug_message("lockAllLayers()")
+
+
+def windowNext():
+    r"""
+    """
+    debug_message("windowNext()")
+
+
+def windowPrevious():
+    debug_message(".")
+
+
+def textItalic():
+    settings["text_style_italic"] = not settings["text_style_italic"]
+
+
+def textBold():
+    settings["text_style_bold"] = not settings["text_style_bold"]
+
+
+def textStrikeout():
+    settings.text_style.strikeout] = not settings.text_style.strikeout
+
+
+def textUnderline():
+    settings.text_style.underline = not settings.text_style.underline
+
+
+def textOverline():
+    settings.text_style.overline = not settings.text_style.overline
+
+
+def layerManager():
+    debug_message("layerManager()")
+    debug_message("Implement layerManager.")
+    #LayerManager layman( _mainWin,  _mainWin)
+    #layman.exec()
+
+
+def layerPrevious():
+    debug_message("layerPrevious()")
+    debug_message("Implement layerPrevious.")
+
+
+def zoomRealtime():
+    debug_message("zoomRealtime()")
+    debug_message("Implement zoomRealtime.")
+
+
+def zoomPrevious():
+    ""
+    debug_message("zoomPrevious()")
+    debug_message("Implement zoomPrevious.")
+
+
+def zoomWindow():
+    ""
+    debug_message("zoomWindow()")
+    #gview = _mainWin->activeView()
+    #if gview:
+    #    gview->zoomWindow()
+
+
+def zoomDynamic():
+    ""
+    debug_message("zoomDynamic()")
+    debug_message("Implement zoomDynamic.")
+
+
+def zoomScale():
+    ""
+    debug_message("zoomScale()")
+    debug_message("Implement zoomScale.")
+
+
+def zoomCenter():
+    ""
+    debug_message("zoomCenter()")
+    debug_message("Implement zoomCenter.")
+
+
+def zoomIn():
+    ""
+    debug_message("zoomIn()")
+
+
+def zoomOut():
+    ""
+    debug_message("zoomOut()")
+
+
+def zoomSelected():
+    ""
+    debug_message("zoomSelected()")
+
+
+def zoomAll():
+    ""
+    debug_message("zoomAll()")
+    debug_message("Implement zoomAll.")
+
+
+def zoomExtents():
+    ""
+    debug_message("zoomExtents()")
+
+
+def panrealtime():
+    ""
+    debug_message("panrealtime()")
+
+
+def panpoint():
+    ""
+    debug_message("panpoint()")
+
+
+def panLeft():
+    ""
+    debug_message("panLeft()")
+
+
+def panRight():
+    ""
+    debug_message("panRight()")
+
+
+def panUp():
+    ""
+    debug_message("panUp()")
+
+
+def panDown():
+    ""
+    debug_message("panDown()")
+
+
+def day_vision():
+    r""" TODO: Make day vision color settings.
+    gview = _mainWin->activeView()
+    if gview:
+        gview->setBackgroundColor("#FFFFFF")
+        gview->setCrossHairColor("#000000")
+        gview->setGridColor("#000000")
+        """
+    debug_message("day_vision()")
+
+
+def night_vision():
+    r""" TODO: Make night vision color settings.
+    gview = _mainWin->activeView()
+    if gview:
+        gview->setBackgroundColor("#000000")
+        gview->setCrossHairColor("#FFFFFF")
+        gview->setGridColor("#FFFFFF")
+        """
+    debug_message("night_vision()")
+
+
 def whatsthisContextHelp():
     r"""
     """
-    debug_message("main_exit()")
+    debug_message("whatsthisContextHelp()")
 
 
 def makeLayerCurrent():
     r"""
     """
-    debug_message("main_exit()")
+    debug_message("makeLayerCurrent()")
 
 
 def layerSelector():
@@ -186,7 +414,7 @@ def main_paste():
 def main_redo():
     r"""
     """
-    debug_message("copy()")
+    debug_message("main_redo()")
     #gview = _mainWin->activeView()
     #if gview:
     #    gview->copy()
@@ -195,7 +423,7 @@ def main_redo():
 def main_undo():
     r"""
     """
-    debug_message("main_paste()")
+    debug_message("main_undo()")
     #gview = _mainWin->activeView()
     #if gview:
     #    gview->paste()
@@ -482,6 +710,109 @@ def panDown():
     debug_message("panDown()")
 
 
+def settingsSnap():
+    r"""
+    """
+    debug_message("stub")
+
+
+def settingsGrid():
+    r"""
+    """
+    debug_message("stub")
+
+
+def settingsRuler():
+    r"""
+    """
+    debug_message("stub")
+
+
+def settingsOrtho():
+    r"""
+    """
+    debug_message("stub")
+
+
+def settingsPolar():
+    r"""
+    """
+    debug_message("stub")
+
+
+def settingsQSnap():
+    r"""
+    """
+    debug_message("stub")
+
+
+def settingsQTrack():
+    r"""
+    """
+    debug_message("stub")
+
+
+def settingsLwt():
+    r"""
+    """
+    debug_message("stub")
+
+
+def toggleSnap(on):
+    r"""
+    """
+    debug_message("StatusBarButton toggleSnap()")
+
+
+def toggleGrid(on):
+    r"""
+    """
+    debug_message("StatusBarButton toggleGrid()")
+
+
+def toggleRuler(on):
+    r"""
+    """
+    debug_message("StatusBarButton toggleRuler()")
+
+
+def toggleOrtho(on):
+    r"""
+    """
+    debug_message("StatusBarButton toggleOrtho()")
+
+
+def togglePolar(on):
+    debug_message("StatusBarButton togglePolar()")
+
+
+def toggleQSnap(on):
+    debug_message("StatusBarButton toggleQSnap()")
+
+
+def toggleQTrack(on):
+    debug_message("StatusBarButton toggleQTrack()")
+
+
+def toggleLwt(on):
+    debug_message("StatusBarButton toggleLwt()")
+
+
+def enableLwt():
+    debug_message("StatusBarButton enableLwt()")
+
+
+def disableLwt():
+    debug_message("StatusBarButton disableLwt()")
+
+
+def enableReal():
+    debug_message("StatusBarButton enableReal()")
+
+
+def disableReal():
+    debug_message("StatusBarButton disableReal()")
+
 action_map = {
     "donothing": do_nothing,
     "new": new_file,
@@ -507,7 +838,6 @@ action_map = {
         "function": save_as_file
         "statustip": "&Print",
         "tooltip": "Print the design.",
-        "function": main_print
         "statustip": "&Details",
         "tooltip": "Details of the current design.",
         "function": design_details
