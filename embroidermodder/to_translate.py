@@ -23,189 +23,42 @@ import libembroidery
 from .data import *
 from .config import *
 
-"""
-#
-TODO: ACTION_spellcheck 
-TODO: ACTION_quickselect 
-*/
+todo_actions = [
+   "ACTION_spellcheck",
+   "ACTION_quickselect"
+]
 
-DOLPHIN_NUM_POINTS                 0
-DOLPHIN_XSCALE                     1
-DOLPHIN_YSCALE                     2
+dolphin_modes = [
+    "NUM_POINTS",
+    "XSCALE",
+    "YSCALE"
+]
 
-ELLIPSE_MAJORDIAMETER_MINORRADIUS  0
-ELLIPSE_MAJORRADIUS_MINORRADIUS    1
-ELLIPSE_ROTATION                   2
+ellipse_modes = [
+    "MAJORDIAMETER_MINORRADIUS",
+    "MAJORRADIUS_MINORRADIUS",
+    "ROTATION"
+]
 
-POLYGON_NUM_SIDES                  0
-POLYGON_CENTER_PT                  1
-POLYGON_POLYTYPE                   2
-POLYGON_INSCRIBE                   3
-POLYGON_CIRCUMSCRIBE               4
-POLYGON_DISTANCE                   5
-POLYGON_SIDE_LEN                   6
+polygon_modes = [
+    "NUM_SIDES",
+    "CENTER_PT",
+    "POLYTYPE",
+    "INSCRIBE",
+    "CIRCUMSCRIBE",
+    "DISTANCE",
+    "SIDE_LEN"
+]
 
 TREBLE_CLEF_MODE_NUM_POINTS        0
 TREBLE_CLEF_MODE_XSCALE            1
 TREBLE_CLEF_MODE_YSCALE            2
 
-
-typedef struct Text_Properties 
-    float size
-    float angle
-    int bold
-    int italic
-    int underline
-    int overline
-    int strikeout
-    int backward
-    int upsidedown
-} text_properties
-
-
-typedef struct circle_args_ 
-    float x1
-    float y1
-    float x2
-    float y2
-    float x3
-    float y3
-    float rad
-    float dia
-    float cx
-    float cy
-    int mode
-} circle_args
-
-typedef struct dolphin_args_ 
-    int numPoints
-    float cx
-    float cy
-    float sx
-    float sy
-    int mode
-} dolphin_args
-
-typedef struct ellipse_args_ 
-    float x1
-    float y1
-    float x2
-    float y2
-    float x3
-    float y3
-    float cx
-    float cy
-    float width
-    float height
-    float rot
-    int mode
-} ellipse_args
-
-typedef struct user_quad__ 
-    int flag
-    float left
-    float right
-    float top
-    float bottom
-    float red
-    float green
-    float blue
-} user_quad_
-
-typedef struct treble_clef_ 
-    int num_points
-    double cx
-    double cy
-    double sx
-    double sy
-    int mode
-} treble_clef
-
-# C Data for embroidermodder
-
-extern int *toolbars[], *menus = ""
-
-extern action action_list = ""
-
-extern int undo_history_length, undo_history_position
-actions_strings[], *tips[], *toolbar_label[], *folders[],
-    *menu_label[], *settings_tab_label[], *status_bar_label[], *obj_names[],
-    *symbol_list[], * _appName_, * _appVer_
-extern char undo_history[1000][100]
-extern int exitApp
-extern settings_wrapper settings, preview, dialog, accept_
-origin_string = ""
-
-extern widget *root
-extern int debug_mode
-
-# C functions for embroidermodder
-
-def to_lower(char *, char *)
-def usage()
-def version()
-def debug_message(format, ...)
-def app_dir(char *string, int folder)
-int file_exists(char *fname)
-int new_main(int argc, char *argv[])
-double radians(double)
-double degrees(double)
-double sgn(double x)
-double theta(double x)
-def key_handler(int c, int x, int y)
-# void render_quadlist(quad *qlist); */
-def menu___(int key)
-def display()
-char *translate(char *a)
-
-def comboBoxScrollBarWidgetCurrentIndexChanged(int)
-def checkBoxTipOfTheDayStateChanged(int)
-def checkBoxUseOpenGLStateChanged(int)
-def checkBoxRenderHintAAStateChanged(int)
-def checkBoxRenderHintTextAAStateChanged(int)
-def checkBoxRenderHintSmoothPixStateChanged(int)
-def checkBoxRenderHintHighAAStateChanged(int)
-def checkBoxRenderHintNonCosmeticStateChanged(int)
-def spinBoxZoomScaleInValueChanged(double)
-def spinBoxZoomScaleOutValueChanged(double)
-def checkBoxDisableBGStateChanged(int)
-def spinBoxGridCenterXValueChanged(double)
-def spinBoxGridCenterYValueChanged(double)
-def spinBoxGridSizeXValueChanged(double)
-def spinBoxGridSizeYValueChanged(double)
-def spinBoxGridSpacingXValueChanged(double)
-def spinBoxGridSpacingYValueChanged(double)
-def spinBoxGridSizeRadiusValueChanged(double)
-def spinBoxGridSpacingRadiusValueChanged(double)
-def spinBoxGridSpacingAngleValueChanged(double)
-def checkBoxRulerShowOnLoadStateChanged(int)
-def checkBoxQSnapEndPointStateChanged(int)
-def checkBoxQSnapMidPointStateChanged(int)
-def checkBoxQSnapCenterStateChanged(int)
-def checkBoxQSnapNodeStateChanged(int)
-def checkBoxQSnapQuadrantStateChanged(int)
-def checkBoxQSnapIntersectionStateChanged(int)
-def checkBoxQSnapExtensionStateChanged(int)
-def checkBoxQSnapInsertionStateChanged(int)
-def checkBoxQSnapPerpendicularStateChanged(int)
-def checkBoxQSnapTangentStateChanged(int)
-def checkBoxQSnapNearestStateChanged(int)
-def checkBoxQSnapApparentStateChanged(int)
-def checkBoxQSnapParallelStateChanged(int)
-def spinBoxRecentMaxFilesValueChanged(int)
-def spinBoxTrimDstNumJumpsValueChanged(int)
-def checkBoxGridShowOnLoadStateChanged(int)
-def checkBoxGridShowOriginStateChanged(int)
-def checkBoxSelectionModePickFirstStateChanged(int)
-def checkBoxSelectionModePickAddStateChanged(int)
-def checkBoxSelectionModePickDragStateChanged(int)
-def sliderSelectionGripSizeValueChanged(int)
-def sliderSelectionPickBoxSizeValueChanged(int)
-def spinBoxRulerPixelSizeValueChanged(double)
-
-/* This is similar to using an svg path, we can blend these systems
- * later. */
-QPixmap *draw_pixmap(description):
+def draw_pixmap(description):
+    r"""
+    This is similar to using an svg path, we can blend these systems
+    later.
+    """
     char *ptr
     int int_buffer[4]
     QPixmap *icon
@@ -223,11 +76,11 @@ QPixmap *draw_pixmap(description):
             get_n_ints(ptr+5, int_buffer, 4)
             painter->fillRect(int_buffer[0], int_buffer[1],
                 int_buffer[2], int_buffer[3], Qt::SolidPattern); 
-        }
-    }
+
     return icon
 
-QIcon loadIcon(*icon):
+
+def loadIcon(*icon):
     /* so we can experiment with different icon generation methods */
     if icon[0][0] == 'C':
         return QIcon(*draw_pixmap(icon[0]+2))
@@ -235,52 +88,43 @@ QIcon loadIcon(*icon):
     return QIcon(QPixmap(icon))
 
 
-def add_to_path(QPainterPath *path, command, float pos[2], float scale[2]):
-    int j
+def add_to_path(path, command, pos, scale):
     float out[10]
-    for (j=0; j<strlen(command); j++) {
-        switch (command[j]) {
-        case 'M':
+    for j in range(len(command)):
+        if command[j] == "M":
             get_n_floats(command+j+2, out, 2)
             path->moveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1])
-            break
-        case 'L':
+        elif command[j] == "L":
             get_n_floats(command+j+2, out, 2)
             path->lineTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1])
-            break
-        case 'A':
+        elif command[j] == "A":
             get_n_floats(command+j+2, out, 6)
             path->arcTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
                         out[2], out[3], out[4], out[5])
-            break
-        case 'a':
+        elif command[j] == "a":
             get_n_floats(command+j+2, out, 5)
             path->arcMoveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
                         out[2]*scale[0], out[3]*scale[1],
                         out[4])
-            break
-        case 'E':
+        elif command[j] == "E":
             get_n_floats(command+j+2, out, 4)
             path->addEllipse(
                 QPointF(pos[0]+out[0]*scale[0],  pos[1]+out[1]*scale[1]),
                 out[2]*scale[0], out[3]*scale[1])
-            break
-        case 'Z':
+        elif command[j] == "Z":
             path->closeSubpath()
-            break
-        default:
-            break
-        }
-    }
-}
+
 
 def add_list_to_path(QPainterPath *path, commands[], float pos[2], float scale[2]):
     for (int i=0; origin_string[i][0]; i++) {
         add_to_path(path, origin_string[i], pos, scale)
 
 
-/*NOTE: This function should be used to interpret various object types and save them as polylines for stitchOnly formats.*/
-def toPolyline(EmbPattern* pattern, const QPointF& objPos, const QPainterPath& objPath, const QString& layer, const QColor& color, const QString& lineType, const QString& lineWeight):
+def toPolyline(pattern, objPos, objPath, layer, color, lineType, lineWeight):
+    r"""
+    NOTE: This function should be used to interpret various
+    object types and save them as polylines for stitchOnly formats.
+    """
     float startX = objPos.x()
     float startY = objPos.y()
     EmbArray* pointList = embArray_create(EMB_POINT)
@@ -397,36 +241,7 @@ def app_dir(output, folder):
         output += folders[folder] + separator
 
 
-int file_exists(char *fname):
-    struct stat stats
-    return !stat(fname, &stats)
-
-def menu___(int key):
-    switch (key) {
-    default:
-        break
-
-
-def display():
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-
-    if (action_id >= 0) {
-        printf("%d\n", action_id)
-        action_id = -1
-
-    draw_widget(root)
-
-    glutSwapBuffers()
-
-def key_handler(int key, int x, int y):
-    switch (key) {
-    case 27:
-        exit(0)
-    default:
-        break
-
-
-def make_texture(widget *output, char **icon, EmbVector position):
+def make_texture(output, icon, position):
     unsigned char data[128*128*3]
     /* xpm-style drawing routine */
     int a, j, k, npalette, pixel
@@ -484,42 +299,43 @@ def version():
 
 def clearSelection():
 
-}
-
-circle_args circle_init():
-    clearSelection()
-    circle_args args
-    self.mode = circle_mode_1P_RAD
-    self.x1 = MAX_DISTANCE+1.0
-    self.y1 = MAX_DISTANCE+1.0
-    self.x2 = MAX_DISTANCE+1.0
-    self.y2 = MAX_DISTANCE+1.0
-    self.x3 = MAX_DISTANCE+1.0
-    self.y3 = MAX_DISTANCE+1.0
-    /*
-    setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
-    */
-    return args
-
-def mouse_callback(int button, int state, int x, int y):
-    if (button==GLUT_LEFT_BUTTON) {
-        if (state==GLUT_DOWN) {
-            int i
-            float pos_x = x/(0.5*window_width) - 1.0
-            float pos_y = -y/(0.5*window_height) + 1.0
-            mouse_x = x
-            mouse_y = y
-            for (i=0; i<2; i++) {
-                widget *leaf = root->leaves[i]
-                if ((leaf->left < pos_x) && (pos_x < leaf->right))
-                if ((leaf->top < pos_y) && (pos_y < leaf->bottom)) {
-                    action_id = i
-                    break
 
 
-int circle_click(circle_args *args, float x, float y):
-    if (self.mode == self.mode_1P_RAD) {
-        if(isNaN(self.x1)) {
+class Circle():
+    r"""
+    """
+    def __init__(self):
+        " . "
+        clearSelection()
+        self.mode = "1P_RAD"
+        self.x1 = MAX_DISTANCE+1.0
+        self.y1 = MAX_DISTANCE+1.0
+        self.x2 = MAX_DISTANCE+1.0
+        self.y2 = MAX_DISTANCE+1.0
+        self.x3 = MAX_DISTANCE+1.0
+        self.y3 = MAX_DISTANCE+1.0
+        setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
+        return self
+
+    def mouse_callback(self, button, state, x, y):
+        if (button==GLUT_LEFT_BUTTON) {
+            if (state==GLUT_DOWN) {
+                int i
+                float pos_x = x/(0.5*window_width) - 1.0
+                float pos_y = -y/(0.5*window_height) + 1.0
+                mouse_x = x
+                mouse_y = y
+                for (i=0; i<2; i++) {
+                    widget *leaf = root->leaves[i]
+                    if ((leaf->left < pos_x) && (pos_x < leaf->right))
+                    if ((leaf->top < pos_y) && (pos_y < leaf->bottom)) {
+                        action_id = i
+                        break
+
+
+def click(self, x, y):
+    if self.mode == "1P_RAD":
+        if isNaN(self.x1):
             self.x1 = x
             self.y1 = y
             self.cx = x
@@ -529,29 +345,25 @@ int circle_click(circle_args *args, float x, float y):
             setRubberPoint("CIRCLE_CENTER", self.cx, self.cy)
             appendPromptHistory()
             setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
-        }
-        else {
+        else:
             self.x2 = x
             self.y2 = y
             setRubberPoint("CIRCLE_RADIUS", self.x2, self.y2)
             vulcanize()
             appendPromptHistory()
             return
-        }
-    }
-    else if(self.mode == circle_mode_1P_DIA) {
-        if(isNaN(self.x1)) {
+
+    elif self.mode == "1P_DIA":
+        if isNaN(self.x1):
             error("CIRCLE", translate("This should never happen."))
-        }
-        else {
+        else:
             self.x2 = x
             self.y2 = y
             setRubberPoint("CIRCLE_DIAMETER", self.x2, self.y2)
             vulcanize()
             appendPromptHistory()
             return
-        }
-    }
+
     else if(self.mode == self.mode_2P) {
         if(isNaN(self.x1)) {
             self.x1 = x
@@ -600,9 +412,8 @@ int circle_click(circle_args *args, float x, float y):
         }
         else {
             error("CIRCLE", translate("This should never happen."))
-        }
-    }
-    else if(self.mode == self.mode_TTR) {
+
+    elif self.mode == self.mode_TTR:
         if (isNaN(self.x1)) {
             self.x1 = x
             self.y1 = y
@@ -660,17 +471,15 @@ int circle_prompt(circle_args args, char *str):
                     setRubberMode("CIRCLE_1P_RAD")
                     setRubberPoint("CIRCLE_CENTER", self.cx, self.cy)
                     setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
-                }
-            }
-        }
-        else {
+
+        else:
             /* TODO: Probably should add additional qsTr calls here. */
             if (!strcmp(str, "D") || !strcmp(str, "DIAMETER")) {
                 self.mode = circle_mode_1P_DIA
                 setRubberMode("CIRCLE_1P_DIA")
                 setPromptPrefix(translate("Specify diameter of circle: "))
             }
-            else {
+            else:
                 float num = Number(str)
                 if (isNaN(num)) {
                     alert(translate("Requires numeric radius, point on circumference, or \"D\"."))
@@ -683,11 +492,8 @@ int circle_prompt(circle_args args, char *str):
                     setRubberPoint("CIRCLE_RADIUS", self.x2, self.y2)
                     vulcanize()
                     return
-                }
-            }
-        }
-    }
-    else if (self.mode == circle_mode_1P_DIA) {
+
+    elif (self.mode == circle_mode_1P_DIA:
         if (isNaN(self.x1)) {
             error("CIRCLE", translate("This should never happen."))
         }
@@ -706,15 +512,10 @@ int circle_prompt(circle_args args, char *str):
                 setRubberPoint("CIRCLE_DIAMETER", self.x2, self.y2)
                 vulcanize()
                 return
-            }
-        }
-        else
-        {
+        else:
             error("CIRCLE", translate("This should never happen."))
-        }
-    }
-    else if(self.mode == self.mode_2P)
-    {
+
+    elif(self.mode == self.mode_2P:
         if(isNaN(self.x1))
         {
             var strList = str.split(",")
@@ -784,17 +585,14 @@ int circle_prompt(circle_args args, char *str):
                 setRubberPoint("CIRCLE_TAN3", self.x3, self.y3)
                 vulcanize()
                 return
-            }
-        }
         else
         {
             error("CIRCLE", translate("This should never happen."))
         }
         
-    }
     else if(self.mode == self.mode_TTR) {
         todo("CIRCLE", "prompt() for TTR")
-    }
+
     return 0
 
 class line():
@@ -870,37 +668,34 @@ int reportDistance():
     setPromptPrefix(translate("Delta X") + " = " + dx.toString() + ", " + translate("Delta Y") + " = " + dy.toString())
     appendPromptHistory()
 
-/* ---------------------------------------------------------------------- */
-
-dolphin_args dolphin_init():
-    dolphin_args args
-    clearSelection()
-    self.numPoints = 512; /*Default //TODO: min:64 max:8192*/
-    self.cx = MAX_DISTANCE+1.0
-    self.cy = MAX_DISTANCE+1.0
-    self.sx = 0.04; /*Default*/
-    self.sy = 0.04; /*Default*/
-    self.mode = DOLPHIN_MODE_NUM_POINTS
-
-
-    addRubber("POLYGON")
-    setRubberMode("POLYGON")
-    updateDolphin(args, self.numPoints, self.sx, self.sy)
-    spareRubber("POLYGON")
-    return args
-#endif
 
 def basis_func(A, B, C, D, E):
     return (A/B)*math.sin(C*t+(D/E))
 
-int dolphin_update(dolphin_args args, int numPts, float xScale, float yScale):
-    int i
+class Dolphin():
+    def __init__(self):
+        clearSelection()
+        self.numPoints = 512
+        # min:64 max:8192
+        self.cx = MAX_DISTANCE+1.0
+        self.cy = MAX_DISTANCE+1.0
+        self.sx = 0.04
+        self.sy = 0.04
+        self.mode = "NUM_POINTS"
 
-    for (i=0; i<=numPts; i++) {
-        float t, xx, yy
-        t = (2*embConstantPi)/numPts*i; 
+        addRubber("POLYGON")
+        setRubberMode("POLYGON")
+        self.updateDolphin(args, self.numPoints, self.sx, self.sy)
+        spareRubber("POLYGON")
+        return self
 
-        xx = basis_func(4, 23, -58, 62, 33)+
+
+    def dolphin_update(self, numPts, xScale, yScale):
+
+        for i in range(numPts+1):
+            t = (2*embConstantPi)/numPts*i; 
+
+            xx = (basis_func(4, 23, -58, 62, 33)+
         8/11*sin(10/9-56*t)+
         17/24*sin(38/35-55*t)+
         30/89*sin(81/23-54*t)+
@@ -958,9 +753,9 @@ int dolphin_update(dolphin_args args, int numPts, float xScale, float yScale):
         25/29*sin(43*t+129/103)-
         7/37*sin(46*t+9/20)-
         17/32*sin(57*t+11/28)-
-        5/16*sin(59*t+32/39)
+        5/16*sin(59*t+32/39))
 
-        yy = 5/11*sin(163/37-59*t)+
+            yy = (5/11*sin(163/37-59*t)+
         7/22*sin(19/41-58*t)+
         30/41*sin(1-57*t)+
         37/29*sin(137/57-56*t)+
@@ -1018,30 +813,23 @@ int dolphin_update(dolphin_args args, int numPts, float xScale, float yScale):
         4/7*sin(49*t+29/23)-
         26/77*sin(50*t+29/27)-
         19/14*sin(53*t+61/48)+
-        34/25*sin(54*t+37/26)
+        34/25*sin(54*t+37/26))
 
-        /*
-        setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale)
-        */
-    }
+            # setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale)
 
-    /*
-    setRubberText("POLYGON_NUM_POINTS", numPts.toString()); */
-    return 0
+        setRubberText("POLYGON_NUM_POINTS", numPts.toString())
+        return 0
 
-#if 0
 
-/* ---------------------------------------------------------------------- */
-
-ellipse_args ellipse_init():
-    ellipse_args args
-    clearSelection()
-    self.mode = ELLIPSE_MAJORDIAMETER_MINORRADIUS
-    self.point1 = {NaN, NaN]
-    self.point2 = {NaN, NaN]
-    self.point3 = {NaN, NaN]
-    setPromptPrefix(translate("Specify first axis start point or [Center]: "))
-    return args
+class Ellipse():
+    def __init__():
+        clearSelection()
+        self.mode = "MAJORDIAMETER_MINORRADIUS"
+        self.point1 = [NaN, NaN]
+        self.point2 = [NaN, NaN]
+        self.point3 = [NaN, NaN]
+        setPromptPrefix(translate("Specify first axis start point or [Center]: "))
+        return args
 
 int ellipse_click(EmbVector point):
     if (self.mode == ELLIPSE_MAJORDIAMETER_MINORRADIUS) {
@@ -1079,9 +867,8 @@ int ellipse_click(EmbVector point):
         }
         else {
             error("ELLIPSE", translate("This should never happen."))
-        }
-    }
-    else if (self.mode == ELLIPSE_MAJORRADIUS_MINORRADIUS) {
+
+    elif self.mode == "MAJORRADIUS_MINORRADIUS":
         if (isNaN(self.x1)) {
             self.x1 = x
             self.y1 = y
@@ -1115,10 +902,9 @@ int ellipse_click(EmbVector point):
             appendPromptHistory()
             return
         }
-        else {
+        else:
             error("ELLIPSE", translate("This should never happen."))
-        }
-    }
+
     else if(self.mode == self.mode_ELLIPSE_ROTATION) {
         if (isNaN(self.x1)) {
             error("ELLIPSE", translate("This should never happen."))
@@ -1132,9 +918,6 @@ int ellipse_click(EmbVector point):
             addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
             appendPromptHistory()
             return
-        }
-    }
-}
 
 int ellipse_prompt(str):
     if(self.mode == self.mode_MAJORDIAMETER_MINORRADIUS)
@@ -1188,17 +971,12 @@ int ellipse_prompt(str):
                 setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
                 setRubberPoint("ELLIPSE_ROT", self.rot, 0)
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-            }
-        }
+
         else if(isNaN(self.x3))
-        {
             if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
-            {
                 self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify rotation: "))
-            }
-            else
-            {
+            else:
                 var strList = str.split(",")
                 if(isNaN(strList[0]) || isNaN(strList[1]))
                 {
@@ -1213,22 +991,14 @@ int ellipse_prompt(str):
                     setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
                     vulcanize()
                     return
-                }
-            }
-        }
-    }
+
     else if(self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
-    {
         if(isNaN(self.x1))
-        {
             var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
+            if(isNaN(strList[0]) || isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify center point: "))
-            }
-            else
-            {
+            else:
                 self.x1 = Number(strList[0])
                 self.y1 = Number(strList[1])
                 self.cx = self.x1
@@ -1238,10 +1008,7 @@ int ellipse_prompt(str):
                 setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
                 setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
                 setPromptPrefix(translate("Specify first axis end point: "))
-            }
-        }
-        else if(isNaN(self.x2))
-        {
+        else if(isNaN(self.x2)):
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
             {
@@ -1284,37 +1051,21 @@ int ellipse_prompt(str):
                     setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
                     vulcanize()
                     return
-                }
-            }
-        }
-    }
-    else if(self.mode == self.mode_ELLIPSE_ROTATION)
-    {
-        if(isNaN(self.x1))
-        {
+
+    else if(self.mode == self.mode_ELLIPSE_ROTATION):
+        if(isNaN(self.x1)):
             error("ELLIPSE", translate("This should never happen."))
-        }
-        else if(isNaN(self.x2))
-        {
+        else if(isNaN(self.x2)):
             error("ELLIPSE", translate("This should never happen."))
-        }
-        else if(isNaN(self.x3))
-        {
+        else if(isNaN(self.x3)):
             if(isNaN(str))
-            {
                 alert(translate("Invalid angle. Input a numeric angle or pick a point."))
                 setPromptPrefix(translate("Specify rotation: "))
-            }
-            else
-            {
+            else:
                 var angle = Number(str)
                 self.height = cos(angle*embConstantPi/180.0)*self.width
                 addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
                 return
-            }
-        }
-    }
-}
 
 --------------------------------------------------------------------------------
 
@@ -4459,7 +4210,6 @@ def checkBoxQSnapApparentStateChanged(int checked):
 
 def checkBoxQSnapParallelStateChanged(int checked):
     dialog.qsnap_parallel = checked
-"""
 
 dialog = {}
 
@@ -4475,7 +4225,6 @@ def checkBoxSelectionModePickDragStateChanged(checked):
 def sliderSelectionGripSizeValueChanged(value):
     dialog["selection_grip_size"] = value
 
-"""
 def sliderSelectionPickBoxSizeValueChanged(value):
     dialog.selection_pickbox_size = value
 
@@ -8470,21 +8219,17 @@ def MainWindow::help():
     /*myProcess->start(program, arguments);*/
 }
 
-/* this wrapper connects the signal to the C-style actuator */
 def MainWindow::actions():
-    int i
+    " this wrapper connects the signal to the C-style actuator "
     char call[100]
     QObject *obj = sender()
-    QString caller = obj->objectName()
-    for (i=0; action_list[i].abbreviation[0]; i++) {
-        if (caller == action_list[i].abbreviation) {
+    caller = obj->objectName()
+    for i in range(len(action_list.keys()):
+        if caller == action_list[i].abbreviation:
             call[0] = (char)i
             call[1] = 0
             actuator(call)
             return
-        }
-    }
-}
 
 def main_undo():
     debug_message("undo()")
@@ -10990,7 +10735,6 @@ def StatusBar::setMouseCoord(x, y):
     /* statusBarMouseCoord->setText(QString().setNum(x, 'E', 4) + ", " + QString().setNum(y, 'E', 4)); */
     /* TODO: use precision from unit settings */
 }
-"""
 
 
 def main_about():
@@ -11043,7 +10787,6 @@ def main_about():
     QApplication::restoreOverrideCursor()
     """
 
-"""
 def dayVision():
     gview = _mainWin->activeView()
     if gview:
@@ -11592,19 +11335,6 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle():
         /* 29 */
         OBJ_TYPE_RECTANGLE, RECT_AREA,
         1, "blank", "Area", LINE_EDIT_DOUBLE, "lineEditRectangleArea"
-    },
-    {
-        /* END */
-        OBJ_TYPE_UNKNOWN, 0,
-        "NULL", 0, "NULL", "NULL", 0, "NULL"
     }
-]
-
-
-    There are 4 regions managed as views, .
-
-    We don't have a seperate window for the pop-ups like the file
-    browser for opening or saving a file. Instead, a view will
-    be created 
-"""
+}
 

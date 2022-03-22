@@ -209,7 +209,7 @@ def textBold():
 
 
 def textStrikeout():
-    settings.text_style.strikeout] = not settings.text_style.strikeout
+    settings.text_style.strikeout = not settings.text_style.strikeout
 
 
 def textUnderline():

@@ -20,6 +20,20 @@ r"""
 
 import libembroidery
 
+
+class View():
+    """
+    There are 4 regions managed as views, .
+
+    We don't have a seperate window for the pop-ups like the file
+    browser for opening or saving a file. Instead, a view will
+    be created 
+    """
+
+    def __init__(self):
+        return self
+
+
 class View : public QGraphicsView:
     Q_OBJECT
 
