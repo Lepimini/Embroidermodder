@@ -7,7 +7,7 @@ r"""
 
     Copyright 2013-2022 The Embroidermodder Team
     Embroidermodder 2 is Open Source Software.
-    See LICENCE for licensing terms.
+    See LICENSE for licensing terms.
 
     ------------------------------------------------------------
 
@@ -16,10 +16,11 @@ r"""
 
     This is a translation of some of the ideas we came up with for other
     attempts.
+"""
 
 import libembroidery
 
-
+"""
 class View():
     There are 4 regions managed as views, .
 

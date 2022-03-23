@@ -11,7 +11,7 @@ setuptools.setup(
     author="The Embroidermodder Team",
     author_email="embroidermodder@gmail.com",
     entry_points={
-        'console_scripts': ['embroidermodder=embroidermodder.__main__:main']
+        'console_scripts': ['embroidermodder=embroidermodder:main']
     },
     packages=setuptools.find_packages(include=['embroidermodder']),
     install_requires=[
@@ -21,7 +21,8 @@ setuptools.setup(
     package_data = {
         'embroidermodder': ['command/*.py', 'icons/*/*.png', 'data/*.json']
     },
-    python_requires=">=3.6",
+    python_requires=">=3.7",
+    test_suite='test',
     options={
         "build_apps": {
             "gui_apps": {

@@ -1,48 +1,29 @@
-#!/usr/bin/env python3
-
-r"""
-    Embroidermodder 2.
-
-    ------------------------------------------------------------
-
-    Copyright 2013-2022 The Embroidermodder Team
-    Embroidermodder 2 is Open Source Software.
-    See LICENCE for licensing terms.
-
-    ------------------------------------------------------------
-
-    If the user has never previously loaded the software on this
-    machine, this sets all the defaults for the settings.
-"""
-
-from libembroidery import *
-
-config = {
+{
     "window_width": 640,
     "window_height": 480,
     "window_x": 100,
     "window_y": 100,
     "general_icon_size": 16,
-    "general_mdi_bg_use_logo": False,
-    "general_mdi_bg_use_texture": False,
-    "general_mdi_bg_use_color": False,
-    "qsnap_endpoint": False,
-    "qsnap_midpoint": False,
-    "qsnap_center": False,
-    "qsnap_node": False,
-    "qsnap_quadrant": False,
-    "qsnap_intersection": False,
-    "qsnap_extension": False,
-    "qsnap_insertion": False,
-    "qsnap_perpendicular": False,
-    "qsnap_tangent": False,
-    "qsnap_nearest": False,
-    "qsnap_apparent": False,
-    "qsnap_parallel": False,
-    "grid_center_on_origin": False,
-    "grid_center": [0.5, 0.5], # EmbVector(0.5, 0.5)
-    "grid_size": [10.0, 10.0], # EmbVector(10.0, 10.0)
-    "grid_spacing": [10.0, 10.0], # EmbVector(10.0, 10.0)
+    "general_mdi_bg_use_logo": 0,
+    "general_mdi_bg_use_texture": 0,
+    "general_mdi_bg_use_color": 0,
+    "qsnap_endpoint": 0,
+    "qsnap_midpoint": 0,
+    "qsnap_center": 0,
+    "qsnap_node": 0,
+    "qsnap_quadrant": 0,
+    "qsnap_intersection": 0,
+    "qsnap_extension": 0,
+    "qsnap_insertion": 0,
+    "qsnap_perpendicular": 0,
+    "qsnap_tangent": 0,
+    "qsnap_nearest": 0,
+    "qsnap_apparent": 0,
+    "qsnap_parallel": 0,
+    "grid_center_on_origin": 0,
+    "grid_center": [0.5, 0.5],
+    "grid_size": [10.0, 10.0],
+    "grid_spacing": [10.0, 10.0],
     "grid_size_radius": 10.0,
     "grid_spacing_radius": "",
     "grid_spacing_angle": "",
@@ -77,18 +58,18 @@ config = {
     "qsnap_enabled": "",
     "qsnap_locator_size": "",
     "qsnap_aperture_size": "",
-    "lwt_show_lwt": False,
-    "lwt_real_render": False,
+    "lwt_show_lwt": 0,
+    "lwt_real_render": 0,
     "lwt_default_lwt": 1.0,
     "selection_mode_pickfirst": "",
     "selection_mode_pickadd": "",
     "selection_mode_pickdrag": "",
     "selection_grip_size": "",
     "selection_pickbox_size": "",
-    "text_style_bold": False,
-    "text_style_italic": False,
-    "text_style_underline": False,
-    "text_style_strikethrough": False,
+    "text_style_bold": 0,
+    "text_style_italic": 0,
+    "text_style_underline": 0,
+    "text_style_strikethrough": 0,
     "rulerPixelSize": "",
     "gripSize": "",
     "pickBoxSize": "",
@@ -104,9 +85,9 @@ config = {
     "panningRealTimeActive": "",
     "panningPointActive": "",
     "panningActive": "",
-    "qSnapActive": False,
-    "qSnapToggle": False,
-    "rulerMetric": True,
+    "qSnapActive": 0,
+    "qSnapToggle": 0,
+    "rulerMetric": 1,
     "general_language": "default",
     "general_icon_theme": "default",
     "general_mdi_bg_logo": "",
@@ -132,4 +113,3 @@ config = {
     "selection_hotgrip_color": "#FFFFFF",
     "text_font": "arial"
 }
-

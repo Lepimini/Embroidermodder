@@ -7,7 +7,7 @@ r"""
 
     Copyright 2013-2022 The Embroidermodder Team
     Embroidermodder 2 is Open Source Software.
-    See LICENCE for licensing terms.
+    See LICENSE for licensing terms.
 
     ------------------------------------------------------------
 
@@ -16,23 +16,9 @@ r"""
 """
 
 import tkinter as tk
-import pkg_resources
-import tempfile
-
+from .icons import load_image
 
 debug_mode = True
-
-def load_image(path):
-    r"""
-    For safe packaging, and to reduce the risk of program
-    crashing errors the resources are loaded via a temporary
-    file.
-    """
-    file_data = pkg_resources.resource_string(__name__, path)
-    file = tempfile.NamedTemporaryFile()
-    file.write(file_data)
-    return tk.PhotoImage(file=file.name)
-
 
 def debug_message(s):
     r"""

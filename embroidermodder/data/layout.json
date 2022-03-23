@@ -1,3 +1,347 @@
 {
-
+    "title": "Embroidermodder 2.0",
+    "width": 640,
+    "height": 480,
+    "MAX_STRING_LENGTH": 500,
+    "menubar": {
+        "order": [
+            "File",
+            "Edit",
+            "View",
+            "Settings",
+            "Window",
+            "Help",
+            "Recent",
+            "Zoom",
+            "Pan"
+        ],
+        "File": {
+            "order": [],
+            "New": "new_file",
+            "Open...": "open_file",
+            "Save...": "save_file",
+            "Save As...": "save_as_file",
+            "Exit": "exit_program"
+        },
+        "Edit": {
+            "order": [],
+            "Cut": "cut_object",
+            "Copy": "copy_object",
+            "Paste": "paste_object"
+        },
+        "View": {
+            "order": []
+        },
+        "Settings": {
+            "order": []
+        },
+        "Window": {
+            "order": []
+        },
+        "Help": {
+            "order": []
+        },
+        "Recent": {
+            "order": []
+        },
+        "Zoom": {
+            "order": []
+        },
+        "Pan": {
+            "order": []
+        }
+    },
+    "toolbar": {
+        "order": [
+            "File",
+            "Edit",
+            "View",
+            "Zoom",
+            "Pan",
+            "Icon",
+            "Help",
+            "Layer",
+            "Text",
+            "Properties"
+        ],
+        "File": {
+            "order": [
+                "New",
+                "Open"
+            ],
+            "New": {
+                "icon": "new",
+                "command": "new_file",
+                "row": 1,
+                "column": 0,
+                "statustip": "&New",
+                "tooltip": "Create a new file."
+            },
+            "Open": {
+                "icon": "open",
+                "command": "open_file",
+                "row": 1,
+                "column": 1,
+                "statustip": "&Open",
+                "tooltip": "Open an existing file."
+            }
+        },
+        "Edit": {
+            "order": []
+        },
+        "View": {
+            "order": []
+        },
+        "Zoom": {
+            "order": []
+        },
+        "Pan": {
+            "order": []
+        },
+        "Icon": {
+            "order": []
+        },
+        "Help": {
+            "order": []
+        },
+        "Layer": {
+            "order": []
+        },
+        "Text": {
+            "order": []
+        },
+        "Properties": {
+            "order": []
+        },
+        "Other": {
+            "order": []
+        
+        }
+    },
+    "symbols": {
+        "zero": "",
+        "one": "",
+        "two": "",
+        "three": "",
+        "four": "",
+        "five": "",
+        "six": "",
+        "seven": "",
+        "eight": "",
+        "nine": "",
+        "minus": "",
+        "apostrophe": "",
+        "quote": ""
+    },
+    "toggles": {
+        "snap": 0,
+        "grid": 0,
+        "ruler": 0,
+        "ortho": 0,
+        "polar": 0,
+        "qsnap": 0,
+        "qtrack": 0,
+        "lwt": 0
+    },
+    "line_edits": {
+        "arc_center_x": "",
+        "arc_center_y": "",
+        "arc_radius": "",
+        "arc_start_angle": "",
+        "arc_end_angle": "",
+        "arc_start_x": "",
+        "arc_start_y": "",
+        "arc_end_x": "",
+        "arc_end_y": "",
+        "arc_area": "",
+        "ARC_LENGTH": "",
+        "ARC_CHORD": "",
+        "ARC_INC_ANGLE": "",
+        "TEXT_SINGLE_CONTENTS": "",
+        "TEXT_SINGLE_HEIGHT": "",
+        "TEXT_SINGLE_ROTATION": "",
+        "TEXT_SINGLE_X": "",
+        "TEXT_SINGLE_Y": "",
+        "CIRCLE_CENTER_X": "",
+        "CIRCLE_CENTER_Y": "",
+        "CIRCLE_RADIUS": "",
+        "CIRCLE_DIAMETER": "",
+        "CIRCLE_AREA": "",
+        "CIRCLE_CIRCUMFERENCE": "",
+        "ELLIPSE_CENTER_X": "",
+        "ELLIPSE_CENTER_Y": "",
+        "ELLIPSE_RADIUS_MAJOR": "",
+        "ELLIPSE_RADIUS_MINOR": "",
+        "ELLIPSE_DIAMETER_MAJOR": "",
+        "ELLIPSE_DIAMETER_MINOR": "",
+        "IMAGE_X": "",
+        "IMAGE_Y": "",
+        "IMAGE_WIDTH": "",
+        "IMAGE_HEIGHT": "",
+        "IMAGE_NAME": "",
+        "IMAGE_PATH": "",
+        "INFINITE_LINE_X1": "",
+        "INFINITE_LINE_Y1": "",
+        "INFINITE_LINE_X2": "",
+        "INFINITE_LINE_Y2": "",
+        "INFINITE_LINE_VECTOR_X": "",
+        "INFINITE_LINE_VECTOR_Y": "",
+        "BLOCK_X": "",
+        "BLOCK_Y": "",
+        "LINE_START_X": "",
+        "LINE_START_Y": "",
+        "LINE_END_X": "",
+        "LINE_END_Y": "",
+        "LINE_DELTA_X": "",
+        "LINE_DELTA_Y": "",
+        "LINE_ANGLE": "",
+        "LINE_LENGTH": "",
+        "POLYGON_CENTER_X": "",
+        "POLYGON_CENTER_Y": "",
+        "POLYGON_RADIUS_VERTEX": "",
+        "POLYGON_RADIUS_SIDE": "",
+        "POLYGON_DIAMETER_VERTEX": "",
+        "POLYGON_DIAMETER_SIDE": "",
+        "POLYGON_INTERIOR_ANGLE": "",
+        "RECT_CORNER_X1": "",
+        "RECT_CORNER_Y1": "",
+        "RECT_CORNER_X2": "",
+        "RECT_CORNER_Y2": "",
+        "RECT_CORNER_X3": "",
+        "RECT_CORNER_Y3": "",
+        "RECT_CORNER_X4": "",
+        "RECT_CORNER_Y4": "",
+        "RECT_HEIGHT": "",
+        "RECT_WIDTH": "",
+        "RECT_AREA": "",
+        "POINT_X": "",
+        "POINT_Y": ""
+    },
+    "shortcuts": {
+        "Ctrl+N": "new_file",
+        "Ctrl+O": "open_file",
+        "Ctrl+S": "save_file",
+        "Ctrl+Shift+S": "save_as_file",
+        "Ctrl+P": "print",
+        "Ctrl+D": "design_details",
+        "Ctrl+Q": "exit_program",
+        "Ctrl+X": "cut_object",
+        "Ctrl+C": "copy_object",
+        "Ctrl+V": "paste_object",
+        "Ctrl+Z": "undo",
+        "Ctrl+Shift+Z": "redo",
+        "F1": "help",
+        "F2": "about"
+    },
+    "tips": [
+        "we need more tips?",
+        "you can change the color of the display through settings?",
+        "you can hide the scrollbars to increase the viewable area through settings?",
+        "you can change the icon size for increased visibility?",
+        "you can toggle the grid on and off by pressing the button in the statusbar?",
+        "the grid size can be changed to match your hoop size through settings?",
+        "the crosshair size is based on a percentage of your screen size? Setting it to 100 may help you visually line things up better.",
+        "you can pan by pressing the middle mouse button and dragging your mouse across the screen?",
+        "you can open and edit multiple designs simultaneously?",
+        "that many embroidery machines support the .dst format?",
+        "that you can zoom in and out using your mouse wheel?",
+        "that you can use circular and isometric grids?",
+        "about our command line format converter?",
+        "that you can use the 'DAY' and 'NIGHT' commands to quickly switch the view colors to commonly used white or black?",
+        "that you can quickly change the background, crosshair and grid colors using the 'RGB' command?"
+    ],
+    "translation_table": {
+         "?": "?"
+    },
+    "folders": [
+        "",
+        "commands",
+        "help",
+        "icons",
+        "images",
+        "samples",
+        "translations"
+    ],
+    "details_label_text": [
+        "Total Stitches:",
+        "Real Stitches:",
+        "Jump Stitches:",
+        "Trim Stitches:",
+        "Total Colors:",
+        "Color Changes:",
+        "Left:",
+        "Top:",
+        "Right:",
+        "Bottom:",
+        "Width:",
+        "Height:"
+    ],
+    "obj_names": [
+        "Unknown",
+        "Base",
+        "Arc",
+        "Block",
+        "Circle",
+        "Aligned Dimension",
+        "Angular Dimension",
+        "Arc Length Dimension",
+        "Diameter Dimension",
+        "Leader Dimension",
+        "Linear Dimension",
+        "Ordinate Dimension",
+        "Radius Dimension",
+        "Ellipse",
+        "Elliptical Arc",
+        "Rubber",
+        "Grid",
+        "Hatch",
+        "Image",
+        "Infinite Line",
+        "Line",
+        "Path",
+        "Point",
+        "Polygon",
+        "Polyline",
+        "Ray",
+        "Rectangle",
+        "Slot",
+        "Spline",
+        "Multi Line Text",
+        "Single Line Text",
+        "Unknown"
+    ],
+    "status_bar_label": [
+        "SNAP",
+        "GRID",
+        "RULER",
+        "ORTHO",
+        "POLAR",
+        "QSNAP",
+        "QTRACK",
+        "LWT"
+    ],
+    "settings_tabs": [
+        "General",
+        "Files/Path",
+        "Display",
+        "Open/Save",
+        "Printing",
+        "Snap",
+        "Grid/Ruler",
+        "Ortho/Polar",
+        "QuickSnap",
+        "QuickTrack",
+        "LineWeight",
+        "Selection"
+    ],
+    "origin_string": [
+        "M 0.0 0.5",
+        "A -0.5 -0.5 1.0 1.0 90.0 360.0",
+        "A -0.5 -0.5 1.0 1.0 90.0 -360.0",
+        "L 0.0 -0.5",
+        "A -0.5 -0.5 1.0 1.0 270.0 90.0",
+        "L -0.5 0.0",
+        "A -0.5 -0.5 1.0 1.0 180.0 -90.0",
+        "Z"
+    ]
 }

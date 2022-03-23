@@ -16,12 +16,13 @@ r"""
 
     This is a translation of some of the ideas we came up with for other
     attempts.
+"""
 
 import libembroidery
 
-from .data import *
-from .config import *
+from .data import layout, config
 
+"""
 todo_actions = [
    "ACTION_spellcheck",
    "ACTION_quickselect"
@@ -75,14 +76,6 @@ def draw_pixmap(description):
                 int_buffer[2], int_buffer[3], Qt::SolidPattern); 
 
     return icon
-
-
-def loadIcon(*icon):
-    /* so we can experiment with different icon generation methods */
-    if icon[0][0] == 'C':
-        return QIcon(*draw_pixmap(icon[0]+2))
-
-    return QIcon(QPixmap(icon))
 
 
 def add_to_path(path, command, pos, scale):
@@ -1637,15 +1630,14 @@ def prompt(str):
                 vulcanize()
                 return
 
-    elif(self.mode == self.mode_CIRCUMSCRIBE):
-        if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
-        {
+    elif self.mode == "CIRCUMSCRIBE":
+        if str == "D" or str == "DISTANCE":
+            # TODO: Probably should add additional qsTr calls here.
             self.mode = self.mode_DISTANCE
             setPromptPrefix(translate("Specify distance: "))
-        }
         else:
             var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
+            if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Point or option keyword required."))
                 setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
@@ -1706,7 +1698,6 @@ int click(x, y):
         setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
         appendPromptHistory()
         setPromptPrefix(translate("Specify next point or [Undo]: "))
-    }
     else:
         self.num += 1
         setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
@@ -2419,19 +2410,16 @@ int click(x, y):
                 setRubberPoint("LINE_START", self.baseX, self.baseY)
                 previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                 setPromptPrefix(translate("Specify new length: "))
-            }
-        }
+
         elif(isNaN(self.factorNew))
-        {
+
             self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
             if(self.factorNew <= 0.0)
             {
                 self.factorNew = MAX_DISTANCE+1.0
                 alert(translate("Value must be positive and nonzero."))
                 setPromptPrefix(translate("Specify new length: "))
-            }
-            else
-            {
+            else:
                 appendPromptHistory()
                 scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
                 previewOff()
