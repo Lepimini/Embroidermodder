@@ -42,10 +42,12 @@ def translate(message):
             return translation_table[message][lang]
     return message
 
-root = tk.Tk()
-root.title(layout["title"])
-root.minsize(layout["width"], layout["height"])
-build_menubar(root, layout["menubar"])
-build_buttongrid(root, layout["toolbar"])
-root.mainloop()
+def main():
+    root = tk.Tk()
+    root.title(layout["title"])
+    root.minsize(layout["width"], layout["height"])
+    build_menubar(root, layout["menubar"])
+    build_buttongrid(root, layout["toolbar"])
+    root.mainloop()
 
+main()

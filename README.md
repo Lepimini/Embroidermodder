@@ -26,7 +26,7 @@ To see what we're focussing on at the moment check this table.
 | Summer Solstice (21st of June) 2022 | Embroidermodder 2 is officially released. |
 | July 2022 | News and Documentation work for Embroidermodder 2 |
 
-Current PyLint score: -12.20/10.
+Current PyLint score: -4.68/10.
 
 ## Install
 
@@ -53,24 +53,61 @@ so development of the Desktop version will help us make both.
 
 ## Build
 
-To run the development version without building just use
+To run the development version just use
 
-    python3 -m embroidermodder
+    python3 setup.py install
 
 or on Windows
 
-    py -m embroidermodder
+    py setup.py install
 
-which will prioritise the local folder over the system one.
+before using the command line boot
 
-To install the development version over your current version we recommend
+    embroidermodder
 
-    python3 -m build
-    python3 -m pip install dist/*.whl --force-reinstall
+If you are on a shared computer, like a university or library machine
+with a login, then remember to use the user-only install:
+
+    python3 setup.py install --user
+
+or on Windows
+
+    py setup.py install --user
 
 This may help if you are running tests that require the `embroidermodder`
 command to be in your system `PATH` or you just want to use the
 latest version before it comes out for some particular feature.
+
+## Testing
+
+We're going to implement testing as soon as possible, for now the
+only testing is the `embroider` test suite on the underlying C code.
+
+## Ideas
+
+Some of these were issues, but have been moved here to keep the
+Issues tab tidy.
+
+### Kivy
+
+Once the tkinter interface is up and running we can
+experiment with different frontends to improve the look
+of the application. For example, the MIT licensed KIVY
+would allow us to replace the mobile development in
+Swift and Java with all Python development:
+
+https://kivy.org/#home
+
+### Data/Code Seperation
+
+We can move the data into JSON files and then load
+them using the same system we use for icons.
+
+### SVG Icons
+
+To make the images easier to alter and restyle we could
+switch to svg icons. There's some code in the git history
+to help with this.
 
 ## Documentation
 

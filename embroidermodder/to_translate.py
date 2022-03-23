@@ -16,7 +16,6 @@ r"""
 
     This is a translation of some of the ideas we came up with for other
     attempts.
-"""
 
 import libembroidery
 
@@ -55,10 +54,8 @@ TREBLE_CLEF_MODE_XSCALE            1
 TREBLE_CLEF_MODE_YSCALE            2
 
 def draw_pixmap(description):
-    r"""
     This is similar to using an svg path, we can blend these systems
     later.
-    """
     char *ptr
     int int_buffer[4]
     QPixmap *icon
@@ -121,10 +118,10 @@ def add_list_to_path(QPainterPath *path, commands[], float pos[2], float scale[2
 
 
 def toPolyline(pattern, objPos, objPath, layer, color, lineType, lineWeight):
-    r"""
+
     NOTE: This function should be used to interpret various
     object types and save them as polylines for stitchOnly formats.
-    """
+
     float startX = objPos.x()
     float startY = objPos.y()
     EmbArray* pointList = embArray_create(EMB_POINT)
@@ -302,8 +299,6 @@ def clearSelection():
 
 
 class Circle():
-    r"""
-    """
     def __init__(self):
         " . "
         clearSelection()
@@ -10702,7 +10697,6 @@ def StatusBar::setMouseCoord(x, y):
 def main_about():
     debug_message("main_about()")
 
-    """
     /*TODO: QTabWidget for about dialog*/
     /*QApplication::setOverrideCursor(Qt::ArrowCursor)
     debug_message("about()")
@@ -10747,7 +10741,6 @@ def main_about():
     dialog.setLayout(&layout)
     dialog.exec()
     QApplication::restoreOverrideCursor()
-    """
 
 
 def actuator(call):
@@ -11283,4 +11276,5 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle():
         1, "blank", "Area", LINE_EDIT_DOUBLE, "lineEditRectangleArea"
     }
 }
+"""
 

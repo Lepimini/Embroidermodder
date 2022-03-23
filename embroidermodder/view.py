@@ -16,19 +16,16 @@ r"""
 
     This is a translation of some of the ideas we came up with for other
     attempts.
-"""
 
 import libembroidery
 
 
 class View():
-    """
     There are 4 regions managed as views, .
 
     We don't have a seperate window for the pop-ups like the file
     browser for opening or saving a file. Instead, a view will
     be created 
-    """
 
     def __init__(self):
         return self
@@ -2016,3 +2013,4 @@ def View::setBackgroundColor(unsigned int color):
 def View::setSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha):
     selectBox->setColors(QColor(colorL), QColor(fillL), QColor(colorR), QColor(fillR), alpha)
 
+"""

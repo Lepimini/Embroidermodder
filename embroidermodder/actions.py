@@ -16,13 +16,28 @@ r"""
 """
 
 import tkinter as tk
+import pkg_resources
+import tempfile
+
 
 debug_mode = True
+
+def load_image(path):
+    r"""
+    For safe packaging, and to reduce the risk of program
+    crashing errors the resources are loaded via a temporary
+    file.
+    """
+    file_data = pkg_resources.resource_string(__name__, path)
+    file = tempfile.NamedTemporaryFile()
+    file.write(file_data)
+    return tk.PhotoImage(file=file.name)
+
 
 def debug_message(s):
     r"""
     Guards against debug messages coming up during normal operation.
-    
+
     Just change debug_mode to True to activate it. We could have a toggle
     in the program to turn it on during operation for when something starts
     acting weird.
@@ -841,6 +856,11 @@ def build_buttongrid(root, button_layout):
             debug_message(button)
             B = button_layout[toolbar][button]
             cmd = globals()[B["command"]]
-            button_ = tk.Button(root, text=button, command=cmd)
+            button_ = tk.Button(
+                root,
+                text=button,
+                command=cmd,
+                image=load_image('icons/default/dolphin.png')
+            )
             button_.grid(row=B["row"], column=B["column"])
 

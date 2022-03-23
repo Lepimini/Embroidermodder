@@ -16,7 +16,6 @@ r"""
 
     This is a translation of some of the ideas we came up with for other
     attempts.
-"""
 
 import libembroidery
 
@@ -3032,3 +3031,4 @@ QPainterPath CircleObject::objectSavePath() const:
     trans.scale(s,s)
     return trans.map(path)
 
+"""
