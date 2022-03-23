@@ -25,7 +25,7 @@ r"""
 """
 
 import libembroidery
-from .data import layout, config
+from .data import layout, settings
 from .actions import build_buttongrid, build_menubar
 import tkinter as tk
 

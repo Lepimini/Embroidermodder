@@ -175,28 +175,15 @@ Embroidermodder 2 has, in its design, the following features to help:
 
 Note that most of these features will be released with version 2.1, which is planned for around early 2023.
 
-### FreeGLUT 3
-
-We're working on an FreeGLUT 3 version of the library that will require no
-non-standard dependencies not included in the source.
-
-On systems where you use `--build-dependencies` the system will
-build and install the libraries if they are not already present
-from the versions in `extern/`. This way a copy of
-the Embroidermodder 2 source code
-on a machine with a build environment can be built without a connection
-to the internet access and insures against FreeGLUT 3 going out of support.
-
 ### Current work
 
-1. Converting C++ to C throughout.
-    1. All comments to multiline `/* C-style comments */`.
-    2. Replace variables with variables of C or libembroidery type.
+1. Converting C++ to Python throughout.
+    1. All comments to docstrings or `#`-style.
+    2. Replace variables with structs or libembroidery type.
        (QColor to EmbColor, QPointF to EmbVector)
     3. Reduce the reliance on Qt functions while allowing boot of the
        program.
-    4. Turn settings into array type, to aid read/write in loops.
-    5. QCheckBoxes into an array to simplify `Settings_Dialog::createTabOpenSave`.
+    4. Find TK equaivalents to existing Qt code
 2. OpenGL Rendering
     1. "Real" rendering to see what the embroidery looks like.
     2. Icons and toolbars.
@@ -235,6 +222,8 @@ to the internet access and insures against FreeGLUT 3 going out of support.
 28. Layer manager and Layer switcher dock widget
 29. test that all formats read data in correct scale (format details should match other programs).
 30. Custom filter bug -- doesn't save changes in some cases.
+31. Get flake8, pylint and tests to pass.
+32. Sphinx documentation from docstrings or similar.
 
 For more details read on into the Design section.
 
@@ -308,15 +297,6 @@ So I've had a few pieces of web infrastructure fail me recently and
 I think it's worth noting. An issue that affects us is an issue that
 can effect people who use our software.
 
-#### googletests
-
-In development we attempted using googletests. Googletests require a web
-connection to update and they update on each compilation.
-
-gtests are non-essential, testing is for developers not users so we can choose
-our own framework. I think the in-built testing for libembroidery was good and
-I want to re-instate it.
-
 #### Qt and dependencies
 
 Downloading and installing Qt has been a pain for some users
@@ -351,6 +331,8 @@ per project.
 
 OpenGL rendering within the application. This will allow for  Realistic Visualization - Bump Mapping/OpenGL/Gradients?
 
+This should backend to a C renderer or something.
+
 ### Configuration Data Ideas
 
 Ok this is changing slightly. embroidermodder should boot from the command line
@@ -363,11 +345,13 @@ but it won't rely on its existence to boot: this is what we currently do with `s
 
 ### Distribution
 
-* Mac Bundle
+When we release the new pip wheel we should also package:
+
 * `.tar.gz` and `.zip` source archive.
-* NSIS installer for Windows
 * Debian package
 * RPM package
+
+Only do this once per minor version number.
 
 ### Scripting Overhaul
 
@@ -388,12 +372,17 @@ Originally Embroidermodder had a terminal widget, this is why we removed it.
 >>
 >> I like the idea of scripting just so people that know how to code could write their own designs without needing to fully build the app. Scripting would be a very advanced feature that most users would be confused by. Libembroidery would be a good fit for advanced features.
 
+Now we are using Python (again, sort of) this would be a lot more natural,
+perhaps we could boot the software without blocking the shell so they can
+interact? TODO: Screenshot a working draft to demonstrate.
+
 ## Perennial Jobs
 
 1. Check for memory leaks
-2. Clear compiler warnings on `-Wall -ansi -pedantic` for C.
-3. Get Embroidermodder onto the current version of libembroidery.
-
+2. Write new tests for new code.
+3. Get Embroidermodder onto the current version of libembroidery-python.
+4. PEP8 compliance.
+5. Better documentation with more photos/screencaps.
 
 ### Developing for Android
 

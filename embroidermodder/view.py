@@ -20,18 +20,19 @@ r"""
 
 import libembroidery
 
-"""
 class View():
+    """
     There are 4 regions managed as views, .
 
     We don't have a seperate window for the pop-ups like the file
     browser for opening or saving a file. Instead, a view will
     be created 
+    """
 
     def __init__(self):
         return self
 
-
+"""
 class View : public QGraphicsView:
     Q_OBJECT
 
@@ -1919,17 +1920,12 @@ QList<QGraphicsItem*> View::createObjectList(QList<QGraphicsItem*> list):
             {
                 TextSingleObject* copyTextObj = new TextSingleObject(textObj)
                 copyList.append(copyTextObj)
-            }
-        }
-    }
 
     return copyList
 
 def View::repeatAction():
-}
 
 def View::moveAction():
-}
 
 def View::moveSelected(float dx, float dy):
     QList<QGraphicsItem*> itemList = gscene->selectedItems()
@@ -1966,13 +1962,10 @@ def View::rotateSelected(float x, float y, float rot):
 def View::mirrorSelected(float x1, float y1, float x2, float y2):
     QList<QGraphicsItem*> itemList = gscene->selectedItems()
     int numSelected = itemList.size()
-    foreach(QGraphicsItem* item, itemList)
-    {
+    foreach(QGraphicsItem* item, itemList):
         BaseObject* base = static_cast<BaseObject*>(item)
-        if(base)
-        {
-        }
-    }
+        if base:
+
 
     /*Always clear the selection after a mirror*/
     gscene->clearSelection()
@@ -2011,7 +2004,8 @@ def View::setBackgroundColor(unsigned int color):
     gscene->setProperty("VIEW_COLOR_BACKGROUND", color)
     if(gscene) gscene->update()
 
-def View::setSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha):
-    selectBox->setColors(QColor(colorL), QColor(fillL), QColor(colorR), QColor(fillR), alpha)
+def View::setSelectBoxColors(colorL, fillL, colorR, fillR, alpha):
+    selectBox->setColors(
+        QColor(colorL), QColor(fillL), QColor(colorR), QColor(fillR), alpha)
 
 """

@@ -1188,3 +1188,202 @@ N_ACTIONS                  =  78
     }
 }
 """
+
+
+#if 0
+    {
+        # 0
+        OBJ_TYPE_ARC, ARC_CENTER_X,
+        0, "blank", "Center X", LINE_EDIT_DOUBLE, "lineEditArcCenterX"
+    },
+    {
+        # 1
+        OBJ_TYPE_ARC, ARC_CENTER_Y,
+        0, "blank", "Center Y", LINE_EDIT_DOUBLE, "lineEditArcCenterY"
+    },
+    {
+        # 2
+        OBJ_TYPE_ARC, ARC_RADIUS,
+        0, "blank", "Radius", LINE_EDIT_DOUBLE, "lineEditArcRadius"
+    },
+    {
+        # 3
+        OBJ_TYPE_ARC, ARC_START_ANGLE,
+        0, "blank", "Start Angle", LINE_EDIT_DOUBLE, "lineEditArcStartAngle"
+    },
+    {
+        # 4
+        OBJ_TYPE_ARC, ARC_END_ANGLE,
+        0, "blank", "End Angle", LINE_EDIT_DOUBLE, "lineEditArcEndAngle"
+    },
+    {
+        # 5
+        OBJ_TYPE_ARC, ARC_START_X,
+        1, "blank", "Start X", LINE_EDIT_DOUBLE, "lineEditArcStartX"
+    },
+    {
+        # 6
+        OBJ_TYPE_ARC, ARC_START_Y,
+        1, "blank", "Start Y", LINE_EDIT_DOUBLE, "lineEditArcStartY"
+    },
+    {
+        # 7
+        OBJ_TYPE_ARC, ARC_END_X,
+        1, "blank", "End X", LINE_EDIT_DOUBLE, "lineEditArcEndX"
+    },
+    {
+        # 8
+        OBJ_TYPE_ARC, ARC_END_Y,
+        1, "blank", "End Y", LINE_EDIT_DOUBLE, "lineEditArcEndY"
+    },
+    {
+        # 9
+        OBJ_TYPE_ARC, ARC_AREA,
+        1, "blank", "Area", LINE_EDIT_DOUBLE, "lineEditArcArea"
+    },
+#        ARC_LENGTH, 1, "blank", "ArcLength")
+    create_lineedit_row(formLayout, ARC_CHORD, 1, "blank", "ArcChord")
+    create_lineedit_row(formLayout, ARC_INC_ANGLE, 1, "blank", "ArcIncludedAngle")
+    ARC_CLOCKWISE, "int", 1, "blank", "Clockwise",
+    {
+        # 9
+        OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_X,
+        0, "blank", "Center X", LINE_EDIT_DOUBLE, "lineEditEllipseCenterX"
+    },
+    {
+        # 10
+        OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_Y,
+        0, "blank", "Center Y", LINE_EDIT_DOUBLE, "lineEditEllipseCenterY"
+    },
+    {
+        # 11
+        OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MAJOR,
+        0, "blank", "Radius Major", LINE_EDIT_DOUBLE, "lineEditEllipseRadiusMajor"
+    },
+    {
+        # 12
+        OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MINOR,
+        0, "blank", "Radius Minor", LINE_EDIT_DOUBLE, "lineEditEllipseRadiusMinor"
+    },
+    {
+        # 13
+        OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MAJOR,
+        0, "blank", "Diameter Major", LINE_EDIT_DOUBLE, "lineEditEllipseDiameterMajor"
+    },
+    {
+        # 14
+        OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MINOR,
+        0, "blank", "Diameter Minor", LINE_EDIT_DOUBLE, "lineEditEllipseDiameterMinor"
+    },
+    {
+        # 15
+        OBJ_TYPE_BLOCK, BLOCK_X,
+        0, "blank", "Position X", LINE_EDIT_DOUBLE, "lineEditBlockX"
+    },
+    {
+        # 16
+        OBJ_TYPE_BLOCK, BLOCK_Y,
+        0, "blank", "Position Y", LINE_EDIT_DOUBLE, "lineEditBlockY"
+    },
+    {
+        # 17
+        OBJ_TYPE_POINT, POINT_X,
+        0, "blank", "Position X", LINE_EDIT_DOUBLE, "lineEditPointX"
+    },
+    {
+        # 18
+        OBJ_TYPE_POINT, POINT_Y,
+        0, "blank", "Position Y", LINE_EDIT_DOUBLE, "lineEditPointY"
+    },
+    {
+        # 19
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_X1,
+        0, "blank", "Corner 1 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner1X"
+    },
+    {
+        # 20
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y1,
+        0, "blank", "Corner 1 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner1Y"
+    },
+    {
+        # 21
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_X2,
+        0, "blank", "Corner 2 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner2X"
+    },
+    {
+        # 22
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y2,
+        0, "blank", "Corner 2 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner2Y"
+    },
+    {
+        # 23
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_X3,
+        0, "blank", "Corner 3 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner3X"
+    },
+    {
+        # 24
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y3,
+        0, "blank", "Corner 3 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner3Y"
+    },
+    {
+        # 25
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_X4,
+        0, "blank", "Corner 4 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner4X"
+    },
+    {
+        # 26
+        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y4,
+        0, "blank", "Corner 4 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner4Y"
+    },
+    {
+        # 27
+        OBJ_TYPE_RECTANGLE, RECT_WIDTH,
+        0, "blank", "Width", LINE_EDIT_DOUBLE, "lineEditRectangleWidth"
+    },
+    {
+        # 28
+        OBJ_TYPE_RECTANGLE, RECT_HEIGHT,
+        0, "blank", "Height", LINE_EDIT_DOUBLE, "lineEditRectangleHeight"
+    },
+    {
+        # 29
+        OBJ_TYPE_RECTANGLE, RECT_AREA,
+        1,
+        "blank", "Area", LINE_EDIT_DOUBLE, "lineEditRectangleArea"
+    }
+}
+
+
+todo_actions = [
+   "ACTION_spellcheck",
+   "ACTION_quickselect"
+]
+
+dolphin_modes = [
+    "NUM_POINTS",
+    "XSCALE",
+    "YSCALE"
+]
+
+ellipse_modes = [
+    "MAJORDIAMETER_MINORRADIUS",
+    "MAJORRADIUS_MINORRADIUS",
+    "ROTATION"
+]
+
+polygon_modes = [
+    "NUM_SIDES",
+    "CENTER_PT",
+    "POLYTYPE",
+    "INSCRIBE",
+    "CIRCUMSCRIBE",
+    "DISTANCE",
+    "SIDE_LEN"
+]
+
+treble_clef_modes = [
+    "NUM_POINTS",
+    "XSCALE",
+    "YSCALE"
+]
+

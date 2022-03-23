@@ -16,7 +16,7 @@ r"""
 """
 
 import tkinter as tk
-from .icons import load_image
+from .data import load_image
 
 debug_mode = True
 

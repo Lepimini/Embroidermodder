@@ -3,13 +3,13 @@
 r"""
     Embroidermodder 2.
 
-    ------------------------------------------------------------
+    -----
 
     Copyright 2013-2022 The Embroidermodder Team
     Embroidermodder 2 is Open Source Software.
-    See LICENCE for licensing terms.
+    See LICENSE for licensing terms.
 
-    ------------------------------------------------------------
+    -----
 
     Another attempt at a graphical user interface that runs on
     lots of machines without a complex build or fragile dependencies.
@@ -18,47 +18,23 @@ r"""
     attempts.
 """
 
+import os
 import libembroidery
 
-from .data import layout, config
+from .data import layout, settings
 
-"""
-todo_actions = [
-   "ACTION_spellcheck",
-   "ACTION_quickselect"
-]
-
-dolphin_modes = [
-    "NUM_POINTS",
-    "XSCALE",
-    "YSCALE"
-]
-
-ellipse_modes = [
-    "MAJORDIAMETER_MINORRADIUS",
-    "MAJORRADIUS_MINORRADIUS",
-    "ROTATION"
-]
-
-polygon_modes = [
-    "NUM_SIDES",
-    "CENTER_PT",
-    "POLYTYPE",
-    "INSCRIBE",
-    "CIRCUMSCRIBE",
-    "DISTANCE",
-    "SIDE_LEN"
-]
-
-TREBLE_CLEF_MODE_NUM_POINTS        0
-TREBLE_CLEF_MODE_XSCALE            1
-TREBLE_CLEF_MODE_YSCALE            2
+preview = settings.copy()
+dialog = settings.copy()
+accept = settings.copy()
+undo_history = []
+undo_history_position = 0
 
 def draw_pixmap(description):
+    """
     This is similar to using an svg path, we can blend these systems
     later.
     char *ptr
-    int int_buffer[4]
+    int_buffer[4]
     QPixmap *icon
     QPainter *painter
     QPen pen
@@ -67,19 +43,21 @@ def draw_pixmap(description):
     painter = new QPainter(icon)
     pen.setWidth(10)
     for (ptr=(char*)description; *ptr; ptr++) {
-        /* Other functions we can use are eraseRect, drawArc etc. https://doc.qt.io/qt-5/qpainter.html */
+        # Other functions we can use are eraseRect, drawArc etc. https://doc.qt.io/qt-5/qpainter.html
         if (strncmp(ptr, "rect", 4)==0) {
             pen.setColor(QColor(QRgb(0x000000)))
             painter->setPen(pen)
             get_n_ints(ptr+5, int_buffer, 4)
             painter->fillRect(int_buffer[0], int_buffer[1],
-                int_buffer[2], int_buffer[3], Qt::SolidPattern); 
+                int_buffer[2], int_buffer[3], Qt::SolidPattern);
 
+    """
+    icon = ""
     return icon
 
-
 def add_to_path(path, command, pos, scale):
-    float out[10]
+    """
+    out[10]
     for j in range(len(command)):
         if command[j] == "M":
             get_n_floats(command+j+2, out, 2)
@@ -103,23 +81,25 @@ def add_to_path(path, command, pos, scale):
                 out[2]*scale[0], out[3]*scale[1])
         elif command[j] == "Z":
             path->closeSubpath()
+    """
+    debug_message("add_to_path()")
 
 
-def add_list_to_path(QPainterPath *path, commands[], float pos[2], float scale[2]):
-    for (int i=0; origin_string[i][0]; i++) {
-        add_to_path(path, origin_string[i], pos, scale)
+def add_list_to_path(path, commands, pos, scale):
+    for line in commands:
+        add_to_path(path, line, pos, scale)
 
 
 def toPolyline(pattern, objPos, objPath, layer, color, lineType, lineWeight):
-
+    r"""
     NOTE: This function should be used to interpret various
     object types and save them as polylines for stitchOnly formats.
-
-    float startX = objPos.x()
-    float startY = objPos.y()
+    """
+    startX = objPos.x()
+    startY = objPos.y()
     EmbArray* pointList = embArray_create(EMB_POINT)
     QPainterPath::Element element
-    for(int i = 0; i < objPath.elementCount(); ++i)
+    for(i = 0; i < objPath.elementCount(); ++i):
     {
         element = objPath.elementAt(i)
         EmbPointObject a
@@ -131,99 +111,33 @@ def toPolyline(pattern, objPos, objPath, layer, color, lineType, lineWeight):
     polyObject = (EmbPolylineObject *) malloc(sizeof(EmbPolylineObject))
     polyObject->pointList = pointList
     polyObject->color = embColor_make(color.red(), color.green(), color.blue())
-    polyObject->lineType = 1; /*TODO: proper lineType*/
+    polyObject->lineType = 1; #TODO: proper lineType
     embPattern_addPolylineObjectAbs(pattern, polyObject)
-#endif
-
-N_TEXTURES = 20
-
-/* FUNCTION DECLARATIONS */
-def clearSelection()
-circle_args circle_init()
-
-def make_texture(widget *w, char** icon, EmbVector position)
-
-widget *make_widget(float width, float height)
-def draw_widget(widget *w)
-def free_widget(widget *w)
-
-char * copy_ini_block(int i, char *data, char *section)
-int find_ini_value(char *key, char *out)
-int get_ini_int(char *key, int default_value)
-float get_ini_float(char *key, float default_value)
-int embClamp(int lower, int x, int upper)
-
-def mouse_callback(int button, int state, int x, int y)
-
-/* DATA SECTION */
-int debug_mode = 1
-GLuint texture[N_TEXTURES]
-int interaction_mode = 0
-int run = 1
-int window_width = 640
-int window_height = 480
-float mouse[2]
-int mouse_x = 0
-int mouse_y = 0
-int action_id = -1
-char undo_history[1000][100]
-int undo_history_length = 0
-int undo_history_position = 0
-settings_wrapper settings, preview, dialog, accept_
-const char* _appName_ = "Embroidermodder"
-const char* _appVer_ = "v2.0 alpha"
-int exitApp = 0
-widget *root
-char assets_dir[1000]
-char settings_fname[1000]
-char settings_data[5000]
-char value_out[1000]
-int settings_data_length
-float aspect = 640.0/480.0
-float ui_scale = 0.1
-char palette_symbols[] = " .+@#$%&*=-;>,')!"
-int ntextures = 0
-char user_string[100]
-int ui_palette[17*3] = {
-    0, 0, 0,
-    0, 0, 0,
-    0, 0, 0,
-    0x3b, 0x3c, 0x34,
-    0x3f, 0x44, 0x3e,
-    0x66, 0x6f, 0x67,
-    0x8f, 0x94, 0x8e,
-    0xc1, 0xbb, 0xbe,
-    0xc3, 0xc0, 0xc4,
-    0xc3, 0xc0, 0xc4,
-    0xc3, 0xc0, 0xc4,
-    0xde, 0xe4, 0xe0,
-    0xde, 0xe4, 0xe0,
-    0xe7, 0xeb, 0xe6,
-    0xe7, 0xeb, 0xe6,
-    0xe7, 0xeb, 0xe6,
-    0xe7, 0xeb, 0xe6,
-]
-
 
 def app_dir(output, folder):
-#if defined(__unix__) || defined(__linux__)
-    char *separator = "/"
+    r"""
+    Constructs the users' folder path for keeping working drafts,
+    any scripts the user writes, etc. in.
 
-    output = getenv("HOME")
+    All data required to run the program is contained in the
+    site_packages folder. However this does not include, say, the
+    samples folder.
+    """
+    separator = os.sep
 
-    /* On MacOS we set a system "HOME" manually if it is not set. */
-    if !output:
-        struct passwd* pwd = getpwuid(getuid())
-        if pwd:
-            output = pwd->pw_dir
-        else:
-            printf("ERROR: failed to set HOME.")
+    output = ''
+    if os.name == 'posix':
+        output = os.getenv("HOME")
 
-#else
-    separator = "\\"
-
-    output = getenv("HOMEDRIVE") + getenv("HOMEPATH")
-#endif
+        # On MacOS we set a system "HOME" manually if it is not set.
+        if strlen(output)==0:
+            pwd = os.getpwuid(os.getuid())
+            if strlen(pwd)>0:
+                output = pwd.pw_dir
+            else:
+                printf("ERROR: failed to set HOME.")
+    else:
+        output = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
 
     output += separator + ".embroidermodder2" + separator
 
@@ -233,13 +147,13 @@ def app_dir(output, folder):
 
 def make_texture(output, icon, position):
     unsigned char data[128*128*3]
-    /* xpm-style drawing routine */
-    int a, j, k, npalette, pixel
+    # xpm-style drawing routine
+    a, j, k, npalette, pixel
     npalette = strlen(palette_symbols)
-    for (a=0; a<128; a++) {
-        for (j=0; j<128; j++) {
-            for (k=0; k<npalette; k++) {
-                if (palette_symbols[k] == icon[1+npalette+a][j]) {
+    for a in range(128):
+        for j in range(128):
+            for k in range(npalette):
+                if palette_symbols[k] == icon[1+npalette+a][j]:
                     break
 
             pixel = 3*(128*(127-a)+j)
@@ -274,7 +188,7 @@ def usage():
   "|_____________________________________________________________________________| "  "\n"
   " " "\n"
   "Usage: embroidermodder [options] files ..."  "\n"
-   /*80CHARS======================================================================MAX*/
+   #80CHARS======================================================================MAX
   "Options:"  "\n"
   "  -d, --debug      Print lots of debugging information." "\n"
   "  -h, --help       Print this message and exit." "\n"
@@ -289,3781 +203,7 @@ def version():
 
 def clearSelection():
 
-
-
-class Circle():
-    def __init__(self):
-        " . "
-        clearSelection()
-        self.mode = "1P_RAD"
-        self.x1 = MAX_DISTANCE+1.0
-        self.y1 = MAX_DISTANCE+1.0
-        self.x2 = MAX_DISTANCE+1.0
-        self.y2 = MAX_DISTANCE+1.0
-        self.x3 = MAX_DISTANCE+1.0
-        self.y3 = MAX_DISTANCE+1.0
-        setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
-        return self
-
-    def mouse_callback(self, button, state, x, y):
-        if (button==GLUT_LEFT_BUTTON) {
-            if (state==GLUT_DOWN) {
-                int i
-                float pos_x = x/(0.5*window_width) - 1.0
-                float pos_y = -y/(0.5*window_height) + 1.0
-                mouse_x = x
-                mouse_y = y
-                for (i=0; i<2; i++) {
-                    widget *leaf = root->leaves[i]
-                    if ((leaf->left < pos_x) && (pos_x < leaf->right))
-                    if ((leaf->top < pos_y) && (pos_y < leaf->bottom)) {
-                        action_id = i
-                        break
-
-
-def click(self, x, y):
-    if self.mode == "1P_RAD":
-        if isNaN(self.x1):
-            self.x1 = x
-            self.y1 = y
-            self.cx = x
-            self.cy = y
-            addRubber("CIRCLE")
-            setRubberMode("CIRCLE_1P_RAD")
-            setRubberPoint("CIRCLE_CENTER", self.cx, self.cy)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
-        else:
-            self.x2 = x
-            self.y2 = y
-            setRubberPoint("CIRCLE_RADIUS", self.x2, self.y2)
-            vulcanize()
-            appendPromptHistory()
-            return
-
-    elif self.mode == "1P_DIA":
-        if isNaN(self.x1):
-            error("CIRCLE", translate("This should never happen."))
-        else:
-            self.x2 = x
-            self.y2 = y
-            setRubberPoint("CIRCLE_DIAMETER", self.x2, self.y2)
-            vulcanize()
-            appendPromptHistory()
-            return
-
-    elif(self.mode == self.mode_2P) {
-        if(isNaN(self.x1)) {
-            self.x1 = x
-            self.y1 = y
-            addRubber("CIRCLE")
-            setRubberMode("CIRCLE_2P")
-            setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify second end point of circle's diameter: "))
-        }
-        elif(isNaN(self.x2)) {
-            self.x2 = x
-            self.y2 = y
-            setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
-            vulcanize()
-            appendPromptHistory()
-            return
-        }
-        else {
-            error("CIRCLE", translate("This should never happen."))
-
-    elif(self.mode == self.mode_3P) {
-        if(isNaN(self.x1)) {
-            self.x1 = x
-            self.y1 = y
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify second point on circle: "))
-        }
-        elif(isNaN(self.x2)) {
-            self.x2 = x
-            self.y2 = y
-            addRubber("CIRCLE")
-            setRubberMode("CIRCLE_3P")
-            setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
-            setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify third point on circle: "))
-        }
-        elif(isNaN(self.x3)) {
-            self.x3 = x
-            self.y3 = y
-            setRubberPoint("CIRCLE_TAN3", self.x3, self.y3)
-            vulcanize()
-            appendPromptHistory()
-            return
-        }
-        else {
-            error("CIRCLE", translate("This should never happen."))
-
-    elif self.mode == self.mode_TTR:
-        if (isNaN(self.x1)) {
-            self.x1 = x
-            self.y1 = y
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify point on object for second tangent of circle: "))
-        }
-        elif (isNaN(self.x2)) {
-            self.x2 = x
-            self.y2 = y
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify radius of circle: "))
-        }
-        elif (isNaN(self.x3)) {
-            self.x3 = x
-            self.y3 = y
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify second point: "))
-        }
-        else {
-            todo("CIRCLE", "click() for TTR")
-        }
-    }
-    return 0
-
-int circle_prompt(circle_args args, char *str):
-    if (self.mode == self.mode_1P_RAD) {
-        if (isNaN(self.x1)) {
-            /* TODO: Probably should add additional qsTr calls here. */
-            if (!strcmp(str, "2P")) {
-                self.mode = self.mode_2P
-                setPromptPrefix(translate("Specify first end point of circle's diameter: "))
-            }
-            /* TODO: Probably should add additional qsTr calls here. */
-            elif (!strcmp(str, "3P")) {
-                self.mode = self.mode_3P
-                setPromptPrefix(translate("Specify first point of circle: "))
-            }
-            /* TODO: Probably should add additional qsTr calls here. */
-            elif (!strcmp(str, "T") || !strcmp(str, "TTR")) {
-                self.mode = self.mode_TTR
-                setPromptPrefix(translate("Specify point on object for first tangent of circle: "))
-            }
-            else {
-                var strList = str.split(",")
-                if (isNaN(strList[0]) || isNaN(strList[1])) {
-                    alert(translate("Point or option keyword required."))
-                    setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
-                }
-                else {
-                    self.x1 = Number(strList[0])
-                    self.y1 = Number(strList[1])
-                    self.cx = self.x1
-                    self.cy = self.y1
-                    addRubber("CIRCLE")
-                    setRubberMode("CIRCLE_1P_RAD")
-                    setRubberPoint("CIRCLE_CENTER", self.cx, self.cy)
-                    setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
-
-        else:
-            /* TODO: Probably should add additional qsTr calls here. */
-            if (!strcmp(str, "D") || !strcmp(str, "DIAMETER")) {
-                self.mode = circle_mode_1P_DIA
-                setRubberMode("CIRCLE_1P_DIA")
-                setPromptPrefix(translate("Specify diameter of circle: "))
-            }
-            else:
-                float num = Number(str)
-                if (isNaN(num)) {
-                    alert(translate("Requires numeric radius, point on circumference, or \"D\"."))
-                    setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
-                }
-                else {
-                    self.rad = num
-                    self.x2 = self.x1 + self.rad
-                    self.y2 = self.y1
-                    setRubberPoint("CIRCLE_RADIUS", self.x2, self.y2)
-                    vulcanize()
-                    return
-
-    elif (self.mode == circle_mode_1P_DIA:
-        if (isNaN(self.x1)) {
-            error("CIRCLE", translate("This should never happen."))
-        }
-        if (isNaN(self.x2)) {
-            var num = Number(str)
-            if(isNaN(num))
-            {
-                alert(translate("Requires numeric distance or second point."))
-                setPromptPrefix(translate("Specify diameter of circle: "))
-            }
-            else
-            {
-                self.dia = num
-                self.x2 = self.x1 + self.dia
-                self.y2 = self.y1
-                setRubberPoint("CIRCLE_DIAMETER", self.x2, self.y2)
-                vulcanize()
-                return
-        else:
-            error("CIRCLE", translate("This should never happen."))
-
-    elif(self.mode == self.mode_2P:
-        if(isNaN(self.x1))
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1])):
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify first end point of circle's diameter: "))
-            else:
-                self.x1 = Number(strList[0])
-                self.y1 = Number(strList[1])
-                addRubber("CIRCLE")
-                setRubberMode("CIRCLE_2P")
-                setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
-                setPromptPrefix(translate("Specify second end point of circle's diameter: "))
-        elif(isNaN(self.x2)):
-            strList = str.split(",")
-            if isNaN(strList[0]) or isNaN(strList[1]):
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify second end point of circle's diameter: "))
-            else:
-                self.x2 = Number(strList[0])
-                self.y2 = Number(strList[1])
-                setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
-                vulcanize()
-                return
-        else:
-            error("CIRCLE", translate("This should never happen."))
-
-    elif(self.mode == self.mode_3P):
-        if(isNaN(self.x1)):
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1])):
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify first point of circle: "))
-            else:
-                self.x1 = Number(strList[0])
-                self.y1 = Number(strList[1])
-                setPromptPrefix(translate("Specify second point of circle: "))
-
-        elif(isNaN(self.x2)):
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify second point of circle: "))
-            }
-            else
-            {
-                self.x2 = Number(strList[0])
-                self.y2 = Number(strList[1])
-                addRubber("CIRCLE")
-                setRubberMode("CIRCLE_3P")
-                setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
-                setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
-                setPromptPrefix(translate("Specify third point of circle: "))
-            }
-        }
-        elif(isNaN(self.x3)) {
-            var strList = str.split(",")
-            if (isNaN(strList[0]) || isNaN(strList[1])) {
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify third point of circle: "))
-            }
-            else {                
-                self.x3 = Number(strList[0])
-                self.y3 = Number(strList[1])
-                setRubberPoint("CIRCLE_TAN3", self.x3, self.y3)
-                vulcanize()
-                return
-        else
-        {
-            error("CIRCLE", translate("This should never happen."))
-        }
-        
-    elif(self.mode == self.mode_TTR) {
-        todo("CIRCLE", "prompt() for TTR")
-
-    return 0
-
-class line():
-    def __init__(self):
-        clearSelection()
-        self.x1 = MAX_DISTANCE+1.0
-        self.y1 = MAX_DISTANCE+1.0
-        self.x2 = MAX_DISTANCE+1.0
-        self.y2 = MAX_DISTANCE+1.0
-        setPromptPrefix(translate("Specify first point: "))
-
-    def click(x, y):
-        if isNaN(self.x1):
-            self.x1 = x
-            self.y1 = y
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.x1, self.y1)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify second point: "))
-        else:
-            appendPromptHistory()
-            self.x2 = x
-            self.y2 = y
-            reportDistance()
-
-int prompt(str):
-    var strList = str.split(",")
-    if (isNaN(self.x1)) {
-        if (isNaN(strList[0]) || isNaN(strList[1])) {
-            alert(translate("Requires numeric distance or two points."))
-            setPromptPrefix(translate("Specify first point: "))
-        }
-        else {
-            self.x1 = Number(strList[0])
-            self.y1 = Number(strList[1])
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.x1, self.y1)
-            setPromptPrefix(translate("Specify second point: "))
-
-    else
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Requires numeric distance or two points."))
-            setPromptPrefix(translate("Specify second point: "))
-        else
-            self.x2 = Number(strList[0])
-            self.y2 = Number(strList[1])
-            reportDistance()
-            return
-
-/* Cartesian Coordinate System reported:
- *
- *               (+)
- *               90
- *               |
- *      (-) 180__|__0 (+)
- *               |
- *              270
- *              (-)
- */
-
-int reportDistance():
-    var dx = self.x2 - self.x1
-    var dy = self.y2 - self.y1
-
-    var dist = calculateDistance(self.x1,self.y1,self.x2, self.y2)
-    var angle = calculateAngle(self.x1,self.y1,self.x2, self.y2)
-
-    setPromptPrefix(translate("Distance") + " = " + dist.toString() + ", " + translate("Angle") + " = " + angle.toString())
-    appendPromptHistory()
-    setPromptPrefix(translate("Delta X") + " = " + dx.toString() + ", " + translate("Delta Y") + " = " + dy.toString())
-    appendPromptHistory()
-
-
-def basis_func(A, B, C, D, E):
-    return (A/B)*math.sin(C*t+(D/E))
-
-class Dolphin():
-    def __init__(self):
-        clearSelection()
-        self.numPoints = 512
-        # min:64 max:8192
-        self.cx = MAX_DISTANCE+1.0
-        self.cy = MAX_DISTANCE+1.0
-        self.sx = 0.04
-        self.sy = 0.04
-        self.mode = "NUM_POINTS"
-
-        addRubber("POLYGON")
-        setRubberMode("POLYGON")
-        self.updateDolphin(args, self.numPoints, self.sx, self.sy)
-        spareRubber("POLYGON")
-        return self
-
-
-    def dolphin_update(self, numPts, xScale, yScale):
-
-        for i in range(numPts+1):
-            t = (2*embConstantPi)/numPts*i; 
-
-            xx = (basis_func(4, 23, -58, 62, 33)+
-        8/11*sin(10/9-56*t)+
-        17/24*sin(38/35-55*t)+
-        30/89*sin(81/23-54*t)+
-        3/17*sin(53/18-53*t)+
-        21/38*sin(29/19-52*t)+
-        11/35*sin(103/40-51*t)+
-        7/16*sin(79/18-50*t)+
-        4/15*sin(270/77-49*t)+
-        19/35*sin(59/27-48*t)+
-        37/43*sin(71/17-47*t)+
-        sin(18/43-45*t)+
-        21/26*sin(37/26-44*t)+
-        27/19*sin(111/32-42*t)+
-        8/39*sin(13/25-41*t)+
-        23/30*sin(27/8-40*t)+
-        23/21*sin(32/35-37*t)+
-        18/37*sin(91/31-36*t)+
-        45/22*sin(29/37-35*t)+
-        56/45*sin(11/8-33*t)+
-        4/7*sin(32/19-32*t)+
-        54/23*sin(74/29-31*t)+
-        28/19*sin(125/33-30*t)+
-        19/9*sin(73/27-29*t)+
-        16/17*sin(737/736-28*t)+
-        52/33*sin(130/29-27*t)+
-        41/23*sin(43/30-25*t)+
-        29/20*sin(67/26-24*t)+
-        64/25*sin(136/29-23*t)+
-        162/37*sin(59/34-21*t)+
-        871/435*sin(199/51-20*t)+
-        61/42*sin(58/17-19*t)+
-        159/25*sin(77/31-17*t)+
-        241/15*sin(94/31-13*t)+
-        259/18*sin(114/91-12*t)+
-        356/57*sin(23/25-11*t)+
-        2283/137*sin(23/25-10*t)+
-        1267/45*sin(139/42-9*t)+
-        613/26*sin(41/23-8*t)+
-        189/16*sin(122/47-6*t)+
-        385/6*sin(151/41-5*t)+
-        2551/38*sin(106/35-4*t)+
-        1997/18*sin(6/5-2*t)+
-        43357/47*sin(81/26-t)-
-        4699/35*sin(3*t+25/31)-
-        1029/34*sin(7*t+20/21)-
-        250/17*sin(14*t+7/40)-
-        140/17*sin(15*t+14/25)-
-        194/29*sin(16*t+29/44)-
-        277/52*sin(18*t+37/53)-
-        94/41*sin(22*t+33/31)-
-        57/28*sin(26*t+44/45)-
-        128/61*sin(34*t+11/14)-
-        111/95*sin(38*t+55/37)-
-        85/71*sin(39*t+4/45)-
-        25/29*sin(43*t+129/103)-
-        7/37*sin(46*t+9/20)-
-        17/32*sin(57*t+11/28)-
-        5/16*sin(59*t+32/39))
-
-            yy = (5/11*sin(163/37-59*t)+
-        7/22*sin(19/41-58*t)+
-        30/41*sin(1-57*t)+
-        37/29*sin(137/57-56*t)+
-        5/7*sin(17/6-55*t)+
-        11/39*sin(46/45-52*t)+
-        25/28*sin(116/83-51*t)+
-        25/34*sin(11/20-47*t)+
-        8/27*sin(81/41-46*t)+
-        44/39*sin(78/37-45*t)+
-        11/25*sin(107/37-44*t)+
-        7/20*sin(7/16-41*t)+
-        30/31*sin(19/5-40*t)+
-        37/27*sin(148/59-39*t)+
-        44/39*sin(17/27-38*t)+
-        13/11*sin(7/11-37*t)+
-        28/33*sin(119/39-36*t)+
-        27/13*sin(244/81-35*t)+
-        13/23*sin(113/27-34*t)+
-        47/38*sin(127/32-33*t)+
-        155/59*sin(173/45-29*t)+
-        105/37*sin(22/43-27*t)+
-        106/27*sin(23/37-26*t)+
-        97/41*sin(53/29-25*t)+
-        83/45*sin(109/31-24*t)+
-        81/31*sin(96/29-23*t)+
-        56/37*sin(29/10-22*t)+
-        44/13*sin(29/19-19*t)+
-        18/5*sin(34/31-18*t)+
-        163/51*sin(75/17-17*t)+
-        152/31*sin(61/18-16*t)+
-        146/19*sin(47/20-15*t)+
-        353/35*sin(55/48-14*t)+
-        355/28*sin(102/25-12*t)+
-        1259/63*sin(71/18-11*t)+
-        17/35*sin(125/52-10*t)+
-        786/23*sin(23/26-6*t)+
-        2470/41*sin(77/30-5*t)+
-        2329/47*sin(47/21-4*t)+
-        2527/33*sin(23/14-3*t)+
-        9931/33*sin(51/35-2*t)-
-        11506/19*sin(t+56/67)-
-        2081/42*sin(7*t+9/28)-
-        537/14*sin(8*t+3/25)-
-        278/29*sin(9*t+23/33)-
-        107/15*sin(13*t+35/26)-
-        56/19*sin(20*t+5/9)-
-        5/9*sin(21*t+1/34)-
-        17/24*sin(28*t+36/23)-
-        21/11*sin(30*t+27/37)-
-        138/83*sin(31*t+1/7)-
-        10/17*sin(32*t+29/48)-
-        31/63*sin(42*t+27/28)-
-        4/27*sin(43*t+29/43)-
-        13/24*sin(48*t+5/21)-
-        4/7*sin(49*t+29/23)-
-        26/77*sin(50*t+29/27)-
-        19/14*sin(53*t+61/48)+
-        34/25*sin(54*t+37/26))
-
-            # setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale)
-
-        setRubberText("POLYGON_NUM_POINTS", numPts.toString())
-        return 0
-
-
-class Ellipse():
-    def __init__():
-        clearSelection()
-        self.mode = "MAJORDIAMETER_MINORRADIUS"
-        self.point1 = [NaN, NaN]
-        self.point2 = [NaN, NaN]
-        self.point3 = [NaN, NaN]
-        setPromptPrefix(translate("Specify first axis start point or [Center]: "))
-        return args
-
-int ellipse_click(EmbVector point):
-    if (self.mode == ELLIPSE_MAJORDIAMETER_MINORRADIUS) {
-        if (isNaN(self.x1)) {
-            self.point1 = point
-            addRubber("ELLIPSE")
-            setRubberMode("ELLIPSE_LINE")
-            setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify first axis end point: "))
-        }
-        elif (isNaN(self.x2)) {
-            self.point2 = point
-            self.cx = (self.x1 + self.x2)/2.0
-            self.cy = (self.y1 + self.y2)/2.0
-            self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)
-            self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
-            setRubberMode("ELLIPSE_MAJORDIAMETER_MINORRADIUS")
-            setRubberPoint("ELLIPSE_AXIS1_POINT1", self.x1, self.y1)
-            setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
-            setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
-            setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
-            setRubberPoint("ELLIPSE_ROT", self.rot, 0)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-        }
-        elif (isNaN(self.x3)) {
-            self.x3 = x
-            self.y3 = y
-            self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
-            setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
-            vulcanize()
-            appendPromptHistory()
-            return
-        }
-        else {
-            error("ELLIPSE", translate("This should never happen."))
-
-    elif self.mode == "MAJORRADIUS_MINORRADIUS":
-        if (isNaN(self.x1)) {
-            self.x1 = x
-            self.y1 = y
-            self.cx = self.x1
-            self.cy = self.y1
-            addRubber("ELLIPSE")
-            setRubberMode("ELLIPSE_LINE")
-            setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
-            setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify first axis end point: "))
-        }
-        elif(isNaN(self.x2)) {
-            self.x2 = x
-            self.y2 = y
-            self.width = calculateDistance(self.cx, self.cy, self.x2, self.y2)*2.0
-            self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
-            setRubberMode("ELLIPSE_MAJORRADIUS_MINORRADIUS")
-            setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
-            setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
-            setRubberPoint("ELLIPSE_ROT", self.rot, 0)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-        }
-        elif(isNaN(self.x3)) {
-            self.x3 = x
-            self.y3 = y
-            self.height = perpendicularDistance(self.x3, self.y3, self.cx, self.cy, self.x2, self.y2)*2.0
-            setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
-            vulcanize()
-            appendPromptHistory()
-            return
-        }
-        else:
-            error("ELLIPSE", translate("This should never happen."))
-
-    elif(self.mode == self.mode_ELLIPSE_ROTATION) {
-        if (isNaN(self.x1)) {
-            error("ELLIPSE", translate("This should never happen."))
-        }
-        elif (isNaN(self.x2)) {
-            error("ELLIPSE", translate("This should never happen."))
-        }
-        elif(isNaN(self.x3)) {
-            var angle = calculateAngle(self.cx, self.cy, x, y)
-            self.height = cos(angle*embConstantPi/180.0)*self.width
-            addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
-            appendPromptHistory()
-            return
-
-int ellipse_prompt(str):
-    if(self.mode == self.mode_MAJORDIAMETER_MINORRADIUS)
-    {
-        if(isNaN(self.x1))
-        {
-            if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
-            {
-                self.mode = self.mode_MAJORRADIUS_MINORRADIUS
-                setPromptPrefix(translate("Specify center point: "))
-            }
-            else
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                {
-                    alert(translate("Point or option keyword required."))
-                    setPromptPrefix(translate("Specify first axis start point or [Center]: "))
-                }
-                else
-                {
-                    self.x1 = Number(strList[0])
-                    self.y1 = Number(strList[1])
-                    addRubber("ELLIPSE")
-                    setRubberMode("ELLIPSE_LINE")
-                    setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
-                    setPromptPrefix(translate("Specify first axis end point: "))
-                }
-            }
-        }
-        elif(isNaN(self.x2))
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify first axis end point: "))
-            }
-            else
-            {
-                self.x2 = Number(strList[0])
-                self.y2 = Number(strList[1])
-                self.cx = (self.x1 + self.x2)/2.0
-                self.cy = (self.y1 + self.y2)/2.0
-                self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)
-                self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
-                setRubberMode("ELLIPSE_MAJORDIAMETER_MINORRADIUS")
-                setRubberPoint("ELLIPSE_AXIS1_POINT1", self.x1, self.y1)
-                setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
-                setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
-                setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
-                setRubberPoint("ELLIPSE_ROT", self.rot, 0)
-                setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-
-        elif(isNaN(self.x3))
-            if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
-                self.mode = self.mode_ELLIPSE_ROTATION
-                setPromptPrefix(translate("Specify rotation: "))
-            else:
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                {
-                    alert(translate("Point or option keyword required."))
-                    setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-                }
-                else
-                {
-                    self.x3 = Number(strList[0])
-                    self.y3 = Number(strList[1])
-                    self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
-                    setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
-                    vulcanize()
-                    return
-
-    elif(self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
-        if(isNaN(self.x1))
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1])):
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify center point: "))
-            else:
-                self.x1 = Number(strList[0])
-                self.y1 = Number(strList[1])
-                self.cx = self.x1
-                self.cy = self.y1
-                addRubber("ELLIPSE")
-                setRubberMode("ELLIPSE_LINE")
-                setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
-                setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
-                setPromptPrefix(translate("Specify first axis end point: "))
-        elif(isNaN(self.x2)):
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify first axis end point: "))
-            }
-            else
-            {
-                self.x2 = Number(strList[0])
-                self.y2 = Number(strList[1])
-                self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)*2.0
-                self.rot = calculateAngle(self.x1, self.y1, self.x2, self.y2)
-                setRubberMode("ELLIPSE_MAJORRADIUS_MINORRADIUS")
-                setRubberPoint("ELLIPSE_AXIS1_POINT2", self.x2, self.y2)
-                setRubberPoint("ELLIPSE_WIDTH", self.width, 0)
-                setRubberPoint("ELLIPSE_ROT", self.rot, 0)
-                setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-            }
-        }
-        elif(isNaN(self.x3))
-        {
-            if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
-            {
-                self.mode = self.mode_ELLIPSE_ROTATION
-                setPromptPrefix(translate("Specify ellipse rotation: "))
-            }
-            else
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                {
-                    alert(translate("Point or option keyword required."))
-                    setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-                }
-                else
-                {
-                    self.x3 = Number(strList[0])
-                    self.y3 = Number(strList[1])
-                    self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
-                    setRubberPoint("ELLIPSE_AXIS2_POINT2", self.x3, self.y3)
-                    vulcanize()
-                    return
-
-    elif(self.mode == self.mode_ELLIPSE_ROTATION):
-        if(isNaN(self.x1)):
-            error("ELLIPSE", translate("This should never happen."))
-        elif(isNaN(self.x2)):
-            error("ELLIPSE", translate("This should never happen."))
-        elif(isNaN(self.x3)):
-            if(isNaN(str))
-                alert(translate("Invalid angle. Input a numeric angle or pick a point."))
-                setPromptPrefix(translate("Specify rotation: "))
-            else:
-                var angle = Number(str)
-                self.height = cos(angle*embConstantPi/180.0)*self.width
-                addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
-                return
-
---------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.numPoints = 512; /*Default //TODO: min:64 max:8192*/
-self.cx
-self.cy
-self.sx = 1.0
-self.sy = 1.0
-self.numPoints
-self.mode
-
-/*enums*/
-self.mode_NUM_POINTS = 0
-self.mode_STYLE      = 1
-self.mode_XSCALE     = 2
-self.mode_YSCALE     = 3
-
-int init():
-    clearSelection()
-    self.cx = MAX_DISTANCE+1.0
-    self.cy = MAX_DISTANCE+1.0
-    self.mode = self.mode_NUM_POINTS
-
-    /*Heart4: 10.0 / 512*/
-    /*Heart5: 1.0 / 512*/
-
-    addRubber("POLYGON")
-    setRubberMode("POLYGON")
-    updateHeart("HEART5", self.numPoints, self.sx, self.sy)
-    spareRubber("POLYGON")
-    return
-
-int updateHeart(style, numPts, xScale, yScale):
-    var i
-    var t
-    var xx = MAX_DISTANCE+1.0
-    var yy = MAX_DISTANCE+1.0
-    var two_pi = 2*embConstantPi
-
-    for(i = 0; i <= numPts; i++)
-    {
-        t = two_pi/numPts*i; 
-
-        if(style == "HEART4")
-        {
-            xx = cos(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2)
-            yy = sin(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2)
-        }
-        elif(style == "HEART5")
-        {
-            xx = 16*pow(sin(t), 3)
-            yy = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t)
-        }
-
-        setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale)
-    }
-
-    setRubberText("POLYGON_NUM_POINTS", numPts.toString())
-
---------------------------------------------------------------------------------
-
-
-/*Command: Line*/
-
-var global = {}; /*Required*/
-self.firstRun
-self.firstX
-self.firstY
-self.prevX
-self.prevY
-
-int init():
-    clearSelection()
-    self.firstRun = true
-    self.firstX = MAX_DISTANCE+1.0
-    self.firstY = MAX_DISTANCE+1.0
-    self.prevX = MAX_DISTANCE+1.0
-    self.prevY = MAX_DISTANCE+1.0
-    setPromptPrefix(translate("Specify first point: "))
-
-int click(x, y):
-    if(self.firstRun)
-    {
-        self.firstRun = false
-        self.firstX = x
-        self.firstY = y
-        self.prevX = x
-        self.prevY = y
-        addRubber("LINE")
-        setRubberMode("LINE")
-        setRubberPoint("LINE_START", self.firstX, self.firstY)
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify next point or [Undo]: "))
-    }
-    else
-    {
-        setRubberPoint("LINE_END", x, y)
-        vulcanize()
-        addRubber("LINE")
-        setRubberMode("LINE")
-        setRubberPoint("LINE_START", x, y)
-        appendPromptHistory()
-        self.prevX = x
-        self.prevY = y
-    }
-}
-
-int prompt(str):
-    if(self.firstRun)
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify first point: "))
-        }
-        else
-        {
-            self.firstRun = false
-            self.firstX = Number(strList[0])
-            self.firstY = Number(strList[1])
-            self.prevX = self.firstX
-            self.prevY = self.firstY
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.firstX, self.firstY)
-            setPromptPrefix(translate("Specify next point or [Undo]: "))
-        }
-    }
-    else
-    {
-        if(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            todo("LINE", "prompt() for UNDO")
-        }
-        else
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Point or option keyword required."))
-                setPromptPrefix(translate("Specify next point or [Undo]: "))
-            }
-            else
-            {
-                var x = Number(strList[0])
-                var y = Number(strList[1])
-                setRubberPoint("LINE_END", x, y)
-                vulcanize()
-                addRubber("LINE")
-                setRubberMode("LINE")
-                setRubberPoint("LINE_START", x, y)
-                self.prevX = x
-                self.prevY = y
-                setPromptPrefix(translate("Specify next point or [Undo]: "))
-
---------------------------------------------------------------------------------
-
-int init():
-    clearSelection()
-    setPromptPrefix(translate("Specify point: "))
-
-int click(x, y):
-    appendPromptHistory()
-    setPromptPrefix("X = " + x.toString() + ", Y = " + y.toString())
-    appendPromptHistory()
-    return
-
-int prompt(str):
-    var strList = str.split(",")
-    if(isNaN(strList[0]) || isNaN(strList[1]))
-    {
-        alert(translate("Invalid point."))
-        setPromptPrefix(translate("Specify point: "))
-    }
-    else
-    {
-        appendPromptHistory()
-        setPromptPrefix("X = " + strList[0].toString() + ", Y = " + strList[1].toString())
-        appendPromptHistory()
-        return
-    }
-}
-
---------------------------------------------------------------------------------
-
-def init():
-    self.firstRun = true
-    self.baseX  = MAX_DISTANCE+1.0
-    self.baseY  = MAX_DISTANCE+1.0
-    self.destX  = MAX_DISTANCE+1.0
-    self.destY  = MAX_DISTANCE+1.0
-    self.deltaX = MAX_DISTANCE+1.0
-    self.deltaY = MAX_DISTANCE+1.0
-
-    if numSelected() <= 0:
-        /*TODO: Prompt to select objects if nothing is preselected*/
-        alert(translate("Preselect objects before invoking the move command."))
-        return
-        messageBox("information", translate("Move Preselect"), translate("Preselect objects before invoking the move command."))
-    else:
-        setPromptPrefix(translate("Specify base point: "))
-
-int click(x, y):
-    if self.firstRun:
-        self.firstRun = false
-        self.baseX = x
-        self.baseY = y
-        addRubber("LINE")
-        setRubberMode("LINE")
-        setRubberPoint("LINE_START", self.baseX, self.baseY)
-        previewOn("SELECTED", "MOVE", self.baseX, self.baseY, 0)
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify destination point: "))
-    else:
-        self.destX = x
-        self.destY = y
-        self.deltaX = self.destX - self.baseX
-        self.deltaY = self.destY - self.baseY
-        moveSelected(self.deltaX, self.deltaY)
-        previewOff()
-        return
-
-
-    def prompt(self, str):
-        if self.firstRun:
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1])):
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify base point: "))
-            else:
-                self.firstRun = false
-                self.baseX = Number(strList[0])
-                self.baseY = Number(strList[1])
-                addRubber("LINE")
-                setRubberMode("LINE")
-                setRubberPoint("LINE_START", self.baseX, self.baseY)
-                previewOn("SELECTED", "MOVE", self.baseX, self.baseY, 0)
-                setPromptPrefix(translate("Specify destination point: "))
-
-        else:
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1])):
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify destination point: "))
-            else:
-                self.destX = Number(strList[0])
-                self.destY = Number(strList[1])
-                self.deltaX = self.destX - self.baseX
-                self.deltaY = self.destY - self.baseY
-                moveSelected(self.deltaX, self.deltaY)
-                previewOff()
-                return
-
---------------------------------------------------------------------------------
-
-/*TODO: The path command is currently broken*/
-
-var global = {}; /*Required*/
-self.firstRun
-self.firstX
-self.firstY
-self.prevX
-self.prevY
-
-int init():
-    clearSelection()
-    self.firstRun = true
-    self.firstX = MAX_DISTANCE+1.0
-    self.firstY = MAX_DISTANCE+1.0
-    self.prevX = MAX_DISTANCE+1.0
-    self.prevY = MAX_DISTANCE+1.0
-    setPromptPrefix(translate("Specify start point: "))
-
-int click(x, y):
-    if(self.firstRun)
-    {
-        self.firstRun = false
-        self.firstX = x
-        self.firstY = y
-        self.prevX = x
-        self.prevY = y
-        addPath(x,y)
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify next point or [Arc/Undo]: "))
-    }
-    else
-    {
-        appendPromptHistory()
-        appendLineToPath(x,y)
-        self.prevX = x
-        self.prevY = y
-    }
-}
-
-int prompt(str):
-    if(str == "A" || str == "ARC")/*TODO: Probably should add additional qsTr calls here.*/
-    {
-        todo("PATH", "prompt() for ARC")
-    }
-    elif(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
-    {
-        todo("PATH", "prompt() for UNDO")
-    }
-    else
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Point or option keyword required."))
-            setPromptPrefix(translate("Specify next point or [Arc/Undo]: "))
-        }
-        else
-        {
-            var x = Number(strList[0])
-            var y = Number(strList[1])
-            if(self.firstRun)
-            {
-                self.firstRun = false
-                self.firstX = x
-                self.firstY = y
-                self.prevX = x
-                self.prevY = y
-                addPath(x,y)
-                setPromptPrefix(translate("Specify next point or [Arc/Undo]: "))
-            else
-                appendLineToPath(x,y)
-                self.prevX = x
-                self.prevY = y
-
-
-int init():
-    clearSelection()
-    reportPlatform()
-    return
-
-int reportPlatform():
-    setPromptPrefix(translate("Platform") + " = " + platformString())
-    appendPromptHistory()
-
-/* ------------------------------------------------------------------------- */
-
-class Point():
-    def __init__(self):
-        " TODO: translate needed here when complete. "
-        clearSelection()
-        self.firstRun = True
-        setPromptPrefix("TODO: Current point settings: PDMODE=?  PDSIZE=?")
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify first point: "))
-        return self
-
-    def click(self, x, y):
-        if self.firstRun:
-            self.firstRun = False
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify next point: "))
-            addPoint(x,y)
-        else:
-            appendPromptHistory()
-            addPoint(x,y)
-
-def prompt(self, str):
-    if self.firstRun:
-        if(str == "M" || str == "MODE") {
-            /*TODO: Probably should add additional qsTr calls here.*/
-            todo("POINT", "prompt() for PDMODE")
-        }
-        elif(str == "S" or str == "SIZE") {
-            /*TODO: Probably should add additional qsTr calls here.*/
-            todo("POINT", "prompt() for PDSIZE")
-        }
-        var strList = str.split(",")
-        if isNaN(strList[0]) or isNaN(strList[1]):
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify first point: "))
-        else:
-            self.firstRun = false
-            x = Number(strList[0])
-            y = Number(strList[1])
-            setPromptPrefix(translate("Specify next point: "))
-            addPoint(x,y)
-
-    else:
-        strList = str.split(",")
-        if isNaN(strList[0]) || isNaN(strList[1]):
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify next point: "))
-        else:
-            var x = Number(strList[0])
-            var y = Number(strList[1])
-            setPromptPrefix(translate("Specify next point: "))
-            addPoint(x,y)
-
-
-
-class Polygon():
-    int __init__(self):
-        clearSelection()
-        self.center.x = MAX_DISTANCE+1.0
-        self.center.y = MAX_DISTANCE+1.0
-        self.sideX1  = MAX_DISTANCE+1.0
-        self.sideY1  = MAX_DISTANCE+1.0
-        self.sideX2  = MAX_DISTANCE+1.0
-        self.sideY2  = MAX_DISTANCE+1.0
-        self.pointIX = MAX_DISTANCE+1.0
-        self.pointIY = MAX_DISTANCE+1.0
-        self.pointCX = MAX_DISTANCE+1.0
-        self.pointCY = MAX_DISTANCE+1.0
-        self.polyType = "Inscribed"
-        self.numSides = 4
-        self.mode = "POLYGON_NUM_SIDES"
-        setPromptPrefix(translate("Enter number of sides") + " {" + self.numSides.toString() + "}: ")
-        return self
-
-int click(self, x, y):
-    if (self.mode == POLYGON_NUM_SIDES) {
-        /*Do nothing, the prompt controls this.*/
-    }
-    elif (self.mode == POLYGON_CENTER_PT) {
-        self.centerX = x
-        self.centerY = y
-        self.mode = self.mode_POLYTYPE
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
-    }
-    elif(self.mode == self.mode_POLYTYPE)
-    {
-        /*Do nothing, the prompt controls this.*/
-    }
-    elif(self.mode == self.mode_INSCRIBE)
-    {
-        self.pointIX = x
-        self.pointIY = y
-        setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
-        vulcanize()
-        appendPromptHistory()
-        return
-    }
-    elif(self.mode == self.mode_CIRCUMSCRIBE)
-    {
-        self.pointCX = x
-        self.pointCY = y
-        setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
-        vulcanize()
-        appendPromptHistory()
-        return
-    }
-    elif(self.mode == self.mode_DISTANCE)
-    {
-        /*Do nothing, the prompt controls this.*/
-    }
-    elif(self.mode == self.mode_SIDE_LEN)
-    {
-        todo("POLYGON", "Sidelength mode")
-    }
-
-def prompt(str):
-    if self.mode == self.mode_NUM_SIDES:
-        if(str == "" && self.numSides >= 3 && self.numSides <= 1024)
-        {
-            setPromptPrefix(translate("Specify center point or [Sidelength]: "))
-            self.mode = self.mode_CENTER_PT
-        }
-        else
-        {
-            var tmp = Number(str)
-            if(isNaN(tmp) || !isInt(tmp) || tmp < 3 || tmp > 1024)
-            {
-                alert(translate("Requires an integer between 3 and 1024."))
-                setPromptPrefix(translate("Enter number of sides") + " {" + self.numSides.toString() + "}: ")
-            }
-            else
-            {
-                self.numSides = tmp
-                setPromptPrefix(translate("Specify center point or [Sidelength]: "))
-                self.mode = self.mode_CENTER_PT
-            }
-        }
-    }
-    elif(self.mode == self.mode_CENTER_PT)
-    {
-        if(str == "S" || str == "SIDELENGTH") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SIDE_LEN
-            setPromptPrefix(translate("Specify start point: "))
-        }
-        else
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Point or option keyword required."))
-                setPromptPrefix(translate("Specify center point or [Sidelength]: "))
-            }
-            else
-            {
-                self.centerX = Number(strList[0])
-                self.centerY = Number(strList[1])
-                self.mode = self.mode_POLYTYPE
-                setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
-
-    elif self.mode == "POLYTYPE":
-        if str == "INSCRIBED"[len(str)]:
-            # TODO: Probably should add additional translate calls here.
-            self.mode = self.mode_INSCRIBE
-            self.polyType = "Inscribed"
-            setPromptPrefix(translate("Specify polygon corner point or [Distance]: "))
-            addRubber("POLYGON")
-            setRubberMode("POLYGON_INSCRIBE")
-            setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
-            setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-        }
-        elif str == "CIRCUMSCRIBED"[len(str)]:
-            # TODO: Probably should add additional translate calls here.
-            self.mode = self.mode_CIRCUMSCRIBE
-            self.polyType = "Circumscribed"
-            setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
-            addRubber("POLYGON")
-            setRubberMode("POLYGON_CIRCUMSCRIBE")
-            setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
-            setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-        }
-        elif(str == "")
-        {
-            if(self.polyType == "Inscribed")
-            {
-                self.mode = self.mode_INSCRIBE
-                setPromptPrefix(translate("Specify polygon corner point or [Distance]: "))
-                addRubber("POLYGON")
-                setRubberMode("POLYGON_INSCRIBE")
-                setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
-                setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-            }
-            elif(self.polyType == "Circumscribed")
-            {
-                self.mode = self.mode_CIRCUMSCRIBE
-                setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
-                addRubber("POLYGON")
-                setRubberMode("POLYGON_CIRCUMSCRIBE")
-                setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
-                setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-            }
-            else
-            {
-                error("POLYGON", translate("Polygon type is not Inscribed or Circumscribed."))
-            }
-        }
-        else
-        {
-            alert(translate("Invalid option keyword."))
-            setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
-
-    elif(self.mode == self.mode_INSCRIBE):
-        if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_DISTANCE
-            setPromptPrefix(translate("Specify distance: "))
-        }
-        else
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Point or option keyword required."))
-                setPromptPrefix(translate("Specify polygon corner point or [Distance]: "))
-            }
-            else
-            {
-                self.pointIX = Number(strList[0])
-                self.pointIY = Number(strList[1])
-                setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
-                vulcanize()
-                return
-
-    elif self.mode == "CIRCUMSCRIBE":
-        if str == "D" or str == "DISTANCE":
-            # TODO: Probably should add additional qsTr calls here.
-            self.mode = self.mode_DISTANCE
-            setPromptPrefix(translate("Specify distance: "))
-        else:
-            var strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
-                alert(translate("Point or option keyword required."))
-                setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
-            }
-            else:
-                self.pointCX = Number(strList[0])
-                self.pointCY = Number(strList[1])
-                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
-                vulcanize()
-                return
-
-    elif(self.mode == self.mode_DISTANCE):
-        if(isNaN(str)):
-            alert(translate("Requires valid numeric distance."))
-            setPromptPrefix(translate("Specify distance: "))
-        else:
-            if(self.polyType == "Inscribed")
-            {
-                self.pointIX = self.centerX
-                self.pointIY = self.centerY + Number(str)
-                setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
-                vulcanize()
-                return
-            }
-            elif(self.polyType == "Circumscribed"):
-                self.pointCX = self.centerX
-                self.pointCY = self.centerY + Number(str)
-                setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
-                vulcanize()
-                return
-            else:
-                error("POLYGON", translate("Polygon type is not Inscribed or Circumscribed."))
-
-    elif(self.mode == self.mode_SIDE_LEN):
-        todo("POLYGON", "Sidelength mode")
-
---------------------------------------------------------------------------------
-
-int init():
-    clearSelection()
-    self.firstRun = true
-    self.firstX = MAX_DISTANCE+1.0
-    self.firstY = MAX_DISTANCE+1.0
-    self.prevX = MAX_DISTANCE+1.0
-    self.prevY = MAX_DISTANCE+1.0
-    self.num = 0
-    setPromptPrefix(translate("Specify first point: "))
-
-int click(x, y):
-    if(self.firstRun):
-        self.firstRun = false
-        self.firstX = x
-        self.firstY = y
-        self.prevX = x
-        self.prevY = y
-        addRubber("POLYLINE")
-        setRubberMode("POLYLINE")
-        setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify next point or [Undo]: "))
-    else:
-        self.num += 1
-        setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
-        setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
-        spareRubber("POLYLINE")
-        appendPromptHistory()
-        self.prevX = x
-        self.prevY = y
-
-int prompt(str):
-    if(self.firstRun)
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify first point: "))
-        }
-        else
-        {
-            self.firstRun = false
-            self.firstX = Number(strList[0])
-            self.firstY = Number(strList[1])
-            self.prevX = self.firstX
-            self.prevY = self.firstY
-            addRubber("POLYLINE")
-            setRubberMode("POLYLINE")
-            setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
-            setPromptPrefix(translate("Specify next point or [Undo]: "))
-        }
-    }
-    else
-    {
-        if(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            todo("POLYLINE", "prompt() for UNDO")
-        }
-        else
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Point or option keyword required."))
-                setPromptPrefix(translate("Specify next point or [Undo]: "))
-            }
-            else
-            {
-                var x = Number(strList[0])
-                var y = Number(strList[1])
-                self.num++
-                setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
-                setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
-                spareRubber("POLYLINE")
-                self.prevX = x
-                self.prevY = y
-                setPromptPrefix(translate("Specify next point or [Undo]: "))
-
---------------------------------------------------------------------------------
-
-class DimLeader():
-    " TODO: Adding the text is not complete yet. "
-
-    def __init__(self):
-        clearSelection()
-        self.x1 = MAX_DISTANCE+1.0
-        self.y1 = MAX_DISTANCE+1.0
-        self.x2 = MAX_DISTANCE+1.0
-        self.y2 = MAX_DISTANCE+1.0
-        setPromptPrefix(translate("Specify first point: "))
-        return self
-
-    def click(self, x, y):
-        if isNaN(self.x1):
-            self.x1 = x
-            self.y1 = y
-            addRubber("DIMLEADER")
-            setRubberMode("DIMLEADER_LINE")
-            setRubberPoint("DIMLEADER_LINE_START", self.x1, self.y1)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify second point: "))
-        else:
-            self.x2 = x
-            self.y2 = y
-            setRubberPoint("DIMLEADER_LINE_END", self.x2, self.y2)
-            vulcanize()
-            appendPromptHistory()
-
-    def prompt(str):
-        var strList = str.split(",")
-        if(isNaN(self.x1))
-    {
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Requires two points."))
-            setPromptPrefix(translate("Specify first point: "))
-        }
-        else:
-            self.x1 = Number(strList[0])
-            self.y1 = Number(strList[1])
-            addRubber("DIMLEADER")
-            setRubberMode("DIMLEADER_LINE")
-            setRubberPoint("DIMLEADER_LINE_START", self.x1, self.y1)
-            setPromptPrefix(translate("Specify second point: "))
-
-    else:
-        if isNaN(strList[0]) or isNaN(strList[1]):
-            alert(translate("Requires two points."))
-            setPromptPrefix(translate("Specify second point: "))
-        else:
-            self.x2 = Number(strList[0])
-            self.y2 = Number(strList[1])
-            setRubberPoint("DIMLEADER_LINE_END", self.x2, self.y2)
-            vulcanize()
-            return
-
---------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.newRect
-self.x1
-self.y1
-self.x2
-self.y2
-
-int init():
-    clearSelection()
-    self.newRect = true
-    self.x1 = MAX_DISTANCE+1.0
-    self.y1 = MAX_DISTANCE+1.0
-    self.x2 = MAX_DISTANCE+1.0
-    self.y2 = MAX_DISTANCE+1.0
-    setPromptPrefix(translate("Specify first corner point or [Chamfer/Fillet]: "))
-
-int click(x, y):
-    if(self.newRect)
-    {
-        self.newRect = false
-        self.x1 = x
-        self.y1 = y
-        addRubber("RECTANGLE")
-        setRubberMode("RECTANGLE")
-        setRubberPoint("RECTANGLE_START", x, y)
-        setPromptPrefix(translate("Specify other corner point or [Dimensions]: "))
-    }
-    else
-    {
-        self.newRect = true
-        self.x2 = x
-        self.y2 = y
-        setRubberPoint("RECTANGLE_END", x, y)
-        vulcanize()
-        return
-    }
-
-int prompt(str):
-    if(str == "C" || str == "CHAMFER") /*TODO: Probably should add additional qsTr calls here.*/
-    {
-        todo("RECTANGLE", "prompt() for CHAMFER")
-    }
-    elif(str == "D" || str == "DIMENSIONS") /*TODO: Probably should add additional qsTr calls here.*/
-    {
-        todo("RECTANGLE", "prompt() for DIMENSIONS")
-    }
-    elif(str == "F" || str == "FILLET") /*TODO: Probably should add additional qsTr calls here.*/
-    {
-        todo("RECTANGLE", "prompt() for FILLET")
-    }
-    else
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify first point: "))
-        }
-        else
-        {
-            var x = Number(strList[0])
-            var y = Number(strList[1])
-            if(self.newRect)
-            {
-                self.newRect = false
-                self.x1 = x
-                self.y1 = y
-                addRubber("RECTANGLE")
-                setRubberMode("RECTANGLE")
-                setRubberPoint("RECTANGLE_START", x, y)
-                setPromptPrefix(translate("Specify other corner point or [Dimensions]: "))
-            }
-            else
-            {
-                self.newRect = true
-                self.x2 = x
-                self.y2 = y
-                setRubberPoint("RECTANGLE_END", x, y)
-                vulcanize()
-                return
-            }
-        }
-    }
-
----------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.mode
-
-/*enums*/
-self.mode_BACKGROUND = 0
-self.mode_CROSSHAIR  = 1
-self.mode_GRID       = 2
-
-int init():
-    clearSelection()
-    self.mode = self.mode_BACKGROUND
-    setPromptPrefix(translate("Enter RED,GREEN,BLUE values for background or [Crosshair/Grid]: "))
-
-int prompt(str):
-    if(self.mode == self.mode_BACKGROUND)
-    {
-        if(str == "C" || str == "CROSSHAIR") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_CROSSHAIR
-            setPromptPrefix(translate("Specify crosshair color: "))
-        }
-        elif(str == "G" || str == "GRID") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_GRID
-            setPromptPrefix(translate("Specify grid color: "))
-        }
-        else
-        {
-            var strList = str.split(",")
-            var r = Number(strList[0])
-            var g = Number(strList[1])
-            var b = Number(strList[2])
-            if(!validRGB(r,g,b))
-            {
-                alert(translate("Invalid color. R,G,B values must be in the range of 0-255."))
-                setPromptPrefix(translate("Specify background color: "))
-            }
-            else
-            {
-                setBackgroundColor(r,g,b)
-                return
-            }
-        }
-    }
-    elif(self.mode == self.mode_CROSSHAIR)
-    {
-        var strList = str.split(",")
-        var r = Number(strList[0])
-        var g = Number(strList[1])
-        var b = Number(strList[2])
-        if(!validRGB(r,g,b))
-        {
-            alert(translate("Invalid color. R,G,B values must be in the range of 0-255."))
-            setPromptPrefix(translate("Specify crosshair color: "))
-        }
-        else
-        {
-            setCrossHairColor(r,g,b)
-            return
-        }
-    }
-    elif(self.mode == self.mode_GRID)
-    {
-        var strList = str.split(",")
-        var r = Number(strList[0])
-        var g = Number(strList[1])
-        var b = Number(strList[2])
-        if(!validRGB(r,g,b))
-        {
-            alert(translate("Invalid color. R,G,B values must be in the range of 0-255."))
-            setPromptPrefix(translate("Specify grid color: "))
-        }
-        else
-        {
-            setGridColor(r,g,b)
-            return
-
-
-def validRGB(r, g, b):
-    if isNaN(r): return False
-    if isNaN(g): return False
-    if isNaN(b): return False
-    if r < 0 or r > 255: return False
-    if g < 0 or g > 255: return False
-    if b < 0 or b > 255: return False
-    return True
-
---------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.firstRun
-self.baseX
-self.baseY
-self.destX
-self.destY
-self.angle
-
-self.baseRX
-self.baseRY
-self.destRX
-self.destRY
-self.angleRef
-self.angleNew
-
-self.mode
-
-/*enums*/
-self.mode_NORMAL    = 0
-self.mode_REFERENCE = 1
-
-int init():
-    self.mode = self.mode_NORMAL
-    self.firstRun = true
-    self.baseX = MAX_DISTANCE+1.0
-    self.baseY = MAX_DISTANCE+1.0
-    self.destX = MAX_DISTANCE+1.0
-    self.destY = MAX_DISTANCE+1.0
-    self.angle = MAX_DISTANCE+1.0
-
-    self.baseRX   = MAX_DISTANCE+1.0
-    self.baseRY   = MAX_DISTANCE+1.0
-    self.destRX   = MAX_DISTANCE+1.0
-    self.destRY   = MAX_DISTANCE+1.0
-    self.angleRef = MAX_DISTANCE+1.0
-    self.angleNew = MAX_DISTANCE+1.0
-
-    if(numSelected() <= 0)
-    {
-        /*TODO: Prompt to select objects if nothing is preselected*/
-        alert(translate("Preselect objects before invoking the rotate command."))
-        return
-        messageBox("information", translate("Rotate Preselect"), translate("Preselect objects before invoking the rotate command."))
-    }
-    else
-    {
-        setPromptPrefix(translate("Specify base point: "))
-    }
-
-int click(x, y):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
-            self.firstRun = false
-            self.baseX = x
-            self.baseY = y
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.baseX, self.baseY)
-            previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, 0)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
-        }
-        else
-        {
-            self.destX = x
-            self.destY = y
-            self.angle = calculateAngle(self.baseX, self.baseY, self.destX, self.destY)
-            appendPromptHistory()
-            rotateSelected(self.baseX, self.baseY, self.angle)
-            previewOff()
-            return
-        }
-    }
-    elif(self.mode == self.mode_REFERENCE)
-    {
-        if(isNaN(self.baseRX))
-        {
-            self.baseRX = x
-            self.baseRY = y
-            appendPromptHistory()
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.baseRX, self.baseRY)
-            setPromptPrefix(translate("Specify second point: "))
-        }
-        elif(isNaN(self.destRX))
-        {
-            self.destRX = x
-            self.destRY = y
-            self.angleRef = calculateAngle(self.baseRX, self.baseRY, self.destRX, self.destRY)
-            setRubberPoint("LINE_START", self.baseX, self.baseY)
-            previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify the new angle: "))
-        }
-        elif(isNaN(self.angleNew))
-        {
-            self.angleNew = calculateAngle(self.baseX, self.baseY, x, y)
-            rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
-            previewOff()
-            return
-        }
-    }
-
-int prompt(str):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify base point: "))
-            }
-            else
-            {
-                self.firstRun = false
-                self.baseX = Number(strList[0])
-                self.baseY = Number(strList[1])
-                addRubber("LINE")
-                setRubberMode("LINE")
-                setRubberPoint("LINE_START", self.baseX, self.baseY)
-                previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, 0)
-                setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
-            }
-        }
-        else
-        {
-            if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
-            {
-                self.mode = self.mode_REFERENCE
-                setPromptPrefix(translate("Specify the reference angle") + " {0.00}: ")
-                clearRubber()
-                previewOff()
-            }
-            else
-            {
-                if(isNaN(str))
-                {
-                    alert(translate("Requires valid numeric angle, second point, or option keyword."))
-                    setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
-                }
-                else
-                {
-                    self.angle = Number(str)
-                    rotateSelected(self.baseX, self.baseY, self.angle)
-                    previewOff()
-                    return
-
-    elif(self.mode == self.mode_REFERENCE)
-        if(isNaN(self.baseRX))
-            if(isNaN(str))
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                    alert(translate("Requires valid numeric angle or two points."))
-                    setPromptPrefix(translate("Specify the reference angle") + " {0.00}: ")
-                }
-                else
-                {
-                    self.baseRX = Number(strList[0])
-                    self.baseRY = Number(strList[1])
-                    addRubber("LINE")
-                    setRubberMode("LINE")
-                    setRubberPoint("LINE_START", self.baseRX, self.baseRY)
-                    setPromptPrefix(translate("Specify second point: "))
-                }
-            }
-            else
-            {
-                /*The base and dest values are only set here to advance the command.*/
-                self.baseRX = 0.0
-                self.baseRY = 0.0
-                self.destRX = 0.0
-                self.destRY = 0.0
-                /*The reference angle is what we will use later.*/
-                self.angleRef = Number(str)
-                addRubber("LINE")
-                setRubberMode("LINE")
-                setRubberPoint("LINE_START", self.baseX, self.baseY)
-                previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
-                setPromptPrefix(translate("Specify the new angle: "))
-            }
-        }
-        elif(isNaN(self.destRX))
-        {
-            if(isNaN(str))
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                {
-                    alert(translate("Requires valid numeric angle or two points."))
-                    setPromptPrefix(translate("Specify second point: "))
-                }
-                else
-                {
-                    self.destRX = Number(strList[0])
-                    self.destRY = Number(strList[1])
-                    self.angleRef = calculateAngle(self.baseRX, self.baseRY, self.destRX, self.destRY)
-                    previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
-                    setRubberPoint("LINE_START", self.baseX, self.baseY)
-                    setPromptPrefix(translate("Specify the new angle: "))
-                }
-            }
-            else
-            {
-                /*The base and dest values are only set here to advance the command.*/
-                self.baseRX = 0.0
-                self.baseRY = 0.0
-                self.destRX = 0.0
-                self.destRY = 0.0
-                /*The reference angle is what we will use later.*/
-                self.angleRef = Number(str)
-                previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
-                setPromptPrefix(translate("Specify the new angle: "))
-            }
-        }
-        elif(isNaN(self.angleNew))
-        {
-            if(isNaN(str))
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                {
-                    alert(translate("Requires valid numeric angle or second point."))
-                    setPromptPrefix(translate("Specify the new angle: "))
-                }
-                else
-                {
-                    var x = Number(strList[0])
-                    var y = Number(strList[1])
-                    self.angleNew = calculateAngle(self.baseX, self.baseY, x, y)
-                    rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
-                    previewOff()
-                    return
-                }
-            }
-            else
-            {
-                self.angleNew = Number(str)
-                rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
-                previewOff()
-                return
-
-
---------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.test1
-self.test2
-
-int init():
-    /*Report number of pre-selected objects*/
-    setPromptPrefix("Number of Objects Selected: " + numSelected().toString())
-    appendPromptHistory()
-    
-    mirrorSelected(0,0,0,1)
-    
-    /*selectAll();*/
-    /*rotateSelected(0,0,90);*/
-    
-    /*Polyline & Polygon Testing*/
-    
-    var offsetX = 0.0
-    var offsetY = 0.0
-    
-    var polylineArray = []
-    polylineArray.push(1.0 + offsetX)
-    polylineArray.push(1.0 + offsetY)
-    polylineArray.push(1.0 + offsetX)
-    polylineArray.push(2.0 + offsetY)
-    polylineArray.push(2.0 + offsetX)
-    polylineArray.push(2.0 + offsetY)
-    polylineArray.push(2.0 + offsetX)
-    polylineArray.push(3.0 + offsetY)
-    polylineArray.push(3.0 + offsetX)
-    polylineArray.push(3.0 + offsetY)
-    polylineArray.push(3.0 + offsetX)
-    polylineArray.push(2.0 + offsetY)
-    polylineArray.push(4.0 + offsetX)
-    polylineArray.push(2.0 + offsetY)
-    polylineArray.push(4.0 + offsetX)
-    polylineArray.push(1.0 + offsetY)
-    addPolyline(polylineArray)
-    
-    offsetX = 5.0
-    offsetY = 0.0
-    
-    var polygonArray = []
-    polygonArray.push(1.0 + offsetX)
-    polygonArray.push(1.0 + offsetY)
-    polygonArray.push(1.0 + offsetX)
-    polygonArray.push(2.0 + offsetY)
-    polygonArray.push(2.0 + offsetX)
-    polygonArray.push(2.0 + offsetY)
-    polygonArray.push(2.0 + offsetX)
-    polygonArray.push(3.0 + offsetY)
-    polygonArray.push(3.0 + offsetX)
-    polygonArray.push(3.0 + offsetY)
-    polygonArray.push(3.0 + offsetX)
-    polygonArray.push(2.0 + offsetY)
-    polygonArray.push(4.0 + offsetX)
-    polygonArray.push(2.0 + offsetY)
-    polygonArray.push(4.0 + offsetX)
-    polygonArray.push(1.0 + offsetY)
-    addPolygon(polygonArray)
-    
-
-    return
-
---------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.firstRun
-self.baseX
-self.baseY
-self.destX
-self.destY
-self.factor
-
-self.baseRX
-self.baseRY
-self.destRX
-self.destRY
-self.factorRef
-self.factorNew
-
-self.mode
-
-/*enums*/
-self.mode_NORMAL    = 0
-self.mode_REFERENCE = 1
-
-int __init__():
-    self.mode = self.mode_NORMAL
-    self.firstRun = true
-    self.baseX  = MAX_DISTANCE+1.0
-    self.baseY  = MAX_DISTANCE+1.0
-    self.destX  = MAX_DISTANCE+1.0
-    self.destY  = MAX_DISTANCE+1.0
-    self.factor = MAX_DISTANCE+1.0
-
-    self.baseRX    = MAX_DISTANCE+1.0
-    self.baseRY    = MAX_DISTANCE+1.0
-    self.destRX    = MAX_DISTANCE+1.0
-    self.destRY    = MAX_DISTANCE+1.0
-    self.factorRef = MAX_DISTANCE+1.0
-    self.factorNew = MAX_DISTANCE+1.0
-
-    if(numSelected() <= 0)
-    {
-        /*TODO: Prompt to select objects if nothing is preselected*/
-        alert(translate("Preselect objects before invoking the scale command."))
-        return
-        messageBox("information", translate("Scale Preselect"), translate("Preselect objects before invoking the scale command."))
-    }
-    else
-    {
-        setPromptPrefix(translate("Specify base point: "))
-    }
-
-int click(x, y):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
-            self.firstRun = false
-            self.baseX = x
-            self.baseY = y
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.baseX, self.baseY)
-            previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify scale factor or [Reference]: "))
-        }
-        else
-        {
-            self.destX = x
-            self.destY = y
-            self.factor = calculateDistance(self.baseX, self.baseY, self.destX, self.destY)
-            appendPromptHistory()
-            scaleSelected(self.baseX, self.baseY, self.factor)
-            previewOff()
-            return
-        }
-    }
-    elif(self.mode == self.mode_REFERENCE)
-    {
-        if(isNaN(self.baseRX))
-        {
-            self.baseRX = x
-            self.baseRY = y
-            appendPromptHistory()
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.baseRX, self.baseRY)
-            setPromptPrefix(translate("Specify second point: "))
-        }
-        elif(isNaN(self.destRX))
-        {
-            self.destRX = x
-            self.destRY = y
-            self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
-            if(self.factorRef <= 0.0)
-            {
-                self.destRX    = MAX_DISTANCE+1.0
-                self.destRY    = MAX_DISTANCE+1.0
-                self.factorRef = MAX_DISTANCE+1.0
-                alert(translate("Value must be positive and nonzero."))
-                setPromptPrefix(translate("Specify second point: "))
-            }
-            else
-            {
-                appendPromptHistory()
-                setRubberPoint("LINE_START", self.baseX, self.baseY)
-                previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
-                setPromptPrefix(translate("Specify new length: "))
-
-        elif(isNaN(self.factorNew))
-
-            self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
-            if(self.factorNew <= 0.0)
-            {
-                self.factorNew = MAX_DISTANCE+1.0
-                alert(translate("Value must be positive and nonzero."))
-                setPromptPrefix(translate("Specify new length: "))
-            else:
-                appendPromptHistory()
-                scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
-                previewOff()
-                return
-
-int prompt(str):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) || isNaN(strList[1]))
-            {
-                alert(translate("Invalid point."))
-                setPromptPrefix(translate("Specify base point: "))
-            }
-            else
-            {
-                self.firstRun = false
-                self.baseX = Number(strList[0])
-                self.baseY = Number(strList[1])
-                addRubber("LINE")
-                setRubberMode("LINE")
-                setRubberPoint("LINE_START", self.baseX, self.baseY)
-                previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
-                setPromptPrefix(translate("Specify scale factor or [Reference]: "))
-            }
-        }
-        else
-        {
-            if(str == "R" || str == "REFERENCE") /*TODO: Probably should add additional qsTr calls here.*/
-            {
-                self.mode = self.mode_REFERENCE
-                setPromptPrefix(translate("Specify reference length") + " {1}: ")
-                clearRubber()
-                previewOff()
-            }
-            else
-            {
-                if(isNaN(str))
-                {
-                    alert(translate("Requires valid numeric distance, second point, or option keyword."))
-                    setPromptPrefix(translate("Specify scale factor or [Reference]: "))
-                }
-                else
-                {
-                    self.factor = Number(str)
-                    scaleSelected(self.baseX, self.baseY, self.factor)
-                    previewOff()
-                    return
-
-    elif(self.mode == self.mode_REFERENCE)
-        if(isNaN(self.baseRX))
-            if(isNaN(str))
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                    alert(translate("Requires valid numeric distance or two points."))
-                    setPromptPrefix(translate("Specify reference length") + " {1}: ")
-                else:
-                    self.baseRX = Number(strList[0])
-                    self.baseRY = Number(strList[1])
-                    addRubber("LINE")
-                    setRubberMode("LINE")
-                    setRubberPoint("LINE_START", self.baseRX, self.baseRY)
-                    setPromptPrefix(translate("Specify second point: "))
-            else:
-                /*The base and dest values are only set here to advance the command.*/
-                self.baseRX = 0.0
-                self.baseRY = 0.0
-                self.destRX = 0.0
-                self.destRY = 0.0
-                /*The reference length is what we will use later.*/
-                self.factorRef = Number(str)
-                if(self.factorRef <= 0.0)
-                {
-                    self.baseRX    = MAX_DISTANCE+1.0
-                    self.baseRY    = MAX_DISTANCE+1.0
-                    self.destRX    = MAX_DISTANCE+1.0
-                    self.destRY    = MAX_DISTANCE+1.0
-                    self.factorRef = MAX_DISTANCE+1.0
-                    alert(translate("Value must be positive and nonzero."))
-                    setPromptPrefix(translate("Specify reference length") + " {1}: ")
-                }
-                else
-                {
-                    addRubber("LINE")
-                    setRubberMode("LINE")
-                    setRubberPoint("LINE_START", self.baseX, self.baseY)
-                    previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
-                    setPromptPrefix(translate("Specify new length: "))
-
-        elif(isNaN(self.destRX))
-            if(isNaN(str))
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                    alert(translate("Requires valid numeric distance or two points."))
-                    setPromptPrefix(translate("Specify second point: "))
-                else:
-                    self.destRX = Number(strList[0])
-                    self.destRY = Number(strList[1])
-                    self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
-                    if(self.factorRef <= 0.0)
-                    {
-                        self.destRX    = MAX_DISTANCE+1.0
-                        self.destRY    = MAX_DISTANCE+1.0
-                        self.factorRef = MAX_DISTANCE+1.0
-                        alert(translate("Value must be positive and nonzero."))
-                        setPromptPrefix(translate("Specify second point: "))
-                    }
-                    else
-                    {
-                        setRubberPoint("LINE_START", self.baseX, self.baseY)
-                        previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
-                        setPromptPrefix(translate("Specify new length: "))
-
-            else:
-                /*The base and dest values are only set here to advance the command.*/
-                self.baseRX = 0.0
-                self.baseRY = 0.0
-                self.destRX = 0.0
-                self.destRY = 0.0
-                /*The reference length is what we will use later.*/
-                self.factorRef = Number(str)
-                if(self.factorRef <= 0.0)
-                {
-                    self.destRX    = MAX_DISTANCE+1.0
-                    self.destRY    = MAX_DISTANCE+1.0
-                    self.factorRef = MAX_DISTANCE+1.0
-                    alert(translate("Value must be positive and nonzero."))
-                    setPromptPrefix(translate("Specify second point: "))
-                }
-                else
-                {
-                    setRubberPoint("LINE_START", self.baseX, self.baseY)
-                    previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
-                    setPromptPrefix(translate("Specify new length: "))
-                }
-            }
-        }
-        elif(isNaN(self.factorNew))
-        {
-            if(isNaN(str))
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                {
-                    alert(translate("Requires valid numeric distance or second point."))
-                    setPromptPrefix(translate("Specify new length: "))
-                }
-                else
-                {
-                    var x = Number(strList[0])
-                    var y = Number(strList[1])
-                    self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
-                    if(self.factorNew <= 0.0)
-                    {
-                        self.factorNew = MAX_DISTANCE+1.0
-                        alert(translate("Value must be positive and nonzero."))
-                        setPromptPrefix(translate("Specify new length: "))
-                    }
-                    else
-                    {
-                        scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
-                        previewOff()
-                        return
-                    }
-                }
-            }
-            else
-            {
-                self.factorNew = Number(str)
-                if(self.factorNew <= 0.0)
-                {
-                    self.factorNew = MAX_DISTANCE+1.0
-                    alert(translate("Value must be positive and nonzero."))
-                    setPromptPrefix(translate("Specify new length: "))
-                }
-                else
-                {
-                    scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
-                    previewOff()
-                    return
-
-
-class Text():
-
-/*enums*/
-self.mode_JUSTIFY = 0
-self.mode_SETFONT = 1
-self.mode_SETGEOM = 2
-self.mode_RAPID   = 3
-
-int init():
-    clearSelection()
-    self.text = ""
-    self.textX = MAX_DISTANCE+1.0
-    self.textY = MAX_DISTANCE+1.0
-    self.textJustify = "Left"
-    self.textFont = textFont()
-    self.textHeight = MAX_DISTANCE+1.0
-    self.textRotation = MAX_DISTANCE+1.0
-    self.mode = self.mode_SETGEOM
-    setPromptPrefix(translate("Current font: ") + "{" + self.textFont + "} " + translate("Text height: ") + "{" +  textSize() + "}")
-    appendPromptHistory()
-    setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-
-int click(x, y):
-    if(self.mode == self.mode_SETGEOM)
-    {
-        if(isNaN(self.textX))
-        {
-            self.textX = x
-            self.textY = y
-            addRubber("LINE")
-            setRubberMode("LINE")
-            setRubberPoint("LINE_START", self.textX, self.textY)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
-        }
-        elif(isNaN(self.textHeight))
-        {
-            self.textHeight = calculateDistance(self.textX, self.textY, x, y)
-            setTextSize(self.textHeight)
-            appendPromptHistory()
-            setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-        }
-        elif(isNaN(self.textRotation))
-        {
-            self.textRotation = calculateAngle(self.textX, self.textY, x, y)
-            setTextAngle(self.textRotation)
-            appendPromptHistory()
-            setPromptPrefix(translate("Enter text: "))
-            self.mode = self.mode_RAPID
-            enablePromptRapidFire()
-            clearRubber()
-            addRubber("TEXTSINGLE")
-            setRubberMode("TEXTSINGLE")
-            setRubberPoint("TEXT_POINT", self.textX, self.textY)
-            setRubberPoint("TEXT_HEIGHT_ROTATION", self.textHeight, self.textRotation)
-            setRubberText("TEXT_FONT", self.textFont)
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setRubberText("TEXT_RAPID", self.text)
-        }
-        else:
-            /*Do nothing, as we are in rapidFire mode now.*/
-
-
-int prompt(str):
-    if(self.mode == self.mode_JUSTIFY)
-    {
-        if(str == "C" || str == "CENTER") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Center"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "R" || str == "RIGHT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Right"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify right-end point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "A" || str == "ALIGN") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Aligned"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "M" || str == "MIDDLE") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Middle"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify middle point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "F" || str == "FIT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Fit"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "TL" || str == "TOPLEFT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Top Left"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify top-left point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "TC" || str == "TOPCENTER") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Top Center"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify top-center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "TR" || str == "TOPRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Top Right"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify top-right point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "ML" || str == "MIDDLELEFT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Middle Left"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify middle-left point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "MC" || str == "MIDDLECENTER") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Middle Center"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify middle-center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "MR" || str == "MIDDLERIGHT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Middle Right"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify middle-right point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "BL" || str == "BOTTOMLEFT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Bottom Left"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify bottom-left point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "BC" || str == "BOTTOMCENTER") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Bottom Center"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify bottom-center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "BR" || str == "BOTTOMRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
-        {
-            self.mode = self.mode_SETGEOM
-            self.textJustify = "Bottom Right"
-            setRubberText("TEXT_JUSTIFY", self.textJustify)
-            setPromptPrefix(translate("Specify bottom-right point of text or [Justify/Setfont]: "))
-        }
-        else
-        {
-            alert(translate("Invalid option keyword."))
-            setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
-        }
-    }
-    elif(self.mode == self.mode_SETFONT)
-    {
-        self.mode = self.mode_SETGEOM
-        self.textFont = str
-        setRubberText("TEXT_FONT", self.textFont)
-        setTextFont(self.textFont)
-        setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-    }
-    elif(self.mode == self.mode_SETGEOM)
-    {
-        if(isNaN(self.textX))
-        {
-            if(str == "J" || str == "JUSTIFY") /*TODO: Probably should add additional qsTr calls here.*/
-            {
-                self.mode = self.mode_JUSTIFY
-                setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
-            }
-            elif(str == "S" || str == "SETFONT") /*TODO: Probably should add additional qsTr calls here.*/
-            {
-                self.mode = self.mode_SETFONT
-                setPromptPrefix(translate("Specify font name: "))
-            }
-            else
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) || isNaN(strList[1]))
-                {
-                    alert(translate("Point or option keyword required."))
-                    setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-                }
-                else
-                {
-                    self.textX = Number(strList[0])
-                    self.textY = Number(strList[1])
-                    addRubber("LINE")
-                    setRubberMode("LINE")
-                    setRubberPoint("LINE_START", self.textX, self.textY)
-                    setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
-
-        elif(isNaN(self.textHeight))
-        {
-            if(str == "")
-            {
-                self.textHeight = textSize()
-                setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-            }
-            elif(isNaN(str))
-            {
-                alert(translate("Requires valid numeric distance or second point."))
-                setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
-            }
-            else
-            {
-                self.textHeight = Number(str)
-                setTextSize(self.textHeight)
-                setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-            }
-        }
-        elif(isNaN(self.textRotation))
-        {
-            if(str == "")
-            {
-                self.textRotation = textAngle()
-                setPromptPrefix(translate("Enter text: "))
-                self.mode = self.mode_RAPID
-                enablePromptRapidFire()
-                clearRubber()
-                addRubber("TEXTSINGLE")
-                setRubberMode("TEXTSINGLE")
-                setRubberPoint("TEXT_POINT", self.textX, self.textY)
-                setRubberPoint("TEXT_HEIGHT_ROTATION", self.textHeight, self.textRotation)
-                setRubberText("TEXT_FONT", self.textFont)
-                setRubberText("TEXT_JUSTIFY", self.textJustify)
-                setRubberText("TEXT_RAPID", self.text)
-            }
-            elif(isNaN(str))
-            {
-                alert(translate("Requires valid numeric angle or second point."))
-                setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-            }
-            else
-            {
-                self.textRotation = Number(str)
-                setTextAngle(self.textRotation)
-                setPromptPrefix(translate("Enter text: "))
-                self.mode = self.mode_RAPID
-                enablePromptRapidFire()
-                clearRubber()
-                addRubber("TEXTSINGLE")
-                setRubberMode("TEXTSINGLE")
-                setRubberPoint("TEXT_POINT", self.textX, self.textY)
-                setRubberPoint("TEXT_HEIGHT_ROTATION", self.textHeight, self.textRotation)
-                setRubberText("TEXT_FONT", self.textFont)
-                setRubberText("TEXT_JUSTIFY", self.textJustify)
-                setRubberText("TEXT_RAPID", self.text)
-            }
-        }
-        else
-        {
-            /*Do nothing, as we are in rapidFire mode now.*/
-        }
-    }
-    elif(self.mode == self.mode_RAPID)
-    {
-        if(str == "RAPID_ENTER")
-        {
-            if(self.text == "")
-            {
-                return
-            }
-            else
-            {
-                vulcanize()
-                return; /*TODO: Rather than ending the command, calculate where the next line would be and modify the x/y to the new point*/
-            }
-        }
-        else
-        {
-            self.text = str
-            setRubberText("TEXT_RAPID", self.text)
-        }
-    }
-
---------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.numPoints = 2048; /*Default //TODO: min:64 max:8192*/
-self.cx
-self.cy
-self.sx = 0.04; /*Default*/
-self.sy = 0.04; /*Default*/
-self.numPoints
-self.mode
-
-/*enums*/
-self.mode_NUM_POINTS = 0
-self.mode_XSCALE     = 1
-self.mode_YSCALE     = 2
-
-int init():
-    clearSelection()
-    self.cx = MAX_DISTANCE+1.0
-    self.cy = MAX_DISTANCE+1.0
-    self.mode = self.mode_NUM_POINTS
-
-    addRubber("POLYGON")
-    setRubberMode("POLYGON")
-    updateSnowflake(self.numPoints, self.sx, self.sy)
-    spareRubber("POLYGON")
-    return
-
-int updateSnowflake(numPts, xScale, yScale):
-    var i
-    var t
-    var xx = MAX_DISTANCE+1.0
-    var yy = MAX_DISTANCE+1.0
-    var two_pi = 2*embConstantPi
-
-    for(i = 0; i <= numPts; i++)
-    {
-        t = two_pi/numPts*i; 
-
-/*Snowflake Curve with t [0,2pi]*/
-
-xx = 4/7*sin(20/11-318*t)+
-3/13*sin(19/11-317*t)+
-3/5*sin(21/16-316*t)+
-1/6*sin(17/5-315*t)+
-2/9*sin(20/19-314*t)+
-5/9*sin(35/9-313*t)+
-7/12*sin(9/8-310*t)+
-5/16*sin(33/8-309*t)+
-5/11*sin(31/11-308*t)+
-4/7*sin(3/8-307*t)+
-4/11*sin(9/8-306*t)+
-7/8*sin(21/11-305*t)+
-2/3*sin(55/13-304*t)+
-5/9*sin(17/7-303*t)+
-3/10*sin(3/13-302*t)+
-4/11*sin(60/17-301*t)+
-6/11*sin(48/11-300*t)+
-9/19*sin(1/6-299*t)+
-4/5*sin(19/11-298*t)+
-7/13*sin(25/8-297*t)+
-7/11*sin(19/7-296*t)+
-1/2*sin(1-295*t)+
-4/9*sin(24/11-294*t)+
-1/3*sin(7/2-291*t)+
-6/17*sin(15/13-290*t)+
-11/17*sin(32/7-288*t)+
-3/8*sin(33/8-287*t)+
-4/7*sin(15/7-286*t)+
-4/5*sin(48/11-284*t)+
-6/7*sin(10/7-283*t)+
-6/7*sin(20/11-282*t)+
-3/8*sin(11/7-281*t)+
-5/7*sin(23/6-280*t)+
-1/21*sin(19/12-279*t)+
-4/9*sin(1/5-278*t)+
-5/8*sin(5/9-276*t)+
-9/10*sin(2/3-274*t)+
-5/8*sin(5/11-273*t)+
-1/6*sin(9/2-272*t)+
-12/25*sin(29/12-271*t)+
-7/13*sin(59/15-270*t)+
-5/7*sin(23/9-269*t)+
-3/4*sin(9/2-268*t)+
-5/11*sin(37/9-267*t)+
-10/11*sin(11/7-266*t)+
-1/3*sin(3/7-264*t)+
-7/9*sin(33/17-262*t)+
-5/8*sin(9/8-261*t)+
-5/8*sin(38/13-260*t)+
-11/21*sin(36/13-259*t)+
-3/11*sin(1/29-258*t)+
-8/15*sin(31/8-257*t)+
-2/5*sin(3/13-256*t)+
-1/2*sin(47/10-255*t)+
-1/10*sin(33/10-254*t)+
-2/5*sin(1/2-253*t)+
-4/7*sin(33/7-252*t)+
-6/17*sin(3/8-250*t)+
-5/7*sin(25/9-249*t)+
-7/9*sin(35/8-248*t)+
-2/7*sin(81/20-247*t)+
-5/8*sin(25/6-244*t)+
-5/16*sin(11/21-243*t)+
-11/13*sin(167/42-242*t)+
-11/15*sin(18/5-241*t)+
-13/14*sin(37/11-240*t)+
-1/4*sin(20/9-239*t)+
-9/14*sin(52/15-238*t)+
-9/14*sin(17/14-237*t)+
-6/13*sin(69/17-236*t)+
-5/8*sin(74/21-235*t)+
-7/15*sin(76/25-234*t)+
-10/11*sin(15/8-232*t)+
-5/11*sin(5/9-230*t)+
-1/8*sin(8/3-229*t)+
-5/9*sin(2/7-227*t)+
-4/13*sin(32/9-226*t)+
-2/3*sin(45/11-225*t)+
-1/30*sin(53/15-223*t)+
-7/11*sin(4/11-222*t)+
-10/19*sin(31/13-221*t)+
-sin(13/7-219*t)+
-9/14*sin(33/7-216*t)+
-2/3*sin(19/9-215*t)+
-3/5*sin(27/11-214*t)+
-9/11*sin(43/10-210*t)+
-5/7*sin(13/8-209*t)+
-5/9*sin(21/5-208*t)+
-2/7*sin(14/9-206*t)+
-9/8*sin(23/7-205*t)+
-18/13*sin(11/9-203*t)+
-7/4*sin(47/12-201*t)+
-10/7*sin(8/9-200*t)+
-7/10*sin(6/11-199*t)+
-5/3*sin(7/6-198*t)+
-19/11*sin(11/6-196*t)+
-15/8*sin(9/8-195*t)+
-8/17*sin(9/7-192*t)+
-8/3*sin(39/10-191*t)+
-23/10*sin(2/7-188*t)+
-3/4*sin(3/5-187*t)+
-7/12*sin(50/11-185*t)+
-57/29*sin(4-184*t)+
-9/8*sin(6/7-183*t)+
-9/7*sin(15/13-182*t)+
-5/13*sin(16/7-181*t)+
-18/7*sin(5/14-180*t)+
-17/9*sin(35/12-179*t)+
-5/4*sin(5/7-178*t)+
-22/23*sin(3/4-176*t)+
-3/8*sin(48/13-175*t)+
-15/11*sin(13/11-174*t)+
-25/17*sin(23/5-173*t)+
-18/11*sin(19/8-172*t)+
-11/16*sin(5/3-170*t)+
-39/38*sin(15/7-169*t)+
-7/6*sin(36/11-166*t)+
-15/11*sin(11/6-163*t)+
-17/13*sin(3-162*t)+
-11/9*sin(20/7-161*t)+
-9/7*sin(35/9-160*t)+
-7/6*sin(3/2-159*t)+
-8/7*sin(9/10-158*t)+
-12/25*sin(13/5-156*t)+
-6/13*sin(25/13-154*t)+
-9/13*sin(7/8-152*t)+
-23/10*sin(33/14-151*t)+
-8/11*sin(36/11-150*t)+
-15/7*sin(26/7-149*t)+
-6/5*sin(53/12-148*t)+
-14/11*sin(3/2-147*t)+
-9/8*sin(4/3-146*t)+
-5/8*sin(18/13-145*t)+
-15/7*sin(3/8-143*t)+
-5/8*sin(5/6-142*t)+
-6/7*sin(35/9-139*t)+
-16/13*sin(1/2-138*t)+
-9/4*sin(7/2-137*t)+
-20/9*sin(15/8-135*t)+
-11/8*sin(9/4-134*t)+
-sin(19/10-133*t)+
-22/7*sin(48/11-132*t)+
-23/14*sin(1-131*t)+
-19/9*sin(27/8-130*t)+
-19/5*sin(20/7-129*t)+
-18/5*sin(76/25-128*t)+
-27/8*sin(4/5-126*t)+
-37/8*sin(3/8-125*t)+
-62/11*sin(11/3-124*t)+
-49/11*sin(7/6-123*t)+
-21/22*sin(23/12-122*t)+
-223/74*sin(11/3-121*t)+
-11/5*sin(19/5-120*t)+
-13/4*sin(33/13-119*t)+
-27/8*sin(22/5-117*t)+
-24/7*sin(13/7-114*t)+
-69/17*sin(18/17-113*t)+
-10/9*sin(2/7-112*t)+
-133/66*sin(12/7-111*t)+
-2/5*sin(47/24-110*t)+
-13/5*sin(11/6-108*t)+
-16/7*sin(39/11-105*t)+
-11/5*sin(25/9-104*t)+
-151/50*sin(19/7-103*t)+
-19/7*sin(12/5-101*t)+
-26/7*sin(101/25-99*t)+
-43/21*sin(41/14-98*t)+
-13/3*sin(31/9-97*t)+
-10/13*sin(1-95*t)+
-17/7*sin(39/10-93*t)+
-145/48*sin(3-92*t)+
-37/6*sin(47/13-91*t)+
-5/6*sin(36/13-89*t)+
-9/4*sin(3/7-87*t)+
-48/13*sin(26/17-86*t)+
-7/3*sin(28/19-82*t)+
-31/6*sin(8/7-81*t)+
-36/7*sin(12/7-80*t)+
-38/9*sin(25/9-79*t)+
-17/2*sin(37/14-76*t)+
-16/3*sin(19/20-75*t)+
-81/16*sin(4/5-74*t)+
-67/10*sin(19/15-73*t)+
-40/11*sin(32/11-72*t)+
-71/13*sin(21/20-71*t)+
-68/15*sin(46/15-70*t)+
-52/15*sin(27/10-69*t)+
-57/14*sin(7/8-67*t)+
-7/4*sin(42/13-66*t)+
-39/11*sin(43/21-65*t)+
-30/11*sin(33/8-64*t)+
-7/5*sin(20/7-63*t)+
-4/7*sin(13/14-62*t)+
-39/10*sin(16/9-61*t)+
-7/6*sin(137/34-59*t)+
-16/13*sin(107/27-58*t)+
-26/27*sin(17/5-57*t)+
-4/3*sin(9/14-56*t)+
-46/11*sin(5/3-55*t)+
-11/6*sin(13/4-54*t)+
-19/4*sin(17/5-53*t)+
-19/7*sin(43/11-52*t)+
-25/12*sin(30/7-51*t)+
-15/7*sin(5/11-50*t)+
-53/5*sin(21/13-49*t)+
-62/13*sin(67/15-48*t)+
-122/9*sin(48/13-47*t)+
-20/13*sin(1-46*t)+
-7/6*sin(32/7-43*t)+
-12/7*sin(13/25-42*t)+
-11/17*sin(9/10-40*t)+
-11/9*sin(2-39*t)+
-4/3*sin(19/7-38*t)+
-12/5*sin(47/11-37*t)+
-10/7*sin(12/7-36*t)+
-108/17*sin(3/4-35*t)+
-25/9*sin(19/5-34*t)+
-7/13*sin(22/5-33*t)+
-9/4*sin(13/11-32*t)+
-181/15*sin(25/11-31*t)+
-202/11*sin(57/13-29*t)+
-2/11*sin(26/7-28*t)+
-129/13*sin(38/15-25*t)+
-13/6*sin(1/8-24*t)+
-77/13*sin(11/8-23*t)+
-19/6*sin(15/7-22*t)+
-18/7*sin(29/10-21*t)+
-9*sin(13/5-18*t)+
-342/7*sin(11/6-17*t)+
-3/5*sin(49/11-15*t)+
-38/3*sin(19/7-14*t)+
-994/9*sin(25/8-13*t)+
-22/9*sin(49/12-10*t)+
-97/9*sin(1/14-8*t)+
-559/7*sin(47/14-7*t)+
-19/13*sin(5/6-6*t)+
-3*sin(57/17-4*t)+
-28/5*sin(1-3*t)+
-10/3*sin(22/7-2*t)+
-1507/3*sin(29/8-t)-
-1407/13*sin(5*t+8/11)-
-15/2*sin(9*t+2/5)-
-1193/9*sin(11*t+28/27)-
-209/15*sin(12*t+2/5)-
-116/15*sin(16*t+40/39)-
-1105/33*sin(19*t+1/3)-
-45/13*sin(20*t+7/6)-
-91/46*sin(26*t+4/7)-
-43/16*sin(27*t+12/11)-
-46/13*sin(30*t+14/9)-
-29/10*sin(41*t+3/14)-
-31/11*sin(44*t+15/14)-
-22/7*sin(45*t+10/7)-
-7/8*sin(60*t+22/15)-
-54/53*sin(68*t+5/4)-
-214/15*sin(77*t+5/9)-
-54/11*sin(78*t+1/13)-
-47/6*sin(83*t+5/11)-
-1/2*sin(84*t+8/7)-
-2/3*sin(85*t+4/9)-
-7/3*sin(88*t+7/6)-
-15/4*sin(90*t+1/6)-
-35/6*sin(94*t+17/18)-
-77/26*sin(96*t+2/7)-
-64/11*sin(100*t+34/23)-
-13/6*sin(102*t+14/11)-
-19/7*sin(106*t+5/6)-
-13/6*sin(107*t+10/11)-
-42/13*sin(109*t+8/7)-
-69/35*sin(115*t+10/21)-
-12/7*sin(116*t+17/16)-
-8/3*sin(118*t+5/9)-
-1/6*sin(127*t+17/12)-
-13/7*sin(136*t+8/7)-
-7/10*sin(140*t+7/5)-
-15/7*sin(141*t+19/14)-
-6/11*sin(144*t+5/16)-
-3/2*sin(153*t+9/14)-
-6/5*sin(155*t+3/10)-
-3/8*sin(157*t+10/11)-
-20/11*sin(164*t+19/14)-
-7/5*sin(165*t+7/6)-
-8/13*sin(167*t+20/13)-
-7/8*sin(168*t+3/7)-
-5/14*sin(171*t+16/13)-
-22/7*sin(177*t+3/13)-
-23/8*sin(186*t+7/8)-
-13/7*sin(189*t+11/9)-
-9/5*sin(190*t+32/21)-
-27/28*sin(193*t+1)-
-5/12*sin(194*t+1/2)-
-44/43*sin(197*t+6/5)-
-5/11*sin(202*t+1/5)-
-8/7*sin(204*t+1/23)-
-16/15*sin(207*t+7/10)-
-1/2*sin(211*t+2/5)-
-5/8*sin(212*t+3/5)-
-10/13*sin(213*t+6/5)-
-21/16*sin(217*t+4/3)-
-11/5*sin(218*t+24/25)-
-2/3*sin(220*t+5/9)-
-13/10*sin(224*t+7/8)-
-17/8*sin(228*t+1/9)-
-3/7*sin(231*t+14/9)-
-5/12*sin(233*t+9/11)-
-3/5*sin(245*t+4/7)-
-2/3*sin(246*t+15/11)-
-3/8*sin(251*t+4/7)-
-2/9*sin(263*t+19/20)-
-1/2*sin(265*t+13/11)-
-3/8*sin(275*t+3/2)-
-17/35*sin(277*t+9/13)-
-3/7*sin(285*t+3/11)-
-9/10*sin(289*t+25/19)-
-4/9*sin(292*t+20/13)-
-12/25*sin(293*t+5/4)-
-3/5*sin(311*t+9/8)-
-33/32*sin(312*t+1/2)
-
-yy = 3/7*sin(24/11-318*t)+
-5/12*sin(3-317*t)+
-5/14*sin(21/16-316*t)+
-9/19*sin(31/9-315*t)+
-2/9*sin(13/6-314*t)+
-3/5*sin(9/7-312*t)+
-2/5*sin(49/12-311*t)+
-1/13*sin(30/7-310*t)+
-4/13*sin(19/12-309*t)+
-1/3*sin(32/7-307*t)+
-5/8*sin(22/5-306*t)+
-4/11*sin(25/11-305*t)+
-8/15*sin(9/8-304*t)+
-1/8*sin(35/9-303*t)+
-3/5*sin(51/25-302*t)+
-2/5*sin(9/8-301*t)+
-4/7*sin(2/7-300*t)+
-2/7*sin(50/11-299*t)+
-3/13*sin(35/8-297*t)+
-5/14*sin(14/5-295*t)+
-8/13*sin(47/14-294*t)+
-2/9*sin(25/8-293*t)+
-8/17*sin(136/45-291*t)+
-2/7*sin(17/7-290*t)+
-3/5*sin(8/7-288*t)+
-3/13*sin(19/8-286*t)+
-6/11*sin(10/19-285*t)+
-9/10*sin(121/40-283*t)+
-8/5*sin(21/5-282*t)+
-1/10*sin(87/25-281*t)+
-7/13*sin(22/7-279*t)+
-3/7*sin(8/5-278*t)+
-4/5*sin(3/14-277*t)+
-7/10*sin(19/13-276*t)+
-1/5*sin(6/13-274*t)+
-7/10*sin(20/9-273*t)+
-1/3*sin(9/4-272*t)+
-4/13*sin(47/11-271*t)+
-18/17*sin(22/7-269*t)+
-1/7*sin(31/9-268*t)+
-7/10*sin(43/17-267*t)+
-8/11*sin(24/7-266*t)+
-5/8*sin(13/6-264*t)+
-9/10*sin(17/13-262*t)+
-4/11*sin(31/8-261*t)+
-1/5*sin(66/19-260*t)+
-1/10*sin(23/5-259*t)+
-3/10*sin(66/19-255*t)+
-1/8*sin(6/7-253*t)+
-9/13*sin(16/5-252*t)+
-3/7*sin(8/9-251*t)+
-4/11*sin(30/13-250*t)+
-7/11*sin(66/19-247*t)+
-1/19*sin(2-246*t)+
-1/4*sin(16/7-245*t)+
-8/17*sin(41/10-244*t)+
-15/16*sin(2/11-240*t)+
-5/7*sin(19/18-239*t)+
-1/6*sin(5/12-238*t)+
-5/11*sin(16/17-236*t)+
-3/10*sin(25/12-235*t)+
-8/17*sin(16/7-233*t)+
-5/8*sin(47/12-231*t)+
-9/11*sin(11/8-230*t)+
-3/11*sin(33/7-229*t)+
-9/10*sin(20/7-226*t)+
-4/9*sin(39/14-225*t)+
-4/9*sin(10/9-224*t)+
-6/7*sin(19/13-222*t)+
-7/9*sin(29/7-221*t)+
-8/11*sin(33/8-220*t)+
-16/9*sin(2/7-219*t)+
-25/14*sin(1/8-218*t)+
-8/11*sin(5/9-217*t)+
-9/11*sin(11/10-216*t)+
-21/13*sin(27/7-215*t)+
-3/7*sin(1/12-213*t)+
-13/9*sin(15/16-212*t)+
-23/8*sin(1/8-210*t)+
-sin(32/11-209*t)+
-9/13*sin(1/9-208*t)+
-7/9*sin(33/10-206*t)+
-2/3*sin(9/4-205*t)+
-3/4*sin(1/2-204*t)+
-3/13*sin(11/17-203*t)+
-3/7*sin(31/12-202*t)+
-19/12*sin(17/8-201*t)+
-7/8*sin(75/19-200*t)+
-6/5*sin(21/10-198*t)+
-3/2*sin(7/5-194*t)+
-28/27*sin(3/2-193*t)+
-4/9*sin(16/5-192*t)+
-22/13*sin(13/6-189*t)+
-18/11*sin(19/10-188*t)+
-sin(7/6-187*t)+
-16/7*sin(13/11-186*t)+
-9/5*sin(11/9-184*t)+
-16/11*sin(2/5-183*t)+
-10/13*sin(10/3-182*t)+
-9/7*sin(38/9-181*t)+
-45/13*sin(8/9-180*t)+
-7/9*sin(35/8-179*t)+
-2/3*sin(35/8-176*t)+
-10/7*sin(6/19-175*t)+
-40/13*sin(15/7-174*t)+
-20/13*sin(1/2-173*t)+
-3/11*sin(20/7-171*t)+
-17/16*sin(50/11-169*t)+
-2/9*sin(1/31-168*t)+
-4/9*sin(7/2-165*t)+
-1/12*sin(26/17-164*t)+
-21/22*sin(27/26-163*t)+
-13/12*sin(17/8-162*t)+
-19/14*sin(39/10-160*t)+
-18/11*sin(5/7-159*t)+
-3/5*sin(15/14-158*t)+
-11/9*sin(35/8-157*t)+
-5/8*sin(30/7-156*t)+
-3/2*sin(28/11-155*t)+
-4/5*sin(5/11-151*t)+
-25/19*sin(11/10-150*t)+
-10/11*sin(11/14-148*t)+
-13/9*sin(7/4-147*t)+
-7/13*sin(19/6-146*t)+
-1/5*sin(37/14-145*t)+
-11/8*sin(42/13-144*t)+
-20/11*sin(32/9-143*t)+
-2/3*sin(22/5-141*t)+
-10/11*sin(9/7-140*t)+
-8/7*sin(23/9-138*t)+
-5/2*sin(9/19-137*t)+
-7/5*sin(193/48-136*t)+
-5/8*sin(67/66-135*t)+
-8/7*sin(7/15-134*t)+
-13/6*sin(13/7-133*t)+
-19/7*sin(16/5-132*t)+
-16/7*sin(39/11-131*t)+
-28/17*sin(69/35-130*t)+
-84/17*sin(7/8-129*t)+
-114/23*sin(10/9-128*t)+
-29/11*sin(1/7-127*t)+
-63/10*sin(65/32-124*t)+
-74/17*sin(37/16-121*t)+
-31/16*sin(35/11-120*t)+
-19/5*sin(23/12-119*t)+
-82/27*sin(27/7-118*t)+
-49/11*sin(8/3-117*t)+
-29/14*sin(63/16-116*t)+
-9/13*sin(35/8-114*t)+
-29/19*sin(5/4-113*t)+
-13/7*sin(20/7-112*t)+
-9/7*sin(11/23-111*t)+
-19/8*sin(27/26-110*t)+
-sin(4/7-109*t)+
-119/40*sin(22/5-108*t)+
-7/5*sin(47/46-107*t)+
-5/3*sin(1/6-106*t)+
-2*sin(14/5-105*t)+
-7/3*sin(10/3-104*t)+
-3/2*sin(15/4-103*t)+
-19/11*sin(3/4-102*t)+
-74/17*sin(13/10-99*t)+
-98/33*sin(26/11-98*t)+
-36/11*sin(13/3-97*t)+
-43/12*sin(26/25-96*t)+
-13/2*sin(3/13-95*t)+
-6/7*sin(24/7-94*t)+
-16/5*sin(6/5-93*t)+
-5/7*sin(9/14-92*t)+
-55/12*sin(27/14-90*t)+
-15/11*sin(14/3-88*t)+
-7/3*sin(7/10-87*t)+
-11/4*sin(2/9-86*t)+
-13/4*sin(35/12-84*t)+
-26/9*sin(38/9-83*t)+
-7/2*sin(5/7-82*t)+
-31/8*sin(27/8-78*t)+
-91/6*sin(35/8-77*t)+
-37/5*sin(7/10-76*t)+
-70/13*sin(17/11-73*t)+
-76/25*sin(56/19-70*t)+
-19/8*sin(17/8-68*t)+
-59/13*sin(42/17-67*t)+
-28/17*sin(49/13-64*t)+
-9/7*sin(79/17-63*t)+
-1/8*sin(7/11-62*t)+
-39/8*sin(49/15-61*t)+
-53/18*sin(33/8-59*t)+
-9/7*sin(41/9-58*t)+
-8/7*sin(65/14-57*t)+
-10/11*sin(16/7-56*t)+
-68/13*sin(42/13-55*t)+
-21/10*sin(7/8-54*t)+
-6/7*sin(41/14-53*t)+
-31/11*sin(55/12-51*t)+
-59/17*sin(27/7-50*t)+
-124/9*sin(37/11-49*t)+
-24/11*sin(3/5-48*t)+
-65/6*sin(12/5-47*t)+
-11/7*sin(49/11-45*t)+
-13/25*sin(11/13-42*t)+
-7/4*sin(5/8-40*t)+
-43/42*sin(2/5-39*t)+
-20/9*sin(4/7-38*t)+
-19/8*sin(4/11-37*t)+
-5/4*sin(15/4-36*t)+
-1/5*sin(11/13-34*t)+
-12/7*sin(23/5-32*t)+
-409/34*sin(39/10-31*t)+
-10/7*sin(5/2-30*t)+
-180/11*sin(3-29*t)+
-23/8*sin(53/12-26*t)+
-71/8*sin(56/13-25*t)+
-12/5*sin(10/21-24*t)+
-10/3*sin(34/9-22*t)+
-27/16*sin(12/11-21*t)+
-49/6*sin(13/7-20*t)+
-69/2*sin(19/14-19*t)+
-475/9*sin(3/10-17*t)+
-68/13*sin(57/28-16*t)+
-40/17*sin(1/6-15*t)+
-77/13*sin(29/11-12*t)+
-4954/39*sin(15/4-11*t)+
-1075/11*sin(4-5*t)+
-191/24*sin(5/4-4*t)+
-84/17*sin(2/7-3*t)-
-12/5*sin(74*t)-
-4/5*sin(166*t)-
-1523/3*sin(t+12/11)-
-25/3*sin(2*t+17/18)-
-13/8*sin(6*t+1/9)-
-5333/62*sin(7*t+9/7)-
-56/9*sin(8*t+5/12)-
-65/8*sin(9*t+2/5)-
-106/9*sin(10*t+1/8)-
-1006/9*sin(13*t+11/7)-
-67/8*sin(14*t+6/5)-
-25/8*sin(18*t+15/11)-
-40/11*sin(23*t+1/16)-
-4/7*sin(27*t+6/5)-
-41/8*sin(28*t+7/12)-
-8/5*sin(33*t+5/6)-
-137/17*sin(35*t+4/5)-
-29/12*sin(41*t+22/15)-
-25/9*sin(43*t+6/7)-
-12/25*sin(44*t+16/11)-
-31/6*sin(46*t+4/3)-
-19/5*sin(52*t+16/13)-
-19/11*sin(60*t+8/17)-
-16/7*sin(65*t+6/13)-
-25/12*sin(66*t+11/13)-
-8/9*sin(69*t+4/11)-
-25/7*sin(71*t+7/5)-
-11/10*sin(72*t+3/2)-
-14/5*sin(75*t+7/9)-
-107/14*sin(79*t+3/4)-
-67/8*sin(80*t+2/11)-
-161/27*sin(81*t+5/11)-
-55/18*sin(85*t+3/7)-
-161/40*sin(89*t+1/21)-
-32/7*sin(91*t+38/25)-
-sin(100*t+19/20)-
-27/5*sin(101*t+2/13)-
-26/9*sin(115*t+1/44)-
-17/11*sin(122*t+1/16)-
-87/22*sin(123*t+2/3)-
-37/8*sin(125*t+9/11)-
-10/7*sin(126*t+8/7)-
-7/8*sin(139*t+3/5)-
-3/7*sin(142*t+5/6)-
-71/36*sin(149*t+5/16)-
-7/6*sin(152*t+1/9)-
-63/25*sin(153*t+29/19)-
-27/20*sin(154*t+8/15)-
-8/15*sin(161*t+12/13)-
-5/3*sin(167*t+13/10)-
-17/25*sin(170*t+3/5)-
-10/9*sin(172*t+3/8)-
-5/7*sin(177*t+5/8)-
-1/2*sin(178*t+7/6)-
-34/13*sin(185*t+5/8)-
-11/13*sin(190*t+38/39)-
-25/19*sin(191*t+11/8)-
-11/12*sin(195*t+18/19)-
-51/26*sin(196*t+2/7)-
-14/9*sin(197*t+4/11)-
-19/12*sin(199*t+1)-
-19/11*sin(207*t+11/8)-
-6/11*sin(211*t+1/20)-
-11/7*sin(214*t+1/14)-
-7/13*sin(223*t+8/11)-
-3/5*sin(227*t+12/13)-
-4/5*sin(228*t+29/19)-
-11/10*sin(232*t+2/7)-
-1/6*sin(234*t+7/11)-
-sin(237*t+60/59)-
-5/11*sin(241*t+7/8)-
-1/2*sin(242*t+8/7)-
-7/15*sin(243*t+15/16)-
-5/8*sin(248*t+2/3)-
-1/3*sin(249*t+4/11)-
-2/3*sin(254*t+8/7)-
-10/19*sin(256*t+14/11)-
-4/9*sin(257*t+8/11)-
-3/4*sin(258*t+3/7)-
-sin(263*t+2/7)-
-3/10*sin(265*t+1/28)-
-1/2*sin(270*t+1)-
-12/13*sin(275*t+5/8)-
-1/4*sin(280*t+16/13)-
-1/10*sin(284*t+5/8)-
-13/25*sin(287*t+3/7)-
-9/13*sin(289*t+3/5)-
-22/23*sin(292*t+17/13)-
-9/11*sin(296*t+17/11)-
-3/7*sin(298*t+12/11)-
-5/6*sin(308*t+1/2)-
-7/15*sin(313*t+1/3)
-
-        setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale)
-    }
-
-    setRubberText("POLYGON_NUM_POINTS", numPts.toString())
-
---------------------------------------------------------------------------------
-
-var global = {}; /*Required*/
-self.numPoints = 5; /*Default*/
-self.cx
-self.cy
-self.x1
-self.y1
-self.x2
-self.y2
-self.mode
-
-/*enums*/
-self.mode_NUM_POINTS = 0
-self.mode_CENTER_PT  = 1
-self.mode_RAD_OUTER  = 2
-self.mode_RAD_INNER  = 3
-
-int init():
-    clearSelection()
-    self.cx       = MAX_DISTANCE+1.0
-    self.cy       = MAX_DISTANCE+1.0
-    self.x1       = MAX_DISTANCE+1.0
-    self.y1       = MAX_DISTANCE+1.0
-    self.x2       = MAX_DISTANCE+1.0
-    self.y2       = MAX_DISTANCE+1.0
-    self.mode = self.mode_NUM_POINTS
-    setPromptPrefix(translate("Enter number of star points") + " {" + self.numPoints.toString() + "}: ")
-
-int click(x, y):
-    if(self.mode == self.mode_NUM_POINTS)
-    {
-        /*Do nothing, the prompt controls this.*/
-    }
-    elif(self.mode == self.mode_CENTER_PT)
-    {
-        self.cx = x
-        self.cy = y
-        self.mode = self.mode_RAD_OUTER
-        setPromptPrefix(translate("Specify outer radius of star: "))
-        addRubber("POLYGON")
-        setRubberMode("POLYGON")
-        updateStar(self.cx, self.cy)
-        enableMoveRapidFire()
-    }
-    elif(self.mode == self.mode_RAD_OUTER)
-    {
-        self.x1 = x
-        self.y1 = y
-        self.mode = self.mode_RAD_INNER
-        setPromptPrefix(translate("Specify inner radius of star: "))
-        updateStar(self.x1, self.y1)
-    }
-    elif(self.mode == self.mode_RAD_INNER)
-    {
-        self.x2 = x
-        self.y2 = y
-        disableMoveRapidFire()
-        updateStar(self.x2, self.y2)
-        spareRubber("POLYGON")
-        return
-    }
-
-def move(x, y):
-    if(self.mode == self.mode_NUM_POINTS)
-    {
-        /*Do nothing, the prompt controls this.*/
-    }
-    elif(self.mode == self.mode_CENTER_PT)
-    {
-        /*Do nothing, prompt and click controls this.*/
-    }
-    elif(self.mode == self.mode_RAD_OUTER)
-    {
-        updateStar(x, y)
-    }
-    elif(self.mode == self.mode_RAD_INNER)
-    {
-        updateStar(x, y)
-    }
-
-def prompt(str):
-    if(self.mode == self.mode_NUM_POINTS)
-    {
-        if(str == "" && self.numPoints >= 3 && self.numPoints <= 1024)
-        {
-            setPromptPrefix(translate("Specify center point: "))
-            self.mode = self.mode_CENTER_PT
-        }
-        else
-        {
-            var tmp = Number(str)
-            if(isNaN(tmp) || !isInt(tmp) || tmp < 3 || tmp > 1024)
-            {
-                alert(translate("Requires an integer between 3 and 1024."))
-                setPromptPrefix(translate("Enter number of star points") + " {" + self.numPoints.toString() + "}: ")
-            }
-            else
-            {
-                self.numPoints = tmp
-                setPromptPrefix(translate("Specify center point: "))
-                self.mode = self.mode_CENTER_PT
-
-    elif(self.mode == self.mode_CENTER_PT)
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify center point: "))
-        }
-        else:
-            self.cx = Number(strList[0])
-            self.cy = Number(strList[1])
-            self.mode = self.mode_RAD_OUTER
-            setPromptPrefix(translate("Specify outer radius of star: "))
-            addRubber("POLYGON")
-            setRubberMode("POLYGON")
-            updateStar(qsnapX(), qsnapY())
-            enableMoveRapidFire()
-
-    elif self.mode == "RAD_OUTER":
-        strList = str.split(",")
-        if isNaN(strList[0]) or isNaN(strList[1]):
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify outer radius of star: "))
-        else:
-            self.x1 = Number(strList[0])
-            self.y1 = Number(strList[1])
-            self.mode = self.mode_RAD_INNER
-            setPromptPrefix(translate("Specify inner radius of star: "))
-            updateStar(qsnapX(), qsnapY())
-
-    elif(self.mode == self.mode_RAD_INNER)
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) || isNaN(strList[1]))
-        {
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify inner radius of star: "))
-        }
-        else
-        {
-            self.x2 = Number(strList[0])
-            self.y2 = Number(strList[1])
-            disableMoveRapidFire()
-            updateStar(self.x2, self.y2)
-            spareRubber("POLYGON")
-            return
-        }
-    }
-
-int updateStar(x, y):
-    var distOuter
-    var distInner
-    var angOuter
-
-    if(self.mode == self.mode_RAD_OUTER)
-    {
-        angOuter = calculateAngle(self.cx, self.cy, x, y)
-        distOuter = calculateDistance(self.cx, self.cy, x, y)
-        distInner = distOuter/2.0
-    }
-    elif(self.mode == self.mode_RAD_INNER)
-    {
-        angOuter = calculateAngle(self.cx, self.cy, self.x1, self.y1)
-        distOuter = calculateDistance(self.cx, self.cy, self.x1, self.y1)
-        distInner = calculateDistance(self.cx, self.cy, x, y)
-    }
-
-    /*Calculate the Star Points*/
-    var angInc = 360.0/(self.numPoints*2)
-    var odd = true
-    for(var i = 0; i < self.numPoints*2; i++)
-    {
-        var xx
-        var yy
-        if(odd)
-        {
-            xx = distOuter*cos((angOuter+(angInc*i))*embConstantPi/180.0)
-            yy = distOuter*sin((angOuter+(angInc*i))*embConstantPi/180.0)
-        }
-        else
-        {
-            xx = distInner*cos((angOuter+(angInc*i))*embConstantPi/180.0)
-            yy = distInner*sin((angOuter+(angInc*i))*embConstantPi/180.0)
-        }
-        odd = !odd
-        setRubberPoint("POLYGON_POINT_" + i.toString(), self.cx + xx, self.cy + yy)
-    }
-    setRubberText("POLYGON_NUM_POINTS", (self.numPoints*2 - 1).toString())
-
-    "menu-name": "None",
-    "menu-position": 0,
-    "toolbar-name": "None",
-    "toolbar-position": 0,
-    "tooltip": "&SysWindows",
-    "statustip": "Arrange the windows:  SYSWINDOWS",
-    "alias": "WINDOWS, SYSWINDOWS"
-
-/*Command: SysWindows*/
-
-int init():
-    clearSelection()
-    setPromptPrefix(translate("Enter an option [Cascade/Tile]: "))
-
-int prompt(str):
-    if(str == "C" || str == "CASCADE") /*TODO: Probably should add additional qsTr calls here.*/
-    {
-        windowCascade()
-        return
-    }
-    elif(str == "T" || str == "TILE") /*TODO: Probably should add additional qsTr calls here.*/
-    {
-        windowTile()
-        return
-    }
-    else
-    {
-        alert(translate("Invalid option keyword."))
-        setPromptPrefix(translate("Enter an option [Cascade/Tile]: "))
-    }
-
-/* ----------------------------------------------------------------------- */
-
-def treble_clef_init():
-    treble_clef global
-    clearSelection()
-    self.cx = MAX_DISTANCE+1.0
-    self.cy = MAX_DISTANCE+1.0
-    self.numPoints = 1024; /*Default //TODO: min:64 max:8192*/
-    self.sx = 0.04; /*Default*/
-    self.sy = 0.04; /*Default*/
-    self.mode = TREBLE_CLEF_MODE_NUM_POINTS
-
-    addRubber("POLYGON")
-    setRubberMode("POLYGON")
-    updateClef(self.numPoints, self.sx, self.sy)
-    spareRubber("POLYGON")
-    return
-
-def treble_clef_updateClef(int numPts, double xScale, double yScale):
-    int i
-
-    for (i=0; i<=numPts; i++) {
-        double t, xx, yy
-        t = (16*embConstantPi)/numPts*i
-
-        xx = ((-1/12*sin(215/214-18*t)-
-        9/17*sin(23/17-12*t)-
-        15/22*sin(34/33-10*t)-
-        10/13*sin(11/13-8*t)-
-        22/29*sin(23/19-6*t)+
-        1777/23*sin(t+52/21)+
-        279/16*sin(2*t+113/26)+
-        97/12*sin(3*t+43/20)+
-        35/13*sin(4*t+93/22)+
-        34/11*sin(5*t+47/26)+
-        29/19*sin(7*t+29/19)+
-        23/34*sin(9*t+13/10)+
-        2/9*sin(11*t+369/185)+
-        1/6*sin(13*t+38/15)+
-        4/11*sin(14*t+37/8)+
-        7/23*sin(15*t+44/21)+
-        2/19*sin(16*t+132/29)+
-        5/16*sin(17*t+58/27)+2121/22)*
-        theta(15*embConstantPi-t)*
-        theta(t-11*embConstantPi)+
-        (-21/23*sin(3/19-18*t)-
-        18/55*sin(34/25-15*t)-
-        47/16*sin(19/33-13*t)-
-        2094/53*sin(29/28-3*t)+
-        2692/27*sin(t+89/41)+
-        2331/22*sin(2*t+17/16)+
-        2226/73*sin(4*t+7/20)+
-        257/19*sin(5*t+53/20)+
-        128/11*sin(6*t+40/11)+
-        101/11*sin(7*t+85/22)+
-        163/30*sin(8*t+50/11)+
-        24/13*sin(9*t+11/14)+
-        77/23*sin(10*t+34/15)+
-        8/47*sin(11*t+41/14)+
-        1/112*sin(12*t+29/26)+
-        31/11*sin(14*t+12/19)+
-        5/19*sin(16*t+11/19)+
-        48/29*sin(17*t+46/11)+
-        35/44*sin(19*t+191/82)+
-        13/15*sin(20*t+62/33)+
-        29/25*sin(21*t+27/10)+
-        11/45*sin(22*t+104/25)+
-        42/85*sin(23*t+3/16)+
-        1/2*sin(24*t+29/28)-2503/17)*
-        theta(11*embConstantPi-t)*
-        theta(t-7*embConstantPi)+
-        (-3/4*sin(13/14-6*t)-
-        29/14*sin(23/40-4*t)-
-        693/65*sin(7/17-2*t)+
-        1869/20*sin(t+137/38)+
-        79/11*sin(3*t+36/11)+
-        38/15*sin(5*t+28/9)+
-        79/63*sin(7*t+41/14)+
-        16/63*sin(8*t+275/61)-1053/43)*
-        theta(7*embConstantPi-t)*
-        theta(t-3*embConstantPi)+
-        (-7/11*sin(34/31-38*t)-
-        199/99*sin(3/13-32*t)-
-        26/23*sin(2/25-26*t)-
-        127/39*sin(130/87-17*t)-
-        49/13*sin(15/13-16*t)-
-        231/37*sin(7/15-14*t)-
-        113/10*sin(3/29-12*t)-
-        1242/29*sin(12/25-6*t)-
-        1433/32*sin(12/11-4*t)-
-        1361/10*sin(22/21-3*t)-
-        577/7*sin(1/9-2*t)+
-        6392/35*sin(t+87/28)+
-        3316/67*sin(5*t+26/9)+
-        864/29*sin(7*t+13/18)+
-        376/11*sin(8*t+19/16)+
-        13/9*sin(9*t+14/15)+
-        187/18*sin(10*t+35/34)+
-        1826/203*sin(11*t+10/19)+
-        317/36*sin(13*t+14/23)+
-        221/59*sin(15*t+47/11)+
-        43/27*sin(18*t+16/13)+
-        47/21*sin(19*t+44/13)+
-        26/7*sin(20*t+57/13)+
-        35/27*sin(21*t+47/12)+
-        57/29*sin(22*t+77/17)+
-        53/37*sin(23*t+51/19)+
-        41/22*sin(24*t+30/19)+
-        47/28*sin(25*t+52/15)+
-        13/16*sin(27*t+15/16)+
-        11/54*sin(28*t+61/49)+
-        31/20*sin(29*t+16/17)+
-        12/25*sin(30*t+17/13)+
-        11/20*sin(31*t+59/14)+
-        5/21*sin(33*t+7/3)+
-        7/25*sin(34*t+397/99)+
-        7/19*sin(35*t+61/14)+
-        12/19*sin(36*t+65/23)+
-        12/25*sin(37*t+77/17)+
-        9/13*sin(39*t+383/128)+
-        7/13*sin(40*t+41/11)+
-        7/10*sin(41*t+22/7)+
-        1/13*sin(42*t+7/4)+
-        4/21*sin(43*t+9/2)+
-        13/35*sin(44*t+63/34)+
-        3/16*sin(45*t+137/68)+
-        2/23*sin(46*t+237/59)+
-        2/7*sin(47*t+43/21)-727/14)*
-        theta(3*embConstantPi-t)*
-        theta(t+embConstantPi))*
-        theta(sqrt(sgn(sin(t/2))))
-
-        yy = ((-1/43*sin(21/17-14*t)-
-        7/20*sin(2/11-12*t)-
-        15/22*sin(53/40-11*t)-
-        37/73*sin(11/21-9*t)+
-        2072/13*sin(t+109/25)+
-        47/7*sin(2*t+83/26)+
-        193/17*sin(3*t+91/24)+
-        203/45*sin(4*t+61/28)+
-        52/23*sin(5*t+233/78)+
-        37/13*sin(6*t+47/30)+
-        8/17*sin(7*t+17/10)+
-        11/7*sin(8*t+28/29)+
-        5/6*sin(10*t+11/27)+
-        2/3*sin(13*t+84/19)+
-        22/45*sin(15*t+82/21)+
-        5/21*sin(16*t+25/12)+
-        8/25*sin(17*t+37/11)+
-        10/29*sin(18*t+18/11)-2967/17)*
-        theta(15*embConstantPi-t)*
-        theta(t-11*embConstantPi)+
-        (-14/17*sin(3/11-15*t)-
-        123/44*sin(9/7-11*t)-
-        97/34*sin(4/13-10*t)-
-        157/23*sin(22/15-7*t)+
-        4709/23*sin(t+122/27)+
-        3533/21*sin(2*t+105/52)+
-        1400/27*sin(3*t+65/24)+
-        1141/39*sin(4*t+55/19)+
-        150/11*sin(5*t+266/59)+
-        205/39*sin(6*t+28/19)+
-        18/7*sin(8*t+11/9)+
-        124/17*sin(9*t+131/28)+
-        11/6*sin(12*t+13/17)+
-        35/27*sin(13*t+58/15)+
-        15/26*sin(14*t+10/13)+
-        87/43*sin(16*t+33/29)+
-        17/24*sin(17*t+32/25)+
-        38/31*sin(18*t+31/17)+
-        25/29*sin(19*t+193/42)+
-        11/17*sin(20*t+21/23)+
-        6/11*sin(21*t+67/15)+
-        24/29*sin(22*t+36/19)+
-        61/51*sin(23*t+80/21)+
-        1/5*sin(24*t+37/11)-1831/17)*
-        theta(11*embConstantPi-t)*
-        theta(t-7*embConstantPi)+
-        (2588/15*sin(t+14/3)+
-        101/26*sin(2*t+65/23)+
-        6273/392*sin(3*t+101/24)+
-        65/33*sin(4*t+27/8)+
-        201/40*sin(5*t+89/23)+
-        31/26*sin(6*t+31/10)+
-        17/7*sin(7*t+97/28)+
-        17/19*sin(8*t+161/54)+6478/9)*
-        theta(7*embConstantPi-t)*
-        theta(t-3*embConstantPi)+
-        (-21/52*sin(13/14-45*t)-
-        11/20*sin(20/19-44*t)-
-        9/35*sin(5/18-41*t)-
-        13/66*sin(18/23-39*t)-
-        5/16*sin(3/28-38*t)-
-        3/23*sin(29/26-35*t)-
-        19/47*sin(5/16-32*t)-
-        6/17*sin(134/89-31*t)-
-        39/49*sin(21/23-25*t)-
-        47/23*sin(19/22-19*t)-
-        23/10*sin(11/38-13*t)-
-        1229/25*sin(17/21-3*t)+
-        11043/13*sin(t+61/13)+
-        1837/12*sin(2*t+25/18)+
-        1030/13*sin(4*t+41/25)+
-        1425/37*sin(5*t+22/9)+
-        1525/28*sin(6*t+5/3)+
-        796/31*sin(7*t+35/26)+
-        803/43*sin(8*t+11/7)+
-        267/28*sin(9*t+51/11)+
-        108/17*sin(10*t+23/18)+
-        196/31*sin(11*t+83/34)+
-        123/26*sin(12*t+33/16)+
-        124/33*sin(14*t+41/29)+
-        39/10*sin(15*t+47/12)+
-        18/37*sin(16*t+21/17)+
-        77/27*sin(17*t+47/22)+
-        64/23*sin(18*t+52/25)+
-        28/9*sin(20*t+21/62)+
-        7/12*sin(21*t+93/29)+
-        8/41*sin(22*t+23/15)+
-        12/29*sin(23*t+29/25)+
-        29/20*sin(24*t+5/4)+
-        46/27*sin(26*t+7/36)+
-        21/41*sin(27*t+62/17)+
-        29/33*sin(28*t+70/19)+
-        15/19*sin(29*t+61/15)+
-        29/39*sin(30*t+17/15)+
-        33/41*sin(33*t+76/21)+
-        17/30*sin(34*t+56/17)+
-        9/10*sin(36*t+33/29)+
-        2/13*sin(37*t+21/8)+
-        1/65*sin(40*t+11/20)+
-        3/4*sin(42*t+14/15)+
-        1/12*sin(43*t+59/58)+
-        2/9*sin(46*t+50/21)+
-        8/39*sin(47*t+56/17)-1223/15)*
-        theta(3*embConstantPi-t)*
-        theta(t+embConstantPi))*
-        theta(sqrt(sgn(sin(t/2))))
-
-        setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale)
-    }
-
-    setRubberText("POLYGON_NUM_POINTS", numPts.toString())
-
-        for (j=0; j<dolphin_curve_basis_ints; j++) {
-            float coef = dolphin_curve_x[5*j]/(1.0*dolphin_curve_x[5*j+1])
-            float offset = dolphin_curve_x[5*j+2]/(1.0*dolphin_curve_x[5*j+3])
-            float t_mult = dophin_curve_x[5*j+4]
-            xx += coef * sin(offset + t_mult * t)
-        }
-        
-        for (j=0; j<dolphin_curve_basis_ints; j++) {
-            float coef = dolphin_curve_y[5*j]/(1.0*dolphin_curve_y[5*j+1])
-            float offset = dolphin_curve_y[5*j+2]/(1.0*dolphin_curve_y[5*j+3])
-            float t_mult = dophin_curve_y[5*j+4]
-            yy += coef * sin(offset + t_mult * t)
-        }
-#endif
-
-unsigned int rgb(unsigned char red, unsigned char green, unsigned char blue):
+def rgb(red, green, blue):
     return blue + green*256 + blue*256*256
 
 def load_settings():
@@ -4103,25 +243,25 @@ def checkBoxTipOfTheDayStateChanged(checked):
 def checkBoxUseOpenGLStateChanged(checked):
     dialog.display_use_opengl = checked
 
-def checkBoxRenderHintAAStateChanged(int checked):
+def checkBoxRenderHintAAStateChanged(checked):
     dialog.display_renderhint_aa = checked
 
-def checkBoxRenderHintTextAAStateChanged(int checked):
+def checkBoxRenderHintTextAAStateChanged(checked):
     dialog.display_renderhint_text_aa = checked
 
-def checkBoxRenderHintSmoothPixStateChanged(int checked):
+def checkBoxRenderHintSmoothPixStateChanged(checked):
     dialog.display_renderhint_smooth_pix = checked
 
-def checkBoxRenderHintHighAAStateChanged(int checked):
+def checkBoxRenderHintHighAAStateChanged(checked):
     dialog.display_renderhint_high_aa = checked
 
-def checkBoxRenderHintNonCosmeticStateChanged(int checked):
+def checkBoxRenderHintNonCosmeticStateChanged(checked):
     dialog.display_renderhint_noncosmetic = checked
 
 def comboBoxScrollBarWidgetCurrentIndexChanged(int index):
     dialog.display_scrollbar_widget_num = index
 
-def spinBoxZoomScaleInValueChanged(double value):
+def spinBoxZoomScaleInValueChanged(value):
     dialog.display_zoomscale_in = value
 
 def spinBoxZoomScaleOutValueChanged(value):
@@ -4151,40 +291,38 @@ def checkBoxQSnapEndPointStateChanged(checked):
 def checkBoxQSnapMidPointStateChanged(checked):
     dialog.qsnap_midpoint = checked
 
-def checkBoxQSnapCenterStateChanged(int checked):
+def checkBoxQSnapCenterStateChanged(checked):
     dialog.qsnap_center = checked
 
-def checkBoxQSnapNodeStateChanged(int checked):
+def checkBoxQSnapNodeStateChanged(checked):
     dialog.qsnap_node = checked
 
-def checkBoxQSnapQuadrantStateChanged(int checked):
+def checkBoxQSnapQuadrantStateChanged(checked):
     dialog.qsnap_quadrant = checked
 
-def checkBoxQSnapIntersectionStateChanged(int checked):
+def checkBoxQSnapIntersectionStateChanged(checked):
     dialog.qsnap_intersection = checked
 
-def checkBoxQSnapExtensionStateChanged(int checked):
+def checkBoxQSnapExtensionStateChanged(checked):
     dialog.qsnap_extension = checked
 
-def checkBoxQSnapInsertionStateChanged(int checked):
+def checkBoxQSnapInsertionStateChanged(checked):
     dialog.qsnap_insertion = checked
 
-def checkBoxQSnapPerpendicularStateChanged(int checked):
+def checkBoxQSnapPerpendicularStateChanged(checked):
     dialog.qsnap_perpendicular = checked
 
-def checkBoxQSnapTangentStateChanged(int checked):
+def checkBoxQSnapTangentStateChanged(checked):
     dialog.qsnap_tangent = checked
 
-def checkBoxQSnapNearestStateChanged(int checked):
+def checkBoxQSnapNearestStateChanged(checked):
     dialog.qsnap_nearest = checked
 
-def checkBoxQSnapApparentStateChanged(int checked):
+def checkBoxQSnapApparentStateChanged(checked):
     dialog.qsnap_apparent = checked
 
-def checkBoxQSnapParallelStateChanged(int checked):
+def checkBoxQSnapParallelStateChanged(checked):
     dialog.qsnap_parallel = checked
-
-dialog = {}
 
 def checkBoxSelectionModePickFirstStateChanged(checked):
     dialog["selection_mode_pickfirst"] = checked
@@ -4201,34 +339,34 @@ def sliderSelectionGripSizeValueChanged(value):
 def sliderSelectionPickBoxSizeValueChanged(value):
     dialog.selection_pickbox_size = value
 
-def spinBoxGridCenterXValueChanged(double value):
+def spinBoxGridCenterXValueChanged(value):
     dialog.grid_center.x = value
 
-def spinBoxGridCenterYValueChanged(double value):
+def spinBoxGridCenterYValueChanged(value):
     dialog.grid_center.y = value
 
-def spinBoxGridSizeXValueChanged(double value):
+def spinBoxGridSizeXValueChanged(value):
     dialog.grid_size.x = value
 
-def spinBoxGridSizeYValueChanged(double value):
+def spinBoxGridSizeYValueChanged(value):
     dialog.grid_size.y = value
 
-def spinBoxGridSpacingXValueChanged(double value):
+def spinBoxGridSpacingXValueChanged(value):
     dialog.grid_spacing.x = value
 
-def spinBoxGridSpacingYValueChanged(double value):
+def spinBoxGridSpacingYValueChanged(value):
     dialog.grid_spacing.y = value
 
-def spinBoxGridSizeRadiusValueChanged(double value):
+def spinBoxGridSizeRadiusValueChanged(value):
     dialog.grid_size_radius = value
 
-def spinBoxGridSpacingRadiusValueChanged(double value):
+def spinBoxGridSpacingRadiusValueChanged(value):
     dialog.grid_spacing_radius = value
 
-def spinBoxGridSpacingAngleValueChanged(double value):
+def spinBoxGridSpacingAngleValueChanged(value):
     dialog.grid_spacing_angle = value
 
-def checkBoxRulerShowOnLoadStateChanged(int checked):
+def checkBoxRulerShowOnLoadStateChanged(checked):
     dialog.ruler_show_on_load = checked
 
 
@@ -4251,40 +389,9 @@ QPointF to_qpointf(EmbVector c)
 EmbVector to_emb_vector(QPointF c)
 QIcon loadIcon(*icon)
 
-def add_to_path(QPainterPath *path, command, float pos[2], float scale[2])
-def add_list_to_path(QPainterPath *path, commands[], float pos[2], float scale[2])
+def add_to_path(QPainterPath *path, command, pos[2], scale[2])
+def add_list_to_path(QPainterPath *path, commands[], pos[2], scale[2])
 
-/* Class based code */
-class LayerManager : public QDialog:
-    Q_OBJECT
-
-public:
-    LayerManager(MainWindow* mw, QWidget *parent = 0)
-    ~LayerManager()
-
-    void addLayer(const QString& name,
-  const int visible,
-  const int frozen,
-  const float zValue,
-  const unsigned int color,
-  const QString& lineType,
-  const QString& lineWeight,
-  const int print)
-
-    QStandardItemModel*    layerModel
-    QSortFilterProxyModel* layerModelSorted
-    QTreeView* treeView
-]
-
-/* On Mac, if the user drops a file on the app's Dock icon, or uses Open As, then this is how the app actually opens the file.*/
-class Application : public QApplication:
-    Q_OBJECT
-public:
-    Application(int argc, char **argv)
-    void setMainWin(MainWindow* mainWin) { _mainWin = mainWin; }
-protected:
-    virtual bool event(QEvent *e)
-]
 
 class ImageWidget : public QWidget:
     Q_OBJECT
@@ -4335,7 +442,7 @@ private:
     View*  gview
     int fileWasLoaded
 
-    /* QPrinter   printer; */
+    # QPrinter   printer;
 
     QString curFile
     void setCurrentFile(const QString& fileName)
@@ -4404,9 +511,9 @@ public:
     MdiArea(MainWindow* mw, QWidget* parent = 0)
     ~MdiArea()
 
-    void useBackgroundLogo(int use)
-    void useBackgroundTexture(int use)
-    void useBackgroundColor(int use)
+    void useBackgroundLogo(use)
+    void useBackgroundTexture(use)
+    void useBackgroundColor(use)
 
     void setBackgroundLogo(const QString& fileName)
     void setBackgroundTexture(const QString& fileName)
@@ -4499,7 +606,7 @@ public:
 
     void onWindowActivated (QMdiSubWindow* w)
     void windowMenuAboutToShow()
-    void windowMenuActivated(int checked/*int id*/ )
+    void windowMenuActivated(int checked#int id )
 
     void updateAllViewScrollBars(int val)
     void updateAllViewCrossHairColors(unsigned int color)
@@ -4529,7 +636,7 @@ public:
     void print()
     void designDetails()
     void checkForUpdates()
-    /* Help Menu*/
+    # Help Menu
     void tipOfTheDay()
     void buttonTipOfTheDayClicked(int)
     void help();
@@ -4540,10 +647,10 @@ public:
     void closeToolBar(QAction*)
     void floatingChangedToolBar(int)
 
-    /* Icons*/
+    # Icons
     void iconResize(int iconSize)
 
-    /*Selectors*/
+    #Selectors
     void layerSelectorIndexChanged(int index)
     void colorSelectorIndexChanged(int index)
     void linetypeSelectorIndexChanged(int index)
@@ -4558,7 +665,7 @@ public:
     QString getCurrentLineType()
     QString getCurrentLineWeight()
 
-    /* Standard Slots*/
+    # Standard Slots
     int isShiftPressed()
     void setShiftPressed()
     void setShiftReleased()
@@ -4566,22 +673,22 @@ public:
     void deletePressed()
     void escapePressed()
 
-    void setTextSize(float num)
+    void setTextSize(num)
 
     void nativeAddArc(float, float, float, float, float, float, int rubberMode)
-    void nativeAddCircle(float centerX, float centerY, float radius, int fill, int rubberMode)
+    void nativeAddCircle(centerX, centerY, radius, int fill, int rubberMode)
     void nativeAddLine(float, float, float, float, float, int rubberMode)
-    void nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, int fill, int rubberMode)
-    void nativeAddPoint(float x, float y)
-    void nativeAddPolygon(float startX, float startY, const QPainterPath& p, int rubberMode)
-    void nativeAddTextSingle(const QString& str, float x, float y, float rot, int fill, int rubberMode)
-    void nativeAddPolyline(float startX, float startY, const QPainterPath& p, int rubberMode)
-    void nativeAddRectangle(float x, float y, float w, float h, float rot, int fill, int rubberMode)
-    void nativeAddDimLeader(float x1, float y1, float x2, float y2, float rot, int rubberMode)
-    
-    float nativeCalculateAngle(float x1, float y1, float x2, float y2)
-    float nativeCalculateDistance(float x1, float y1, float x2, float y2)
-    float nativePerpendicularDistance(float px, float py, float x1, float y1, float x2, float y2)
+    void nativeAddEllipse(centerX, centerY, width, height, rot, int fill, int rubberMode)
+    void nativeAddPoint(x, y)
+    void nativeAddPolygon(startX, startY, const QPainterPath& p, int rubberMode)
+    void nativeAddTextSingle(const QString& str, x, y, rot, int fill, int rubberMode)
+    void nativeAddPolyline(startX, startY, const QPainterPath& p, int rubberMode)
+    void nativeAddRectangle(x, y, w, h, rot, int fill, int rubberMode)
+    void nativeAddDimLeader(x1, y1, x2, y2, rot, int rubberMode)
+
+    nativeCalculateAngle(x1, y1, x2, y2)
+    nativeCalculateDistance(x1, y1, x2, y2)
+    nativePerpendicularDistance(px, py, x1, y1, x2, y2)
 
     virtual void resizeEvent(QResizeEvent*)
     void closeEvent(QCloseEvent *event)
@@ -4634,7 +741,7 @@ public:
 
     QList<QGraphicsItem*> selectedItemList
 
-    /*Helper functions*/
+    #Helper functions
     QToolButton*   createToolButton(const QString& iconName, const QString& txt)
     QLineEdit* createLineEdit(const QString& validatorType = QString(), int readOnly = false)
     QComboBox* createComboBox(int disable = false)
@@ -4642,7 +749,7 @@ public:
 
 
     void updateLineEditStrIfVaries(QLineEdit* lineEdit, const QString& str)
-    void updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, int useAnglePrecision)
+    void updateLineEditNumIfVaries(QLineEdit* lineEdit, num, int useAnglePrecision)
     void updateFontComboBoxStrIfVaries(QFontComboBox* fontComboBox, const QString& str)
     void updateComboBoxStrIfVaries(QComboBox* comboBox, const QString& str, const QStringList& strList)
     void updateComboBoxintIfVaries(QComboBox* comboBox, int val, int yesOrNoText)
@@ -4658,7 +765,7 @@ public:
     QToolButton* toolButtonQSelect
     QToolButton* toolButtonPickAdd
 
-    /*TODO: Alphabetic/Categorized TabWidget*/
+    #TODO: Alphabetic/Categorized TabWidget
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event)
@@ -4727,7 +834,7 @@ public:
 
     void addColorsToComboBox(QComboBox* comboBox)
 
-    /* Functions */
+    # Functions
     QWidget* createTabGeneral()
     QWidget* createTabFilesPaths()
     QWidget* createTabDisplay()
@@ -4819,7 +926,7 @@ class StatusBar : public QStatusBar:
 public:
     StatusBar(MainWindow* mw, QWidget* parent = 0)
 
-    void setMouseCoord(float x, float y)
+    void setMouseCoord(x, y)
 
 ]
 
@@ -4926,7 +1033,7 @@ QLineEdit*   lineEditInfiniteLineY2
 QLineEdit*   lineEditInfiniteLineVectorX
 QLineEdit*   lineEditInfiniteLineVectorY
 
-/*Used when checking if fields vary*/
+#Used when checking if fields vary
 QString fieldOldText
 QString fieldNewText
 QString fieldVariesText
@@ -5018,30 +1125,30 @@ QComboBox*   comboBoxTextSingleUpsideDown
 
 MainWindow* _mainWin = 0
 
-/*
+#
  * WARNING
  * -------
  * DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
  * and the item is double clicked, the scene will erratically move the item while zooming.
  * All movement has to be handled explicitly by us, not by the scene.
- */
+
 
 
 def MainWindow::readSettings():
     debug_message("Reading Settings...")
 
-    /* This file needs to be read from the users home directory to ensure it is writable. */
+    # This file needs to be read from the users home directory to ensure it is writable.
     QPoint pos(settings.window_x, settings.window_y)
     QSize size(settings.window_width, settings.window_height)
 
-    /*
+    #
     layoutState = settings_file.value("LayoutState").toByteArray()
     if(!restoreState(layoutState))
     {
         debug_message("LayoutState NOT restored! Setting Default Layout...")
         //someToolBar->setVisible(1)
     }
-    */
+
 
     load_settings()
 
@@ -5068,28 +1175,28 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
 
     setFrameShape(QFrame::NoFrame)
 
-    /* NOTE: This has to be done before setting mouse tracking. */
-    /*TODO: Review OpenGL for Qt5 later*/
-    /*if (mainWin->settings.display_use_opengl) {*/
-    /*    debug_message("Using OpenGL...");*/
-    /*    setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));*/
-    /*}*/
+    # NOTE: This has to be done before setting mouse tracking.
+    #TODO: Review OpenGL for Qt5 later
+    #if (mainWin->settings.display_use_opengl) {
+    #    debug_message("Using OpenGL...");
+    #    setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));
+    #}
 
-    /*TODO: Review RenderHints later*/
-    /*setRenderHint(QPainter::Antialiasing, mainWin->settings.display_render_hintAA());*/
-    /*setRenderHint(QPainter::TextAntialiasing, mainWin->settings.display_render_hintTextAA());*/
-    /*setRenderHint(QPainter::SmoothPixmapTransform, mainWin->settings.display_render_hintSmoothPix());*/
-    /*setRenderHint(QPainter::HighQualityAntialiasing, mainWin->settings.display_render_hintHighAA());*/
-    /*setRenderHint(QPainter::NonCosmeticDefaultPen, mainWin->settings.display_render_hint_noncosmetic);*/
+    #TODO: Review RenderHints later
+    #setRenderHint(QPainter::Antialiasing, mainWin->settings.display_render_hintAA());
+    #setRenderHint(QPainter::TextAntialiasing, mainWin->settings.display_render_hintTextAA());
+    #setRenderHint(QPainter::SmoothPixmapTransform, mainWin->settings.display_render_hintSmoothPix());
+    #setRenderHint(QPainter::HighQualityAntialiasing, mainWin->settings.display_render_hintHighAA());
+    #setRenderHint(QPainter::NonCosmeticDefaultPen, mainWin->settings.display_render_hint_noncosmetic);
 
-    /* NOTE
+    # NOTE
      * ----
      * FullViewportUpdate MUST be used for both the GL and Qt renderers.
      * Qt renderer will not draw the foreground properly if it isnt set.
-     */
+
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate)
 
-    panDistance = 10; /*TODO: should there be a setting for this???*/
+    panDistance = 10; #TODO: should there be a setting for this???
 
     setCursor(Qt::BlankCursor)
     horizontalScrollBar()->setCursor(Qt::ArrowCursor)
@@ -5107,7 +1214,7 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
         createGrid("")
 
     toggleRuler(settings.ruler_show_on_load)
-    toggleReal(1); /*TODO: load this from file, else settings with default being 1*/
+    toggleReal(1); #TODO: load this from file, else settings with default being 1
 
     settings.grippingActive = 0
     settings.rapidMoveActive = 0
@@ -5126,7 +1233,7 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
     settings.qSnapActive = 0
     settings.qSnapToggle = 0
 
-    /* Randomize the hot grip location initially so it's not located at (0,0). */
+    # Randomize the hot grip location initially so it's not located at (0,0).
     srand(1234)
 
     sceneGripPoint = QPointF((rand()%1000)*0.1, (rand()%1000)*0.1)
@@ -5148,7 +1255,7 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
 
     setMouseTracking(1)
     setBackgroundColor(settings.display_bg_color)
-    /*TODO: wrap this with a setBackgroundPixmap() function: setBackgroundBrush(QPixmap("images/canvas));*/
+    #TODO: wrap this with a setBackgroundPixmap() function: setBackgroundBrush(QPixmap("images/canvas));
 
     connect(gscene, SIGNAL(selectionChanged()), this, SLOT(selectionChanged()))
 
@@ -5159,7 +1266,7 @@ Settings_Dialog::Settings_Dialog(MainWindow* mw, const QString& showTab, QWidget
 
     tabWidget = new QTabWidget(this)
 
-    /*TODO: Add icons to tabs*/
+    #TODO: Add icons to tabs
     tabWidget->addTab(createTabGeneral(), tr("General"))
     tabWidget->addTab(createTabFilesPaths(), tr("Files/Paths"))
     tabWidget->addTab(createTabDisplay(), tr("Display"))
@@ -5173,11 +1280,9 @@ Settings_Dialog::Settings_Dialog(MainWindow* mw, const QString& showTab, QWidget
     tabWidget->addTab(createTabLineWeight(), tr("LineWeight"))
     tabWidget->addTab(createTabSelection(), tr("Selection"))
 
-    for (i=0; i<12; i++) {
+    for i in range(12):
         if (showTab == settings_tab_label[i]) {
             tabWidget->setCurrentIndex(i)
-        }
-    }
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel)
 
@@ -5199,7 +1304,7 @@ Settings_Dialog::~Settings_Dialog():
 QWidget* Settings_Dialog::createTabGeneral():
     QWidget* widget = new QWidget(this)
 
-    /*Language*/
+    #Language
     QGroupBox* groupBoxLanguage = new QGroupBox(tr("Language"), widget)
 
     QLabel* labelLanguage = new QLabel(tr("Language (Requires Restart)"), groupBoxLanguage)
@@ -5225,7 +1330,7 @@ QWidget* Settings_Dialog::createTabGeneral():
     vboxLayoutLanguage->addWidget(comboBoxLanguage)
     groupBoxLanguage->setLayout(vboxLayoutLanguage)
 
-    /*Icons*/
+    #Icons
     QGroupBox* groupBoxIcon = new QGroupBox(tr("Icons"), widget)
 
     QLabel* labelIconTheme = new QLabel(tr("Icon Theme"), groupBoxIcon)
@@ -5259,7 +1364,7 @@ QWidget* Settings_Dialog::createTabGeneral():
     vboxLayoutIcon->addWidget(comboBoxIconSize)
     groupBoxIcon->setLayout(vboxLayoutIcon)
 
-    /*Mdi Background*/
+    #Mdi Background
     QGroupBox* groupBoxMdiBG = new QGroupBox(tr("Background"), widget)
 
     QCheckBox* checkBoxMdiBGUseLogo = new QCheckBox(tr("Use Logo"), groupBoxMdiBG)
@@ -5314,7 +1419,7 @@ QWidget* Settings_Dialog::createTabGeneral():
     gridLayoutMdiBG->addWidget(buttonMdiBGColor, 2, 1, Qt::AlignRight)
     groupBoxMdiBG->setLayout(gridLayoutMdiBG)
 
-    /*Tips*/
+    #Tips
     QGroupBox* groupBoxTips = new QGroupBox(tr("Tips"), widget)
 
     QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("Show Tip of the Day on startup"), groupBoxTips)
@@ -5326,21 +1431,21 @@ QWidget* Settings_Dialog::createTabGeneral():
     vboxLayoutTips->addWidget(checkBoxTipOfTheDay)
     groupBoxTips->setLayout(vboxLayoutTips)
 
-    /*Help Browser*/
+    #Help Browser
     QGroupBox* groupBoxHelpBrowser = new QGroupBox(tr("Help Browser"), widget)
 
     QRadioButton* radioButtonSystemHelpBrowser = new QRadioButton(tr("System"), groupBoxHelpBrowser)
     radioButtonSystemHelpBrowser->setChecked(settings.general_system_help_browser)
     QRadioButton* radioButtonCustomHelpBrowser = new QRadioButton(tr("Custom"), groupBoxHelpBrowser)
     radioButtonCustomHelpBrowser->setChecked(!settings.general_system_help_browser)
-    radioButtonCustomHelpBrowser->setEnabled(0); /*TODO: finish this*/
+    radioButtonCustomHelpBrowser->setEnabled(0); #TODO: finish this
 
     QVBoxLayout* vboxLayoutHelpBrowser = new QVBoxLayout(groupBoxHelpBrowser)
     vboxLayoutHelpBrowser->addWidget(radioButtonSystemHelpBrowser)
     vboxLayoutHelpBrowser->addWidget(radioButtonCustomHelpBrowser)
     groupBoxHelpBrowser->setLayout(vboxLayoutHelpBrowser)
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(widget)
     vboxLayoutMain->addWidget(groupBoxLanguage)
     vboxLayoutMain->addWidget(groupBoxIcon)
@@ -5366,9 +1471,9 @@ QWidget* Settings_Dialog::createTabFilesPaths():
 QWidget* Settings_Dialog::createTabDisplay():
     QWidget* widget = new QWidget(this)
 
-    /*Rendering*/
-    /*TODO: Review OpenGL and Rendering settings for future inclusion*/
-    /*
+    #Rendering
+    #TODO: Review OpenGL and Rendering settings for future inclusion
+    #
     QGroupBox* groupBoxRender = new QGroupBox(tr("Rendering"), widget)
 
     QCheckBox* checkBoxUseOpenGL = new QCheckBox(tr("Use OpenGL"), groupBoxRender)
@@ -5409,9 +1514,9 @@ QWidget* Settings_Dialog::createTabDisplay():
     vboxLayoutRender->addWidget(checkBoxRenderHintHighAA)
     vboxLayoutRender->addWidget(checkBoxRenderHintNonCosmetic)
     groupBoxRender->setLayout(vboxLayoutRender)
-    */
 
-    /*ScrollBars*/
+
+    #ScrollBars
     QGroupBox* groupBoxScrollBars = new QGroupBox(tr("ScrollBars"), widget)
 
     QCheckBox* checkBoxShowScrollBars = new QCheckBox(tr("Show ScrollBars"), groupBoxScrollBars)
@@ -5438,7 +1543,7 @@ QWidget* Settings_Dialog::createTabDisplay():
     vboxLayoutScrollBars->addWidget(comboBoxScrollBarWidget)
     groupBoxScrollBars->setLayout(vboxLayoutScrollBars)
 
-    /*Colors*/
+    #Colors
     QGroupBox* groupBoxColor = new QGroupBox(tr("Colors"), widget)
 
     QLabel* labelCrossHairColor = new QLabel(tr("Crosshair Color"), groupBoxColor)
@@ -5526,7 +1631,7 @@ QWidget* Settings_Dialog::createTabDisplay():
     gridLayoutColor->addWidget(spinBoxSelectBoxAlpha, 6, 1, Qt::AlignRight)
     groupBoxColor->setLayout(gridLayoutColor)
 
-    /*Zoom*/
+    #Zoom
     QGroupBox* groupBoxZoom = new QGroupBox(tr("Zoom"), widget)
 
     QLabel* labelZoomScaleIn = new QLabel(tr("Zoom In Scale"), groupBoxZoom)
@@ -5552,9 +1657,9 @@ QWidget* Settings_Dialog::createTabDisplay():
     gridLayoutZoom->addWidget(spinBoxZoomScaleOut, 1, 1, Qt::AlignRight)
     groupBoxZoom->setLayout(gridLayoutZoom)
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
-    /*vboxLayoutMain->addWidget(groupBoxRender); //TODO: Review OpenGL and Rendering settings for future inclusion*/
+    #vboxLayoutMain->addWidget(groupBoxRender); //TODO: Review OpenGL and Rendering settings for future inclusion
     vboxLayoutMain->addWidget(groupBoxScrollBars)
     vboxLayoutMain->addWidget(groupBoxColor)
     vboxLayoutMain->addWidget(groupBoxZoom)
@@ -5566,13 +1671,13 @@ QWidget* Settings_Dialog::createTabDisplay():
     scrollArea->setWidget(widget)
     return scrollArea
 
-/* TODO: finish open/save options */
+# TODO: finish open/save options
 QWidget* Settings_Dialog::createTabOpenSave():
     QWidget* widget = new QWidget(this)
 
-    /*Custom Filter*/
+    #Custom Filter
     QGroupBox* groupBoxCustomFilter = new QGroupBox(tr("Custom Filter"), widget)
-    groupBoxCustomFilter->setEnabled(0); /*TODO: Fixup custom filter*/
+    groupBoxCustomFilter->setEnabled(0); #TODO: Fixup custom filter
 
     QPushButton* buttonCustomFilterSelectAll = new QPushButton(tr("Select All"), groupBoxCustomFilter)
     connect(buttonCustomFilterSelectAll, SIGNAL(clicked()), this, SLOT(buttonCustomFilterSelectAllClicked()))
@@ -5597,7 +1702,7 @@ QWidget* Settings_Dialog::createTabOpenSave():
 
     if(opensave_custom_filter.contains("supported", Qt::CaseInsensitive)) buttonCustomFilterSelectAllClicked()
 
-    /* Opening */
+    # Opening
     QGroupBox* groupBoxOpening = new QGroupBox(tr("File Open"), widget)
 
     QComboBox* comboBoxOpenFormat = new QComboBox(groupBoxOpening)
@@ -5605,7 +1710,7 @@ QWidget* Settings_Dialog::createTabOpenSave():
     QCheckBox* checkBoxOpenThumbnail = new QCheckBox(tr("Preview Thumbnails"), groupBoxOpening)
     checkBoxOpenThumbnail->setChecked(0)
 
-    /* TODO: Add a button to clear the recent history. */
+    # TODO: Add a button to clear the recent history.
 
     QLabel* labelRecentMaxFiles = new QLabel(tr("Number of recently accessed files to show"), groupBoxOpening)
     QSpinBox* spinBoxRecentMaxFiles = new QSpinBox(groupBoxOpening)
@@ -5626,7 +1731,7 @@ QWidget* Settings_Dialog::createTabOpenSave():
     vboxLayoutOpening->addWidget(frameRecent)
     groupBoxOpening->setLayout(vboxLayoutOpening)
 
-    /*Saving*/
+    #Saving
     QGroupBox* groupBoxSaving = new QGroupBox(tr("File Save"), widget)
 
     QComboBox* comboBoxSaveFormat = new QComboBox(groupBoxSaving)
@@ -5643,7 +1748,7 @@ QWidget* Settings_Dialog::createTabOpenSave():
     vboxLayoutSaving->addWidget(checkBoxAutoSave)
     groupBoxSaving->setLayout(vboxLayoutSaving)
 
-    /*Trimming*/
+    #Trimming
     QGroupBox* groupBoxTrim = new QGroupBox(tr("Trimming"), widget)
 
     QLabel* labelTrimDstNumJumps = new QLabel(tr("DST Only: Minimum number of jumps to trim"), groupBoxTrim)
@@ -5663,7 +1768,7 @@ QWidget* Settings_Dialog::createTabOpenSave():
     vboxLayoutTrim->addWidget(frameTrimDstNumJumps)
     groupBoxTrim->setLayout(vboxLayoutTrim)
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(widget)
     vboxLayoutMain->addWidget(groupBoxCustomFilter)
     vboxLayoutMain->addWidget(groupBoxOpening)
@@ -5678,7 +1783,7 @@ QWidget* Settings_Dialog::createTabOpenSave():
     return scrollArea
 
 QWidget* Settings_Dialog::createTabPrinting():
-    /*
+    #
     QWidget* widget = new QWidget(this)
 
     //Default Printer
@@ -5721,16 +1826,16 @@ QWidget* Settings_Dialog::createTabPrinting():
     vboxLayoutMain->addStretch(1)
     widget->setLayout(vboxLayoutMain)
 
-    */
+
     QScrollArea* scrollArea = new QScrollArea(this)
-    /*scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget); */
+    #scrollArea->setWidgetResizable(1)
+    scrollArea->setWidget(widget);
     return scrollArea
 
 QWidget* Settings_Dialog::createTabSnap():
     QWidget* widget = new QWidget(this)
 
-    /*TODO: finish this*/
+    #TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this)
     scrollArea->setWidgetResizable(1)
@@ -5740,7 +1845,7 @@ QWidget* Settings_Dialog::createTabSnap():
 QWidget* Settings_Dialog::createTabGridRuler():
     QWidget* widget = new QWidget(this)
 
-    /*Grid Misc*/
+    #Grid Misc
     QGroupBox* groupBoxGridMisc = new QGroupBox(tr("Grid Misc"), widget)
 
     QCheckBox* checkBoxGridShowOnLoad = new QCheckBox(tr("Initially show grid when loading a file"), groupBoxGridMisc)
@@ -5758,7 +1863,7 @@ QWidget* Settings_Dialog::createTabGridRuler():
     gridLayoutGridMisc->addWidget(checkBoxGridShowOrigin, 1, 0, Qt::AlignLeft)
     groupBoxGridMisc->setLayout(gridLayoutGridMisc)
 
-    /*Grid Color*/
+    #Grid Color
     QGroupBox* groupBoxGridColor = new QGroupBox(tr("Grid Color"), widget)
 
     QCheckBox* checkBoxGridColorMatchCrossHair = new QCheckBox(tr("Match grid color to crosshair color"), groupBoxGridColor)
@@ -5788,7 +1893,7 @@ QWidget* Settings_Dialog::createTabGridRuler():
     gridLayoutGridColor->addWidget(buttonGridColor, 1, 1, Qt::AlignRight)
     groupBoxGridColor->setLayout(gridLayoutGridColor)
 
-    /*Grid Geometry*/
+    #Grid Geometry
     QGroupBox* groupBoxGridGeom = new QGroupBox(tr("Grid Geometry"), widget)
 
     QCheckBox* checkBoxGridLoadFromFile = new QCheckBox(tr("Set grid size from opened file"), groupBoxGridGeom)
@@ -5967,7 +2072,7 @@ QWidget* Settings_Dialog::createTabGridRuler():
     gridLayoutGridGeom->addWidget(spinBoxGridSpacingAngle, 11, 1, Qt::AlignRight)
     groupBoxGridGeom->setLayout(gridLayoutGridGeom)
 
-    /*Ruler Misc*/
+    #Ruler Misc
     QGroupBox* groupBoxRulerMisc = new QGroupBox(tr("Ruler Misc"), widget)
 
     QCheckBox* checkBoxRulerShowOnLoad = new QCheckBox(tr("Initially show ruler when loading a file"), groupBoxRulerMisc)
@@ -5989,7 +2094,7 @@ QWidget* Settings_Dialog::createTabGridRuler():
     gridLayoutRulerMisc->addWidget(comboBoxRulerMetric, 1, 1, Qt::AlignRight)
     groupBoxRulerMisc->setLayout(gridLayoutRulerMisc)
 
-    /*Ruler Color*/
+    #Ruler Color
     QGroupBox* groupBoxRulerColor = new QGroupBox(tr("Ruler Color"), widget)
 
     QLabel* labelRulerColor = new QLabel(tr("Ruler Color"), groupBoxRulerColor)
@@ -6009,7 +2114,7 @@ QWidget* Settings_Dialog::createTabGridRuler():
     gridLayoutRulerColor->addWidget(buttonRulerColor, 1, 1, Qt::AlignRight)
     groupBoxRulerColor->setLayout(gridLayoutRulerColor)
 
-    /*Ruler Geometry*/
+    #Ruler Geometry
     QGroupBox* groupBoxRulerGeom = new QGroupBox(tr("Ruler Geometry"), widget)
 
     QLabel* labelRulerPixelSize = new QLabel(tr("Ruler Pixel Size"), groupBoxRulerGeom)
@@ -6027,7 +2132,7 @@ QWidget* Settings_Dialog::createTabGridRuler():
     gridLayoutRulerGeom->addWidget(spinBoxRulerPixelSize, 0, 1, Qt::AlignRight)
     groupBoxRulerGeom->setLayout(gridLayoutRulerGeom)
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
     vboxLayoutMain->addWidget(groupBoxGridMisc)
     vboxLayoutMain->addWidget(groupBoxGridColor)
@@ -6046,7 +2151,7 @@ QWidget* Settings_Dialog::createTabGridRuler():
 QWidget* Settings_Dialog::createTabOrthoPolar():
     QWidget* widget = new QWidget(this)
 
-    /*TODO: finish this*/
+    #TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this)
     scrollArea->setWidgetResizable(1)
@@ -6068,7 +2173,7 @@ QWidget* Settings_Dialog::createTabOrthoPolar():
 QWidget* Settings_Dialog::createTabQuickSnap():
     QWidget* widget = new QWidget(this)
 
-    /*QSnap Locators*/
+    #QSnap Locators
     QGroupBox* groupBoxQSnapLoc = new QGroupBox(tr("Locators Used"), widget)
     QPushButton* buttonQSnapSelectAll = new QPushButton(tr("Select All"), groupBoxQSnapLoc)
     QPushButton* buttonQSnapClearAll = new QPushButton(tr("Clear All"), groupBoxQSnapLoc)
@@ -6096,7 +2201,7 @@ QWidget* Settings_Dialog::createTabQuickSnap():
     gridLayoutQSnap->setColumnStretch(2,1)
     groupBoxQSnapLoc->setLayout(gridLayoutQSnap)
 
-    /*QSnap Visual Config*/
+    #QSnap Visual Config
     QGroupBox* groupBoxQSnapVisual = new QGroupBox(tr("Visual Configuration"), widget)
 
     QLabel* labelQSnapLocColor = new QLabel(tr("Locator Color"), groupBoxQSnapVisual)
@@ -6120,7 +2225,7 @@ QWidget* Settings_Dialog::createTabQuickSnap():
     vboxLayoutQSnapVisual->addWidget(sliderQSnapLocSize)
     groupBoxQSnapVisual->setLayout(vboxLayoutQSnapVisual)
 
-    /*QSnap Sensitivity Config*/
+    #QSnap Sensitivity Config
     QGroupBox* groupBoxQSnapSensitivity = new QGroupBox(tr("Sensitivity"), widget)
 
     QLabel* labelQSnapApertureSize = new QLabel(tr("Aperture Size"), groupBoxQSnapSensitivity)
@@ -6135,7 +2240,7 @@ QWidget* Settings_Dialog::createTabQuickSnap():
     vboxLayoutQSnapSensitivity->addWidget(sliderQSnapApertureSize)
     groupBoxQSnapSensitivity->setLayout(vboxLayoutQSnapSensitivity)
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
     vboxLayoutMain->addWidget(groupBoxQSnapLoc)
     vboxLayoutMain->addWidget(groupBoxQSnapVisual)
@@ -6153,7 +2258,7 @@ QWidget* Settings_Dialog::createTabQuickSnap():
 QWidget* Settings_Dialog::createTabQuickTrack():
     QWidget* widget = new QWidget(this)
 
-    /* TODO: finish this */
+    # TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this)
     scrollArea->setWidgetResizable(1)
@@ -6163,9 +2268,9 @@ QWidget* Settings_Dialog::createTabQuickTrack():
 QWidget* Settings_Dialog::createTabLineWeight():
     QWidget* widget = new QWidget(this)
 
-    /* TODO: finish this */
+    # TODO: finish this
 
-    /* Misc */
+    # Misc
     QGroupBox* groupBoxLwtMisc = new QGroupBox(tr("LineWeight Misc"), widget)
 
     QGraphicsScene* s = mainWin->activeScene()
@@ -6195,12 +2300,12 @@ QWidget* Settings_Dialog::createTabLineWeight():
     checkBoxRealRender->setEnabled(dialog.lwt_show_lwt)
 
     QLabel* labelDefaultLwt = new QLabel(tr("Default weight"), groupBoxLwtMisc)
-    labelDefaultLwt->setEnabled(0); /* TODO: remove later */
+    labelDefaultLwt->setEnabled(0); # TODO: remove later
     QComboBox* comboBoxDefaultLwt = new QComboBox(groupBoxLwtMisc)
     dialog.lwt_default_lwt = settings.lwt_default_lwt
-    /* TODO: populate the comboBox and set the initial value */
+    # TODO: populate the comboBox and set the initial value
     comboBoxDefaultLwt->addItem(QString().setNum(dialog.lwt_default_lwt, 'F', 2).append(" mm"), dialog.lwt_default_lwt)
-    comboBoxDefaultLwt->setEnabled(0); /* TODO: remove later */
+    comboBoxDefaultLwt->setEnabled(0); # TODO: remove later
 
     QVBoxLayout* vboxLayoutLwtMisc = new QVBoxLayout(groupBoxLwtMisc)
     vboxLayoutLwtMisc->addWidget(checkBoxShowLwt)
@@ -6209,7 +2314,7 @@ QWidget* Settings_Dialog::createTabLineWeight():
     vboxLayoutLwtMisc->addWidget(comboBoxDefaultLwt)
     groupBoxLwtMisc->setLayout(vboxLayoutLwtMisc)
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
     vboxLayoutMain->addWidget(groupBoxLwtMisc)
     vboxLayoutMain->addStretch(1)
@@ -6223,13 +2328,13 @@ QWidget* Settings_Dialog::createTabLineWeight():
 QWidget* Settings_Dialog::createTabSelection():
     QWidget* widget = new QWidget(this)
 
-    /* Selection Modes */
+    # Selection Modes
     QGroupBox* groupBoxSelectionModes = new QGroupBox(tr("Modes"), widget)
 
     QCheckBox* checkBoxSelectionModePickFirst = new QCheckBox(tr("Allow Preselection (PickFirst)"), groupBoxSelectionModes)
     dialog.selection_mode_pickfirst = settings.selection_mode_pickfirst
     checkBoxSelectionModePickFirst->setChecked(dialog.selection_mode_pickfirst)
-    checkBoxSelectionModePickFirst->setChecked(1); checkBoxSelectionModePickFirst->setEnabled(0); /* TODO: Remove this line when Post-selection is available */
+    checkBoxSelectionModePickFirst->setChecked(1); checkBoxSelectionModePickFirst->setEnabled(0); # TODO: Remove this line when Post-selection is available
     connect(checkBoxSelectionModePickFirst, SIGNAL(stateChanged(int)), this, SLOT(checkBoxSelectionModePickFirstStateChanged(int)))
 
     QCheckBox* checkBoxSelectionModePickAdd = new QCheckBox(tr("Add to Selection (PickAdd)"), groupBoxSelectionModes)
@@ -6240,7 +2345,7 @@ QWidget* Settings_Dialog::createTabSelection():
     QCheckBox* checkBoxSelectionModePickDrag = new QCheckBox(tr("Drag to Select (PickDrag)"), groupBoxSelectionModes)
     dialog.selection_mode_pickdrag = settings.selection_mode_pickdrag
     checkBoxSelectionModePickDrag->setChecked(dialog.selection_mode_pickdrag)
-    checkBoxSelectionModePickDrag->setChecked(0); checkBoxSelectionModePickDrag->setEnabled(0); /*TODO: Remove this line when this functionality is available*/
+    checkBoxSelectionModePickDrag->setChecked(0); checkBoxSelectionModePickDrag->setEnabled(0); #TODO: Remove this line when this functionality is available
     connect(checkBoxSelectionModePickDrag, SIGNAL(stateChanged(int)), this, SLOT(checkBoxSelectionModePickDragStateChanged(int)))
 
     QVBoxLayout* vboxLayoutSelectionModes = new QVBoxLayout(groupBoxSelectionModes)
@@ -6249,7 +2354,7 @@ QWidget* Settings_Dialog::createTabSelection():
     vboxLayoutSelectionModes->addWidget(checkBoxSelectionModePickDrag)
     groupBoxSelectionModes->setLayout(vboxLayoutSelectionModes)
 
-    /*Selection Colors*/
+    #Selection Colors
     QGroupBox* groupBoxSelectionColors = new QGroupBox(tr("Colors"), widget)
 
     QLabel* labelCoolGripColor = new QLabel(tr("Cool Grip (Unselected)"), groupBoxSelectionColors)
@@ -6273,7 +2378,7 @@ QWidget* Settings_Dialog::createTabSelection():
     vboxLayoutSelectionColors->addWidget(comboBoxHotGripColor)
     groupBoxSelectionColors->setLayout(vboxLayoutSelectionColors)
 
-    /*Selection Sizes*/
+    #Selection Sizes
     QGroupBox* groupBoxSelectionSizes = new QGroupBox(tr("Sizes"), widget)
 
     QLabel* labelSelectionGripSize = new QLabel(tr("Grip Size"), groupBoxSelectionSizes)
@@ -6297,7 +2402,7 @@ QWidget* Settings_Dialog::createTabSelection():
     vboxLayoutSelectionSizes->addWidget(sliderSelectionPickBoxSize)
     groupBoxSelectionSizes->setLayout(vboxLayoutSelectionSizes)
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
     vboxLayoutMain->addWidget(groupBoxSelectionModes)
     vboxLayoutMain->addWidget(groupBoxSelectionColors)
@@ -6318,7 +2423,7 @@ def Settings_Dialog::addColorsToComboBox(QComboBox* comboBox):
     comboBox->addItem(loadIcon(colorblue_xpm), tr("Blue"), qRgb(  0, 0,255))
     comboBox->addItem(loadIcon(colormagenta_xpm), tr("Magenta"), qRgb(255, 0,255))
     comboBox->addItem(loadIcon(colorwhite_xpm), tr("White"), qRgb(255,255,255))
-    /* TODO: Add Other... so the user can select custom colors */
+    # TODO: Add Other... so the user can select custom colors
 }
 
 def Settings_Dialog::comboBoxLanguageCurrentIndexChanged(const QString& lang):
@@ -6339,7 +2444,7 @@ def Settings_Dialog::comboBoxIconSizeCurrentIndexChanged(int index):
     else
         dialog.general_icon_size = 16
 
-def Settings_Dialog::checkBoxGeneralMdiBGUseLogoStateChanged(int checked):
+def Settings_Dialog::checkBoxGeneralMdiBGUseLogoStateChanged(checked):
     preview.general_mdi_bg_use_logo = checked
     mainWin->mdiArea->useBackgroundLogo(checked)
 
@@ -6355,12 +2460,12 @@ def Settings_Dialog::chooseGeneralMdiBackgroundLogo():
         if (!selectedImage.isNull())
             strcpy(accept_.general_mdi_bg_logo, selectedImage.toLocal8Bit().constData())
 
-        /*Update immediately so it can be previewed*/
+        #Update immediately so it can be previewed
         mainWin->mdiArea->setBackgroundLogo(accept_.general_mdi_bg_logo)
     }
 }
 
-def Settings_Dialog::checkBoxGeneralMdiBGUseTextureStateChanged(int checked):
+def Settings_Dialog::checkBoxGeneralMdiBGUseTextureStateChanged(checked):
     preview.general_mdi_bg_use_texture = checked
     mainWin->mdiArea->useBackgroundTexture(checked)
 
@@ -6376,12 +2481,12 @@ def Settings_Dialog::chooseGeneralMdiBackgroundTexture():
             strcpy(accept_.general_mdi_bg_texture, selectedImage.toLocal8Bit().constData())
         }
 
-        /*Update immediately so it can be previewed*/
+        #Update immediately so it can be previewed
         mainWin->mdiArea->setBackgroundTexture(accept_.general_mdi_bg_texture)
     }
 }
 
-def Settings_Dialog::checkBoxGeneralMdiBGUseColorStateChanged(int checked):
+def Settings_Dialog::checkBoxGeneralMdiBGUseColorStateChanged(checked):
     preview.general_mdi_bg_use_color = checked
     mainWin->mdiArea->useBackgroundColor(checked)
 
@@ -6408,7 +2513,7 @@ def Settings_Dialog::currentGeneralMdiBackgroundColorChanged(const QColor& color
     mainWin->mdiArea->setBackgroundColor(QColor(preview.general_mdi_bg_color))
 
 
-/*
+#
 check_func(checkBoxTipOfTheDayStateChanged, general_tip_of_the_day)
 check_func(checkBoxUseOpenGLStateChanged, display_use_opengl)
 check_func(checkBoxRenderHintAAStateChanged, display_renderhint_aa)
@@ -6416,19 +2521,19 @@ check_func(checkBoxRenderHintTextAAStateChanged, display_renderhint_text_aa)
 check_func(checkBoxRenderHintSmoothPixStateChanged, display_renderhint_smooth_pix)
 check_func(checkBoxRenderHintHighAAStateChanged, display_renderhint_high_aa)
 check_func(checkBoxRenderHintNonCosmeticStateChanged, display_renderhint_noncosmetic)
-*/
 
-def Settings_Dialog::checkBoxShowScrollBarsStateChanged(int checked):
+
+def Settings_Dialog::checkBoxShowScrollBarsStateChanged(checked):
     preview.display_show_scrollbars = checked
     mainWin->updateAllViewScrollBars(preview.display_show_scrollbars)
 
-def Settings_Dialog::spinBoxZoomScaleInValueChanged(double value):
+def Settings_Dialog::spinBoxZoomScaleInValueChanged(value):
     dialog.display_zoomscale_in = value
 
-def Settings_Dialog::spinBoxZoomScaleOutValueChanged(double value):
+def Settings_Dialog::spinBoxZoomScaleOutValueChanged(value):
     dialog.display_zoomscale_out = value
 
-def Settings_Dialog::checkBoxDisableBGStateChanged(int checked):
+def Settings_Dialog::checkBoxDisableBGStateChanged(checked):
     dialog.printing_disable_bg = checked
 
 def Settings_Dialog::chooseDisplayCrossHairColor():
@@ -6613,7 +2718,7 @@ def Settings_Dialog::currentDisplaySelectBoxRightFillChanged(const QColor& color
         preview.display_selectbox_right_fill,
         preview.display_selectbox_alpha)
 
-def Settings_Dialog::spinBoxDisplaySelectBoxAlphaValueChanged(int value):
+def Settings_Dialog::spinBoxDisplaySelectBoxAlphaValueChanged(value):
     preview.display_selectbox_alpha = value
     mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
         accept_.display_selectbox_left_fill,
@@ -6621,7 +2726,7 @@ def Settings_Dialog::spinBoxDisplaySelectBoxAlphaValueChanged(int value):
         accept_.display_selectbox_right_fill,
         preview.display_selectbox_alpha)
 
-def Settings_Dialog::checkBoxCustomFilterStateChanged(int checked):
+def Settings_Dialog::checkBoxCustomFilterStateChanged(checked):
     QCheckBox* checkBox = qobject_cast<QCheckBox*>(sender())
     if(checkBox)
     {
@@ -6631,7 +2736,7 @@ def Settings_Dialog::checkBoxCustomFilterStateChanged(int checked):
             opensave_custom_filter.append(" *." + format.toLower())
         else
             opensave_custom_filter.remove("*." + format, Qt::CaseInsensitive)
-        /*dialog.opensave_custom_filter = checked; //TODO*/
+        #dialog.opensave_custom_filter = checked; //TODO
 
 
 def Settings_Dialog::buttonCustomFilterSelectAllClicked():
@@ -6642,7 +2747,7 @@ def Settings_Dialog::buttonCustomFilterClearAllClicked():
     emit buttonCustomFilterClearAll(0)
     opensave_custom_filter.clear()
 
-def Settings_Dialog::checkBoxGridColorMatchCrossHairStateChanged(int checked):
+def Settings_Dialog::checkBoxGridColorMatchCrossHairStateChanged(checked):
     dialog.grid_color_match_crosshair = checked
     if (dialog.grid_color_match_crosshair) {
         mainWin->updateAllViewGridColors(accept_.display_crosshair_color)
@@ -6685,7 +2790,7 @@ def Settings_Dialog::currentGridColorChanged(const QColor& color):
     preview.grid_color = color.rgb()
     mainWin->updateAllViewGridColors(preview.grid_color)
 
-def Settings_Dialog::checkBoxGridLoadFromFileStateChanged(int checked):
+def Settings_Dialog::checkBoxGridLoadFromFileStateChanged(checked):
     dialog.grid_load_from_file = checked
 
     QObject* senderObj = sender()
@@ -6699,13 +2804,13 @@ def Settings_Dialog::checkBoxGridLoadFromFileStateChanged(int checked):
             QCheckBox* checkBoxGridCenterOnOrigin = parent->findChild<QCheckBox*>("checkBoxGridCenterOnOrigin")
             if(checkBoxGridCenterOnOrigin) checkBoxGridCenterOnOrigin->setEnabled(!dialog.grid_load_from_file)
             QLabel* labelGridCenterX = parent->findChild<QLabel*>("labelGridCenterX")
-            if(labelGridCenterX) labelGridCenterX->setEnabled(!dialog.grid_load_from_file && !dialog.grid_center_on_origin)
+            if(labelGridCenterX) labelGridCenterX->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
             QDoubleSpinBox* spinBoxGridCenterX = parent->findChild<QDoubleSpinBox*>("spinBoxGridCenterX")
-            if(spinBoxGridCenterX) spinBoxGridCenterX->setEnabled(!dialog.grid_load_from_file && !dialog.grid_center_on_origin)
+            if(spinBoxGridCenterX) spinBoxGridCenterX->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
             QLabel* labelGridCenterY = parent->findChild<QLabel*>("labelGridCenterY")
-            if(labelGridCenterY) labelGridCenterY->setEnabled(!dialog.grid_load_from_file && !dialog.grid_center_on_origin)
+            if(labelGridCenterY) labelGridCenterY->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
             QDoubleSpinBox* spinBoxGridCenterY = parent->findChild<QDoubleSpinBox*>("spinBoxGridCenterY")
-            if(spinBoxGridCenterY) spinBoxGridCenterY->setEnabled(!dialog.grid_load_from_file && !dialog.grid_center_on_origin)
+            if(spinBoxGridCenterY) spinBoxGridCenterY->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
             QLabel* labelGridSizeX = parent->findChild<QLabel*>("labelGridSizeX")
             if(labelGridSizeX) labelGridSizeX->setEnabled(!dialog.grid_load_from_file)
             QDoubleSpinBox* spinBoxGridSizeX = parent->findChild<QDoubleSpinBox*>("spinBoxGridSizeX")
@@ -6790,7 +2895,7 @@ def Settings_Dialog::comboBoxGridTypeCurrentIndexChanged(const QString& type):
             if(spinBoxGridSpacingAngle) spinBoxGridSpacingAngle->setVisible(visibility)
 
 
-def Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(int checked):
+def Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(checked):
     dialog.grid_center_on_origin = checked
 
     QObject* senderObj = sender()
@@ -6822,8 +2927,10 @@ def Settings_Dialog::comboBoxRulerMetricCurrentIndexChanged(int index):
 def Settings_Dialog::chooseRulerColor():
     QPushButton* button = qobject_cast<QPushButton*>(sender())
     if (button) {
-        QColorDialog* colorDialog = new QColorDialog(QColor(accept_.ruler_color), this)
-        connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentRulerColorChanged(const QColor&)))
+        QColorDialog* colorDialog = new QColorDialog(
+            QColor(accept_.ruler_color), this)
+        connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)),
+            this, SLOT(currentRulerColorChanged(const QColor&)))
         colorDialog->exec()
 
         if (colorDialog->result() == QDialog::Accepted) {
@@ -6835,9 +2942,6 @@ def Settings_Dialog::chooseRulerColor():
         }
         else {
             mainWin->updateAllViewRulerColors(dialog.ruler_color)
-        }
-    }
-}
 
 def Settings_Dialog::currentRulerColorChanged(const QColor& color):
     preview.ruler_color = color.rgb()
@@ -6849,7 +2953,7 @@ def Settings_Dialog::buttonQSnapSelectAllClicked():
 def Settings_Dialog::buttonQSnapClearAllClicked():
     emit buttonQSnapClearAll(0)
 
-/*
+#
  * TODO:
  * Figure out how to abstract the slot in a way that it can be used for
  * comboBoxes in general
@@ -6858,30 +2962,27 @@ def Settings_Dialog::buttonQSnapClearAllClicked():
  *        comboBoxSelectionHotGripColorCurrentIndexChanged(int index)
  * are all similar except the dialog. variable being worked on and the
  * QVariant.
- */
+
 
 def Settings_Dialog::comboBoxQSnapLocatorColorCurrentIndexChanged(int index):
-    /* TODO: Alert user if color matched the display bg color */
+    # TODO: Alert user if color matched the display bg color
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender())
-    unsigned int defaultColor = qRgb(255,255,0); /* Yellow */
-    if (comboBox) {
+    unsigned int defaultColor = qRgb(255,255,0); # Yellow
+    if comboBox:
         bool ok = 0
         dialog.qsnap_locator_color = comboBox->itemData(index).toUInt(&ok)
         if(!ok)
             dialog.qsnap_locator_color = defaultColor
-    }
-    else {
+    else:
         dialog.qsnap_locator_color = defaultColor
-    }
-}
 
-def Settings_Dialog::sliderQSnapLocatorSizeValueChanged(int value):
+def Settings_Dialog::sliderQSnapLocatorSizeValueChanged(value):
     dialog.qsnap_locator_size = value
 
-def Settings_Dialog::sliderQSnapApertureSizeValueChanged(int value):
+def Settings_Dialog::sliderQSnapApertureSizeValueChanged(value):
     dialog.qsnap_aperture_size = value
 
-def Settings_Dialog::checkBoxLwtShowLwtStateChanged(int checked):
+def Settings_Dialog::checkBoxLwtShowLwtStateChanged(checked):
     preview.lwt_show_lwt = checked
     if (preview.lwt_show_lwt) {
         enableLwt()
@@ -6898,7 +2999,7 @@ def Settings_Dialog::checkBoxLwtShowLwtStateChanged(int checked):
             if (checkBoxRealRender) {
                 checkBoxRealRender->setEnabled(preview.lwt_show_lwt)
 
-def Settings_Dialog::checkBoxLwtRealRenderStateChanged(int checked):
+def Settings_Dialog::checkBoxLwtRealRenderStateChanged(checked):
     preview.lwt_real_render = checked
     if preview.lwt_real_render:
         enableReal()
@@ -6906,9 +3007,9 @@ def Settings_Dialog::checkBoxLwtRealRenderStateChanged(int checked):
         disableReal()
 
 def Settings_Dialog::comboBoxSelectionCoolGripColorCurrentIndexChanged(int index):
-    /* TODO: Alert user if color matched the display bg color */
+    # TODO: Alert user if color matched the display bg color
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender())
-    unsigned int defaultColor = qRgb(0,0,255); /*Blue*/
+    unsigned int defaultColor = qRgb(0,0,255); #Blue
     if (comboBox) {
         bool ok = 0
         dialog.selection_coolgrip_color = comboBox->itemData(index).toUInt(&ok)
@@ -6918,9 +3019,9 @@ def Settings_Dialog::comboBoxSelectionCoolGripColorCurrentIndexChanged(int index
         dialog.selection_coolgrip_color = defaultColor
 
 def Settings_Dialog::comboBoxSelectionHotGripColorCurrentIndexChanged(int index):
-    /* TODO: Alert user if color matched the display bg color */
+    # TODO: Alert user if color matched the display bg color
     QComboBox* comboBox = qobject_cast<QComboBox*>(sender())
-    unsigned int defaultColor = qRgb(255,0,0); /* Red */
+    unsigned int defaultColor = qRgb(255,0,0); # Red
     if (comboBox) {
         ok = False
         dialog.selection_hotgrip_color = comboBox->itemData(index).toUInt(&ok)
@@ -6968,9 +3069,9 @@ def Settings_Dialog::acceptChanges():
     accept()
 
 def Settings_Dialog::rejectChanges():
-    /*TODO: inform the user if they have changed settings*/
+    #TODO: inform the user if they have changed settings
 
-    /*Update the view since the user must accept the preview*/
+    #Update the view since the user must accept the preview
     mainWin->mdiArea->useBackgroundLogo(dialog.general_mdi_bg_use_logo)
     mainWin->mdiArea->useBackgroundTexture(dialog.general_mdi_bg_use_texture)
     mainWin->mdiArea->useBackgroundColor(dialog.general_mdi_bg_use_color)
@@ -7000,13 +3101,13 @@ PropertyEditor::PropertyEditor(const QString& iconDirectory, int pickAddMode, QW
     int i
     iconDir = iconDirectory
     iconSize = 16
-    propertyEditorButtonStyle = Qt::ToolButtonTextBesideIcon; /*TODO: Make customizable*/
+    propertyEditorButtonStyle = Qt::ToolButtonTextBesideIcon; #TODO: Make customizable
     setMinimumSize(100,100)
 
     pickAdd = pickAddMode
 
-    precisionAngle = 0; /*TODO: Load this from settings and provide function for updating from settings*/
-    precisionLength = 4; /*TODO: Load this from settings and provide function for updating from settings*/
+    precisionAngle = 0; #TODO: Load this from settings and provide function for updating from settings
+    precisionLength = 4; #TODO: Load this from settings and provide function for updating from settings
 
     signalMapper = new QSignalMapper(this)
 
@@ -7096,12 +3197,12 @@ QToolButton* PropertyEditor::createToolButtonQSelect():
     toolButtonQSelect->setIcon(loadIcon(quickselect_xpm))
     toolButtonQSelect->setIconSize(QSize(iconSize, iconSize))
     toolButtonQSelect->setText("QSelect")
-    toolButtonQSelect->setToolTip("QSelect"); /*TODO: Better Description*/
+    toolButtonQSelect->setToolTip("QSelect"); #TODO: Better Description
     toolButtonQSelect->setToolButtonStyle(Qt::ToolButtonIconOnly)
     return toolButtonQSelect
 
 QToolButton* PropertyEditor::createToolButtonPickAdd():
-    /*TODO: Set as PickAdd or PickNew based on settings*/
+    #TODO: Set as PickAdd or PickNew based on settings
     toolButtonPickAdd = new QToolButton(this)
     updatePickAddModeButton(pickAdd)
     connect(toolButtonPickAdd, SIGNAL(clicked(int)), this, SLOT(togglePickAddMode()))
@@ -7122,15 +3223,13 @@ def PropertyEditor::updatePickAddModeButton(int pickAddMode):
         toolButtonPickAdd->setText("PickNew")
         toolButtonPickAdd->setToolTip("PickNew Mode - Replace current selection.\nClick to switch to PickAdd Mode.")
         toolButtonPickAdd->setToolButtonStyle(Qt::ToolButtonIconOnly)
-    }
-}
 
 def PropertyEditor::togglePickAddMode():
     emit pickAddModeToggled()
 
 def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
     selectedItemList = itemList
-    /*Hide all the groups initially, then decide which ones to show*/
+    #Hide all the groups initially, then decide which ones to show
     hideAllGroups()
     comboBoxSelected->clear()
 
@@ -7156,44 +3255,37 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
         int objType = item->type()
         typeSet.insert(objType)
 
-        if (objType > OBJ_TYPE_BASE && objType < OBJ_TYPE_UNKNOWN) {
+        if (objType > OBJ_TYPE_BASE and objType < OBJ_TYPE_UNKNOWN) {
             if (numObjects[objType-OBJ_TYPE_BASE] == 0) {
                 numTypes++
-            }
             numObjects[objType-OBJ_TYPE_BASE]++
-        }
         else {
             numObjects[OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE]++
-        }
-    }
 
-    /*==================================================*/
-    /* Populate the selection comboBox*/
-    /*==================================================*/
+    # ==================================================
+    #  Populate the selection comboBox
+    # ==================================================
     if (numTypes > 1) {
         comboBoxSelected->addItem(tr("Varies") + " (" + QString().setNum(numAll) + ")")
         connect(comboBoxSelected, SIGNAL(currentIndexChanged(int)), this, SLOT(showOneType(int)))
-    }
 
     for (i=0; i<31; i++) {
         if (numObjects[i] > 0) {
             QString comboBoxStr = tr(obj_names[i])
                 + " (" + QString().setNum(numObjects[i]) + ")"
             comboBoxSelected->addItem(comboBoxStr, OBJ_TYPE_BASE+i)
-        }
-    }
 
-    /* ==================================================
+    # ==================================================
      * Load Data into the fields
-     * ================================================== */
+     * ==================================================
 
-    /* Clear fields first so if the selected data varies, the comparison is simple */
+    # Clear fields first so if the selected data varies, the comparison is simple
     clearAllFields()
 
     foreach(QGraphicsItem* item, itemList) {
         if(!item) continue
 
-        /* TODO: load data into the General field */
+        # TODO: load data into the General field
 
         int objType = item->type()
         switch (objType) {
@@ -7221,7 +3313,7 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             break
         case OBJ_TYPE_BLOCK:
             {
-            /*TODO: load block data*/
+            #TODO: load block data
             }
             break
         case OBJ_TYPE_CIRCLE:
@@ -7240,42 +3332,42 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             break
         case OBJ_TYPE_DIMALIGNED:
             {
-            /* TODO: load aligned dimension data */
+            # TODO: load aligned dimension data
             }
             break
         case OBJ_TYPE_DIMANGULAR:
             {
-            /* TODO: load angular dimension data */
+            # TODO: load angular dimension data
             }
             break
         case OBJ_TYPE_DIMARCLENGTH:
             {
-            /* TODO: load arclength dimension data */
+            # TODO: load arclength dimension data
             }
             break
         case OBJ_TYPE_DIMDIAMETER:
             {
-            /* TODO: load diameter dimension data */
+            # TODO: load diameter dimension data
             }
             break
         case OBJ_TYPE_DIMLEADER:
             {
-            /* TODO: load leader dimension data */
+            # TODO: load leader dimension data
             }
             break
         case OBJ_TYPE_DIMLINEAR:
             {
-            /* TODO: load linear dimension data */
+            # TODO: load linear dimension data
             }
             break
         case OBJ_TYPE_DIMORDINATE:
             {
-            /* TODO: load ordinate dimension data */
+            # TODO: load ordinate dimension data
             }
             break
         case OBJ_TYPE_DIMRADIUS:
             {
-            /* TODO: load radius dimension data */
+            # TODO: load radius dimension data
             }
             break
         case OBJ_TYPE_ELLIPSE:
@@ -7294,12 +3386,12 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             break
         case OBJ_TYPE_IMAGE:
             {
-            /*TODO: load image data*/
+            #TODO: load image data
             }
             break
         case OBJ_TYPE_INFINITELINE:
             {
-            /* TODO: load infinite line data */
+            # TODO: load infinite line data
             }
             break
         case OBJ_TYPE_LINE:
@@ -7319,7 +3411,7 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             break
         case OBJ_TYPE_PATH:
         {
-            /*TODO: load path data*/
+            #TODO: load path data
         }
             break
         case OBJ_TYPE_POINT:
@@ -7333,17 +3425,17 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             break
         case OBJ_TYPE_POLYGON:
             {
-            /*TODO: load polygon data*/
+            #TODO: load polygon data
             }
             break
         case OBJ_TYPE_POLYLINE:
             {
-            /*TODO: load polyline data*/
+            #TODO: load polyline data
             }
             break
         case OBJ_TYPE_RAY:
             {
-            /*TODO: load ray data*/
+            #TODO: load ray data
             }
             break
         case OBJ_TYPE_RECTANGLE:
@@ -7371,7 +3463,7 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             break
         case OBJ_TYPE_TEXTMULTI:
             {
-            /* TODO: load multiline text data */
+            # TODO: load multiline text data
             }
             break
         case OBJ_TYPE_TEXTSINGLE:
@@ -7395,9 +3487,9 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
         }
     }
 
-    /*==================================================*/
-    /* Only show fields if all objects are the same type*/
-    /*==================================================*/
+    #==================================================
+    # Only show fields if all objects are the same type
+    #==================================================
     if (numTypes == 1) {
         foreach (int objType, typeSet) {
             showGroups(objType)
@@ -7412,7 +3504,7 @@ def PropertyEditor::updateLineEditStrIfVaries(QLineEdit* lineEdit, const QString
     if     (fieldOldText.isEmpty())       lineEdit->setText(fieldNewText)
     elif(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText)
 
-def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, int useAnglePrecision):
+def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, num, int useAnglePrecision):
     int precision = 0
     if(useAnglePrecision) precision = precisionAngle
     else                  precision = precisionLength
@@ -7420,7 +3512,7 @@ def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, in
     fieldOldText = lineEdit->text()
     fieldNewText.setNum(num, 'f', precision)
 
-    /*Prevent negative zero :D*/
+    #Prevent negative zero :D
     QString negativeZero = "-0."
     for(int i = 0; i < precision; ++i)
         negativeZero.append('0')
@@ -7433,7 +3525,7 @@ def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, in
 def PropertyEditor::updateFontComboBoxStrIfVaries(QFontComboBox* fontComboBox, const QString& str):
     fieldOldText = fontComboBox->property("FontFamily").toString()
     fieldNewText = str
-    /*debug_message("old: %d %s, new: %d %s", oldIndex, qPrintable(fontComboBox->currentText()), newIndex, qPrintable(str));*/
+    #debug_message("old: %d %s, new: %d %s", oldIndex, qPrintable(fontComboBox->currentText()), newIndex, qPrintable(str));
     if(fieldOldText.isEmpty())
     {
         fontComboBox->setCurrentFont(QFont(fieldNewText))
@@ -7441,7 +3533,7 @@ def PropertyEditor::updateFontComboBoxStrIfVaries(QFontComboBox* fontComboBox, c
     }
     elif(fieldOldText != fieldNewText)
     {
-        if(fontComboBox->findText(fieldVariesText) == -1) /*Prevent multiple entries*/
+        if(fontComboBox->findText(fieldVariesText) == -1) #Prevent multiple entries
             fontComboBox->addItem(fieldVariesText)
         fontComboBox->setCurrentIndex(fontComboBox->findText(fieldVariesText))
     }
@@ -7461,7 +3553,7 @@ def PropertyEditor::updateComboBoxStrIfVaries(QComboBox* comboBox, const QString
     }
     elif(fieldOldText != fieldNewText)
     {
-        if(comboBox->findText(fieldVariesText) == -1) /*Prevent multiple entries*/
+        if(comboBox->findText(fieldVariesText) == -1) #Prevent multiple entries
             comboBox->addItem(fieldVariesText)
         comboBox->setCurrentIndex(comboBox->findText(fieldVariesText))
     }
@@ -7492,7 +3584,7 @@ def PropertyEditor::updateComboBoxintIfVaries(QComboBox* comboBox, int val, int 
         comboBox->setCurrentIndex(comboBox->findText(fieldNewText))
     }
     elif(fieldOldText != fieldNewText) {
-        /* Prevent multiple entries */
+        # Prevent multiple entries
         if(comboBox->findText(fieldVariesText) == -1) {
             comboBox->addItem(fieldVariesText)
         }
@@ -7501,7 +3593,7 @@ def PropertyEditor::updateComboBoxintIfVaries(QComboBox* comboBox, int val, int 
 }
 
 def PropertyEditor::showGroups(int objType):
-    if (objType>=OBJ_TYPE_BASE && objType<OBJ_TYPE_UNKNOWN) {
+    if (objType>=OBJ_TYPE_BASE and objType<OBJ_TYPE_UNKNOWN) {
         groupBoxGeometry[objType-OBJ_TYPE_BASE]->show()
     }
     if (objType == OBJ_TYPE_ARC) {
@@ -7528,7 +3620,7 @@ def PropertyEditor::showOneType(int index):
 
 def PropertyEditor::hideAllGroups():
     int i
-    /* NOTE: General group will never be hidden */
+    # NOTE: General group will never be hidden
     for (i=1; i<OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE; i++) {
         groupBoxGeometry[i]->hide()
     }
@@ -7548,18 +3640,18 @@ def PropertyEditor::clearAllFields():
         lineEdit[i]->clear()
     }
 
-    /* Text Single */
+    # Text Single
     comboBoxTextSingleFont->removeItem(comboBoxTextSingleFont->findText(fieldVariesText))
-    /* NOTE: Do not clear comboBoxTextSingleFont */
+    # NOTE: Do not clear comboBoxTextSingleFont
     comboBoxTextSingleFont->setProperty("FontFamily", "")
 
 QGroupBox* PropertyEditor::createGroupBoxGeneral():
     groupBoxGeneral = new QGroupBox(tr("General"), this)
 
-    toolButtonGeneralLayer = createToolButton("blank", tr("Layer"));      /*TODO: use proper icon*/
-    toolButtonGeneralColor = createToolButton("blank", tr("Color"));      /*TODO: use proper icon*/
-    toolButtonGeneralLineType = createToolButton("blank", tr("LineType"));   /*TODO: use proper icon*/
-    toolButtonGeneralLineWeight = createToolButton("blank", tr("LineWeight")); /*TODO: use proper icon*/
+    toolButtonGeneralLayer = createToolButton("blank", tr("Layer"));      #TODO: use proper icon
+    toolButtonGeneralColor = createToolButton("blank", tr("Color"));      #TODO: use proper icon
+    toolButtonGeneralLineType = createToolButton("blank", tr("LineType"));   #TODO: use proper icon
+    toolButtonGeneralLineWeight = createToolButton("blank", tr("LineWeight")); #TODO: use proper icon
 
     comboBoxGeneralLayer = createComboBox(0)
     comboBoxGeneralColor = createComboBox(0)
@@ -7578,7 +3670,7 @@ QGroupBox* PropertyEditor::createGroupBoxGeneral():
 QGroupBox* PropertyEditor::createGroupBoxMiscArc():
     groupBoxMiscArc = new QGroupBox(tr("Misc"), this)
 
-    toolButtonArcClockwise = createToolButton("blank", tr("Clockwise")); /*TODO: use proper icon*/
+    toolButtonArcClockwise = createToolButton("blank", tr("Clockwise")); #TODO: use proper icon
 
     comboBoxArcClockwise = createComboBox(1)
 
@@ -7592,19 +3684,19 @@ QGroupBox* PropertyEditor::createGroupBoxGeometry(int objType):
     int i
     QGroupBox *gb = new QGroupBox(tr("Geometry"), this)
 
-    /* TODO: use proper icons */
+    # TODO: use proper icons
     QFormLayout* formLayout = new QFormLayout(this)
-    /*
+    #
     for (i=0; property_editors[i].object != OBJ_TYPE_UNKNOWN; i++) {
         if (property_editors[i].object == objType) {
             int index = property_editors[i].id
-            toolButton[index] = createToolButton(property_editors[i].icon, tr(property_editors[i].label));       
+            toolButton[index] = createToolButton(property_editors[i].icon, tr(property_editors[i].label));
             lineEdit[index] = createLineEdit(property_editors[i].type, property_editors[i].read_only)
             formLayout->addRow(toolButton[index], lineEdit[index])
             mapSignal(lineEdit[index], property_editors[i].signal, objType)
         }
     }
-    */
+
     gb->setLayout(formLayout)
 
     return gb
@@ -7612,8 +3704,8 @@ QGroupBox* PropertyEditor::createGroupBoxGeometry(int objType):
 QGroupBox* PropertyEditor::createGroupBoxMiscImage():
     groupBoxMiscImage = new QGroupBox(tr("Misc"), this)
 
-    toolButtonImageName = createToolButton("blank", tr("Name")); /*TODO: use proper icon*/
-    toolButtonImagePath = createToolButton("blank", tr("Path")); /*TODO: use proper icon*/
+    toolButtonImageName = createToolButton("blank", tr("Name")); #TODO: use proper icon
+    toolButtonImagePath = createToolButton("blank", tr("Path")); #TODO: use proper icon
 
     lineEditImageName = createLineEdit("double", 1)
     lineEditImagePath = createLineEdit("double", 1)
@@ -7628,11 +3720,11 @@ QGroupBox* PropertyEditor::createGroupBoxMiscImage():
 QGroupBox* PropertyEditor::createGroupBoxMiscPath():
     groupBoxMiscPath = new QGroupBox(tr("Misc"), this)
 
-    toolButtonPathClosed = createToolButton("blank", tr("Closed")); /*TODO: use proper icon*/
+    toolButtonPathClosed = createToolButton("blank", tr("Closed")); #TODO: use proper icon
 
     comboBoxPathClosed = createComboBox(0)
 
-    /*TODO: mapSignal for paths*/
+    #TODO: mapSignal for paths
 
     QFormLayout* formLayout = new QFormLayout(this)
     formLayout->addRow(toolButtonPathClosed, comboBoxPathClosed)
@@ -7643,11 +3735,11 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPath():
 QGroupBox* PropertyEditor::createGroupBoxMiscPolyline():
     groupBoxMiscPolyline = new QGroupBox(tr("Misc"), this)
 
-    toolButtonPolylineClosed = createToolButton("blank", tr("Closed")); /*TODO: use proper icon*/
+    toolButtonPolylineClosed = createToolButton("blank", tr("Closed")); #TODO: use proper icon
 
     comboBoxPolylineClosed = createComboBox(0)
 
-    /*TODO: mapSignal for polylines*/
+    #TODO: mapSignal for polylines
 
     QFormLayout* formLayout = new QFormLayout(this)
     formLayout->addRow(toolButtonPolylineClosed, comboBoxPolylineClosed)
@@ -7658,11 +3750,11 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPolyline():
 QGroupBox* PropertyEditor::createGroupBoxTextTextSingle():
     groupBoxTextTextSingle = new QGroupBox(tr("Text"), this)
 
-    toolButtonTextSingleContents = createToolButton("blank", tr("Contents")); /*TODO: use proper icon*/
-    toolButtonTextSingleFont = createToolButton("blank", tr("Font"));     /*TODO: use proper icon*/
-    toolButtonTextSingleJustify = createToolButton("blank", tr("Justify"));  /*TODO: use proper icon*/
-    toolButtonTextSingleHeight = createToolButton("blank", tr("Height"));   /*TODO: use proper icon*/
-    toolButtonTextSingleRotation = createToolButton("blank", tr("Rotation")); /*TODO: use proper icon*/
+    toolButtonTextSingleContents = createToolButton("blank", tr("Contents")); #TODO: use proper icon
+    toolButtonTextSingleFont = createToolButton("blank", tr("Font"));     #TODO: use proper icon
+    toolButtonTextSingleJustify = createToolButton("blank", tr("Justify"));  #TODO: use proper icon
+    toolButtonTextSingleHeight = createToolButton("blank", tr("Height"));   #TODO: use proper icon
+    toolButtonTextSingleRotation = createToolButton("blank", tr("Rotation")); #TODO: use proper icon
 
     lineEditTextSingleContents = createLineEdit("string", 0)
     comboBoxTextSingleFont = createFontComboBox(0)
@@ -7689,8 +3781,8 @@ QGroupBox* PropertyEditor::createGroupBoxTextTextSingle():
 QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle():
     groupBoxMiscTextSingle = new QGroupBox(tr("Misc"), this)
 
-    toolButtonTextSingleBackward = createToolButton("blank", tr("Backward"));   /*TODO: use proper icon*/
-    toolButtonTextSingleUpsideDown = createToolButton("blank", tr("UpsideDown")); /*TODO: use proper icon*/
+    toolButtonTextSingleBackward = createToolButton("blank", tr("Backward"));   #TODO: use proper icon
+    toolButtonTextSingleUpsideDown = createToolButton("blank", tr("UpsideDown")); #TODO: use proper icon
 
     comboBoxTextSingleBackward = createComboBox(0)
     comboBoxTextSingleUpsideDown = createComboBox(0)
@@ -7810,7 +3902,7 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                     }
                 }
                 break
-            case OBJ_TYPE_BLOCK: /*TODO: field editing*/
+            case OBJ_TYPE_BLOCK: #TODO: field editing
                 break
             case OBJ_TYPE_CIRCLE:
                 if(objName == "lineEditCircleCenterX") {
@@ -7852,21 +3944,21 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                     }
                 }
                 break
-            case OBJ_TYPE_DIMALIGNED: /*TODO: field editing*/
+            case OBJ_TYPE_DIMALIGNED: #TODO: field editing
                 break
-            case OBJ_TYPE_DIMANGULAR: /*TODO: field editing*/
+            case OBJ_TYPE_DIMANGULAR: #TODO: field editing
                 break
-            case OBJ_TYPE_DIMARCLENGTH: /*TODO: field editing*/
+            case OBJ_TYPE_DIMARCLENGTH: #TODO: field editing
                 break
-            case OBJ_TYPE_DIMDIAMETER: /*TODO: field editing*/
+            case OBJ_TYPE_DIMDIAMETER: #TODO: field editing
                 break
-            case OBJ_TYPE_DIMLEADER: /*TODO: field editing*/
+            case OBJ_TYPE_DIMLEADER: #TODO: field editing
                 break
-            case OBJ_TYPE_DIMLINEAR: /*TODO: field editing*/
+            case OBJ_TYPE_DIMLINEAR: #TODO: field editing
                 break
-            case OBJ_TYPE_DIMORDINATE: /*TODO: field editing*/
+            case OBJ_TYPE_DIMORDINATE: #TODO: field editing
                 break
-            case OBJ_TYPE_DIMRADIUS: /*TODO: field editing*/
+            case OBJ_TYPE_DIMRADIUS: #TODO: field editing
                 break
             case OBJ_TYPE_ELLIPSE:
                 if(objName == "lineEditEllipseCenterX") {
@@ -7910,9 +4002,9 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                     }
                 }
                 break
-            case OBJ_TYPE_IMAGE: /*TODO: field editing*/
+            case OBJ_TYPE_IMAGE: #TODO: field editing
                 break
-            case OBJ_TYPE_INFINITELINE: /*TODO: field editing*/
+            case OBJ_TYPE_INFINITELINE: #TODO: field editing
                 break
             case OBJ_TYPE_LINE:
                 if(objName == "lineEditLineStartX") {
@@ -7940,7 +4032,7 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                     }
                 }
                 break
-            case OBJ_TYPE_PATH: /*TODO: field editing*/
+            case OBJ_TYPE_PATH: #TODO: field editing
                 break
             case OBJ_TYPE_POINT:
                 if(objName == "lineEditPointX") {
@@ -7956,17 +4048,17 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                     }
                 }
                 break
-            case OBJ_TYPE_POLYGON: /*TODO: field editing*/
+            case OBJ_TYPE_POLYGON: #TODO: field editing
                 break
-            case OBJ_TYPE_POLYLINE: /*TODO: field editing*/
+            case OBJ_TYPE_POLYLINE: #TODO: field editing
                 break
-            case OBJ_TYPE_RAY: /*TODO: field editing*/
+            case OBJ_TYPE_RAY: #TODO: field editing
                 break
-            case OBJ_TYPE_RECTANGLE: /*TODO: field editing*/
+            case OBJ_TYPE_RECTANGLE: #TODO: field editing
                 break
-            case OBJ_TYPE_TEXTMULTI: /*TODO: field editing*/
+            case OBJ_TYPE_TEXTMULTI: #TODO: field editing
                 break
-            case OBJ_TYPE_TEXTSINGLE: /*TODO: field editing*/
+            case OBJ_TYPE_TEXTSINGLE: #TODO: field editing
                 if(objName == "lineEditTextSingleContents") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
                     if (tempTextSingleObj) {
@@ -8019,13 +4111,13 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
 
     }
 
-    /*Block this slot from running twice since calling setSelectedItems will trigger it*/
+    #Block this slot from running twice since calling setSelectedItems will trigger it
     blockSignals = 1
 
     QWidget* widget = QApplication::focusWidget()
-    /* Update so all fields have fresh data
+    # Update so all fields have fresh data
      * TODO: Improve this
-     */
+
     setSelectedItems(selectedItemList)
     hideAllGroups()
     showGroups(objType)
@@ -8040,7 +4132,7 @@ def MainWindow::stub_testing():
 
 def MainWindow::checkForUpdates():
     debug_message("checkForUpdates()")
-    /*TODO: Check website for new versions, commands, etc...*/
+    #TODO: Check website for new versions, commands, etc...
 }
 
 def MainWindow::selectAll():
@@ -8050,15 +4142,15 @@ def MainWindow::selectAll():
 }
 
 QString MainWindow::platformString():
-    /*TODO: Append QSysInfo to string where applicable.*/
+    #TODO: Append QSysInfo to string where applicable.
     QString os
-    
-#if defined(__unix__) || defined(__linux__)
+
+#if defined(__unix__) or defined(__linux__)
     struct utsname unameData
     uname(&unameData)
     os = QString(unameData.sysname)
 #else
-    /* Get windows version. */
+    # Get windows version.
     os = QString("Windows")
 #endif
     debug_message("Platform: %s", qPrintable(os))
@@ -8129,7 +4221,7 @@ def MainWindow::tipOfTheDay():
     wizardTipOfTheDay->exec()
 
 def MainWindow::buttonTipOfTheDayClicked(int button):
-    /*
+    #
     debug_message("buttonTipOfTheDayClicked(%d)", button)
     if(button == QWizard::CustomButton1)
     {
@@ -8155,18 +4247,18 @@ def MainWindow::buttonTipOfTheDayClicked(int button):
 def MainWindow::help():
     debug_message("help()")
 
-    /* display in a custom widget instead */
-    /* Open the HTML Help in the default browser
+    # display in a custom widget instead
+    # Open the HTML Help in the default browser
     QUrl helpURL("file:///" + qApp->applicationDirPath() + "/help/doc-index.html")
     QDesktopServices::openUrl(helpURL)
-    */
 
-    /*TODO: This is how to start an external program. Use this elsewhere...*/
-    /*QString program = "firefox";*/
-    /*QStringList arguments;*/
-    /*arguments << "help/commands.html";*/
-    /*QProcess *myProcess = new QProcess(this);*/
-    /*myProcess->start(program, arguments);*/
+
+    #TODO: This is how to start an external program. Use this elsewhere...
+    #QString program = "firefox";
+    #QStringList arguments;
+    #arguments << "help/commands.html";
+    #QProcess *myProcess = new QProcess(this);
+    #myProcess->start(program, arguments);
 }
 
 def MainWindow::actions():
@@ -8188,10 +4280,10 @@ def main_undo():
         undo_history_position--
         printf("undo_history_position = %d\n", undo_history_position)
         printf("undo_history_length = %d\n", undo_history_length)
-        
-        /* Create the reverse action from the last action and apply with
+
+        # Create the reverse action from the last action and apply with
          * the main actuator.
-         */
+
         switch (last[0]) {
         case ACTION_donothing:
         default:
@@ -8210,7 +4302,7 @@ def main_redo():
         printf("undo_history_position = %d\n", undo_history_position)
         printf("undo_history_length = %d\n", undo_history_length)
         strcpy(undo_call, undo_history[undo_history_position])
-        /* set reverse flag */
+        # set reverse flag
         strcat(undo_call, " -r")
         actuator(undo_call)
     }
@@ -8225,21 +4317,21 @@ def MainWindow::setShiftPressed():
 def MainWindow::setShiftReleased():
     settings.shiftKeyPressedState = 0
 
-/* Icons */
+# Icons
 def MainWindow::iconResize(int iconSize):
     this->setIconSize(QSize(iconSize, iconSize))
     layerSelector->     setIconSize(QSize(iconSize*4, iconSize))
     colorSelector->     setIconSize(QSize(iconSize, iconSize))
     linetypeSelector->  setIconSize(QSize(iconSize*4, iconSize))
     lineweightSelector->setIconSize(QSize(iconSize*4, iconSize))
-    /*set the minimum combobox width so the text is always readable*/
+    #set the minimum combobox width so the text is always readable
     layerSelector->     setMinimumWidth(iconSize*4)
     colorSelector->     setMinimumWidth(iconSize*2)
     linetypeSelector->  setMinimumWidth(iconSize*4)
     lineweightSelector->setMinimumWidth(iconSize*4)
 
-    /* TODO: low-priority:
-     * open app with iconSize set to 128. resize the icons to a smaller size. */
+    # TODO: low-priority:
+     * open app with iconSize set to 128. resize the icons to a smaller size.
 
     settings.general_icon_size = iconSize
 
@@ -8330,7 +4422,7 @@ def MainWindow::colorSelectorIndexChanged(int index):
     if(comboBox)
     {
         bool ok = 0
-        /*TODO: Handle ByLayer and ByBlock and Other...*/
+        #TODO: Handle ByLayer and ByBlock and Other...
         newColor = comboBox->itemData(index).toUInt(&ok)
         if(!ok)
             QMessageBox::warning(this, tr("Color Selector Conversion Error"), tr("<b>An error has occurred while changing colors.</b>"))
@@ -8355,13 +4447,13 @@ def MainWindow::textFontSelectorCurrentFontChanged(const QFont& font):
 
 def MainWindow::textSizeSelectorIndexChanged(int index):
     debug_message("textSizeSelectorIndexChanged(%d)", index)
-    settings.text_style.size = fabs(textSizeSelector->itemData(index).toReal()); /*TODO: check that the toReal() conversion is ok*/
+    settings.text_style.size = fabs(textSizeSelector->itemData(index).toReal()); #TODO: check that the toReal() conversion is ok
 }
 
 QString MainWindow::textFont():
     return settings.text_font
 
-def MainWindow::setTextSize(float num):
+def MainWindow::setTextSize(num):
     settings.text_style.size = fabs(num)
     int index = textSizeSelector->findText("Custom", Qt::MatchContains)
     if(index != -1)
@@ -8379,8 +4471,7 @@ QString MainWindow::getCurrentLayer():
 unsigned int MainWindow::getCurrentColor():
     MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
     if(mdiWin) { return mdiWin->getCurrentColor(); }
-    return 0; /*TODO: return color ByLayer*/
-}
+    return 0; #TODO: return color ByLayer
 
 QString MainWindow::getCurrentLineType():
     MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
@@ -8432,27 +4523,27 @@ def MainWindow::disableMoveRapidFire():
     View* gview = activeView()
     if(gview) gview->disableMoveRapidFire()
 
-def MainWindow::nativeAddTextSingle(const QString& str, float x, float y, float rot, int fill, int rubberMode):
+def MainWindow::nativeAddTextSingle(const QString& str, x, y, rot, int fill, int rubberMode):
     View* gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if(gview && gscene)
+    if(gview and gscene)
     {
         TextSingleObject* obj = new TextSingleObject(str, x, -y, getCurrentColor())
         obj->objTextFont = settings.text_font
         obj->obj_text = settings.text_style
         obj->setObjectText(obj->objText)
         obj->setRotation(-rot)
-        /*TODO: single line text fill*/
+        #TODO: single line text fill
         obj->setObjectRubberMode(rubberMode)
         if (rubberMode) {
             gview->addToRubberRoom(obj)
             gscene->addItem(obj)
             gscene->update()
 
-def MainWindow::nativeAddLine(float x1, float y1, float x2, float y2, float rot, int rubberMode):
+def MainWindow::nativeAddLine(x1, y1, x2, y2, rot, int rubberMode):
     View* gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if(gview && gscene)
+    if(gview and gscene)
     {
         LineObject* obj = new LineObject(x1, -y1, x2, -y2, getCurrentColor())
         obj->setRotation(-rot)
@@ -8463,24 +4554,24 @@ def MainWindow::nativeAddLine(float x1, float y1, float x2, float y2, float rot,
             gscene->update()
 
 
-def MainWindow::nativeAddRectangle(float x, float y, float w, float h, float rot, int fill, int rubberMode):
+def MainWindow::nativeAddRectangle(x, y, w, h, rot, int fill, int rubberMode):
     View* gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if(gview && gscene)
+    if(gview and gscene)
     {
         RectObject* obj = new RectObject(x, -y, w, -h, getCurrentColor())
         obj->setRotation(-rot)
         obj->setObjectRubberMode(rubberMode)
-        /*TODO: rect fill*/
+        #TODO: rect fill
         if (rubberMode) {
             gview->addToRubberRoom(obj)
             gscene->addItem(obj)
             gscene->update()
 
-def MainWindow::nativeAddArc(float startX, float startY, float midX, float midY, float endX, float endY, int rubberMode):
+def MainWindow::nativeAddArc(startX, startY, midX, midY, endX, endY, int rubberMode):
     View* gview = activeView()
     QGraphicsScene* scene = activeScene()
-    if(gview && scene)
+    if(gview and scene)
     {
         ArcObject* arcObj = new ArcObject(startX, -startY, midX, -midY, endX, -endY, getCurrentColor())
         arcObj->setObjectRubberMode(rubberMode)
@@ -8488,84 +4579,71 @@ def MainWindow::nativeAddArc(float startX, float startY, float midX, float midY,
         scene->addItem(arcObj)
         scene->update()
 
-def MainWindow::nativeAddCircle(float centerX, float centerY, float radius, int fill, int rubberMode):
+def MainWindow::nativeAddCircle(centerX, centerY, radius, int fill, int rubberMode):
     View* gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if (gview && gscene) {
+    if (gview and gscene) {
         CircleObject* obj = new CircleObject(centerX, -centerY, radius, getCurrentColor())
         obj->setObjectRubberMode(rubberMode)
-        /*TODO: circle fill*/
-        if(rubberMode)
-        {
+        #TODO: circle fill
+        if rubberMode:
             gview->addToRubberRoom(obj)
             gscene->addItem(obj)
             gscene->update()
 
-def MainWindow::nativeAddEllipse(float centerX, float centerY, float width, float height, float rot, int fill, int rubberMode):
+
+def MainWindow::nativeAddEllipse(centerX, centerY, width, height, rot, int fill, int rubberMode):
     View* gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if (gview && gscene) {
+    if (gview and gscene) {
         EllipseObject* obj = new EllipseObject(centerX, -centerY, width, height, getCurrentColor())
         obj->setRotation(-rot)
         obj->setObjectRubberMode(rubberMode)
-        /*TODO: ellipse fill*/
-        if(rubberMode)
-        {
+        #TODO: ellipse fill
+        if rubberMode:
             gview->addToRubberRoom(obj)
             gscene->addItem(obj)
             gscene->update()
 
 
-def MainWindow::nativeAddPoint(float x, float y):
-    View* gview = activeView()
-    if (gview) {
-        PointObject* obj = new PointObject(x, -y, getCurrentColor())
-    }
-}
+def MainWindow::nativeAddPoint(x, y):
+    gview = activeView()
+    if gview:
+        obj = new PointObject(x, -y, getCurrentColor())
 
-/*NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)*/
-def MainWindow::nativeAddPolygon(float startX, float startY, const QPainterPath& p, int rubberMode):
-    View* gview = activeView()
+
+#NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)
+def MainWindow::nativeAddPolygon(startX, startY, const QPainterPath& p, rubberMode):
+    gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if (gview && gscene) {
+    if (gview and gscene) {
         PolygonObject* obj = new PolygonObject(startX, startY, p, getCurrentColor())
         obj->setObjectRubberMode(rubberMode)
         if(rubberMode)
-        {
             gview->addToRubberRoom(obj)
             gscene->addItem(obj)
             gscene->update()
-        }
-        else
-        {
-        }
-    }
-}
+        else:
 
-/*NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)*/
-def MainWindow::nativeAddPolyline(float startX, float startY, const QPainterPath& p, int rubberMode):
-    View* gview = activeView()
+
+#NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)
+def MainWindow::nativeAddPolyline(startX, startY, const QPainterPath& p, rubberMode):
+    gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if(gview && gscene)
-    {
+    if(gview and gscene)
         PolylineObject* obj = new PolylineObject(startX, startY, p, getCurrentColor())
         obj->setObjectRubberMode(rubberMode)
         if(rubberMode)
-        {
             gview->addToRubberRoom(obj)
             gscene->addItem(obj)
             gscene->update()
-        }
-        else
-        {
-        }
-    }
-}
+        else:
 
-def MainWindow::nativeAddDimLeader(float x1, float y1, float x2, float y2, float rot, int rubberMode):
+
+def MainWindow::nativeAddDimLeader(x1, y1, x2, y2, rot, rubberMode):
     View* gview = activeView()
     QGraphicsScene* gscene = gview->scene()
-    if(gview && gscene) {
+    if(gview and gscene) {
         DimLeaderObject* obj = new DimLeaderObject(x1, -y1, x2, -y2, getCurrentColor())
         obj->setRotation(-rot)
         obj->setObjectRubberMode(rubberMode)
@@ -8575,14 +4653,14 @@ def MainWindow::nativeAddDimLeader(float x1, float y1, float x2, float y2, float
             gscene->addItem(obj)
             gscene->update()
 
-float MainWindow::nativeCalculateAngle(float x1, float y1, float x2, float y2):
+MainWindow::nativeCalculateAngle(x1, y1, x2, y2):
     return QLineF(x1, -y1, x2, -y2).angle()
 
-float MainWindow::nativeCalculateDistance(float x1, float y1, float x2, float y2):
+MainWindow::nativeCalculateDistance(x1, y1, x2, y2):
     return QLineF(x1, y1, x2, y2).length()
 
-def MainWindow::fill_menu(int menu_id):
-    int i
+def MainWindow::fill_menu(menu_id):
+    i
     debug_message("MainWindow creating %s", menu_label[menu_id])
     menuBar()->addMenu(menu[menu_id])
     for (i=0; menus[menu_id][i]>=-1; i++) {
@@ -8592,21 +4670,21 @@ def MainWindow::fill_menu(int menu_id):
         else {
             menu[menu_id]->addSeparator()
 
-/* nativePerpendicularDistance
+# nativePerpendicularDistance
     This is currently causing a bug and is going to be replaced with a libembroidery function.
     QLineF line(x1, y1, x2, y2)
     QLineF norm = line.normalVector()
-    float dx = px-x1
-    float dy = py-y1
+    dx = px-x1
+    dy = py-y1
     norm.translate(dx, dy)
     QPointF iPoint
     norm.intersects(line, &iPoint)
     return QLineF(px, py, iPoint.x(), iPoint.y()).length()
-*/
+
 
 MainWindow::MainWindow() : QMainWindow(0):
     char current_path[1000]
-    int i
+    i
 
     QString appDir = qApp->applicationDirPath()
     readSettings()
@@ -8623,23 +4701,23 @@ MainWindow::MainWindow() : QMainWindow(0):
     if(lang == "system")
         lang = QLocale::system().languageToString(QLocale::system().language()).toLower()
 
-    /*Load translations for the Embroidermodder 2 GUI*/
+    #Load translations for the Embroidermodder 2 GUI
     QTranslator translatorEmb
     app_dir(current_path, translations_folder)
     translatorEmb.load(QString(current_path) + "/embroidermodder2_" + lang)
     qApp->installTranslator(&translatorEmb)
 
-    /*Load translations for the commands*/
+    #Load translations for the commands
     QTranslator translatorCmd
     translatorCmd.load(QDir::toNativeSeparators(QString(current_path) + lang + "/commands_" + lang))
     qApp->installTranslator(&translatorCmd)
 
-    /*Load translations provided by Qt - this covers dialog buttons and other common things.*/
+    #Load translations provided by Qt - this covers dialog buttons and other common things.
     QTranslator translatorQt
-    translatorQt.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)); /*TODO: ensure this always loads, ship a copy of this with the app*/
+    translatorQt.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)); #TODO: ensure this always loads, ship a copy of this with the app
     qApp->installTranslator(&translatorQt)
 
-    /*Init*/
+    #Init
     mainWin = this
     for (i=0; i<N_MENUS; i++) {
         menu[i] = new QMenu(tr(menu_label[i]), this)
@@ -8647,7 +4725,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     for (i=0; i<N_TOOLBARS; i++) {
         toolbar[i] = addToolBar(tr(toolbar_label[i]))
     }
-    /*Selectors*/
+    #Selectors
     layerSelector = new QComboBox(this)
     colorSelector = new QComboBox(this)
     linetypeSelector = new QComboBox(this)
@@ -8661,11 +4739,11 @@ MainWindow::MainWindow() : QMainWindow(0):
     settings.shiftKeyPressedState = 0
 
     setWindowIcon(loadIcon(app_xpm))
-    setMinimumSize(800, 480); /*Require Minimum WVGA*/
+    setMinimumSize(800, 480); #Require Minimum WVGA
 
     loadFormats()
 
-    /*create the mdiArea*/
+    #create the mdiArea
     QFrame* vbox = new QFrame(this)
     QVBoxLayout* layout = new QVBoxLayout(vbox)
     layout->setContentsMargins(QMargins())
@@ -8684,10 +4762,10 @@ MainWindow::MainWindow() : QMainWindow(0):
     layout->addWidget(mdiArea)
     setCentralWidget(vbox)
 
-    /*setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::VerticalTabs);*/
-    /* TODO: Load these from settings */
-    /* tabifyDockWidget(dockPropEdit, dockUndoEdit); */
-    /* TODO: load this from settings */
+    #setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::VerticalTabs);
+    # TODO: Load these from settings
+    # tabifyDockWidget(dockPropEdit, dockUndoEdit);
+    # TODO: load this from settings
 
     statusbar = new StatusBar(this, this)
     this->setStatusBar(statusbar)
@@ -8697,13 +4775,13 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     for (i=0; action_list[i].abbreviation[0]; i++) {
         QAction *ACTION = new QAction(loadIcon((*)action_list[i].icon), action_list[i].menu_name, this)
-        /* TODO: Set What's This Context Help to statusTip for now so there is some infos there.*/
-        /* Make custom What's This Context Help popup with more descriptive help than just*/
-        /* the status bar/tip one liner(short but not real long) with a hyperlink in the custom popup*/
-        /* at the bottom to open full help file description. Ex: like wxPython AGW's SuperToolTip.*/
-        /* TODO: Finish All Commands ... <.<*/
+        # TODO: Set What's This Context Help to statusTip for now so there is some infos there.
+        # Make custom What's This Context Help popup with more descriptive help than just
+        # the status bar/tip one liner(short but not real long) with a hyperlink in the custom popup
+        # at the bottom to open full help file description. Ex: like wxPython AGW's SuperToolTip.
+        # TODO: Finish All Commands ... <.<
 
-        /*
+        #
         if(icon == "windowcascade") {
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(cascade()))
         }
@@ -8723,12 +4801,12 @@ MainWindow::MainWindow() : QMainWindow(0):
         elif(icon == "windowprevious") {
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()))
         }
-        elif(icon == "textbold" || icon == "textitalic"
-            || icon == "textunderline" || icon == "textstrikeout"
-            || icon == "textoverline") {
+        elif(icon == "textbold" or icon == "textitalic"
+            or icon == "textunderline" or icon == "textstrikeout"
+            or icon == "textoverline") {
             ACTION->setCheckable(1)
         }
-        */
+
 
         if (strlen(action_list[i].shortcut)>0) {
             ACTION->setShortcut(QKeySequence(action_list[i].shortcut))
@@ -8743,10 +4821,10 @@ MainWindow::MainWindow() : QMainWindow(0):
     actionHash.value(ACTION_windowclose)->setEnabled(numOfDocs > 0)
     actionHash.value(ACTION_designdetails)->setEnabled(numOfDocs > 0)
 
-    /* ---------------------------------------------------------------------- */
+    # ----
 
     debug_message("MainWindow createAllMenus()")
-    
+
     debug_message("MainWindow createFileMenu()")
     menuBar()->addMenu(menu[FILE_MENU])
     menu[FILE_MENU]->addAction(actionHash.value(ACTION_new))
@@ -8755,7 +4833,7 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     menu[FILE_MENU]->addMenu(menu[RECENT_MENU])
     connect(menu[RECENT_MENU], SIGNAL(aboutToShow()), this, SLOT(recentMenuAboutToShow()))
-    /* Do not allow the Recent Menu to be torn off. It's a pain in the ass to maintain. */
+    # Do not allow the Recent Menu to be torn off. It's a pain in the ass to maintain.
     menu[RECENT_MENU]->setTearOffEnabled(0)
 
     menu[FILE_MENU]->addSeparator()
@@ -8772,7 +4850,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     menu[FILE_MENU]->addAction(actionHash.value(ACTION_exit))
     menu[FILE_MENU]->setTearOffEnabled(0)
 
-    /* ---------------------------------------------------------------------- */
+    # ----
 
     debug_message("MainWindow createmenu[EDIT_MENU]()")
     menuBar()->addMenu(menu[EDIT_MENU])
@@ -8785,7 +4863,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     menu[EDIT_MENU]->addSeparator()
     menu[EDIT_MENU]->setTearOffEnabled(1)
 
-    /* ---------------------------------------------------------------------- */
+    # ----
 
     debug_message("MainWindow createmenu[VIEW_MENU]()")
 
@@ -8825,7 +4903,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     menu[ZOOM_MENU]->setTearOffEnabled(1)
     menu[PAN_MENU]->setTearOffEnabled(1)
 
-    /* ---------------------------------------------------------------------- */
+    # ----
 
     debug_message("MainWindow createSettingsMenu()")
     menuBar()->addMenu(menu[SETTINGS_MENU])
@@ -8833,15 +4911,15 @@ MainWindow::MainWindow() : QMainWindow(0):
     menu[SETTINGS_MENU]->addSeparator()
     menu[SETTINGS_MENU]->setTearOffEnabled(1)
 
-    /* ---------------------------------------------------------------------- */
+    # ----
 
     debug_message("MainWindow createWindowMenu()")
     menuBar()->addMenu(menu[WINDOW_MENU])
     connect(menu[WINDOW_MENU], SIGNAL(aboutToShow()), this, SLOT(windowMenuAboutToShow()))
-    /*Do not allow the Window Menu to be torn off. It's a pain in the ass to maintain.*/
+    #Do not allow the Window Menu to be torn off. It's a pain in the ass to maintain.
     menu[WINDOW_MENU]->setTearOffEnabled(0)
 
-    /* ---------------------------------------------------------------------- */
+    # ----
 
     debug_message("MainWindow createHelpMenu()")
     menuBar()->addMenu(menu[HELP_MENU])
@@ -8856,12 +4934,12 @@ MainWindow::MainWindow() : QMainWindow(0):
     menu[HELP_MENU]->addAction(actionHash.value(ACTION_whatsthis))
     menu[HELP_MENU]->setTearOffEnabled(1)
 
-    /* ---------------------------------------------------------------------- */
+    # ----
 
     debug_message("MainWindow createAllToolbars()")
 
     for (i=0; i<N_TOOLBARS; i++) {
-        int j
+        j
         char message[100]
         sprintf(message, "MainWindow creating %s\n", toolbar_label[i])
         debug_message(message)
@@ -8880,16 +4958,16 @@ MainWindow::MainWindow() : QMainWindow(0):
         connect(toolbar[i], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)))
     }
 
-    /* ---------------------------------------------------------------- */
-    
+    # ---------
+
     debug_message("MainWindow createLayerToolbar()")
 
     toolbar[TOOLBAR_LAYER]->setObjectName("toolbarLayer")
     toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_makelayercurrent))
     toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layers))
 
-    /*NOTE: Qt4.7 wont load icons without an extension...*/
-    /*TODO: Create layer pixmaps by concatenating several icons*/
+    #NOTE: Qt4.7 wont load icons without an extension...
+    #TODO: Create layer pixmaps by concatenating several icons
     layerSelector->addItem(loadIcon(linetypebylayer_xpm), "0")
     layerSelector->addItem(loadIcon(linetypebylayer_xpm), "1")
     layerSelector->addItem(loadIcon(linetypebylayer_xpm), "2")
@@ -8906,15 +4984,15 @@ MainWindow::MainWindow() : QMainWindow(0):
     toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layerprevious))
 
     connect(toolbar[TOOLBAR_LAYER], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)))
-    
-    /* ----------------- */
+
+    # ------
 
     debug_message("MainWindow createPropertiesToolbar()")
 
     toolbar[TOOLBAR_PROPERTIES]->setObjectName("toolbarProperties")
 
     colorSelector->setFocusProxy(menu[FILE_MENU])
-    /*NOTE: Qt4.7 wont load icons without an extension...*/
+    #NOTE: Qt4.7 wont load icons without an extension...
     colorSelector->addItem(loadIcon(colorbylayer_xpm), "ByLayer")
     colorSelector->addItem(loadIcon(colorbyblock_xpm), "ByBlock")
     colorSelector->addItem(loadIcon(colorred_xpm), tr("Red"), qRgb(255, 0, 0))
@@ -8930,7 +5008,7 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator()
     linetypeSelector->setFocusProxy(menu[FILE_MENU])
-    /*NOTE: Qt4.7 wont load icons without an extension...*/
+    #NOTE: Qt4.7 wont load icons without an extension...
     linetypeSelector->addItem(loadIcon(linetypebylayer_xpm), "ByLayer")
     linetypeSelector->addItem(loadIcon(linetypebyblock_xpm), "ByBlock")
     linetypeSelector->addItem(loadIcon(linetypecontinuous_xpm), "Continuous")
@@ -8942,11 +5020,11 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     toolbar[TOOLBAR_PROPERTIES]->addSeparator()
     lineweightSelector->setFocusProxy(menu[FILE_MENU])
-    /*NOTE: Qt4.7 wont load icons without an extension...*/
+    #NOTE: Qt4.7 wont load icons without an extension...
     lineweightSelector->addItem(loadIcon(lineweightbylayer_xpm), "ByLayer", -2.00)
     lineweightSelector->addItem(loadIcon(lineweightbyblock_xpm), "ByBlock", -1.00)
     lineweightSelector->addItem(loadIcon(lineweightdefault_xpm), "Default", 0.00)
-    /* TODO: Thread weight is weird. See http://en.wikipedia.org/wiki/Thread_(yarn)#Weight */
+    # TODO: Thread weight is weird. See http://en.wikipedia.org/wiki/Thread_(yarn)#Weight
     lineweightSelector->addItem(loadIcon(lineweight01_xpm), "0.00 mm", 0.00)
     lineweightSelector->addItem(loadIcon(lineweight02_xpm), "0.05 mm", 0.05)
     lineweightSelector->addItem(loadIcon(lineweight03_xpm), "0.15 mm", 0.15)
@@ -8972,13 +5050,13 @@ MainWindow::MainWindow() : QMainWindow(0):
     lineweightSelector->addItem(loadIcon(lineweight23_xpm), "1.15 mm", 1.15)
     lineweightSelector->addItem(loadIcon(lineweight24_xpm), "1.20 mm", 1.20)
     lineweightSelector->setMinimumContentsLength(8)
-    /* Prevent dropdown text readability being squish...d. */
+    # Prevent dropdown text readability being squish...d.
     toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector)
     connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(lineweightSelectorIndexChanged(int)))
 
     connect(toolbar[TOOLBAR_PROPERTIES], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)))
 
-    /* ------------------------------------------------------------- */
+    # ------
 
     debug_message("MainWindow createTextToolbar()")
 
@@ -8988,7 +5066,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     textFontSelector->setCurrentFont(QFont(settings.text_font))
     connect(textFontSelector, SIGNAL(currentFontChanged(const QFont&)), this, SLOT(textFontSelectorCurrentFontChanged(const QFont&)))
 
-/* TODO: SEGFAULTING FOR SOME REASON 
+# TODO: SEGFAULTING FOR SOME REASON
     toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textbold))
     actionHash.value(ACTION_textbold)->setChecked(settings.text_style_bold)
     toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textitalic))
@@ -9018,19 +5096,19 @@ MainWindow::MainWindow() : QMainWindow(0):
     setTextSize(settings.text_size)
     toolbar[TOOLBAR_TEXT]->addWidget(textSizeSelector)
     connect(textSizeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(textSizeSelectorIndexChanged(int)))
-    */
+
 
     connect(toolbar[TOOLBAR_TEXT], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)))
 
-    /* ------------------------------------------------------------ */
+    # -----
 
-    /* Horizontal*/
+    # Horizontal
     toolbar[TOOLBAR_VIEW]->setOrientation(Qt::Horizontal)
     toolbar[TOOLBAR_ZOOM]->setOrientation(Qt::Horizontal)
     toolbar[TOOLBAR_LAYER]->setOrientation(Qt::Horizontal)
     toolbar[TOOLBAR_PROPERTIES]->setOrientation(Qt::Horizontal)
     toolbar[TOOLBAR_TEXT]->setOrientation(Qt::Horizontal)
-    /* Top*/
+    # Top
     addToolBarBreak(Qt::TopToolBarArea)
     addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_FILE])
     addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_EDIT])
@@ -9046,15 +5124,15 @@ MainWindow::MainWindow() : QMainWindow(0):
     addToolBarBreak(Qt::TopToolBarArea)
     addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_TEXT])
 
-    /*zoomToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);*/
-    /* ---------------------------------------------------------------------- */
+    #zoomToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    # ----
 
     iconResize(settings.general_icon_size)
     updateMenuToolbarStatusbar()
 
-    /* Show date in statusbar after it has been updated
+    # Show date in statusbar after it has been updated
      * TODO: Switch to ISO dates.
-     */
+
     QDate date = QDate::currentDate()
     QString datestr = date.toString("MMMM d, yyyy")
     statusbar->showMessage(datestr)
@@ -9069,7 +5147,7 @@ MainWindow::MainWindow() : QMainWindow(0):
 MainWindow::~MainWindow():
     debug_message("MainWindow::Destructor()")
 
-    /*Prevent memory leaks by deleting any unpasted objects*/
+    #Prevent memory leaks by deleting any unpasted objects
     qDeleteAll(cutCopyObjectList.begin(), cutCopyObjectList.end())
     cutCopyObjectList.clear()
 
@@ -9079,17 +5157,17 @@ def MainWindow::recentMenuAboutToShow():
 
     QFileInfo recentFileInfo
     QString recentValue
-    for(int i = 0; i < opensave_recent_list_of_files.size(); ++i)
+    for(i = 0; i < opensave_recent_list_of_files.size(); ++i)
     {
-        /*If less than the max amount of entries add to menu*/
+        #If less than the max amount of entries add to menu
         if(i < settings.opensave_recent_max_files)
         {
             recentFileInfo = QFileInfo(opensave_recent_list_of_files.at(i))
-            if(recentFileInfo.exists() && validFileFormat(recentFileInfo.fileName()))
+            if(recentFileInfo.exists() and validFileFormat(recentFileInfo.fileName()))
             {
                 recentValue.setNum(i+1)
                 QAction* rAction
-                if     (recentValue.toInt() >= 1 && recentValue.toInt() <= 9) rAction = new QAction("&" + recentValue + " " + recentFileInfo.fileName(), this)
+                if     (recentValue.toInt() >= 1 and recentValue.toInt() <= 9) rAction = new QAction("&" + recentValue + " " + recentFileInfo.fileName(), this)
                 elif(recentValue.toInt() == 10)                            rAction = new QAction("1&0 "                  + recentFileInfo.fileName(), this)
                 else                                                          rAction = new QAction(      recentValue + " " + recentFileInfo.fileName(), this)
                 rAction->setCheckable(0)
@@ -9097,7 +5175,7 @@ def MainWindow::recentMenuAboutToShow():
                 menu[RECENT_MENU]->addAction(rAction)
                 connect(rAction, SIGNAL(triggered()), this, SLOT(openrecentfile()))
 
-    /*Ensure the list only has max amount of entries*/
+    #Ensure the list only has max amount of entries
     while(opensave_recent_list_of_files.size() > settings.opensave_recent_max_files) {
         opensave_recent_list_of_files.removeLast()
 
@@ -9116,7 +5194,7 @@ def MainWindow::windowMenuAboutToShow():
 
     menu[WINDOW_MENU]->addSeparator()
     QList<QMdiSubWindow*> windows = mdiArea->subWindowList()
-    for(int i = 0; i < windows.count(); ++i)
+    for(i = 0; i < windows.count(); ++i)
     {
         QAction* aAction = new QAction(windows.at(i)->windowTitle(), this)
         aAction->setCheckable(1)
@@ -9127,13 +5205,13 @@ def MainWindow::windowMenuAboutToShow():
     }
 }
 
-def MainWindow::windowMenuActivated(int checked):
+def MainWindow::windowMenuActivated(checked):
     debug_message("MainWindow::windowMenuActivated()")
     QAction* aSender = qobject_cast<QAction*>(sender())
     if(!aSender)
         return
     QWidget* w = mdiArea->subWindowList().at(aSender->data().toInt())
-    if(w && checked)
+    if(w and checked)
         w->setFocus()
 
 def MainWindow::newFile():
@@ -9155,16 +5233,16 @@ def MainWindow::newFile():
     }
 }
 
-def MainWindow::openFile(int recent, const QString& recentFile):
+def MainWindow::openFile(recent, const QString& recentFile):
     debug_message("MainWindow::openFile()")
 
     QApplication::setOverrideCursor(Qt::ArrowCursor)
 
     QStringList files
-    int preview = settings.opensave_open_thumbnail
+    preview = settings.opensave_open_thumbnail
     openFilesPath = settings.opensave_recent_directory
 
-    /*Check to see if this from the recent files list*/
+    #Check to see if this from the recent files list
     if(recent)
     {
         files.append(recentFile)
@@ -9172,14 +5250,14 @@ def MainWindow::openFile(int recent, const QString& recentFile):
     }
     elif(!preview)
     {
-        /*TODO: set getOpenFileNames' selectedFilter parameter from settings.opensave_open_format*/
+        #TODO: set getOpenFileNames' selectedFilter parameter from settings.opensave_open_format
         files = QFileDialog::getOpenFileNames(this, tr("Open"), openFilesPath, formatFilterOpen)
         openFilesSelected(files)
     }
     elif(preview)
     {
         PreviewDialog* openDialog = new PreviewDialog(this, tr("Open w/Preview"), openFilesPath, formatFilterOpen)
-        /*TODO: set openDialog->selectNameFilter(const QString& filter) from settings.opensave_open_format*/
+        #TODO: set openDialog->selectNameFilter(const QString& filter) from settings.opensave_open_format
         connect(openDialog, SIGNAL(filesSelected(const QStringList&)), this, SLOT(openFilesSelected(const QStringList&)))
         openDialog->exec()
     }
@@ -9187,11 +5265,11 @@ def MainWindow::openFile(int recent, const QString& recentFile):
     QApplication::restoreOverrideCursor()
 
 def MainWindow::openFilesSelected(const QStringList& filesToOpen):
-    int doOnce = 1
+    doOnce = 1
 
     if(filesToOpen.count())
     {
-        for(int i = 0; i < filesToOpen.count(); i++)
+        for(i = 0; i < filesToOpen.count(); i++)
         {
             if(!validFileFormat(filesToOpen[i]))
                 continue
@@ -9203,13 +5281,13 @@ def MainWindow::openFilesSelected(const QStringList& filesToOpen):
                 continue
             }
 
-            /*The docIndex doesn't need increased as it is only used for unnamed files*/
+            #The docIndex doesn't need increased as it is only used for unnamed files
             numOfDocs++
             MdiWindow* mdiWin = new MdiWindow(docIndex, mainWin, mdiArea, Qt::SubWindow)
             connect(mdiWin, SIGNAL(sendCloseMdiWin(MdiWindow*)), this, SLOT(onCloseMdiWin(MdiWindow*)))
             connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow*)), this, SLOT(onWindowActivated(QMdiSubWindow*)))
 
-            /* Make sure the toolbars/etc... are shown before doing their zoomExtents */
+            # Make sure the toolbars/etc... are shown before doing their zoomExtents
             if (doOnce) {
                 updateMenuToolbarStatusbar()
                 doOnce = 0
@@ -9219,11 +5297,11 @@ def MainWindow::openFilesSelected(const QStringList& filesToOpen):
                 statusbar->showMessage(tr("File(s) loaded"), 2000)
                 mdiWin->show()
                 mdiWin->showMaximized()
-                /*Prevent duplicate entries in the recent files list*/
+                #Prevent duplicate entries in the recent files list
                 if(!opensave_recent_list_of_files.contains(filesToOpen.at(i), Qt::CaseInsensitive)) {
                     opensave_recent_list_of_files.prepend(filesToOpen.at(i))
                 }
-                /*Move the recent file to the top of the list*/
+                #Move the recent file to the top of the list
                 else {
                     opensave_recent_list_of_files.removeAll(filesToOpen.at(i))
                     opensave_recent_list_of_files.prepend(filesToOpen.at(i))
@@ -9238,16 +5316,13 @@ def MainWindow::openFilesSelected(const QStringList& filesToOpen):
             }
             else {
                 mdiWin->close()
-            }
-        }
-    }
 
     windowMenuAboutToShow()
 
 def MainWindow::openrecentfile():
     debug_message("MainWindow::openrecentfile()")
 
-    /*Check to see if this from the recent files list*/
+    #Check to see if this from the recent files list
     QAction* recentSender = qobject_cast<QAction*>(sender())
     if (recentSender) {
         openFile(1, recentSender->data().toString())
@@ -9259,7 +5334,7 @@ def MainWindow::savefile():
 
 def MainWindow::saveasfile():
     debug_message("MainWindow::saveasfile()")
-    /* need to find the activeSubWindow before it loses focus to the FileDialog*/
+    # need to find the activeSubWindow before it loses focus to the FileDialog
     MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
     if(!mdiWin)
         return
@@ -9274,17 +5349,12 @@ QMdiSubWindow* MainWindow::findMdiWindow(const QString& fileName):
     debug_message("MainWindow::findMdiWindow(%s)", qPrintable(fileName))
     QString canonicalFilePath = QFileInfo(fileName).canonicalFilePath()
 
-    foreach(QMdiSubWindow* subWindow, mdiArea->subWindowList())
-    {
+    foreach(QMdiSubWindow* subWindow, mdiArea->subWindowList()):
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(subWindow)
-        if(mdiWin)
-        {
-            if(mdiWin->getCurrentFile() == canonicalFilePath)
-            {
+        if(mdiWin):
+            if(mdiWin->getCurrentFile() == canonicalFilePath):
                 return subWindow
-            }
-        }
-    }
+
     return 0
 
 def MainWindow::closeEvent(QCloseEvent* event):
@@ -9294,18 +5364,15 @@ def MainWindow::closeEvent(QCloseEvent* event):
 
 def MainWindow::onCloseWindow():
     debug_message("MainWindow::onCloseWindow()")
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin)
-    {
+    mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
+    if mdiWin:
         onCloseMdiWin(mdiWin)
-    }
-}
 
 def MainWindow::onCloseMdiWin(MdiWindow* theMdiWin):
     debug_message("MainWindow::onCloseMdiWin()")
     numOfDocs--
 
-    int keepMaximized
+    keepMaximized
     if(theMdiWin) { keepMaximized = theMdiWin->isMaximized(); }
 
     mdiArea->removeSubWindow(theMdiWin)
@@ -9337,7 +5404,7 @@ QAction* MainWindow::getFileSeparator():
     return myFileSeparator
 
 def MainWindow::updateMenuToolbarStatusbar():
-    int i
+    i
     debug_message("MainWindow::updateMenuToolbarStatusbar()")
 
     actionHash.value(ACTION_print)->setEnabled(numOfDocs > 0)
@@ -9345,8 +5412,8 @@ def MainWindow::updateMenuToolbarStatusbar():
     actionHash.value(ACTION_designdetails)->setEnabled(numOfDocs > 0)
 
     if (numOfDocs) {
-        int i
-        /*Toolbars*/
+        i
+        #Toolbars
         for (i=0; i<N_TOOLBARS; i++) {
             toolbar[i]->show()
         }
@@ -9356,13 +5423,13 @@ def MainWindow::updateMenuToolbarStatusbar():
             tb->show()
         }
 
-        /*DockWidgets*/
-        /*
+        #DockWidgets
+        #
         dockPropEdit->show()
         dockUndoEdit->show()
-        */
 
-        /*Menus*/
+
+        #Menus
         menuBar()->clear()
         menuBar()->addMenu(menu[FILE_MENU])
         menuBar()->addMenu(menu[EDIT_MENU])
@@ -9379,7 +5446,7 @@ def MainWindow::updateMenuToolbarStatusbar():
 
         menu[WINDOW_MENU]->setEnabled(1)
 
-        /* Statusbar */
+        # Statusbar
         statusbar->clearMessage()
         statusBarMouseCoord->show()
         status_bar[STATUS_SNAP]->show()
@@ -9393,7 +5460,7 @@ def MainWindow::updateMenuToolbarStatusbar():
     }
     else
     {
-        /* Toolbars */
+        # Toolbars
         toolbar[TOOLBAR_VIEW]->hide()
         toolbar[TOOLBAR_ZOOM]->hide()
         toolbar[TOOLBAR_PAN]->hide()
@@ -9407,13 +5474,13 @@ def MainWindow::updateMenuToolbarStatusbar():
             tb->hide()
         }
 
-        /*DockWidgets*/
-        /*
+        #DockWidgets
+        #
         dockPropEdit->hide()
         dockUndoEdit->hide()
-        */
-        
-        /*Menus*/
+
+
+        #Menus
         menuBar()->clear()
         menuBar()->addMenu(menu[FILE_MENU])
         menuBar()->addMenu(menu[EDIT_MENU])
@@ -9423,14 +5490,14 @@ def MainWindow::updateMenuToolbarStatusbar():
 
         menu[WINDOW_MENU]->setEnabled(0)
 
-        /*Statusbar*/
+        #Statusbar
         statusbar->clearMessage()
         statusBarMouseCoord->hide()
         for (i=0; i<N_STATUS; i++:
             status_bar[i]->hide()
 
 
-int MainWindow::validFileFormat(const QString& fileName):
+MainWindow::validFileFormat(const QString& fileName):
     if(fileName.length() == 0) {
         return 0
     }
@@ -9450,10 +5517,10 @@ def MainWindow::loadFormats():
     QString supportedStr
     QString individualStr
 
-    /*TODO: Stable Only (Settings Option)*/
-    /*stable = 'S'; unstable = 'S';*/
+    #TODO: Stable Only (Settings Option)
+    #stable = 'S'; unstable = 'S';
 
-    /*Stable + Unstable*/
+    #Stable + Unstable
     stable = 'S'; unstable = 'U'
 
     const char* extension = 0
@@ -9462,7 +5529,7 @@ def MainWindow::loadFormats():
     char writerState
 
     EmbFormatList* curFormat = 0
-    for(int i=0; i < numberOfFormats; i++)
+    for(i=0; i < numberOfFormats; i++)
     {
         extension = formatTable[i].extension
         description = formatTable[i].description
@@ -9472,22 +5539,19 @@ def MainWindow::loadFormats():
         QString upperExt = QString(extension).toUpper()
         supportedStr = "*" + upperExt + " "
         individualStr = upperExt.replace(".", "") + " - " + description + " (*" + extension + ");;"
-        if(readerState == stable || readerState == unstable)
+        if(readerState == stable or readerState == unstable)
         {
-            /*Exclude color file formats from open dialogs*/
-            if(upperExt != "COL" && upperExt != "EDR" && upperExt != "INF" && upperExt != "RGB")
+            #Exclude color file formats from open dialogs
+            if(upperExt != "COL" and upperExt != "EDR" and upperExt != "INF" and upperExt != "RGB")
             {
                 supportedReaders.append(supportedStr)
                 individualReaders.append(individualStr)
             }
         }
-        if(writerState == stable || writerState == unstable)
+        if(writerState == stable or writerState == unstable)
         {
             supportedWriters.append(supportedStr)
             individualWriters.append(individualStr)
-        }
-
-    }
 
     supportedReaders.append(");;")
     supportedWriters.append(");;")
@@ -9495,8 +5559,8 @@ def MainWindow::loadFormats():
     formatFilterOpen = supportedReaders + individualReaders
     formatFilterSave = supportedWriters + individualWriters
 
-    /*TODO: Fixup custom filter*/
-    /*
+    #TODO: Fixup custom filter
+    #
     QString custom = settings.custom_filter
     if(custom.contains("supported", Qt::CaseInsensitive))
         custom = ""; //This will hide it
@@ -9506,8 +5570,7 @@ def MainWindow::loadFormats():
         custom = "Custom Filter(" + custom + ");;"
 
     return tr(qPrintable(custom + supported + all))
-    */
-}
+
 
 def MainWindow::closeToolBar(QAction* action):
     if (action->objectName() == "toolbarclose") {
@@ -9516,22 +5579,20 @@ def MainWindow::closeToolBar(QAction* action):
         {
             debug_message("%s closed.", qPrintable(tb->objectName()))
             tb->hide()
-        }
-    }
-}
 
-def MainWindow::floatingChangedToolBar(int isFloating):
+
+def MainWindow::floatingChangedToolBar(isFloating):
     QToolBar* tb = qobject_cast<QToolBar*>(sender())
     if(tb)
     {
         if(isFloating)
         {
-            /*
+            #
             //TODO: Determine best suited close button on various platforms.
             QStyle::SP_DockWidgetCloseButton
             QStyle::SP_TitleBarCloseButton
             QStyle::SP_DialogCloseButton
-            */
+
             QAction *ACTION = new QAction(tb->style()->standardIcon(QStyle::SP_DialogCloseButton), "Close", this)
             ACTION->setStatusTip("Close the " + tb->windowTitle() + " Toolbar")
             ACTION->setObjectName("toolbarclose")
@@ -9541,7 +5602,7 @@ def MainWindow::floatingChangedToolBar(int isFloating):
         else
         {
             QList<QAction*> actList = tb->actions()
-            for(int i = 0; i < actList.size(); ++i)
+            for(i = 0; i < actList.size(); ++i)
             {
                 QAction* ACTION = actList.value(i)
                 if(ACTION->objectName() == "toolbarclose")
@@ -9549,11 +5610,7 @@ def MainWindow::floatingChangedToolBar(int isFloating):
                     tb->removeAction(ACTION)
                     disconnect(tb, SIGNAL(actionTriggered(QAction*)), this, SLOT(closeToolBar(QAction*)))
                     delete ACTION
-                }
-            }
-        }
-    }
-}
+
 
 EmbDetailsDialog::EmbDetailsDialog(QGraphicsScene* theScene, QWidget* parent) : QDialog(parent):
     setMinimumSize(750,550)
@@ -9577,17 +5634,17 @@ EmbDetailsDialog::~EmbDetailsDialog():
     QApplication::restoreOverrideCursor()
 
 def EmbDetailsDialog::getInfo():
-    /*TODO: generate a temporary pattern from the scene data.*/
+    #TODO: generate a temporary pattern from the scene data.
 
-    /*TODO: grab this information from the pattern*/
-    stitchesTotal = 5; /*TODO: embStitchList_count(pattern->stitchList, TOTAL);*/
-    stitchesReal = 4; /*TODO: embStitchList_count(pattern->stitchList, NORMAL);*/
-    stitchesJump = 3; /*TODO: embStitchList_count(pattern->stitchList, JUMP);*/
-    stitchesTrim = 2; /*TODO: embStitchList_count(pattern->stitchList, TRIM);*/
-    colorTotal = 1; /*TODO: embThreadList_count(pattern->threadList, TOTAL);*/
-    colorChanges = 0; /*TODO: embThreadList_count(pattern->threadList, CHANGES);*/
+    #TODO: grab this information from the pattern
+    stitchesTotal = 5; #TODO: embStitchList_count(pattern->stitchList, TOTAL);
+    stitchesReal = 4; #TODO: embStitchList_count(pattern->stitchList, NORMAL);
+    stitchesJump = 3; #TODO: embStitchList_count(pattern->stitchList, JUMP);
+    stitchesTrim = 2; #TODO: embStitchList_count(pattern->stitchList, TRIM);
+    colorTotal = 1; #TODO: embThreadList_count(pattern->threadList, TOTAL);
+    colorChanges = 0; #TODO: embThreadList_count(pattern->threadList, CHANGES);
 
-    boundingRect.setRect(0, 0, 50, 100); /*TODO: embPattern_calcBoundingBox(pattern);*/
+    boundingRect.setRect(0, 0, 50, 100); #TODO: embPattern_calcBoundingBox(pattern);
 }
 
 extern char *details_label_text[]
@@ -9595,13 +5652,13 @@ extern char *details_label_text[]
 QWidget* EmbDetailsDialog::createMainWidget():
     QWidget* widget = new QWidget(this)
 
-    /*Misc*/
+    #Misc
     QGroupBox* groupBoxMisc = new QGroupBox(tr("General Information"), widget)
 
     QLabel* labels[12]
     QLabel* fields[12]
 
-    int i
+    i
     for (i=0; i<12; i++) {
         labels[i] = new QLabel(tr(details_label_text[i]), this)
     }
@@ -9627,17 +5684,17 @@ QWidget* EmbDetailsDialog::createMainWidget():
     gridLayoutMisc->setColumnStretch(1,1)
     groupBoxMisc->setLayout(gridLayoutMisc)
 
-    /* TODO: Color Histogram */
+    # TODO: Color Histogram
 
-    /*Stitch Distribution*/
-    /*QGroupBox* groupBoxDist = new QGroupBox(tr("Stitch Distribution"), widget);*/
+    #Stitch Distribution
+    #QGroupBox* groupBoxDist = new QGroupBox(tr("Stitch Distribution"), widget);
 
-    /* TODO: Stitch Distribution Histogram */
+    # TODO: Stitch Distribution Histogram
 
-    /*Widget Layout*/
+    #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
     vboxLayoutMain->addWidget(groupBoxMisc)
-    /*vboxLayoutMain->addWidget(groupBoxDist);*/
+    #vboxLayoutMain->addWidget(groupBoxDist);
     vboxLayoutMain->addStretch(1)
     widget->setLayout(vboxLayoutMain)
 
@@ -9653,7 +5710,7 @@ bool Application::event(QEvent *event):
             _mainWin->openFilesSelected(QStringList(static_cast<QFileOpenEvent *>(event)->file()))
             return 1
         }
-        /* Fall through*/
+        # Fall through
     default:
         return QApplication::event(event)
     }
@@ -9671,11 +5728,11 @@ ImageWidget::ImageWidget(const QString &filename, QWidget* parent) : QWidget(par
 
     this->show()
 
-int ImageWidget::load(const QString &fileName):
+ImageWidget::load(const QString &fileName):
     img.load(fileName)
     return 1
 
-int ImageWidget::save(const QString &fileName):
+ImageWidget::save(const QString &fileName):
     img.save(fileName, "PNG")
     return 1
 
@@ -9730,7 +5787,7 @@ LayerManager::LayerManager(MainWindow* mw, QWidget* parent) : QDialog(parent):
     addLayer("8", 1, 0, 8.0, qRgb(0,0,0), "Continuous", "Default", 1)
     addLayer("9", 1, 0, 9.0, qRgb(0,0,0), "Continuous", "Default", 1)
 
-    for(int i = 0; i < layerModel->columnCount(); ++i)
+    for(i = 0; i < layerModel->columnCount(); ++i)
         treeView->resizeColumnToContents(i)
 
     QApplication::setOverrideCursor(Qt::ArrowCursor)
@@ -9739,13 +5796,13 @@ LayerManager::~LayerManager():
     QApplication::restoreOverrideCursor()
 
 def LayerManager::addLayer(const QString& name,
-                            const int visible,
-                            const int frozen,
-                            const float zValue,
-                            const unsigned int color,
+                            const visible,
+                            const frozen,
+                            const zValue,
+                            const unsigned color,
                             const QString& lineType,
                             const QString& lineWeight,
-                            const int print):
+                            const print):
     layerModel->insertRow(0)
     layerModel->setData(layerModel->index(0, 0), name)
     layerModel->setData(layerModel->index(0, 1), visible)
@@ -9761,7 +5818,7 @@ def LayerManager::addLayer(const QString& name,
     layerModel->setData(layerModel->index(0, 6), lineWeight)
     layerModel->setData(layerModel->index(0, 7), print)
 
-int old_main(int argc, char *argv[]):
+old_main(argc, char *argv[]):
 #if defined(Q_OS_MAC)
     Application app(argc, argv)
 #else
@@ -9772,11 +5829,11 @@ int old_main(int argc, char *argv[]):
 
     QStringList filesToOpen
 
-    for (int i = 1; i < argc; i++) {
-        if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")) {  }
-        elif(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")   ) { usage(); }
-        elif(!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version")) { version(); }
-        elif(QFile::exists(argv[i]) && MainWindow::validFileFormat(argv[i])) {
+    for (i = 1; i < argc; i++) {
+        if (!strcmp(argv[i], "-d") or !strcmp(argv[i], "--debug")) {  }
+        elif(!strcmp(argv[i], "-h") or !strcmp(argv[i], "--help")   ) { usage(); }
+        elif(!strcmp(argv[i], "-v") or !strcmp(argv[i], "--version")) { version(); }
+        elif(QFile::exists(argv[i]) and MainWindow::validFileFormat(argv[i])) {
             filesToOpen << argv[i]
         }
     }
@@ -9794,7 +5851,7 @@ int old_main(int argc, char *argv[]):
     _mainWin->setWindowTitle(app.applicationName() + " " + app.applicationVersion())
     _mainWin->show()
 
-    /*NOTE: If openFilesSelected() is called from within the mainWin constructor, slot commands wont work and the window menu will be screwed*/
+    #NOTE: If openFilesSelected() is called from within the mainWin constructor, slot commands wont work and the window menu will be screwed
     if(!filesToOpen.isEmpty())
         _mainWin->openFilesSelected(filesToOpen)
 
@@ -9810,15 +5867,15 @@ MdiArea::MdiArea(MainWindow* mw, QWidget *parent) : QMdiArea(parent), mainWin(mw
 MdiArea::~MdiArea():
 }
 
-def MdiArea::useBackgroundLogo(int use):
+def MdiArea::useBackgroundLogo(use):
     useLogo = use
     forceRepaint()
 
-def MdiArea::useBackgroundTexture(int use):
+def MdiArea::useBackgroundTexture(use):
     useTexture = use
     forceRepaint()
 
-def MdiArea::useBackgroundColor(int use):
+def MdiArea::useBackgroundColor(use):
     useColor = use
     forceRepaint()
 
@@ -9840,33 +5897,33 @@ def MdiArea::setBackgroundColor(const QColor& color):
 
     forceRepaint()
 
-def MdiArea::mouseDoubleClickEvent(QMouseEvent* /*e*/):
+def MdiArea::mouseDoubleClickEvent(QMouseEvent* #e):
     mainWin->openFile()
 
-def MdiArea::paintEvent(QPaintEvent* /*e*/):
+def MdiArea::paintEvent(QPaintEvent* #e):
     QWidget* vport = viewport()
     QRect rect = vport->rect()
 
     QPainter painter(vport)
     painter.setRenderHint(QPainter::SmoothPixmapTransform)
 
-    /*Always fill with a solid color first*/
+    #Always fill with a solid color first
     if(useColor) painter.fillRect(rect, bgColor)
     else         painter.fillRect(rect, background())
 
-    /*Then overlay the texture*/
+    #Then overlay the texture
     if(useTexture)
     {
         QBrush bgBrush(bgTexture)
         painter.fillRect(rect, bgBrush)
     }
 
-    /*Overlay the logo last*/
+    #Overlay the logo last
     if(useLogo)
     {
-        /*Center the pixmap*/
-        int dx = (rect.width()-bgLogo.width())/2
-        int dy = (rect.height()-bgLogo.height())/2
+        #Center the pixmap
+        dx = (rect.width()-bgLogo.width())/2
+        dy = (rect.height()-bgLogo.height())/2
         painter.drawPixmap(dx, dy, bgLogo.width(), bgLogo.height(), bgLogo)
     }
 }
@@ -9896,12 +5953,12 @@ def MdiArea::zoomExtentsAllSubWindows():
 }
 
 def MdiArea::forceRepaint():
-    /* HACK: Take that QMdiArea! */
+    # HACK: Take that QMdiArea!
     QSize hack = size()
     resize(hack + QSize(1,1))
     resize(hack)
 
-MdiWindow::MdiWindow(const int theIndex, MainWindow* mw, QMdiArea* parent, Qt::WindowFlags wflags) : QMdiSubWindow(parent, wflags):
+MdiWindow::MdiWindow(const theIndex, MainWindow* mw, QMdiArea* parent, Qt::WindowFlags wflags) : QMdiSubWindow(parent, wflags):
     mainWin = mw
     mdiArea = parent
 
@@ -9922,24 +5979,24 @@ MdiWindow::MdiWindow(const int theIndex, MainWindow* mw, QMdiArea* parent, Qt::W
 
     setWidget(gview)
 
-    /*
+    #
      * WARNING:
      * DO NOT SET THE QMDISUBWINDOW (this) FOCUSPROXY TO THE PROMPT
      * AS IT WILL CAUSE THE WINDOW MENU TO NOT SWITCH WINDOWS PROPERLY!
      * ALTHOUGH IT SEEMS THAT SETTING INTERNAL WIDGETS FOCUSPROXY IS OK.
-     */
-/*    gview->setFocusProxy(mainWin->prompt);*/
+
+#    gview->setFocusProxy(mainWin->prompt);
 
     resize(sizeHint())
 
     curLayer = "0"
-    curColor = 0; /*TODO: color ByLayer*/
+    curColor = 0; #TODO: color ByLayer
     curLineType = "ByLayer"
     curLineWeight = "ByLayer"
 
-    /* Due to strange Qt4.2.3 feature the child window icon is not drawn*/
-    /* in the main menu if showMaximized() is called for a non-visible child window*/
-    /* Therefore calling show() first...*/
+    # Due to strange Qt4.2.3 feature the child window icon is not drawn
+    # in the main menu if showMaximized() is called for a non-visible child window
+    # Therefore calling show() first...
     show()
     showMaximized()
 
@@ -9951,20 +6008,20 @@ MdiWindow::MdiWindow(const int theIndex, MainWindow* mw, QMdiArea* parent, Qt::W
 MdiWindow::~MdiWindow():
     debug_message("MdiWindow Destructor()")
 
-int MdiWindow::saveFile(const QString &fileName):
+MdiWindow::saveFile(const QString &fileName):
     debug_message("SaveObject save(%s)", qPrintable(fileName))
 
-    /* TODO: Before saving to a stitch only format, Embroidermodder needs
+    # TODO: Before saving to a stitch only format, Embroidermodder needs
      *       to calculate the optimal path to minimize jump stitches. Also
      *       based upon which layer needs to be stitched first,
      *       the path to the next object needs to be hidden beneath fills
      *       that will come later. When finding the optimal path, we need
      *       to take into account the color of the thread, as we do not want
      *       to try to hide dark colored stitches beneath light colored fills.
-     */
-    int formatType = EMBFORMAT_UNSUPPORTED
-    int writeSuccessful = 0
-    int i
+
+    formatType = EMBFORMAT_UNSUPPORTED
+    writeSuccessful = 0
+    i
 
     formatType = emb_identify_format((char*)qPrintable(fileName))
     if (formatType == EMBFORMAT_UNSUPPORTED) {
@@ -9976,59 +6033,59 @@ int MdiWindow::saveFile(const QString &fileName):
     pattern = embPattern_create()
     if(!pattern) { debug_message("Could not allocate memory for embroidery pattern"); }
 
-    /* Write */
-    int writer = emb_identify_format((char*)qPrintable(fileName))
+    # Write
+    writer = emb_identify_format((char*)qPrintable(fileName))
     if (writer<0) {
         debug_message("Unsupported write file type: %s", qPrintable(fileName))
     }
     else {
         foreach(QGraphicsItem* item, _mainWin->activeScene()->items(Qt::AscendingOrder))
         {
-            int objType = item->data(OBJ_TYPE).toInt()
+            objType = item->data(OBJ_TYPE).toInt()
 
             if (objType == OBJ_TYPE_ARC) {
-                /* addArc */
+                # addArc
             }
             elif (objType == OBJ_TYPE_BLOCK) {
-                /* addBlock(pattern, item); */
+                # addBlock(pattern, item);
             }
             elif(objType == OBJ_TYPE_CIRCLE) {
                 CircleObject* obj = static_cast<CircleObject*>(item)
                 if (obj) {
                     if (formatType == EMBFORMAT_STITCHONLY) {
                         QPainterPath path = obj->objectSavePath()
-            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified*/
+            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
         }
         else {
             QPointF p = obj->objectCenter()
-            float r = obj->objectRadius()
+            r = obj->objectRadius()
             embPattern_addCircleObjectAbs(pattern, (double)p.x(), (double)p.y(), (double)r)
         }
     }
             }
             elif(objType == OBJ_TYPE_DIMALIGNED) {
-                /* addDimAligned(pattern, item); */
+                # addDimAligned(pattern, item);
             }
             elif(objType == OBJ_TYPE_DIMANGULAR) {
-                /* addDimAngular(pattern, item); */
+                # addDimAngular(pattern, item);
             }
             elif(objType == OBJ_TYPE_DIMARCLENGTH) {
-                /* addDimArcLength(pattern, item); */
+                # addDimArcLength(pattern, item);
             }
             elif(objType == OBJ_TYPE_DIMDIAMETER) {
-                /* addDimDiameter(pattern, item); */
+                # addDimDiameter(pattern, item);
             }
             elif(objType == OBJ_TYPE_DIMLEADER) {
-                /* addDimLeader(pattern, item); */
+                # addDimLeader(pattern, item);
             }
             elif(objType == OBJ_TYPE_DIMLINEAR) {
-                /* addDimLinear(pattern, item); */
+                # addDimLinear(pattern, item);
             }
             elif(objType == OBJ_TYPE_DIMORDINATE)  {
-                /* addDimOrdinate(pattern, item); */
+                # addDimOrdinate(pattern, item);
             }
             elif(objType == OBJ_TYPE_DIMRADIUS)    {
-                /* addDimRadius(pattern, item); */
+                # addDimRadius(pattern, item);
             }
             elif(objType == OBJ_TYPE_ELLIPSE) {
     EllipseObject* obj = static_cast<EllipseObject*>(item)
@@ -10037,27 +6094,27 @@ int MdiWindow::saveFile(const QString &fileName):
         if(formatType == EMBFORMAT_STITCHONLY)
         {
             QPainterPath path = obj->objectSavePath()
-            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified*/
+            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
         }
         else
         {
-            /*TODO: ellipse rotation*/
+            #TODO: ellipse rotation
             embPattern_addEllipseObjectAbs(pattern, (double)obj->objectCenter().x(), (double)obj->objectCenter().y(), (double)obj->objectWidth()/2.0, (double)obj->objectHeight()/2.0)
         }
     }
             }
-            elif(objType == OBJ_TYPE_ELLIPSEARC)   { /* addEllipseArc(pattern, item);  */ }
-            elif(objType == OBJ_TYPE_GRID)         { /* addGrid(pattern, item);     */    }
-            elif(objType == OBJ_TYPE_HATCH)        { /* addHatch(pattern, item);       */ }
-            elif(objType == OBJ_TYPE_IMAGE)        { /* addImage(pattern, item);       */ }
-            elif(objType == OBJ_TYPE_INFINITELINE) { /* addInfiniteLine(pattern, item); */ }
-            elif(objType == OBJ_TYPE_LINE)         { 
+            elif(objType == OBJ_TYPE_ELLIPSEARC)   { # addEllipseArc(pattern, item);   }
+            elif(objType == OBJ_TYPE_GRID)         { # addGrid(pattern, item);         }
+            elif(objType == OBJ_TYPE_HATCH)        { # addHatch(pattern, item);        }
+            elif(objType == OBJ_TYPE_IMAGE)        { # addImage(pattern, item);        }
+            elif(objType == OBJ_TYPE_INFINITELINE) { # addInfiniteLine(pattern, item);  }
+            elif(objType == OBJ_TYPE_LINE)         {
     LineObject* obj = static_cast<LineObject*>(item)
     if(obj)
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            toPolyline(pattern, obj->objectEndPoint1(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight*/
+            toPolyline(pattern, obj->objectEndPoint1(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
         }
         else
         {
@@ -10066,16 +6123,16 @@ int MdiWindow::saveFile(const QString &fileName):
     }
       }
             elif (objType == OBJ_TYPE_PATH) {
-    /*TODO: Reimplement addPolyline() using the libembroidery C API*/
-    /*
+    #TODO: Reimplement addPolyline() using the libembroidery C API
+    #
     debug_message("addPolyline()")
     QGraphicsPathItem* polylineItem = (QGraphicsPathItem*)item
     if(polylineItem)
     {
         QPainterPath path = polylineItem->path()
         QPointF pos = polylineItem->pos()
-        float startX = pos.x()
-        float startY = pos.y()
+        startX = pos.x()
+        startY = pos.y()
 
         QPainterPath::Element element
         QPainterPath::Element P1
@@ -10083,7 +6140,7 @@ int MdiWindow::saveFile(const QString &fileName):
         QPainterPath::Element P3
         QPainterPath::Element P4
 
-        for(int i = 0; i < path.elementCount()-1; ++i)
+        for(i = 0; i < path.elementCount()-1; ++i)
         {
             element = path.elementAt(i)
             if(element.isMoveTo())
@@ -10109,15 +6166,15 @@ int MdiWindow::saveFile(const QString &fileName):
         QColor c= polylineItem->pen().color()
         pattern.AddColor(c.red(), c.green(), c.blue(), "", "")
     }
-    */
+
             }
-            elif(objType == OBJ_TYPE_POINT)        { 
+            elif(objType == OBJ_TYPE_POINT)        {
     PointObject* obj = static_cast<PointObject*>(item)
     if(obj)
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight*/
+            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
         }
         else
         {
@@ -10129,29 +6186,29 @@ int MdiWindow::saveFile(const QString &fileName):
     PolygonObject* obj = static_cast<PolygonObject*>(item)
     if(obj)
     {
-        toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight*/
+        toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
     }
             }
-            elif(objType == OBJ_TYPE_POLYLINE) { 
+            elif(objType == OBJ_TYPE_POLYLINE) {
                 PolylineObject* obj = static_cast<PolylineObject*>(item)
                 if (obj)  {
-                    toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight*/
+                    toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
                 }
             }
             elif(objType == OBJ_TYPE_RAY) {
-                /* addRay(pattern, item);       */
+                # addRay(pattern, item);
             }
-            elif(objType == OBJ_TYPE_RECTANGLE) { 
+            elif(objType == OBJ_TYPE_RECTANGLE) {
     RectObject* obj = static_cast<RectObject*>(item)
     if(obj)
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight*/
+            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
         }
         else
         {
-            /*TODO: Review this at some point*/
+            #TODO: Review this at some point
             QPointF topLeft = obj->objectTopLeft()
             embPattern_addRectObjectAbs(pattern, (double)topLeft.x(), (double)topLeft.y(), (double)obj->objectWidth(), (double)obj->objectHeight())
         }
@@ -10159,16 +6216,16 @@ int MdiWindow::saveFile(const QString &fileName):
             }
             elif(objType == OBJ_TYPE_SLOT) {
             }
-            elif(objType == OBJ_TYPE_SPLINE)       { 
-    /*TODO: abstract bezier into geom-bezier... cubicBezierMagic(P1, P2, P3, P4, 0.0, 1.0, tPoints);*/
+            elif(objType == OBJ_TYPE_SPLINE)       {
+    #TODO: abstract bezier into geom-bezier... cubicBezierMagic(P1, P2, P3, P4, 0.0, 1.0, tPoints);
     }
-            elif(objType == OBJ_TYPE_TEXTMULTI)    { 
-    /*TODO: saving polygons, polylines and paths must be stable before we go here.*/
+            elif(objType == OBJ_TYPE_TEXTMULTI)    {
+    #TODO: saving polygons, polylines and paths must be stable before we go here.
        }
             elif (objType == OBJ_TYPE_TEXTSINGLE) {
-    /*TODO: saving polygons, polylines and paths must be stable before we go here.*/
+    #TODO: saving polygons, polylines and paths must be stable before we go here.
 
-    /*TODO: This needs to work like a path, not a polyline. Improve this*/
+    #TODO: This needs to work like a path, not a polyline. Improve this
     TextSingleObject* obj = static_cast<TextSingleObject*>(item)
     if(obj)
     {
@@ -10177,7 +6234,7 @@ int MdiWindow::saveFile(const QString &fileName):
             QList<QPainterPath> pathList = obj->objectSavePathList()
             foreach(QPainterPath path, pathList)
             {
-                toPolyline(pattern, obj->objectPos(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified*/
+                toPolyline(pattern, obj->objectPos(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
             }
         }
         else
@@ -10187,23 +6244,23 @@ int MdiWindow::saveFile(const QString &fileName):
     }  }
         }
 
-        /*TODO: handle EMBFORMAT_STCHANDOBJ also*/
+        #TODO: handle EMBFORMAT_STCHANDOBJ also
         if(formatType == EMBFORMAT_STITCHONLY)
-            embPattern_movePolylinesToStitchList(pattern); /*TODO: handle all objects like this*/
+            embPattern_movePolylinesToStitchList(pattern); #TODO: handle all objects like this
 
         writeSuccessful = embPattern_writeAuto(pattern, qPrintable(fileName))
         if(!writeSuccessful) { debug_message("Writing file %s was unsuccessful", qPrintable(fileName)); }
     }
 
-    /*TODO: check the embLog for errors and if any exist, report them.*/
+    #TODO: check the embLog for errors and if any exist, report them.
     embPattern_free(pattern)
 
     return writeSuccessful
 
-int MdiWindow::loadFile(const QString &fileName):
+MdiWindow::loadFile(const QString &fileName):
     debug_message("MdiWindow loadFile()")
 
-    unsigned int tmpColor = getCurrentColor()
+    unsigned tmpColor = getCurrentColor()
 
     QFile file(fileName)
     if(!file.open(QFile::ReadOnly | QFile::Text))
@@ -10220,7 +6277,7 @@ int MdiWindow::loadFile(const QString &fileName):
     QString ext = fileExtension(fileName)
     debug_message("ext: %s", qPrintable(ext))
 
-    /* Read*/
+    # Read
     EmbPattern* p = embPattern_create()
     if (!p) {
         printf("Could not allocate memory for embroidery pattern\n")
@@ -10232,8 +6289,8 @@ int MdiWindow::loadFile(const QString &fileName):
         QMessageBox::warning(this, tr("Error reading pattern"), tr("Reading file was unsuccessful: ") + fileName)
     }
     else:
-        embPattern_moveStitchListToPolylines(p); /*TODO: Test more*/
-        int stitchCount = p->stitchList->count
+        embPattern_moveStitchListToPolylines(p); #TODO: Test more
+        stitchCount = p->stitchList->count
         QPainterPath path
 
         if p.circles:
@@ -10241,38 +6298,38 @@ int MdiWindow::loadFile(const QString &fileName):
                 EmbCircle c = p->circles->circle[i].circle
                 EmbColor thisColor = p->circles->circle[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.*/
-                mainWin->nativeAddCircle(c.center.x, c.center.y, c.radius, 0, OBJ_RUBBER_OFF); /*TODO: fill*/
+                # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
+                mainWin->nativeAddCircle(c.center.x, c.center.y, c.radius, 0, OBJ_RUBBER_OFF); #TODO: fill
 
         if p.ellipses:
-            for (int i = 0; i < p->ellipses->count; i++) {
+            for (i = 0; i < p->ellipses->count; i++) {
                 EmbEllipse e = p->ellipses->ellipse[i].ellipse
                 EmbColor thisColor = p->ellipses->ellipse[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed. */
-                mainWin->nativeAddEllipse(e.centerX, e.centerY, e.radiusX, e.radiusY, 0, 0, OBJ_RUBBER_OFF); /*TODO: rotation and fill*/
+                # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
+                mainWin->nativeAddEllipse(e.centerX, e.centerY, e.radiusX, e.radiusY, 0, 0, OBJ_RUBBER_OFF); #TODO: rotation and fill
 
         if (p->lines) {
-            for (int i = 0; i < p->lines->count; i++) {
+            for (i = 0; i < p->lines->count; i++) {
                 EmbLine li = p->lines->line[i].line
                 EmbColor thisColor = p->lines->line[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed. */
-                mainWin->nativeAddLine(li.start.x, li.start.y, li.end.x, li.end.y, 0, OBJ_RUBBER_OFF); /*TODO: rotation*/
+                # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
+                mainWin->nativeAddLine(li.start.x, li.start.y, li.end.x, li.end.y, 0, OBJ_RUBBER_OFF); #TODO: rotation
 
         if (p->paths) {
-            /* TODO: This is unfinished. It needs more work*/
-            for (int i=0; i < p->paths->count; i++) {
+            # TODO: This is unfinished. It needs more work
+            for (i=0; i < p->paths->count; i++) {
                 EmbArray* curPointList = p->paths->path[i]->pointList
                 QPainterPath pathPath
                 EmbColor thisColor = p->paths->path[i]->color
                 if (curPointList->count > 0) {
                     EmbVector pp = curPointList[0].point->point
-                    pathPath.moveTo(pp.x, -pp.y); /*NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.*/
+                    pathPath.moveTo(pp.x, -pp.y); #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                 }
-                for (int j = 1; j < curPointList->count; j++) {
+                for (j = 1; j < curPointList->count; j++) {
                     EmbVector pp = curPointList[j].point->point
-                    pathPath.lineTo(pp.x, -pp.y); /*NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.*/
+                    pathPath.lineTo(pp.x, -pp.y); #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                 }
                 QPen loadPen(qRgb(thisColor.r, thisColor.g, thisColor.b))
                 loadPen.setWidthF(0.35)
@@ -10285,33 +6342,33 @@ int MdiWindow::loadFile(const QString &fileName):
             }
         }
         if (p->points) {
-            for (int i = 0; i < p->points->count; i++) {
+            for (i = 0; i < p->points->count; i++) {
                 EmbVector po = p->points->point[i].point
                 EmbColor thisColor = p->points->point[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                /* NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.*/
+                # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
                 mainWin->nativeAddPoint(po.x, po.y)
             }
         }
         if (p->polygons) {
-            for (int i = 0; i < p->polygons->count; i++) {
+            for (i = 0; i < p->polygons->count; i++) {
                 EmbArray *curPointList = p->polygons->polygon[i]->pointList
                 QPainterPath polygonPath
-                int firstPoint = 0
-                float startX = 0, startY = 0
-                float x = 0, y = 0
+                firstPo= 0
+                startX = 0, startY = 0
+                x = 0, y = 0
                 EmbColor thisColor = p->polygons->polygon[i]->color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                for (int j=0; j<curPointList->count; j++) {
+                for (j=0; j<curPointList->count; j++) {
                     EmbVector pp = curPointList->point[j].point
                     x = pp.x
-                    y = -pp.y; /*NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.*/
+                    y = -pp.y; #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
 
                     if (firstPoint) {
                         polygonPath.lineTo(x,y)
                     } else {
                         polygonPath.moveTo(x,y)
-                        firstPoint = 1
+                        firstPo= 1
                         startX = x
                         startY = y
                     }
@@ -10320,25 +6377,25 @@ int MdiWindow::loadFile(const QString &fileName):
                 mainWin->nativeAddPolygon(startX, startY, polygonPath, OBJ_RUBBER_OFF)
             }
         }
-        /* NOTE: Polylines should only contain NORMAL stitches. */
+        # NOTE: Polylines should only contain NORMAL stitches.
         if (p->polylines) {
-            for (int i=0; i<p->polylines->count; i++) {
+            for (i=0; i<p->polylines->count; i++) {
                 EmbArray* curPointList = p->polylines->polyline[i]->pointList
                 QPainterPath polylinePath
-                int firstPoint = 0
-                float startX = 0, startY = 0
-                float x = 0, y = 0
+                firstPo= 0
+                startX = 0, startY = 0
+                x = 0, y = 0
                 EmbColor thisColor = p->polylines->polyline[i]->color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                for (int j=0; j<curPointList->count; j++) {
+                for (j=0; j<curPointList->count; j++) {
                     EmbVector pp = curPointList->point[j].point
                     x = pp.x
-                    y = -pp.y; /*NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.*/
+                    y = -pp.y; #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                     if (firstPoint) {
                         polylinePath.lineTo(x,y)
                     } else {
                         polylinePath.moveTo(x,y)
-                        firstPoint = 1
+                        firstPo= 1
                         startX = x
                         startY = y
                     }
@@ -10349,12 +6406,12 @@ int MdiWindow::loadFile(const QString &fileName):
             }
         }
         if (p->rects) {
-            for (int i=0; i<p->rects->count; i++) {
+            for (i=0; i<p->rects->count; i++) {
                 EmbRect r = p->rects->rect[i].rect
                 EmbColor thisColor = p->rects->rect[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                /*NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.*/
-                mainWin->nativeAddRectangle(embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r), 0, 0, OBJ_RUBBER_OFF); /*TODO: rotation and fill*/
+                #NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
+                mainWin->nativeAddRectangle(embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r), 0, 0, OBJ_RUBBER_OFF); #TODO: rotation and fill
             }
         }
         setCurrentFile(fileName)
@@ -10363,20 +6420,20 @@ int MdiWindow::loadFile(const QString &fileName):
         stitches.setNum(stitchCount)
 
         if(settings.grid_load_from_file) {
-            /*TODO: Josh, provide me a hoop size and/or grid spacing from the pattern.*/
+            #TODO: Josh, provide me a hoop size and/or grid spacing from the pattern.
         }
         QApplication::restoreOverrideCursor()
     }
     embPattern_free(p)
 
-    /* Clear the undo stack so it is not possible to undo past this point. */
+    # Clear the undo stack so it is not possible to undo past this point.
     undo_history_length = 0
 
     setCurrentColor(tmpColor)
     return 1
 
 def MdiWindow::print():
-    /*
+    #
     QPrintDialog dialog(&printer, this)
     if (dialog.exec() == QDialog::Accepted) {
         QPainter painter(&printer)
@@ -10396,20 +6453,20 @@ def MdiWindow::print():
 
 
 
-/* TODO: Save a Brother PEL image (An 8bpp, 130x113 pixel monochromatic? bitmap image) Why 8bpp when only 1bpp is needed?*/
+# TODO: Save a Brother PEL image (An 8bpp, 130x113 pixel monochromatic? bitmap image) Why 8bpp when only 1bpp is needed?
 
-/* TODO: Should BMC be limited to ~32KB or is this a mix up with Bitmap Cache?*/
-/* TODO: Is there/should there be other embedded data in the bitmap besides the image itself?*/
-/* NOTE: Can save a Singer BMC image (An 8bpp, 130x113 pixel colored bitmap image)*/
+# TODO: Should BMC be limited to ~32KB or is this a mix up with Bitmap Cache?
+# TODO: Is there/should there be other embedded data in the bitmap besides the image itself?
+# NOTE: Can save a Singer BMC image (An 8bpp, 130x113 pixel colored bitmap image)
 def MdiWindow::saveBMC():
-    /* TODO: figure out how to center the image, right now it just plops it to the left side.*/
+    # TODO: figure out how to center the image, right now it just plops it to the left side.
     QImage img(150, 150, QImage::Format_ARGB32_Premultiplied)
     img.fill(qRgb(255,255,255))
     QRectF extents = gscene->itemsBoundingRect()
 
     QPainter painter(&img)
     QRectF targetRect(0,0,150,150)
-    if (settings.printing_disable_bg) { /*TODO: Make BMC background into it's own setting? */
+    if (settings.printing_disable_bg) { #TODO: Make BMC background into it's own setting?
         QBrush brush = gscene->backgroundBrush()
         gscene->setBackgroundBrush(Qt::NoBrush)
         gscene->update()
@@ -10432,7 +6489,7 @@ QString MdiWindow::getShortCurrentFile():
 QString MdiWindow::fileExtension(const QString& fileName):
     return QFileInfo(fileName).suffix().toLower()
 
-def MdiWindow::closeEvent(QCloseEvent* /*e*/):
+def MdiWindow::closeEvent(QCloseEvent* #e):
     debug_message("MdiWindow closeEvent()")
     emit sendCloseMdiWin(this)
 
@@ -10446,7 +6503,7 @@ def MdiWindow::onWindowActivated():
     status_bar[STATUS_QSNAP]->setChecked(gscene->property("ENABLE_QSNAP").toBool())
     status_bar[STATUS_QTRACK]->setChecked(gscene->property("ENABLE_QTRACK").toBool())
     status_bar[STATUS_LWT]->setChecked(gscene->property("ENABLE_LWT").toBool())
-    /*mainWin->prompt->setHistory(promptHistory);*/
+    #mainWin->prompt->setHistory(promptHistory);
 }
 
 QSize MdiWindow::sizeHint() const:
@@ -10474,22 +6531,22 @@ def MdiWindow::deletePressed():
 def MdiWindow::escapePressed():
     gview->escapePressed()
 
-def MdiWindow::showViewScrollBars(int val):
+def MdiWindow::showViewScrollBars(val):
     gview->showScrollBars(val)
 
-def MdiWindow::setViewCrossHairColor(unsigned int color):
+def MdiWindow::setViewCrossHairColor(unsigned color):
     gview->setCrossHairColor(color)
 
-def MdiWindow::setViewBackgroundColor(unsigned int color):
+def MdiWindow::setViewBackgroundColor(unsigned color):
     gview->setBackgroundColor(color)
 
-def MdiWindow::setViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha):
+def MdiWindow::setViewSelectBoxColors(unsigned colorL, unsigned fillL, unsigned colorR, unsigned fillR, alpha):
     gview->setSelectBoxColors(colorL, fillL, colorR, fillR, alpha)
 
-def MdiWindow::setViewGridColor(unsigned int color):
+def MdiWindow::setViewGridColor(unsigned color):
     gview->setGridColor(color)
 
-def MdiWindow::setViewRulerColor(unsigned int color):
+def MdiWindow::setViewRulerColor(unsigned color):
     gview->setRulerColor(color)
 
 PreviewDialog::PreviewDialog(QWidget* parent,
@@ -10498,8 +6555,8 @@ PreviewDialog::PreviewDialog(QWidget* parent,
                              const QString& filter) : QFileDialog(parent, caption, dir, filter):
     debug_message("PreviewDialog Constructor")
 
-    /*TODO: get actual thumbnail image from file, lets also use a size of 128x128 for now...*/
-    /*TODO: make thumbnail size adjustable thru settings dialog*/
+    #TODO: get actual thumbnail image from file, lets also use a size of 128x128 for now...
+    #TODO: make thumbnail size adjustable thru settings dialog
     imgWidget = new ImageWidget("icons/default/nopreview.png", this)
 
     QLayout* lay = layout()
@@ -10514,28 +6571,28 @@ PreviewDialog::PreviewDialog(QWidget* parent,
     setViewMode(QFileDialog::Detail)
     setFileMode(QFileDialog::ExistingFiles)
 
-    /*TODO: connect the currentChanged signal to update the preview imgWidget.*/
+    #TODO: connect the currentChanged signal to update the preview imgWidget.
 }
 
 PreviewDialog::~PreviewDialog():
     debug_message("PreviewDialog Destructor")
 
 SelectBox::SelectBox(Shape s, QWidget* parent) : QRubberBand(s, parent):
-    /*Default values*/
+    #Default values
     setColors(QColor(Qt::darkGreen), QColor(Qt::green), QColor(Qt::darkBlue), QColor(Qt::blue), 32)
 
-def SelectBox::setDirection(int dir):
+def SelectBox::setDirection(dir):
     if(!dir) { dirPen = leftPen;  dirBrush = leftBrush;  }
     else     { dirPen = rightPen; dirBrush = rightBrush; }
     boxDir = dir
 
-def SelectBox::setColors(const QColor& colorL, const QColor& fillL, const QColor& colorR, const QColor& fillR, int newAlpha):
+def SelectBox::setColors(const QColor& colorL, const QColor& fillL, const QColor& colorR, const QColor& fillR, newAlpha):
     debug_message("SelectBox setColors()")
     alpha = newAlpha
 
-    leftPenColor = colorL; /*TODO: allow customization*/
+    leftPenColor = colorL; #TODO: allow customization
     leftBrushColor = to_emb_color(QColor(fillL.red(), fillL.green(), fillL.blue(), alpha))
-    rightPenColor = colorR; /*TODO: allow customization*/
+    rightPenColor = colorR; #TODO: allow customization
     rightBrushColor = QColor(fillR.red(), fillR.green(), fillR.blue(), alpha)
 
     leftPen.setColor(leftPenColor)
@@ -10560,7 +6617,7 @@ def SelectBox::paintEvent(QPaintEvent*):
     painter.drawRect(0,0,width()-1, height()-1)
 
 def SelectBox::forceRepaint():
-    /*HACK: Take that QRubberBand!*/
+    #HACK: Take that QRubberBand!
     QSize hack = size()
     resize(hack + QSize(1,1))
     resize(hack)
@@ -10632,7 +6689,7 @@ def StatusBarButton::contextMenuEvent(QContextMenuEvent *event):
     }
     elif(objectName() == "StatusBarButtonLWT") {
         View* gview = _mainWin->activeView()
-        if (gview) {
+        if gview:
             QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu_)
             enableRealAction->setEnabled(!gview->isRealEnabled())
             connect(enableRealAction, SIGNAL(triggered()), this, SLOT(enableReal()))
@@ -10653,7 +6710,7 @@ def StatusBarButton::contextMenuEvent(QContextMenuEvent *event):
     statusbar->clearMessage()
 
 StatusBar::StatusBar(MainWindow* mw, QWidget *parent) : QStatusBar(parent):
-    int i
+    i
     this->setObjectName("StatusBar")
 
     for (i=0; i<N_STATUS; i++) {
@@ -10661,32 +6718,32 @@ StatusBar::StatusBar(MainWindow* mw, QWidget *parent) : QStatusBar(parent):
     }
     statusBarMouseCoord = new QLabel(this)
 
-    statusBarMouseCoord->setMinimumWidth(300); /* Must fit this text always*/
-    statusBarMouseCoord->setMaximumWidth(300); /* "+1.2345E+99, +1.2345E+99, +1.2345E+99"*/
+    statusBarMouseCoord->setMinimumWidth(300); # Must fit this text always
+    statusBarMouseCoord->setMaximumWidth(300); # "+1.2345E+99, +1.2345E+99, +1.2345E+99"
 
     this->addWidget(statusBarMouseCoord)
     for (i=0; i<N_STATUS; i++) {
         this->addWidget(status_bar[i])
-    }
-}
 
 def StatusBar::setMouseCoord(x, y):
     # TODO: set format from settings (Architectural, Decimal, Engineering, Fractional, Scientific)
 
-    /* Decimal */
-    statusBarMouseCoord->setText(QString().setNum(x, 'F', 4) + ", " + QString().setNum(y, 'F', 4)); /*TODO: use precision from unit settings*/
+    # Decimal
+    statusBarMouseCoord->setText(QString().setNum(x, 'F', 4) + ", "
+        + QString().setNum(y, 'F', 4));
+        #TODO: use precision from unit settings
 
-    /* Scientific */
-    /* statusBarMouseCoord->setText(QString().setNum(x, 'E', 4) + ", " + QString().setNum(y, 'E', 4)); */
-    /* TODO: use precision from unit settings */
-}
+    # Scientific
+    # statusBarMouseCoord->setText(QString().setNum(x, 'E', 4)
+         + ", " + QString().setNum(y, 'E', 4));
+    # TODO: use precision from unit settings
 
 
 def main_about():
     debug_message("main_about()")
 
-    /*TODO: QTabWidget for about dialog*/
-    /*QApplication::setOverrideCursor(Qt::ArrowCursor)
+    #TODO: QTabWidget for about dialog
+    #QApplication::setOverrideCursor(Qt::ArrowCursor)
     debug_message("about()")
     QString appDir = qApp->applicationDirPath()
     QString title = "About Embroidermodder 2"
@@ -10694,20 +6751,20 @@ def main_about():
     QDialog dialog(_mainWin)
     ImageWidget img(appDir + "/images/logo-small.png")
     QLabel text(QString("Embroidermodder ") + QString(_appVer_) + "\n\n" +
-                          _mainWin->tr("http://embroidermodder.org") +
-                          "\n\n" +
-                          _mainWin->tr("Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi") +
-                          "\n\n" +
-                          _mainWin->tr("Embroidery formats by Josh Varga.") +
-                          "\n" +
-                          _mainWin->tr("User Interface by Jonathan Greig and Robin Swift.") +
-                          "\n\n" +
-                          _mainWin->tr("Free under the zlib/libpng license.")
-                          #if defined(BUILD_GIT_HASH)
-                          + "\n\n" +
-                          _mainWin->tr("Build Hash: ") + qPrintable(BUILD_GIT_HASH)
-                          #endif
-                          )
+        _mainWin->tr("http://embroidermodder.org") +
+        "\n\n" +
+        _mainWin->tr("Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi") +
+        "\n\n" +
+         _mainWin->tr("Embroidery formats by Josh Varga.") +
+         "\n" +
+        _mainWin->tr("User Interface by Jonathan Greig and Robin Swift.") +
+        "\n\n" +
+         _mainWin->tr("Free under the zlib/libpng license.")
+         #if defined(BUILD_GIT_HASH)
+         + "\n\n" +
+         _mainWin->tr("Build Hash: ") + qPrintable(BUILD_GIT_HASH)
+          #endif
+    )
     text.setWordWrap(1)
 
     QDialogButtonBox buttonbox(Qt::Horizontal, &dialog)
@@ -10733,24 +6790,24 @@ def main_about():
 
 def actuator(call):
     undo_history_position++
-    /* an action has been taken, we are at the current head of the stack */
+    # an action has been taken, we are at the current head of the stack
     undo_history_length = undo_history_position
     strcpy(undo_history[undo_history_position], call)
     id = call[0]
-    if (id < 0) 
+    if (id < 0)
         id += 256
-    
-    if (id < N_ACTIONS) 
+
+    if (id < N_ACTIONS)
         action_list[id].function()
 
-/* New for toolbars: modify and draw. Inquiry toolbar?
+# New for toolbars: modify and draw. Inquiry toolbar?
  *
  * TODO: associate the property editor with the function callbacks using
  * a function pointer.
- */
 
-/* property_editor_row property_editors[] = { */
-/*
+
+# property_editor_row property_editors[] = {
+#
 QGroupBox* PropertyEditor::createGroupBoxGeometryCircle():
     groupBoxGeometryCircle = new QGroupBox(tr("Geometry"), this)
 
@@ -10759,7 +6816,8 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryCircle():
     toolButtonCircleRadius = createToolButton("blank", tr("Radius"))
     toolButtonCircleDiameter = createToolButton("blank", tr("Diameter"))
     toolButtonCircleArea = createToolButton("blank", tr("Area"))
-    toolButtonCircleCircumference = createToolButton("blank", tr("Circumference"))
+    toolButtonCircleCircumference = createToolButton("blank",
+        tr("Circumference"))
 
     lineEditCircleCenterX = createLineEdit("double", 0)
     lineEditCircleCenterY = createLineEdit("double", 0)
@@ -10771,9 +6829,10 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryCircle():
     mapSignal(lineEditCircleCenterX, "lineEditCircleCenterX", OBJ_TYPE_CIRCLE)
     mapSignal(lineEditCircleCenterY, "lineEditCircleCenterY", OBJ_TYPE_CIRCLE)
     mapSignal(lineEditCircleRadius, "lineEditCircleRadius", OBJ_TYPE_CIRCLE)
-    mapSignal(lineEditCircleDiameter, "lineEditCircleDiameter", OBJ_TYPE_CIRCLE)
+    mapSignal(lineEditCircleDiameter, "lineEditCircleDiameter", "CIRCLE")
     mapSignal(lineEditCircleArea, "lineEditCircleArea", OBJ_TYPE_CIRCLE)
-    mapSignal(lineEditCircleCircumference, "lineEditCircleCircumference", OBJ_TYPE_CIRCLE)
+    mapSignal(lineEditCircleCircumference, "lineEditCircleCircumference",
+        OBJ_TYPE_CIRCLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
     formLayout->addRow(toolButtonCircleCenterX, lineEditCircleCenterX)
@@ -10781,7 +6840,8 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryCircle():
     formLayout->addRow(toolButtonCircleRadius, lineEditCircleRadius)
     formLayout->addRow(toolButtonCircleDiameter, lineEditCircleDiameter)
     formLayout->addRow(toolButtonCircleArea, lineEditCircleArea)
-    formLayout->addRow(toolButtonCircleCircumference, lineEditCircleCircumference)
+    formLayout->addRow(toolButtonCircleCircumference,
+        lineEditCircleCircumference)
     groupBoxGeometryCircle->setLayout(formLayout)
 
     return groupBoxGeometryCircle
@@ -10848,8 +6908,10 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryInfiniteLine():
     formLayout->addRow(toolButtonInfiniteLineY1, lineEditInfiniteLineY1)
     formLayout->addRow(toolButtonInfiniteLineX2, lineEditInfiniteLineX2)
     formLayout->addRow(toolButtonInfiniteLineY2, lineEditInfiniteLineY2)
-    formLayout->addRow(toolButtonInfiniteLineVectorX, lineEditInfiniteLineVectorX)
-    formLayout->addRow(toolButtonInfiniteLineVectorY, lineEditInfiniteLineVectorY)
+    formLayout->addRow(toolButtonInfiniteLineVectorX,
+        lineEditInfiniteLineVectorX)
+    formLayout->addRow(toolButtonInfiniteLineVectorY,
+        lineEditInfiniteLineVectorY)
     groupBoxGeometryInfiniteLine->setLayout(formLayout)
 
     return groupBoxGeometryInfiniteLine
@@ -10949,13 +7011,18 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolygon():
     },
     {
         OBJ_TYPE_POLYGON, POLYGON_VERTEX_RADIUS,
-        0, "blank", "Vertex Radius", LINE_EDIT_MODE, "lineEditPolygonVertexRadius"
+        0, "blank", "Vertex Radius", LINE_EDIT_MODE,
+        "lineEditPolygonVertexRadius"
     }
 
-    toolButtonPolygonRadiusSide = createToolButton("blank", tr("Side Radius"))
-    toolButtonPolygonDiameterVertex = createToolButton("blank", tr("Vertex Diameter"))
-    toolButtonPolygonDiameterSide = createToolButton("blank", tr("Side Diameter"))
-    toolButtonPolygonInteriorAngle = createToolButton("blank", tr("Interior Angle"))
+    toolButtonPolygonRadiusSide = createToolButton("blank",
+        tr("Side Radius"))
+    toolButtonPolygonDiameterVertex = createToolButton("blank",
+        tr("Vertex Diameter"))
+    toolButtonPolygonDiameterSide = createToolButton("blank",
+       tr("Side Diameter"))
+    toolButtonPolygonInteriorAngle = createToolButton("blank",
+       tr("Interior Angle"))
 
     lineEditPolygonRadiusSide = createLineEdit("double", 0)
     lineEditPolygonDiameterVertex = createLineEdit("double", 0)
@@ -10963,10 +7030,14 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolygon():
     lineEditPolygonInteriorAngle = createLineEdit("double", 1)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonPolygonRadiusSide, lineEditPolygonRadiusSide)
-    formLayout->addRow(toolButtonPolygonDiameterVertex, lineEditPolygonDiameterVertex)
-    formLayout->addRow(toolButtonPolygonDiameterSide, lineEditPolygonDiameterSide)
-    formLayout->addRow(toolButtonPolygonInteriorAngle, lineEditPolygonInteriorAngle)
+    formLayout->addRow(toolButtonPolygonRadiusSide,
+        lineEditPolygonRadiusSide)
+    formLayout->addRow(toolButtonPolygonDiameterVertex,
+        lineEditPolygonDiameterVertex)
+    formLayout->addRow(toolButtonPolygonDiameterSide,
+        lineEditPolygonDiameterSide)
+    formLayout->addRow(toolButtonPolygonInteriorAngle,
+        lineEditPolygonInteriorAngle)
     groupBoxGeometryPolygon->setLayout(formLayout)
 
     return groupBoxGeometryPolygon
@@ -11048,18 +7119,28 @@ QGroupBox* PropertyEditor::createGroupBoxTextTextSingle():
     lineEditTextSingleHeight = createLineEdit("double", 0)
     lineEditTextSingleRotation = createLineEdit("double", 0)
 
-    mapSignal(lineEditTextSingleContents, "lineEditTextSingleContents", OBJ_TYPE_TEXTSINGLE)
-    mapSignal(comboBoxTextSingleFont, "comboBoxTextSingleFont", OBJ_TYPE_TEXTSINGLE)
-    mapSignal(comboBoxTextSingleJustify, "comboBoxTextSingleJustify", OBJ_TYPE_TEXTSINGLE)
-    mapSignal(lineEditTextSingleHeight, "lineEditTextSingleHeight", OBJ_TYPE_TEXTSINGLE)
-    mapSignal(lineEditTextSingleRotation, "lineEditTextSingleRotation", OBJ_TYPE_TEXTSINGLE)
+    mapSignal(lineEditTextSingleContents,
+       "lineEditTextSingleContents", OBJ_TYPE_TEXTSINGLE)
+    mapSignal(comboBoxTextSingleFont,
+        "comboBoxTextSingleFont", OBJ_TYPE_TEXTSINGLE)
+    mapSignal(comboBoxTextSingleJustify,
+        "comboBoxTextSingleJustify", OBJ_TYPE_TEXTSINGLE)
+    mapSignal(lineEditTextSingleHeight,
+        "lineEditTextSingleHeight", OBJ_TYPE_TEXTSINGLE)
+    mapSignal(lineEditTextSingleRotation,
+        "lineEditTextSingleRotation", OBJ_TYPE_TEXTSINGLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextSingleContents, lineEditTextSingleContents)
-    formLayout->addRow(toolButtonTextSingleFont, comboBoxTextSingleFont)
-    formLayout->addRow(toolButtonTextSingleJustify, comboBoxTextSingleJustify)
-    formLayout->addRow(toolButtonTextSingleHeight, lineEditTextSingleHeight)
-    formLayout->addRow(toolButtonTextSingleRotation, lineEditTextSingleRotation)
+    formLayout->addRow(toolButtonTextSingleContents,
+        lineEditTextSingleContents)
+    formLayout->addRow(toolButtonTextSingleFont,
+        comboBoxTextSingleFont)
+    formLayout->addRow(toolButtonTextSingleJustify,
+        comboBoxTextSingleJustify)
+    formLayout->addRow(toolButtonTextSingleHeight,
+        lineEditTextSingleHeight)
+    formLayout->addRow(toolButtonTextSingleRotation,
+        lineEditTextSingleRotation)
     groupBoxTextTextSingle->setLayout(formLayout)
 
     return groupBoxTextTextSingle
@@ -11086,183 +7167,25 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryTextSingle():
 QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle():
     groupBoxMiscTextSingle = new QGroupBox(tr("Misc"), this)
 
-    toolButtonTextSingleBackward = createToolButton("blank", tr("Backward"))
-    toolButtonTextSingleUpsideDown = createToolButton("blank", tr("UpsideDown"))
+    toolButtonTextSingleBackward = createToolButton("blank",
+        tr("Backward"))
+    toolButtonTextSingleUpsideDown = createToolButton("blank",
+        tr("UpsideDown"))
 
     comboBoxTextSingleBackward = createComboBox(0)
     comboBoxTextSingleUpsideDown = createComboBox(0)
 
-    mapSignal(comboBoxTextSingleBackward, "comboBoxTextSingleBackward", OBJ_TYPE_TEXTSINGLE)
-    mapSignal(comboBoxTextSingleUpsideDown, "comboBoxTextSingleUpsideDown", OBJ_TYPE_TEXTSINGLE)
+    mapSignal(comboBoxTextSingleBackward,
+        "comboBoxTextSingleBackward", OBJ_TYPE_TEXTSINGLE)
+    mapSignal(comboBoxTextSingleUpsideDown,
+        "comboBoxTextSingleUpsideDown", OBJ_TYPE_TEXTSINGLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextSingleBackward, comboBoxTextSingleBackward)
-    formLayout->addRow(toolButtonTextSingleUpsideDown, comboBoxTextSingleUpsideDown)
+    formLayout->addRow(toolButtonTextSingleBackward,
+        comboBoxTextSingleBackward)
+    formLayout->addRow(toolButtonTextSingleUpsideDown,
+        comboBoxTextSingleUpsideDown)
     groupBoxMiscTextSingle->setLayout(formLayout)
 
     return groupBoxMiscTextSingle
-
-*/
-#if 0
-    {
-        /* 0 */
-        OBJ_TYPE_ARC, ARC_CENTER_X,
-        0, "blank", "Center X", LINE_EDIT_DOUBLE, "lineEditArcCenterX"
-    },
-    {
-        /* 1 */
-        OBJ_TYPE_ARC, ARC_CENTER_Y,
-        0, "blank", "Center Y", LINE_EDIT_DOUBLE, "lineEditArcCenterY"
-    },
-    {
-        /* 2 */
-        OBJ_TYPE_ARC, ARC_RADIUS,
-        0, "blank", "Radius", LINE_EDIT_DOUBLE, "lineEditArcRadius"
-    },
-    {
-        /* 3 */
-        OBJ_TYPE_ARC, ARC_START_ANGLE,
-        0, "blank", "Start Angle", LINE_EDIT_DOUBLE, "lineEditArcStartAngle"
-    },
-    {
-        /* 4 */
-        OBJ_TYPE_ARC, ARC_END_ANGLE,
-        0, "blank", "End Angle", LINE_EDIT_DOUBLE, "lineEditArcEndAngle"
-    },
-    {
-        /* 5 */
-        OBJ_TYPE_ARC, ARC_START_X,
-        1, "blank", "Start X", LINE_EDIT_DOUBLE, "lineEditArcStartX"
-    },
-    {
-        /* 6 */
-        OBJ_TYPE_ARC, ARC_START_Y,
-        1, "blank", "Start Y", LINE_EDIT_DOUBLE, "lineEditArcStartY"
-    },
-    {
-        /* 7 */
-        OBJ_TYPE_ARC, ARC_END_X,
-        1, "blank", "End X", LINE_EDIT_DOUBLE, "lineEditArcEndX"
-    },
-    {
-        /* 8 */
-        OBJ_TYPE_ARC, ARC_END_Y,
-        1, "blank", "End Y", LINE_EDIT_DOUBLE, "lineEditArcEndY"
-    },
-    {
-        /* 9 */
-        OBJ_TYPE_ARC, ARC_AREA,
-        1, "blank", "Area", LINE_EDIT_DOUBLE, "lineEditArcArea"
-    },
-/*        ARC_LENGTH, 1, "blank", "ArcLength")
-    create_lineedit_row(formLayout, ARC_CHORD, 1, "blank", "ArcChord")
-    create_lineedit_row(formLayout, ARC_INC_ANGLE, 1, "blank", "ArcIncludedAngle")
-    ARC_CLOCKWISE, "int", 1, "blank", "Clockwise", */
-    {
-        /* 9 */
-        OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_X,
-        0, "blank", "Center X", LINE_EDIT_DOUBLE, "lineEditEllipseCenterX"
-    },
-    {
-        /* 10 */
-        OBJ_TYPE_ELLIPSE, ELLIPSE_CENTER_Y,
-        0, "blank", "Center Y", LINE_EDIT_DOUBLE, "lineEditEllipseCenterY"
-    },
-    {
-        /* 11 */
-        OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MAJOR,
-        0, "blank", "Radius Major", LINE_EDIT_DOUBLE, "lineEditEllipseRadiusMajor"
-    },
-    {
-        /* 12 */
-        OBJ_TYPE_ELLIPSE, ELLIPSE_RADIUS_MINOR,
-        0, "blank", "Radius Minor", LINE_EDIT_DOUBLE, "lineEditEllipseRadiusMinor"
-    },
-    {
-        /* 13 */
-        OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MAJOR,
-        0, "blank", "Diameter Major", LINE_EDIT_DOUBLE, "lineEditEllipseDiameterMajor"
-    },
-    {
-        /* 14 */
-        OBJ_TYPE_ELLIPSE, ELLIPSE_DIAMETER_MINOR,
-        0, "blank", "Diameter Minor", LINE_EDIT_DOUBLE, "lineEditEllipseDiameterMinor"
-    },
-    {
-        /* 15 */
-        OBJ_TYPE_BLOCK, BLOCK_X,
-        0, "blank", "Position X", LINE_EDIT_DOUBLE, "lineEditBlockX"
-    },
-    {
-        /* 16 */
-        OBJ_TYPE_BLOCK, BLOCK_Y,
-        0, "blank", "Position Y", LINE_EDIT_DOUBLE, "lineEditBlockY"
-    },
-    {
-        /* 17 */
-        OBJ_TYPE_POINT, POINT_X,
-        0, "blank", "Position X", LINE_EDIT_DOUBLE, "lineEditPointX"
-    },
-    {
-        /* 18 */
-        OBJ_TYPE_POINT, POINT_Y,
-        0, "blank", "Position Y", LINE_EDIT_DOUBLE, "lineEditPointY"
-    },
-    {
-        /* 19 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_X1,
-        0, "blank", "Corner 1 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner1X"
-    },
-    {
-        /* 20 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y1,
-        0, "blank", "Corner 1 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner1Y"
-    },
-    {
-        /* 21 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_X2,
-        0, "blank", "Corner 2 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner2X"
-    },
-    {
-        /* 22 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y2,
-        0, "blank", "Corner 2 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner2Y"
-    },
-    {
-        /* 23 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_X3,
-        0, "blank", "Corner 3 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner3X"
-    },
-    {
-        /* 24 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y3,
-        0, "blank", "Corner 3 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner3Y"
-    },
-    {
-        /* 25 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_X4,
-        0, "blank", "Corner 4 X", LINE_EDIT_DOUBLE, "lineEditRectangleCorner4X"
-    },
-    {
-        /* 26 */
-        OBJ_TYPE_RECTANGLE, RECT_CORNER_Y4,
-        0, "blank", "Corner 4 Y", LINE_EDIT_DOUBLE, "lineEditRectangleCorner4Y"
-    },
-    {
-        /* 27 */
-        OBJ_TYPE_RECTANGLE, RECT_WIDTH,
-        0, "blank", "Width", LINE_EDIT_DOUBLE, "lineEditRectangleWidth"
-    },
-    {
-        /* 28 */
-        OBJ_TYPE_RECTANGLE, RECT_HEIGHT,
-        0, "blank", "Height", LINE_EDIT_DOUBLE, "lineEditRectangleHeight"
-    },
-    {
-        /* 29 */
-        OBJ_TYPE_RECTANGLE, RECT_AREA,
-        1, "blank", "Area", LINE_EDIT_DOUBLE, "lineEditRectangleArea"
-    }
-}
-"""
 
