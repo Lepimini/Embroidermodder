@@ -801,9 +801,9 @@ QPointF ArcObject::mouseSnapPoint(const QPointF& mousePoint):
     float minDist = qMin(qMin(cntrDist, startDist), qMin(midDist, endDist))
 
     if     (minDist == cntrDist)  return center
-    else if(minDist == startDist) return start
-    else if(minDist == midDist)   return mid
-    else if(minDist == endDist)   return end
+    elif(minDist == startDist) return start
+    elif(minDist == midDist)   return mid
+    elif(minDist == endDist)   return end
 
     return scenePos()
 
@@ -851,7 +851,7 @@ def BaseObject::setObjectLineWeight(float lineWeight):
         {
             lwtPen.setWidthF(0.35); /*TODO: getLayerLineWeight*/
         }
-        else if(lineWeight == OBJ_LWT_BYBLOCK)
+        elif(lineWeight == OBJ_LWT_BYBLOCK)
         {
             lwtPen.setWidthF(0.35); /*TODO: getBlockLineWeight*/
         }
@@ -1091,7 +1091,7 @@ def DimLeaderObject::updateLeader():
         arrowStylePath.lineTo(ap0)
         arrowStylePath.lineTo(ap1)
     }
-    else if(arrowStyle == Closed)
+    elif(arrowStyle == Closed)
     {
         arrowStylePath = QPainterPath()
         arrowStylePath.moveTo(ap1)
@@ -1099,12 +1099,12 @@ def DimLeaderObject::updateLeader():
         arrowStylePath.lineTo(ap2)
         arrowStylePath.lineTo(ap1)
     }
-    else if(arrowStyle == Dot)
+    elif(arrowStyle == Dot)
     {
         arrowStylePath = QPainterPath()
         arrowStylePath.addEllipse(ap0, arrowStyleLength, arrowStyleLength)
     }
-    else if(arrowStyle == Box)
+    elif(arrowStyle == Box)
     {
         arrowStylePath = QPainterPath()
         float side = QLineF(ap1, ap2).length()
@@ -1112,7 +1112,7 @@ def DimLeaderObject::updateLeader():
         ar0.moveCenter(ap0)
         arrowStylePath.addRect(ar0)
     }
-    else if(arrowStyle == Tick)
+    elif(arrowStyle == Tick)
     {
     }
 
@@ -1147,14 +1147,14 @@ def DimLeaderObject::updateRubber(QPainter* painter):
         setObjectEndPoint1(to_emb_vector(sceneStartPoint))
         setObjectEndPoint2(to_emb_vector(sceneQSnapPoint))
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP)
+    elif(rubberMode == OBJ_RUBBER_GRIP)
     {
         if(painter)
         {
             QPointF gripPoint = objectRubberPoint("GRIP_POINT")
             if     (gripPoint == objectEndPoint1()) painter->drawLine(line().p2(), mapFromScene(objectRubberPoint(QString())))
-            else if(gripPoint == objectEndPoint2()) painter->drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
-            else if(gripPoint == objectMidPoint())  painter->drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
+            elif(gripPoint == objectEndPoint2()) painter->drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
+            elif(gripPoint == objectMidPoint())  painter->drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
         }
     }
 }
@@ -1181,8 +1181,8 @@ QPointF DimLeaderObject::mouseSnapPoint(const QPointF& mousePoint):
         minDist = qMin(minDist, midDist)
 
     if     (minDist == end1Dist) return endPoint1
-    else if(minDist == end2Dist) return endPoint2
-    else if(minDist == midDist)  return midPoint
+    elif(minDist == end2Dist) return endPoint2
+    elif(minDist == midDist)  return midPoint
 
     return scenePos()
 
@@ -1195,8 +1195,8 @@ QList<QPointF> DimLeaderObject::allGripPoints():
 
 def DimLeaderObject::gripEdit(const QPointF& before, const QPointF& after):
     if     (before == objectEndPoint1()) { setObjectEndPoint1(to_emb_vector(after)); }
-    else if(before == objectEndPoint2()) { setObjectEndPoint2(to_emb_vector(after)); }
-    else if(before == objectMidPoint())  { QPointF delta = after-before; moveBy(delta.x(), delta.y()); }
+    elif(before == objectEndPoint2()) { setObjectEndPoint2(to_emb_vector(after)); }
+    elif(before == objectMidPoint())  { QPointF delta = after-before; moveBy(delta.x(), delta.y()); }
 }
 
 
@@ -1328,7 +1328,7 @@ def EllipseObject::updateRubber(QPainter* painter):
         if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORDIAMETER_MINORRADIUS)
+    elif(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORDIAMETER_MINORRADIUS)
     {
         QPointF sceneAxis1Point1 = objectRubberPoint("ELLIPSE_AXIS1_POINT1")
         QPointF sceneAxis1Point2 = objectRubberPoint("ELLIPSE_AXIS1_POINT2")
@@ -1364,7 +1364,7 @@ def EllipseObject::updateRubber(QPainter* painter):
         if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS)
+    elif(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS)
     {
         QPointF sceneAxis1Point2 = objectRubberPoint("ELLIPSE_AXIS1_POINT2")
         QPointF sceneCenterPoint = objectRubberPoint("ELLIPSE_CENTER")
@@ -1398,7 +1398,7 @@ def EllipseObject::updateRubber(QPainter* painter):
         if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP)
+    elif(rubberMode == OBJ_RUBBER_GRIP)
     {
         /* TODO: updateRubber() gripping for EllipseObject. */
     }
@@ -1427,10 +1427,10 @@ QPointF EllipseObject::mouseSnapPoint(const QPointF& mousePoint):
     float minDist = qMin(qMin(qMin(q0Dist, q90Dist), qMin(q180Dist, q270Dist)), cntrDist)
 
     if     (minDist == cntrDist) return center
-    else if(minDist == q0Dist)   return quad0
-    else if(minDist == q90Dist)  return quad90
-    else if(minDist == q180Dist) return quad180
-    else if(minDist == q270Dist) return quad270
+    elif(minDist == q0Dist)   return quad0
+    elif(minDist == q90Dist)  return quad90
+    elif(minDist == q180Dist) return quad180
+    elif(minDist == q270Dist) return quad270
 
     return scenePos()
 
@@ -1556,7 +1556,7 @@ def ImageObject::updateRubber(QPainter* painter):
         setObjectRect(x,y,w,h)
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP)
+    elif(rubberMode == OBJ_RUBBER_GRIP)
     {
         /*TODO: updateRubber() gripping for ImageObject*/
     }
@@ -1583,9 +1583,9 @@ QPointF ImageObject::mouseSnapPoint(const QPointF& mousePoint):
     float minDist = qMin(qMin(ptlDist, ptrDist), qMin(pblDist, pbrDist))
 
     if     (minDist == ptlDist) return ptl
-    else if(minDist == ptrDist) return ptr
-    else if(minDist == pblDist) return pbl
-    else if(minDist == pbrDist) return pbr
+    elif(minDist == ptrDist) return ptr
+    elif(minDist == pblDist) return pbl
+    elif(minDist == pbrDist) return pbr
 
     return scenePos()
 
@@ -1701,20 +1701,16 @@ def LineObject::updateRubber(QPainter* painter):
 
         drawRubberLine(line(), painter, "VIEW_COLOR_CROSSHAIR")
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP)
-    {
-        if(painter)
-        {
+    elif(rubberMode == OBJ_RUBBER_GRIP:
+        if(painter:
             QPointF gripPoint = objectRubberPoint("GRIP_POINT")
             if     (gripPoint == objectEndPoint1()) painter->drawLine(line().p2(), mapFromScene(objectRubberPoint(QString())))
-            else if(gripPoint == objectEndPoint2()) painter->drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
-            else if(gripPoint == objectMidPoint())  painter->drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
+            elif(gripPoint == objectEndPoint2()) painter->drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
+            elif(gripPoint == objectMidPoint())  painter->drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
 
             QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
             drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
-        }
-    }
-}
+
 
 def LineObject::vulcanize():
     debug_message("LineObject vulcanize()")
@@ -1735,8 +1731,8 @@ QPointF LineObject::mouseSnapPoint(const QPointF& mousePoint):
     float minDist = qMin(qMin(end1Dist, end2Dist), midDist)
 
     if     (minDist == end1Dist) return endPoint1
-    else if(minDist == end2Dist) return endPoint2
-    else if(minDist == midDist)  return midPoint
+    elif(minDist == end2Dist) return endPoint2
+    elif(minDist == midDist)  return midPoint
 
     return scenePos()
 
@@ -1747,8 +1743,8 @@ QList<QPointF> LineObject::allGripPoints():
 
 def LineObject::gripEdit(const QPointF& before, const QPointF& after):
     if     (before == objectEndPoint1()) { setObjectEndPoint1(after.x(), after.y()); }
-    else if(before == objectEndPoint2()) { setObjectEndPoint2(after.x(), after.y()); }
-    else if(before == objectMidPoint())  { QPointF delta = after-before; moveBy(delta.x(), delta.y()); }
+    elif(before == objectEndPoint2()) { setObjectEndPoint2(after.x(), after.y()); }
+    elif(before == objectMidPoint())  { QPointF delta = after-before; moveBy(delta.x(), delta.y()); }
 }
 
 QPainterPath LineObject::objectSavePath() const:
@@ -1858,8 +1854,7 @@ PointObject::PointObject(PointObject* obj, QGraphicsItem* parent) : BaseObject(p
     {
         init(obj->objectX(), obj->objectY(), obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
         setRotation(obj->rotation())
-    }
-}
+
 
 PointObject::~PointObject():
     debug_message("PointObject Destructor()")
@@ -1890,6 +1885,7 @@ def PointObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option
 
     painter->drawPoint(0,0)
 
+
 def PointObject::updateRubber(QPainter* painter):
     int rubberMode = objectRubberMode()
     if(rubberMode == OBJ_RUBBER_GRIP)
@@ -1901,10 +1897,7 @@ def PointObject::updateRubber(QPainter* painter):
             {
                 QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
                 drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
-            }
-        }
-    }
-}
+
 
 def PointObject::vulcanize():
     debug_message("PointObject vulcanize()")
@@ -2017,7 +2010,7 @@ def PolygonObject::updateRubber(QPainter* painter):
         /*Ensure the path isn't updated until the number of points is changed again*/
         setObjectRubberText("POLYGON_NUM_POINTS", QString())
     }
-    else if(rubberMode == OBJ_RUBBER_POLYGON_INSCRIBE) {
+    elif(rubberMode == OBJ_RUBBER_POLYGON_INSCRIBE) {
         setObjectPos(objectRubberPoint("POLYGON_CENTER"))
 
         unsigned short numSides = objectRubberPoint("POLYGON_NUM_SIDES").x()
@@ -2039,7 +2032,7 @@ def PolygonObject::updateRubber(QPainter* painter):
         }
         updatePath(inscribePath)
     }
-    else if (rubberMode == OBJ_RUBBER_POLYGON_CIRCUMSCRIBE) {
+    elif (rubberMode == OBJ_RUBBER_POLYGON_CIRCUMSCRIBE) {
         setObjectPos(objectRubberPoint("POLYGON_CENTER"))
 
         unsigned short numSides = objectRubberPoint("POLYGON_NUM_SIDES").x()
@@ -2075,7 +2068,7 @@ def PolygonObject::updateRubber(QPainter* painter):
         }
         updatePath(circumscribePath)
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP) {
+    elif(rubberMode == OBJ_RUBBER_GRIP) {
         if(painter) {
             int elemCount = normalPath.elementCount()
             QPointF gripPoint = objectRubberPoint("GRIP_POINT")
@@ -2086,7 +2079,7 @@ def PolygonObject::updateRubber(QPainter* painter):
             int n = 0
 
             if(!gripIndex)                    { m = elemCount-1; n = 1; }
-            else if(gripIndex == elemCount-1) { m = elemCount-2; n = 0; }
+            elif(gripIndex == elemCount-1) { m = elemCount-2; n = 0; }
             else                              { m = gripIndex-1; n = gripIndex+1; }
             QPainterPath::Element em = normalPath.elementAt(m)
             QPainterPath::Element en = normalPath.elementAt(n)
@@ -2255,7 +2248,7 @@ def PolylineObject::updateRubber(QPainter* painter):
         /*Ensure the path isn't updated until the number of points is changed again*/
         setObjectRubberText("POLYLINE_NUM_POINTS", QString())
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP)
+    elif(rubberMode == OBJ_RUBBER_GRIP)
     {
         if(painter)
         {
@@ -2270,7 +2263,7 @@ def PolylineObject::updateRubber(QPainter* painter):
                 QPointF efPoint = QPointF(ef.x, ef.y)
                 painter->drawLine(efPoint, mapFromScene(objectRubberPoint(QString())))
             }
-            else if(gripIndex == elemCount-1) /*Last*/
+            elif(gripIndex == elemCount-1) /*Last*/
             {
                 QPainterPath::Element el = normalPath.elementAt(gripIndex-1)
                 QPointF elPoint = QPointF(el.x, el.y)
@@ -2464,7 +2457,7 @@ def RectObject::updateRubber(QPainter* painter):
         setObjectRect(x,y,w,h)
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP)
+    elif(rubberMode == OBJ_RUBBER_GRIP)
     {
         if(painter)
         {
@@ -2474,9 +2467,9 @@ def RectObject::updateRubber(QPainter* painter):
             QPointF after = objectRubberPoint(QString())
             QPointF delta = after-gripPoint
             if     (gripPoint == objectTopLeft())     { painter->drawPolygon(mapFromScene(QRectF(after.x(), after.y(), objectWidth()-delta.x(), objectHeight()-delta.y()))); }
-            else if(gripPoint == objectTopRight())    { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y()))); }
-            else if(gripPoint == objectBottomLeft())  { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y()))); }
-            else if(gripPoint == objectBottomRight()) { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y()))); }
+            elif(gripPoint == objectTopRight())    { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y()))); }
+            elif(gripPoint == objectBottomLeft())  { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y()))); }
+            elif(gripPoint == objectBottomRight()) { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y()))); }
 
             QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
             drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
@@ -2513,9 +2506,9 @@ QPointF RectObject::mouseSnapPoint(const QPointF& mousePoint):
     float minDist = qMin(qMin(ptlDist, ptrDist), qMin(pblDist, pbrDist))
 
     if     (minDist == ptlDist) return ptl
-    else if(minDist == ptrDist) return ptr
-    else if(minDist == pblDist) return pbl
-    else if(minDist == pbrDist) return pbr
+    elif(minDist == ptrDist) return ptr
+    elif(minDist == pblDist) return pbl
+    elif(minDist == pbrDist) return pbr
 
     return scenePos()
 
@@ -2527,9 +2520,9 @@ QList<QPointF> RectObject::allGripPoints():
 def RectObject::gripEdit(const QPointF& before, const QPointF& after):
     QPointF delta = after-before
     if     (before == objectTopLeft())     { setObjectRect(after.x(), after.y(), objectWidth()-delta.x(), objectHeight()-delta.y()); }
-    else if(before == objectTopRight())    { setObjectRect(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y()); }
-    else if(before == objectBottomLeft())  { setObjectRect(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y()); }
-    else if(before == objectBottomRight()) { setObjectRect(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y()); }
+    elif(before == objectTopRight())    { setObjectRect(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y()); }
+    elif(before == objectBottomLeft())  { setObjectRect(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y()); }
+    elif(before == objectBottomRight()) { setObjectRect(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y()); }
 }
 
 QPainterPath RectObject::objectSavePath() const:
@@ -2607,20 +2600,20 @@ def TextSingleObject::setObjectText(const QString& str):
     /*Translate the path based on the justification*/
     QRectF jRect = textPath.boundingRect()
     if     (objTextJustify == "Left")          { textPath.translate(-jRect.left(), 0); }
-    else if(objTextJustify == "Center")        { textPath.translate(-jRect.center().x(), 0); }
-    else if(objTextJustify == "Right")         { textPath.translate(-jRect.right(), 0); }
-    else if(objTextJustify == "Aligned")       { } /*TODO: TextSingleObject Aligned Justification*/
-    else if(objTextJustify == "Middle")        { textPath.translate(-jRect.center()); }
-    else if(objTextJustify == "Fit")           { } /*TODO: TextSingleObject Fit Justification*/
-    else if(objTextJustify == "Top Left")      { textPath.translate(-jRect.topLeft()); }
-    else if(objTextJustify == "Top Center")    { textPath.translate(-jRect.center().x(), -jRect.top()); }
-    else if(objTextJustify == "Top Right")     { textPath.translate(-jRect.topRight()); }
-    else if(objTextJustify == "Middle Left")   { textPath.translate(-jRect.left(), -jRect.top()/2.0); }
-    else if(objTextJustify == "Middle Center") { textPath.translate(-jRect.center().x(), -jRect.top()/2.0); }
-    else if(objTextJustify == "Middle Right")  { textPath.translate(-jRect.right(), -jRect.top()/2.0); }
-    else if(objTextJustify == "Bottom Left")   { textPath.translate(-jRect.bottomLeft()); }
-    else if(objTextJustify == "Bottom Center") { textPath.translate(-jRect.center().x(), -jRect.bottom()); }
-    else if(objTextJustify == "Bottom Right")  { textPath.translate(-jRect.bottomRight()); }
+    elif(objTextJustify == "Center")        { textPath.translate(-jRect.center().x(), 0); }
+    elif(objTextJustify == "Right")         { textPath.translate(-jRect.right(), 0); }
+    elif(objTextJustify == "Aligned")       { } /*TODO: TextSingleObject Aligned Justification*/
+    elif(objTextJustify == "Middle")        { textPath.translate(-jRect.center()); }
+    elif(objTextJustify == "Fit")           { } /*TODO: TextSingleObject Fit Justification*/
+    elif(objTextJustify == "Top Left")      { textPath.translate(-jRect.topLeft()); }
+    elif(objTextJustify == "Top Center")    { textPath.translate(-jRect.center().x(), -jRect.top()); }
+    elif(objTextJustify == "Top Right")     { textPath.translate(-jRect.topRight()); }
+    elif(objTextJustify == "Middle Left")   { textPath.translate(-jRect.left(), -jRect.top()/2.0); }
+    elif(objTextJustify == "Middle Center") { textPath.translate(-jRect.center().x(), -jRect.top()/2.0); }
+    elif(objTextJustify == "Middle Right")  { textPath.translate(-jRect.right(), -jRect.top()/2.0); }
+    elif(objTextJustify == "Bottom Left")   { textPath.translate(-jRect.bottomLeft()); }
+    elif(objTextJustify == "Bottom Center") { textPath.translate(-jRect.center().x(), -jRect.bottom()); }
+    elif(objTextJustify == "Bottom Right")  { textPath.translate(-jRect.bottomRight()); }
 
     /*Backward or Upside Down*/
     if(obj_text.backward || obj_text.upsidedown)
@@ -2643,11 +2636,11 @@ def TextSingleObject::setObjectText(const QString& str):
             {
                 flippedPath.moveTo(horiz * element.x, vert * element.y)
             }
-            else if(element.isLineTo())
+            elif(element.isLineTo())
             {
                 flippedPath.lineTo(horiz * element.x, vert * element.y)
             }
-            else if(element.isCurveTo())
+            elif(element.isCurveTo())
             {
                                               /* start point P1 is not needed*/
                 P2 = textPath.elementAt(i);   /* control point*/
@@ -2679,20 +2672,20 @@ def TextSingleObject::setObjectTextJustify(const QString& justify):
     if (justify == "Left") {
         objTextJustify = justify
     }
-    else if(justify == "Center")        { objTextJustify = justify; }
-    else if(justify == "Right")         { objTextJustify = justify; }
-    else if(justify == "Aligned")       { objTextJustify = justify; }
-    else if(justify == "Middle")        { objTextJustify = justify; }
-    else if(justify == "Fit")           { objTextJustify = justify; }
-    else if(justify == "Top Left")      { objTextJustify = justify; }
-    else if(justify == "Top Center")    { objTextJustify = justify; }
-    else if(justify == "Top Right")     { objTextJustify = justify; }
-    else if(justify == "Middle Left")   { objTextJustify = justify; }
-    else if(justify == "Middle Center") { objTextJustify = justify; }
-    else if(justify == "Middle Right")  { objTextJustify = justify; }
-    else if(justify == "Bottom Left")   { objTextJustify = justify; }
-    else if(justify == "Bottom Center") { objTextJustify = justify; }
-    else if(justify == "Bottom Right")  { objTextJustify = justify; }
+    elif(justify == "Center")        { objTextJustify = justify; }
+    elif(justify == "Right")         { objTextJustify = justify; }
+    elif(justify == "Aligned")       { objTextJustify = justify; }
+    elif(justify == "Middle")        { objTextJustify = justify; }
+    elif(justify == "Fit")           { objTextJustify = justify; }
+    elif(justify == "Top Left")      { objTextJustify = justify; }
+    elif(justify == "Top Center")    { objTextJustify = justify; }
+    elif(justify == "Top Right")     { objTextJustify = justify; }
+    elif(justify == "Middle Left")   { objTextJustify = justify; }
+    elif(justify == "Middle Center") { objTextJustify = justify; }
+    elif(justify == "Middle Right")  { objTextJustify = justify; }
+    elif(justify == "Bottom Left")   { objTextJustify = justify; }
+    elif(justify == "Bottom Center") { objTextJustify = justify; }
+    elif(justify == "Bottom Right")  { objTextJustify = justify; }
     else                                { objTextJustify = "Left";  } /*Default*/
     setObjectText(objText)
 
@@ -2752,7 +2745,7 @@ def TextSingleObject::updateRubber(QPainter* painter):
         setRotation(hr.y())
         setObjectText(objectRubberText("TEXT_RAPID"))
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP) {
+    elif(rubberMode == OBJ_RUBBER_GRIP) {
         if (painter) {
             QPointF gripPoint = objectRubberPoint("GRIP_POINT")
             if (gripPoint == scenePos()) {
@@ -2817,10 +2810,10 @@ QList<QPainterPath> TextSingleObject::subPathList() const:
             if (element.isMoveTo()) {
                 subPath.moveTo(element.x, element.y)
             }
-            else if (element.isLineTo()) {
+            elif (element.isLineTo()) {
                 subPath.lineTo(element.x, element.y)
             }
-            else if (element.isCurveTo()) {
+            elif (element.isCurveTo()) {
                 subPath.cubicTo(path.elementAt(i  ).x, path.elementAt(i  ).y, /*control point 1*/
                                 path.elementAt(i+1).x, path.elementAt(i+1).y, /*control point 2*/
                                 path.elementAt(i+2).x, path.elementAt(i+2).y); /*end point*/
@@ -2924,7 +2917,7 @@ def CircleObject::updateRubber(QPainter* painter):
         if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_CIRCLE_1P_DIA)
+    elif(rubberMode == OBJ_RUBBER_CIRCLE_1P_DIA)
     {
         QPointF sceneCenterPoint = objectRubberPoint("CIRCLE_CENTER")
         QPointF sceneQSnapPoint = objectRubberPoint("CIRCLE_DIAMETER")
@@ -2938,7 +2931,7 @@ def CircleObject::updateRubber(QPainter* painter):
         if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_CIRCLE_2P)
+    elif(rubberMode == OBJ_RUBBER_CIRCLE_2P)
     {
         QPointF sceneTan1Point = objectRubberPoint("CIRCLE_TAN1")
         QPointF sceneQSnapPoint = objectRubberPoint("CIRCLE_TAN2")
@@ -2948,7 +2941,7 @@ def CircleObject::updateRubber(QPainter* painter):
         setObjectDiameter(diameter)
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_CIRCLE_3P)
+    elif(rubberMode == OBJ_RUBBER_CIRCLE_3P)
     {
         QPointF sceneTan1Point = objectRubberPoint("CIRCLE_TAN1")
         QPointF sceneTan2Point = objectRubberPoint("CIRCLE_TAN2")
@@ -2966,7 +2959,7 @@ def CircleObject::updateRubber(QPainter* painter):
         setObjectRadius(radius)
         updatePath()
     }
-    else if(rubberMode == OBJ_RUBBER_GRIP)
+    elif(rubberMode == OBJ_RUBBER_GRIP)
     {
         if(painter)
         {
@@ -3010,10 +3003,10 @@ QPointF CircleObject::mouseSnapPoint(const QPointF& mousePoint):
     float minDist = qMin(qMin(qMin(q0Dist, q90Dist), qMin(q180Dist, q270Dist)), cntrDist)
 
     if     (minDist == cntrDist) return center
-    else if(minDist == q0Dist)   return quad0
-    else if(minDist == q90Dist)  return quad90
-    else if(minDist == q180Dist) return quad180
-    else if(minDist == q270Dist) return quad270
+    elif(minDist == q0Dist)   return quad0
+    elif(minDist == q90Dist)  return quad90
+    elif(minDist == q180Dist) return quad180
+    elif(minDist == q270Dist) return quad270
 
     return scenePos()
 
@@ -3038,3 +3031,4 @@ QPainterPath CircleObject::objectSavePath() const:
     trans.rotate(rotation())
     trans.scale(s,s)
     return trans.map(path)
+

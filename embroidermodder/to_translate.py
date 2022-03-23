@@ -364,7 +364,7 @@ def click(self, x, y):
             appendPromptHistory()
             return
 
-    else if(self.mode == self.mode_2P) {
+    elif(self.mode == self.mode_2P) {
         if(isNaN(self.x1)) {
             self.x1 = x
             self.y1 = y
@@ -374,7 +374,7 @@ def click(self, x, y):
             appendPromptHistory()
             setPromptPrefix(translate("Specify second end point of circle's diameter: "))
         }
-        else if(isNaN(self.x2)) {
+        elif(isNaN(self.x2)) {
             self.x2 = x
             self.y2 = y
             setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
@@ -385,14 +385,14 @@ def click(self, x, y):
         else {
             error("CIRCLE", translate("This should never happen."))
 
-    else if(self.mode == self.mode_3P) {
+    elif(self.mode == self.mode_3P) {
         if(isNaN(self.x1)) {
             self.x1 = x
             self.y1 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify second point on circle: "))
         }
-        else if(isNaN(self.x2)) {
+        elif(isNaN(self.x2)) {
             self.x2 = x
             self.y2 = y
             addRubber("CIRCLE")
@@ -402,7 +402,7 @@ def click(self, x, y):
             appendPromptHistory()
             setPromptPrefix(translate("Specify third point on circle: "))
         }
-        else if(isNaN(self.x3)) {
+        elif(isNaN(self.x3)) {
             self.x3 = x
             self.y3 = y
             setRubberPoint("CIRCLE_TAN3", self.x3, self.y3)
@@ -420,13 +420,13 @@ def click(self, x, y):
             appendPromptHistory()
             setPromptPrefix(translate("Specify point on object for second tangent of circle: "))
         }
-        else if (isNaN(self.x2)) {
+        elif (isNaN(self.x2)) {
             self.x2 = x
             self.y2 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify radius of circle: "))
         }
-        else if (isNaN(self.x3)) {
+        elif (isNaN(self.x3)) {
             self.x3 = x
             self.y3 = y
             appendPromptHistory()
@@ -447,12 +447,12 @@ int circle_prompt(circle_args args, char *str):
                 setPromptPrefix(translate("Specify first end point of circle's diameter: "))
             }
             /* TODO: Probably should add additional qsTr calls here. */
-            else if (!strcmp(str, "3P")) {
+            elif (!strcmp(str, "3P")) {
                 self.mode = self.mode_3P
                 setPromptPrefix(translate("Specify first point of circle: "))
             }
             /* TODO: Probably should add additional qsTr calls here. */
-            else if (!strcmp(str, "T") || !strcmp(str, "TTR")) {
+            elif (!strcmp(str, "T") || !strcmp(str, "TTR")) {
                 self.mode = self.mode_TTR
                 setPromptPrefix(translate("Specify point on object for first tangent of circle: "))
             }
@@ -543,7 +543,7 @@ int circle_prompt(circle_args args, char *str):
         else:
             error("CIRCLE", translate("This should never happen."))
 
-    else if(self.mode == self.mode_3P):
+    elif(self.mode == self.mode_3P):
         if(isNaN(self.x1)):
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1])):
@@ -573,7 +573,7 @@ int circle_prompt(circle_args args, char *str):
                 setPromptPrefix(translate("Specify third point of circle: "))
             }
         }
-        else if(isNaN(self.x3)) {
+        elif(isNaN(self.x3)) {
             var strList = str.split(",")
             if (isNaN(strList[0]) || isNaN(strList[1])) {
                 alert(translate("Invalid point."))
@@ -590,7 +590,7 @@ int circle_prompt(circle_args args, char *str):
             error("CIRCLE", translate("This should never happen."))
         }
         
-    else if(self.mode == self.mode_TTR) {
+    elif(self.mode == self.mode_TTR) {
         todo("CIRCLE", "prompt() for TTR")
 
     return 0
@@ -841,7 +841,7 @@ int ellipse_click(EmbVector point):
             appendPromptHistory()
             setPromptPrefix(translate("Specify first axis end point: "))
         }
-        else if (isNaN(self.x2)) {
+        elif (isNaN(self.x2)) {
             self.point2 = point
             self.cx = (self.x1 + self.x2)/2.0
             self.cy = (self.y1 + self.y2)/2.0
@@ -856,7 +856,7 @@ int ellipse_click(EmbVector point):
             appendPromptHistory()
             setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
         }
-        else if (isNaN(self.x3)) {
+        elif (isNaN(self.x3)) {
             self.x3 = x
             self.y3 = y
             self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
@@ -881,7 +881,7 @@ int ellipse_click(EmbVector point):
             appendPromptHistory()
             setPromptPrefix(translate("Specify first axis end point: "))
         }
-        else if(isNaN(self.x2)) {
+        elif(isNaN(self.x2)) {
             self.x2 = x
             self.y2 = y
             self.width = calculateDistance(self.cx, self.cy, self.x2, self.y2)*2.0
@@ -893,7 +893,7 @@ int ellipse_click(EmbVector point):
             appendPromptHistory()
             setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
         }
-        else if(isNaN(self.x3)) {
+        elif(isNaN(self.x3)) {
             self.x3 = x
             self.y3 = y
             self.height = perpendicularDistance(self.x3, self.y3, self.cx, self.cy, self.x2, self.y2)*2.0
@@ -905,14 +905,14 @@ int ellipse_click(EmbVector point):
         else:
             error("ELLIPSE", translate("This should never happen."))
 
-    else if(self.mode == self.mode_ELLIPSE_ROTATION) {
+    elif(self.mode == self.mode_ELLIPSE_ROTATION) {
         if (isNaN(self.x1)) {
             error("ELLIPSE", translate("This should never happen."))
         }
-        else if (isNaN(self.x2)) {
+        elif (isNaN(self.x2)) {
             error("ELLIPSE", translate("This should never happen."))
         }
-        else if(isNaN(self.x3)) {
+        elif(isNaN(self.x3)) {
             var angle = calculateAngle(self.cx, self.cy, x, y)
             self.height = cos(angle*embConstantPi/180.0)*self.width
             addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
@@ -948,7 +948,7 @@ int ellipse_prompt(str):
                 }
             }
         }
-        else if(isNaN(self.x2))
+        elif(isNaN(self.x2))
         {
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -972,7 +972,7 @@ int ellipse_prompt(str):
                 setRubberPoint("ELLIPSE_ROT", self.rot, 0)
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
 
-        else if(isNaN(self.x3))
+        elif(isNaN(self.x3))
             if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
                 self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify rotation: "))
@@ -992,7 +992,7 @@ int ellipse_prompt(str):
                     vulcanize()
                     return
 
-    else if(self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
+    elif(self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
         if(isNaN(self.x1))
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1])):
@@ -1008,7 +1008,7 @@ int ellipse_prompt(str):
                 setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
                 setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
                 setPromptPrefix(translate("Specify first axis end point: "))
-        else if(isNaN(self.x2)):
+        elif(isNaN(self.x2)):
             var strList = str.split(",")
             if(isNaN(strList[0]) || isNaN(strList[1]))
             {
@@ -1028,7 +1028,7 @@ int ellipse_prompt(str):
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
             }
         }
-        else if(isNaN(self.x3))
+        elif(isNaN(self.x3))
         {
             if(str == "R" || str == "ROTATION") /*TODO: Probably should add additional qsTr calls here.*/
             {
@@ -1052,12 +1052,12 @@ int ellipse_prompt(str):
                     vulcanize()
                     return
 
-    else if(self.mode == self.mode_ELLIPSE_ROTATION):
+    elif(self.mode == self.mode_ELLIPSE_ROTATION):
         if(isNaN(self.x1)):
             error("ELLIPSE", translate("This should never happen."))
-        else if(isNaN(self.x2)):
+        elif(isNaN(self.x2)):
             error("ELLIPSE", translate("This should never happen."))
-        else if(isNaN(self.x3)):
+        elif(isNaN(self.x3)):
             if(isNaN(str))
                 alert(translate("Invalid angle. Input a numeric angle or pick a point."))
                 setPromptPrefix(translate("Specify rotation: "))
@@ -1115,7 +1115,7 @@ int updateHeart(style, numPts, xScale, yScale):
             xx = cos(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2)
             yy = sin(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2)
         }
-        else if(style == "HEART5")
+        elif(style == "HEART5")
         {
             xx = 16*pow(sin(t), 3)
             yy = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t)
@@ -1222,10 +1222,6 @@ int prompt(str):
                 self.prevX = x
                 self.prevY = y
                 setPromptPrefix(translate("Specify next point or [Undo]: "))
-            }
-        }
-    }
-}
 
 --------------------------------------------------------------------------------
 
@@ -1371,7 +1367,7 @@ int prompt(str):
     {
         todo("PATH", "prompt() for ARC")
     }
-    else if(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
+    elif(str == "U" || str == "UNDO") /*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("PATH", "prompt() for UNDO")
     }
@@ -1439,7 +1435,7 @@ def prompt(self, str):
             /*TODO: Probably should add additional qsTr calls here.*/
             todo("POINT", "prompt() for PDMODE")
         }
-        else if(str == "S" or str == "SIZE") {
+        elif(str == "S" or str == "SIZE") {
             /*TODO: Probably should add additional qsTr calls here.*/
             todo("POINT", "prompt() for PDSIZE")
         }
@@ -1490,18 +1486,18 @@ int click(self, x, y):
     if (self.mode == POLYGON_NUM_SIDES) {
         /*Do nothing, the prompt controls this.*/
     }
-    else if (self.mode == POLYGON_CENTER_PT) {
+    elif (self.mode == POLYGON_CENTER_PT) {
         self.centerX = x
         self.centerY = y
         self.mode = self.mode_POLYTYPE
         appendPromptHistory()
         setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
     }
-    else if(self.mode == self.mode_POLYTYPE)
+    elif(self.mode == self.mode_POLYTYPE)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(self.mode == self.mode_INSCRIBE)
+    elif(self.mode == self.mode_INSCRIBE)
     {
         self.pointIX = x
         self.pointIY = y
@@ -1510,7 +1506,7 @@ int click(self, x, y):
         appendPromptHistory()
         return
     }
-    else if(self.mode == self.mode_CIRCUMSCRIBE)
+    elif(self.mode == self.mode_CIRCUMSCRIBE)
     {
         self.pointCX = x
         self.pointCY = y
@@ -1519,11 +1515,11 @@ int click(self, x, y):
         appendPromptHistory()
         return
     }
-    else if(self.mode == self.mode_DISTANCE)
+    elif(self.mode == self.mode_DISTANCE)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(self.mode == self.mode_SIDE_LEN)
+    elif(self.mode == self.mode_SIDE_LEN)
     {
         todo("POLYGON", "Sidelength mode")
     }
@@ -1551,7 +1547,7 @@ def prompt(str):
             }
         }
     }
-    else if(self.mode == self.mode_CENTER_PT)
+    elif(self.mode == self.mode_CENTER_PT)
     {
         if(str == "S" || str == "SIDELENGTH") /*TODO: Probably should add additional qsTr calls here.*/
         {
@@ -1594,7 +1590,7 @@ def prompt(str):
             setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
             setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
         }
-        else if(str == "")
+        elif(str == "")
         {
             if(self.polyType == "Inscribed")
             {
@@ -1605,7 +1601,7 @@ def prompt(str):
                 setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
                 setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
             }
-            else if(self.polyType == "Circumscribed")
+            elif(self.polyType == "Circumscribed")
             {
                 self.mode = self.mode_CIRCUMSCRIBE
                 setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
@@ -1624,7 +1620,7 @@ def prompt(str):
             alert(translate("Invalid option keyword."))
             setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
 
-    else if(self.mode == self.mode_INSCRIBE):
+    elif(self.mode == self.mode_INSCRIBE):
         if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_DISTANCE
@@ -1646,7 +1642,7 @@ def prompt(str):
                 vulcanize()
                 return
 
-    else if(self.mode == self.mode_CIRCUMSCRIBE):
+    elif(self.mode == self.mode_CIRCUMSCRIBE):
         if(str == "D" || str == "DISTANCE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_DISTANCE
@@ -1666,7 +1662,7 @@ def prompt(str):
                 vulcanize()
                 return
 
-    else if(self.mode == self.mode_DISTANCE):
+    elif(self.mode == self.mode_DISTANCE):
         if(isNaN(str)):
             alert(translate("Requires valid numeric distance."))
             setPromptPrefix(translate("Specify distance: "))
@@ -1679,7 +1675,7 @@ def prompt(str):
                 vulcanize()
                 return
             }
-            else if(self.polyType == "Circumscribed"):
+            elif(self.polyType == "Circumscribed"):
                 self.pointCX = self.centerX
                 self.pointCY = self.centerY + Number(str)
                 setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
@@ -1688,7 +1684,7 @@ def prompt(str):
             else:
                 error("POLYGON", translate("Polygon type is not Inscribed or Circumscribed."))
 
-    else if(self.mode == self.mode_SIDE_LEN):
+    elif(self.mode == self.mode_SIDE_LEN):
         todo("POLYGON", "Sidelength mode")
 
 --------------------------------------------------------------------------------
@@ -1875,11 +1871,11 @@ int prompt(str):
     {
         todo("RECTANGLE", "prompt() for CHAMFER")
     }
-    else if(str == "D" || str == "DIMENSIONS") /*TODO: Probably should add additional qsTr calls here.*/
+    elif(str == "D" || str == "DIMENSIONS") /*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("RECTANGLE", "prompt() for DIMENSIONS")
     }
-    else if(str == "F" || str == "FILLET") /*TODO: Probably should add additional qsTr calls here.*/
+    elif(str == "F" || str == "FILLET") /*TODO: Probably should add additional qsTr calls here.*/
     {
         todo("RECTANGLE", "prompt() for FILLET")
     }
@@ -1940,7 +1936,7 @@ int prompt(str):
             self.mode = self.mode_CROSSHAIR
             setPromptPrefix(translate("Specify crosshair color: "))
         }
-        else if(str == "G" || str == "GRID") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "G" || str == "GRID") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_GRID
             setPromptPrefix(translate("Specify grid color: "))
@@ -1963,7 +1959,7 @@ int prompt(str):
             }
         }
     }
-    else if(self.mode == self.mode_CROSSHAIR)
+    elif(self.mode == self.mode_CROSSHAIR)
     {
         var strList = str.split(",")
         var r = Number(strList[0])
@@ -1980,7 +1976,7 @@ int prompt(str):
             return
         }
     }
-    else if(self.mode == self.mode_GRID)
+    elif(self.mode == self.mode_GRID)
     {
         var strList = str.split(",")
         var r = Number(strList[0])
@@ -2083,7 +2079,7 @@ int click(x, y):
             return
         }
     }
-    else if(self.mode == self.mode_REFERENCE)
+    elif(self.mode == self.mode_REFERENCE)
     {
         if(isNaN(self.baseRX))
         {
@@ -2095,7 +2091,7 @@ int click(x, y):
             setRubberPoint("LINE_START", self.baseRX, self.baseRY)
             setPromptPrefix(translate("Specify second point: "))
         }
-        else if(isNaN(self.destRX))
+        elif(isNaN(self.destRX))
         {
             self.destRX = x
             self.destRY = y
@@ -2105,7 +2101,7 @@ int click(x, y):
             appendPromptHistory()
             setPromptPrefix(translate("Specify the new angle: "))
         }
-        else if(isNaN(self.angleNew))
+        elif(isNaN(self.angleNew))
         {
             self.angleNew = calculateAngle(self.baseX, self.baseY, x, y)
             rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
@@ -2160,7 +2156,7 @@ int prompt(str):
                     previewOff()
                     return
 
-    else if(self.mode == self.mode_REFERENCE)
+    elif(self.mode == self.mode_REFERENCE)
         if(isNaN(self.baseRX))
             if(isNaN(str))
                 var strList = str.split(",")
@@ -2194,7 +2190,7 @@ int prompt(str):
                 setPromptPrefix(translate("Specify the new angle: "))
             }
         }
-        else if(isNaN(self.destRX))
+        elif(isNaN(self.destRX))
         {
             if(isNaN(str))
             {
@@ -2227,7 +2223,7 @@ int prompt(str):
                 setPromptPrefix(translate("Specify the new angle: "))
             }
         }
-        else if(isNaN(self.angleNew))
+        elif(isNaN(self.angleNew))
         {
             if(isNaN(str))
             {
@@ -2397,7 +2393,7 @@ int click(x, y):
             return
         }
     }
-    else if(self.mode == self.mode_REFERENCE)
+    elif(self.mode == self.mode_REFERENCE)
     {
         if(isNaN(self.baseRX))
         {
@@ -2409,7 +2405,7 @@ int click(x, y):
             setRubberPoint("LINE_START", self.baseRX, self.baseRY)
             setPromptPrefix(translate("Specify second point: "))
         }
-        else if(isNaN(self.destRX))
+        elif(isNaN(self.destRX))
         {
             self.destRX = x
             self.destRY = y
@@ -2430,7 +2426,7 @@ int click(x, y):
                 setPromptPrefix(translate("Specify new length: "))
             }
         }
-        else if(isNaN(self.factorNew))
+        elif(isNaN(self.factorNew))
         {
             self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
             if(self.factorNew <= 0.0)
@@ -2492,7 +2488,7 @@ int prompt(str):
                     previewOff()
                     return
 
-    else if(self.mode == self.mode_REFERENCE)
+    elif(self.mode == self.mode_REFERENCE)
         if(isNaN(self.baseRX))
             if(isNaN(str))
                 var strList = str.split(",")
@@ -2532,7 +2528,7 @@ int prompt(str):
                     previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                     setPromptPrefix(translate("Specify new length: "))
 
-        else if(isNaN(self.destRX))
+        elif(isNaN(self.destRX))
             if(isNaN(str))
                 var strList = str.split(",")
                 if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -2580,7 +2576,7 @@ int prompt(str):
                 }
             }
         }
-        else if(isNaN(self.factorNew))
+        elif(isNaN(self.factorNew))
         {
             if(isNaN(str))
             {
@@ -2660,14 +2656,14 @@ int click(x, y):
             appendPromptHistory()
             setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
         }
-        else if(isNaN(self.textHeight))
+        elif(isNaN(self.textHeight))
         {
             self.textHeight = calculateDistance(self.textX, self.textY, x, y)
             setTextSize(self.textHeight)
             appendPromptHistory()
             setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
         }
-        else if(isNaN(self.textRotation))
+        elif(isNaN(self.textRotation))
         {
             self.textRotation = calculateAngle(self.textX, self.textY, x, y)
             setTextAngle(self.textRotation)
@@ -2684,11 +2680,9 @@ int click(x, y):
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setRubberText("TEXT_RAPID", self.text)
         }
-        else
-        {
+        else:
             /*Do nothing, as we are in rapidFire mode now.*/
-        }
-    }
+
 
 int prompt(str):
     if(self.mode == self.mode_JUSTIFY)
@@ -2700,91 +2694,91 @@ int prompt(str):
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify center point of text or [Justify/Setfont]: "))
         }
-        else if(str == "R" || str == "RIGHT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "R" || str == "RIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify right-end point of text or [Justify/Setfont]: "))
         }
-        else if(str == "A" || str == "ALIGN") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "A" || str == "ALIGN") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Aligned"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
         }
-        else if(str == "M" || str == "MIDDLE") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "M" || str == "MIDDLE") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle point of text or [Justify/Setfont]: "))
         }
-        else if(str == "F" || str == "FIT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "F" || str == "FIT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Fit"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
         }
-        else if(str == "TL" || str == "TOPLEFT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "TL" || str == "TOPLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-left point of text or [Justify/Setfont]: "))
         }
-        else if(str == "TC" || str == "TOPCENTER") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "TC" || str == "TOPCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-center point of text or [Justify/Setfont]: "))
         }
-        else if(str == "TR" || str == "TOPRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "TR" || str == "TOPRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-right point of text or [Justify/Setfont]: "))
         }
-        else if(str == "ML" || str == "MIDDLELEFT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "ML" || str == "MIDDLELEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-left point of text or [Justify/Setfont]: "))
         }
-        else if(str == "MC" || str == "MIDDLECENTER") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "MC" || str == "MIDDLECENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-center point of text or [Justify/Setfont]: "))
         }
-        else if(str == "MR" || str == "MIDDLERIGHT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "MR" || str == "MIDDLERIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-right point of text or [Justify/Setfont]: "))
         }
-        else if(str == "BL" || str == "BOTTOMLEFT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "BL" || str == "BOTTOMLEFT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-left point of text or [Justify/Setfont]: "))
         }
-        else if(str == "BC" || str == "BOTTOMCENTER") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "BC" || str == "BOTTOMCENTER") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-center point of text or [Justify/Setfont]: "))
         }
-        else if(str == "BR" || str == "BOTTOMRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
+        elif(str == "BR" || str == "BOTTOMRIGHT") /*TODO: Probably should add additional qsTr calls here.*/
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Right"
@@ -2797,7 +2791,7 @@ int prompt(str):
             setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
         }
     }
-    else if(self.mode == self.mode_SETFONT)
+    elif(self.mode == self.mode_SETFONT)
     {
         self.mode = self.mode_SETGEOM
         self.textFont = str
@@ -2805,7 +2799,7 @@ int prompt(str):
         setTextFont(self.textFont)
         setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
     }
-    else if(self.mode == self.mode_SETGEOM)
+    elif(self.mode == self.mode_SETGEOM)
     {
         if(isNaN(self.textX))
         {
@@ -2814,7 +2808,7 @@ int prompt(str):
                 self.mode = self.mode_JUSTIFY
                 setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
             }
-            else if(str == "S" || str == "SETFONT") /*TODO: Probably should add additional qsTr calls here.*/
+            elif(str == "S" || str == "SETFONT") /*TODO: Probably should add additional qsTr calls here.*/
             {
                 self.mode = self.mode_SETFONT
                 setPromptPrefix(translate("Specify font name: "))
@@ -2835,17 +2829,15 @@ int prompt(str):
                     setRubberMode("LINE")
                     setRubberPoint("LINE_START", self.textX, self.textY)
                     setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
-                }
-            }
-        }
-        else if(isNaN(self.textHeight))
+
+        elif(isNaN(self.textHeight))
         {
             if(str == "")
             {
                 self.textHeight = textSize()
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
             }
-            else if(isNaN(str))
+            elif(isNaN(str))
             {
                 alert(translate("Requires valid numeric distance or second point."))
                 setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
@@ -2857,7 +2849,7 @@ int prompt(str):
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
             }
         }
-        else if(isNaN(self.textRotation))
+        elif(isNaN(self.textRotation))
         {
             if(str == "")
             {
@@ -2874,7 +2866,7 @@ int prompt(str):
                 setRubberText("TEXT_JUSTIFY", self.textJustify)
                 setRubberText("TEXT_RAPID", self.text)
             }
-            else if(isNaN(str))
+            elif(isNaN(str))
             {
                 alert(translate("Requires valid numeric angle or second point."))
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
@@ -2901,7 +2893,7 @@ int prompt(str):
             /*Do nothing, as we are in rapidFire mode now.*/
         }
     }
-    else if(self.mode == self.mode_RAPID)
+    elif(self.mode == self.mode_RAPID)
     {
         if(str == "RAPID_ENTER")
         {
@@ -3640,7 +3632,7 @@ int click(x, y):
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(self.mode == self.mode_CENTER_PT)
+    elif(self.mode == self.mode_CENTER_PT)
     {
         self.cx = x
         self.cy = y
@@ -3651,7 +3643,7 @@ int click(x, y):
         updateStar(self.cx, self.cy)
         enableMoveRapidFire()
     }
-    else if(self.mode == self.mode_RAD_OUTER)
+    elif(self.mode == self.mode_RAD_OUTER)
     {
         self.x1 = x
         self.y1 = y
@@ -3659,7 +3651,7 @@ int click(x, y):
         setPromptPrefix(translate("Specify inner radius of star: "))
         updateStar(self.x1, self.y1)
     }
-    else if(self.mode == self.mode_RAD_INNER)
+    elif(self.mode == self.mode_RAD_INNER)
     {
         self.x2 = x
         self.y2 = y
@@ -3669,25 +3661,25 @@ int click(x, y):
         return
     }
 
-int move(x, y):
+def move(x, y):
     if(self.mode == self.mode_NUM_POINTS)
     {
         /*Do nothing, the prompt controls this.*/
     }
-    else if(self.mode == self.mode_CENTER_PT)
+    elif(self.mode == self.mode_CENTER_PT)
     {
         /*Do nothing, prompt and click controls this.*/
     }
-    else if(self.mode == self.mode_RAD_OUTER)
+    elif(self.mode == self.mode_RAD_OUTER)
     {
         updateStar(x, y)
     }
-    else if(self.mode == self.mode_RAD_INNER)
+    elif(self.mode == self.mode_RAD_INNER)
     {
         updateStar(x, y)
     }
 
-int prompt(str):
+def prompt(str):
     if(self.mode == self.mode_NUM_POINTS)
     {
         if(str == "" && self.numPoints >= 3 && self.numPoints <= 1024)
@@ -3708,10 +3700,8 @@ int prompt(str):
                 self.numPoints = tmp
                 setPromptPrefix(translate("Specify center point: "))
                 self.mode = self.mode_CENTER_PT
-            }
-        }
-    }
-    else if(self.mode == self.mode_CENTER_PT)
+
+    elif(self.mode == self.mode_CENTER_PT)
     {
         var strList = str.split(",")
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -3741,7 +3731,7 @@ int prompt(str):
             setPromptPrefix(translate("Specify inner radius of star: "))
             updateStar(qsnapX(), qsnapY())
 
-    else if(self.mode == self.mode_RAD_INNER)
+    elif(self.mode == self.mode_RAD_INNER)
     {
         var strList = str.split(",")
         if(isNaN(strList[0]) || isNaN(strList[1]))
@@ -3771,7 +3761,7 @@ int updateStar(x, y):
         distOuter = calculateDistance(self.cx, self.cy, x, y)
         distInner = distOuter/2.0
     }
-    else if(self.mode == self.mode_RAD_INNER)
+    elif(self.mode == self.mode_RAD_INNER)
     {
         angOuter = calculateAngle(self.cx, self.cy, self.x1, self.y1)
         distOuter = calculateDistance(self.cx, self.cy, self.x1, self.y1)
@@ -3820,7 +3810,7 @@ int prompt(str):
         windowCascade()
         return
     }
-    else if(str == "T" || str == "TILE") /*TODO: Probably should add additional qsTr calls here.*/
+    elif(str == "T" || str == "TILE") /*TODO: Probably should add additional qsTr calls here.*/
     {
         windowTile()
         return
@@ -4163,19 +4153,19 @@ def spinBoxRecentMaxFilesValueChanged(value):
 def spinBoxTrimDstNumJumpsValueChanged(value):
     dialog.opensave_trim_dst_num_jumps = value
 
-def checkBoxGridShowOnLoadStateChanged(int checked):
+def checkBoxGridShowOnLoadStateChanged(checked):
     dialog.grid_show_on_load = checked
 
-def checkBoxGridShowOriginStateChanged(int checked):
+def checkBoxGridShowOriginStateChanged(checked):
     dialog.grid_show_origin = checked
 
-def spinBoxRulerPixelSizeValueChanged(double value):
+def spinBoxRulerPixelSizeValueChanged(value):
     dialog.ruler_pixel_size = value
 
-def checkBoxQSnapEndPointStateChanged(int checked):
+def checkBoxQSnapEndPointStateChanged(checked):
     dialog.qsnap_endpoint = checked
 
-def checkBoxQSnapMidPointStateChanged(int checked):
+def checkBoxQSnapMidPointStateChanged(checked):
     dialog.qsnap_midpoint = checked
 
 def checkBoxQSnapCenterStateChanged(int checked):
@@ -6426,11 +6416,9 @@ def Settings_Dialog::chooseGeneralMdiBackgroundColor():
             button->setIcon(QIcon(pix))
             mainWin->mdiArea->setBackgroundColor(QColor(accept_.general_mdi_bg_color))
         }
-        else {
+        else:
             mainWin->mdiArea->setBackgroundColor(QColor(dialog.general_mdi_bg_color))
-        }
-    }
-}
+
 
 def Settings_Dialog::currentGeneralMdiBackgroundColorChanged(const QColor& color):
     preview.general_mdi_bg_color = color.rgb()
@@ -6476,9 +6464,7 @@ def Settings_Dialog::chooseDisplayCrossHairColor():
         }
         else {
             mainWin->updateAllViewCrossHairColors(dialog.display_crosshair_color)
-        }
-    }
-}
+
 
 def Settings_Dialog::currentDisplayCrossHairColorChanged(const QColor& color):
     preview.display_crosshair_color = color.rgb()
@@ -6498,11 +6484,9 @@ def Settings_Dialog::chooseDisplayBackgroundColor():
             button->setIcon(QIcon(pix))
             mainWin->updateAllViewBackgroundColors(accept_.display_bg_color)
         }
-        else {
+        else:
             mainWin->updateAllViewBackgroundColors(dialog.display_bg_color)
-        }
-    }
-}
+
 
 def Settings_Dialog::currentDisplayBackgroundColorChanged(const QColor& color):
     preview.display_bg_color = color.rgb()
@@ -6534,9 +6518,7 @@ def Settings_Dialog::chooseDisplaySelectBoxLeftColor():
                 dialog.display_selectbox_right_color,
                 dialog.display_selectbox_right_fill,
                                                   preview.display_selectbox_alpha)
-        }
-    }
-}
+
 
 def Settings_Dialog::currentDisplaySelectBoxLeftColorChanged(const QColor& color):
     preview.display_selectbox_left_color = color.rgb()
@@ -6571,9 +6553,7 @@ def Settings_Dialog::chooseDisplaySelectBoxLeftFill():
                                                   dialog.display_selectbox_right_color,
                                                   dialog.display_selectbox_right_fill,
                                                   preview.display_selectbox_alpha)
-        }
-    }
-}
+
 
 def Settings_Dialog::currentDisplaySelectBoxLeftFillChanged(const QColor& color):
     preview.display_selectbox_left_fill = color.rgb()
@@ -6607,9 +6587,7 @@ def Settings_Dialog::chooseDisplaySelectBoxRightColor():
                                                   dialog.display_selectbox_right_color,
                                                   dialog.display_selectbox_right_fill,
                                                   preview.display_selectbox_alpha)
-        }
-    }
-}
+
 
 def Settings_Dialog::currentDisplaySelectBoxRightColorChanged(const QColor& color):
     preview.display_selectbox_right_color = color.rgb()
@@ -6671,8 +6649,7 @@ def Settings_Dialog::checkBoxCustomFilterStateChanged(int checked):
         else
             opensave_custom_filter.remove("*." + format, Qt::CaseInsensitive)
         /*dialog.opensave_custom_filter = checked; //TODO*/
-    }
-}
+
 
 def Settings_Dialog::buttonCustomFilterSelectAllClicked():
     emit buttonCustomFilterSelectAll(1)
@@ -6701,9 +6678,7 @@ def Settings_Dialog::checkBoxGridColorMatchCrossHairStateChanged(int checked):
             QPushButton* buttonGridColor = parent->findChild<QPushButton*>("buttonGridColor")
             if (buttonGridColor)
                 buttonGridColor->setEnabled(!dialog.grid_color_match_crosshair)
-        }
-    }
-}
+
 
 def Settings_Dialog::chooseGridColor():
     QPushButton* button = qobject_cast<QPushButton*>(sender())
@@ -6721,9 +6696,7 @@ def Settings_Dialog::chooseGridColor():
         }
         else {
             mainWin->updateAllViewGridColors(dialog.grid_color)
-        }
-    }
-}
+
 
 def Settings_Dialog::currentGridColorChanged(const QColor& color):
     preview.grid_color = color.rgb()
@@ -6784,9 +6757,7 @@ def Settings_Dialog::checkBoxGridLoadFromFileStateChanged(int checked):
             }
             QDoubleSpinBox* spinBoxGridSpacingAngle = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingAngle")
             if(spinBoxGridSpacingAngle) spinBoxGridSpacingAngle->setEnabled(!dialog.grid_load_from_file)
-        }
-    }
-}
+
 
 def Settings_Dialog::comboBoxGridTypeCurrentIndexChanged(const QString& type):
     strcpy(dialog.grid_type, type.toLocal8Bit().constData())
@@ -6834,9 +6805,7 @@ def Settings_Dialog::comboBoxGridTypeCurrentIndexChanged(const QString& type):
             if(labelGridSpacingAngle) labelGridSpacingAngle->setVisible(visibility)
             QDoubleSpinBox* spinBoxGridSpacingAngle = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingAngle")
             if(spinBoxGridSpacingAngle) spinBoxGridSpacingAngle->setVisible(visibility)
-        }
-    }
-}
+
 
 def Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(int checked):
     dialog.grid_center_on_origin = checked
@@ -6857,9 +6826,7 @@ def Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(int checked):
             if(labelGridCenterY) labelGridCenterY->setEnabled(!dialog.grid_center_on_origin)
             QDoubleSpinBox* spinBoxGridCenterY = parent->findChild<QDoubleSpinBox*>("spinBoxGridCenterY")
             if(spinBoxGridCenterY) spinBoxGridCenterY->setEnabled(!dialog.grid_center_on_origin)
-        }
-    }
-}
+
 
 def Settings_Dialog::comboBoxRulerMetricCurrentIndexChanged(int index):
     comboBox = qobject_cast<QComboBox*>(sender())
@@ -7460,7 +7427,7 @@ def PropertyEditor::updateLineEditStrIfVaries(QLineEdit* lineEdit, const QString
     fieldNewText = str
 
     if     (fieldOldText.isEmpty())       lineEdit->setText(fieldNewText)
-    else if(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText)
+    elif(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText)
 
 def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, int useAnglePrecision):
     int precision = 0
@@ -7478,7 +7445,7 @@ def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, float num, in
         fieldNewText = negativeZero.replace("-", "")
 
     if     (fieldOldText.isEmpty())       lineEdit->setText(fieldNewText)
-    else if(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText)
+    elif(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText)
 
 def PropertyEditor::updateFontComboBoxStrIfVaries(QFontComboBox* fontComboBox, const QString& str):
     fieldOldText = fontComboBox->property("FontFamily").toString()
@@ -7489,7 +7456,7 @@ def PropertyEditor::updateFontComboBoxStrIfVaries(QFontComboBox* fontComboBox, c
         fontComboBox->setCurrentFont(QFont(fieldNewText))
         fontComboBox->setProperty("FontFamily", fieldNewText)
     }
-    else if(fieldOldText != fieldNewText)
+    elif(fieldOldText != fieldNewText)
     {
         if(fontComboBox->findText(fieldVariesText) == -1) /*Prevent multiple entries*/
             fontComboBox->addItem(fieldVariesText)
@@ -7509,7 +7476,7 @@ def PropertyEditor::updateComboBoxStrIfVaries(QComboBox* comboBox, const QString
         }
         comboBox->setCurrentIndex(comboBox->findText(fieldNewText))
     }
-    else if(fieldOldText != fieldNewText)
+    elif(fieldOldText != fieldNewText)
     {
         if(comboBox->findText(fieldVariesText) == -1) /*Prevent multiple entries*/
             comboBox->addItem(fieldVariesText)
@@ -7541,7 +7508,7 @@ def PropertyEditor::updateComboBoxintIfVaries(QComboBox* comboBox, int val, int 
         }
         comboBox->setCurrentIndex(comboBox->findText(fieldNewText))
     }
-    else if(fieldOldText != fieldNewText) {
+    elif(fieldOldText != fieldNewText) {
         /* Prevent multiple entries */
         if(comboBox->findText(fieldVariesText) == -1) {
             comboBox->addItem(fieldVariesText)
@@ -7557,16 +7524,16 @@ def PropertyEditor::showGroups(int objType):
     if (objType == OBJ_TYPE_ARC) {
         groupBoxMiscArc->show()
     }
-    else if(objType == OBJ_TYPE_IMAGE) {
+    elif(objType == OBJ_TYPE_IMAGE) {
         groupBoxMiscImage->show()
     }
-    else if(objType == OBJ_TYPE_PATH) {
+    elif(objType == OBJ_TYPE_PATH) {
         groupBoxMiscPath->show()
     }
-    else if(objType == OBJ_TYPE_POLYLINE) {
+    elif(objType == OBJ_TYPE_POLYLINE) {
         groupBoxMiscPolyline->show()
     }
-    else if(objType == OBJ_TYPE_TEXTSINGLE) {
+    elif(objType == OBJ_TYPE_TEXTSINGLE) {
         groupBoxTextTextSingle->show()
         groupBoxMiscTextSingle->show()
     }
@@ -7769,7 +7736,7 @@ QLineEdit* PropertyEditor::createLineEdit(const QString& validatorType, int read
     if (validatorType == "int") {
         le->setValidator(new QIntValidator(le))
     }
-    else if (validatorType == "double") {
+    elif (validatorType == "double") {
         le->setValidator(new QDoubleValidator(le))
     }
     le->setReadOnly(readOnly)
@@ -7792,7 +7759,7 @@ def PropertyEditor::mapSignal(QObject* fieldObj, const QString& name, QVariant v
     if (name.startsWith("lineEdit")) {
         connect(fieldObj, SIGNAL(editingFinished()), signalMapper, SLOT(map()))
     }
-    else if (name.startsWith("comboBox")) {
+    elif (name.startsWith("comboBox")) {
         connect(fieldObj, SIGNAL(activated(const QString&)), signalMapper, SLOT(map()))
     }
 
@@ -8189,14 +8156,14 @@ def MainWindow::buttonTipOfTheDayClicked(int button):
             settings.general_current_tip = listTipOfTheDay.size()-1
         labelTipOfTheDay->setText(listTipOfTheDay.value(settings.general_current_tip))
     }
-    else if(button == QWizard::CustomButton2)
+    elif(button == QWizard::CustomButton2)
     {
         settings.general_current_tip++
         if(settings.general_current_tip >= listTipOfTheDay.size())
             settings.general_current_tip = 0
         labelTipOfTheDay->setText(listTipOfTheDay.value(settings.general_current_tip))
     }
-    else if(button == QWizard::CustomButton3)
+    elif(button == QWizard::CustomButton3)
     {
         wizardTipOfTheDay->close()
 
@@ -8757,23 +8724,23 @@ MainWindow::MainWindow() : QMainWindow(0):
         if(icon == "windowcascade") {
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(cascade()))
         }
-        else if(icon == "windowtile") {
+        elif(icon == "windowtile") {
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(tile()))
         }
-        else if(icon == "windowclose") {
+        elif(icon == "windowclose") {
             ACTION->setShortcut(QKeySequence::Close)
             connect(ACTION, SIGNAL(triggered()), this, SLOT(onCloseWindow()))
         }
-        else if(icon == "windowcloseall") {
+        elif(icon == "windowcloseall") {
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(closeAllSubWindows()))
         }
-        else if(icon == "windownext") {
+        elif(icon == "windownext") {
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()))
         }
-        else if(icon == "windowprevious") {
+        elif(icon == "windowprevious") {
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(activatePreviousSubWindow()))
         }
-        else if(icon == "textbold" || icon == "textitalic"
+        elif(icon == "textbold" || icon == "textitalic"
             || icon == "textunderline" || icon == "textstrikeout"
             || icon == "textoverline") {
             ACTION->setCheckable(1)
@@ -9140,20 +9107,17 @@ def MainWindow::recentMenuAboutToShow():
                 recentValue.setNum(i+1)
                 QAction* rAction
                 if     (recentValue.toInt() >= 1 && recentValue.toInt() <= 9) rAction = new QAction("&" + recentValue + " " + recentFileInfo.fileName(), this)
-                else if(recentValue.toInt() == 10)                            rAction = new QAction("1&0 "                  + recentFileInfo.fileName(), this)
+                elif(recentValue.toInt() == 10)                            rAction = new QAction("1&0 "                  + recentFileInfo.fileName(), this)
                 else                                                          rAction = new QAction(      recentValue + " " + recentFileInfo.fileName(), this)
                 rAction->setCheckable(0)
                 rAction->setData(opensave_recent_list_of_files.at(i))
                 menu[RECENT_MENU]->addAction(rAction)
                 connect(rAction, SIGNAL(triggered()), this, SLOT(openrecentfile()))
-            }
-        }
-    }
+
     /*Ensure the list only has max amount of entries*/
     while(opensave_recent_list_of_files.size() > settings.opensave_recent_max_files) {
         opensave_recent_list_of_files.removeLast()
-    }
-}
+
 
 def MainWindow::windowMenuAboutToShow():
     debug_message("MainWindow::windowMenuAboutToShow()")
@@ -9223,13 +9187,13 @@ def MainWindow::openFile(int recent, const QString& recentFile):
         files.append(recentFile)
         openFilesSelected(files)
     }
-    else if(!preview)
+    elif(!preview)
     {
         /*TODO: set getOpenFileNames' selectedFilter parameter from settings.opensave_open_format*/
         files = QFileDialog::getOpenFileNames(this, tr("Open"), openFilesPath, formatFilterOpen)
         openFilesSelected(files)
     }
-    else if(preview)
+    elif(preview)
     {
         PreviewDialog* openDialog = new PreviewDialog(this, tr("Open w/Preview"), openFilesPath, formatFilterOpen)
         /*TODO: set openDialog->selectNameFilter(const QString& filter) from settings.opensave_open_format*/
@@ -9479,11 +9443,9 @@ def MainWindow::updateMenuToolbarStatusbar():
         /*Statusbar*/
         statusbar->clearMessage()
         statusBarMouseCoord->hide()
-        for (i=0; i<N_STATUS; i++) {
+        for (i=0; i<N_STATUS; i++:
             status_bar[i]->hide()
-        }
-    }
-}
+
 
 int MainWindow::validFileFormat(const QString& fileName):
     if(fileName.length() == 0) {
@@ -9555,7 +9517,7 @@ def MainWindow::loadFormats():
     QString custom = settings.custom_filter
     if(custom.contains("supported", Qt::CaseInsensitive))
         custom = ""; //This will hide it
-    else if(!custom.contains("*", Qt::CaseInsensitive))
+    elif(!custom.contains("*", Qt::CaseInsensitive))
         custom = ""; //This will hide it
     else
         custom = "Custom Filter(" + custom + ");;"
@@ -9829,9 +9791,9 @@ int old_main(int argc, char *argv[]):
 
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "-d") || !strcmp(argv[i], "--debug")) {  }
-        else if(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")   ) { usage(); }
-        else if(!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version")) { version(); }
-        else if(QFile::exists(argv[i]) && MainWindow::validFileFormat(argv[i])) {
+        elif(!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")   ) { usage(); }
+        elif(!strcmp(argv[i], "-v") || !strcmp(argv[i], "--version")) { version(); }
+        elif(QFile::exists(argv[i]) && MainWindow::validFileFormat(argv[i])) {
             filesToOpen << argv[i]
         }
     }
@@ -10044,10 +10006,10 @@ int MdiWindow::saveFile(const QString &fileName):
             if (objType == OBJ_TYPE_ARC) {
                 /* addArc */
             }
-            else if (objType == OBJ_TYPE_BLOCK) {
+            elif (objType == OBJ_TYPE_BLOCK) {
                 /* addBlock(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_CIRCLE) {
+            elif(objType == OBJ_TYPE_CIRCLE) {
                 CircleObject* obj = static_cast<CircleObject*>(item)
                 if (obj) {
                     if (formatType == EMBFORMAT_STITCHONLY) {
@@ -10061,31 +10023,31 @@ int MdiWindow::saveFile(const QString &fileName):
         }
     }
             }
-            else if(objType == OBJ_TYPE_DIMALIGNED) {
+            elif(objType == OBJ_TYPE_DIMALIGNED) {
                 /* addDimAligned(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_DIMANGULAR) {
+            elif(objType == OBJ_TYPE_DIMANGULAR) {
                 /* addDimAngular(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_DIMARCLENGTH) {
+            elif(objType == OBJ_TYPE_DIMARCLENGTH) {
                 /* addDimArcLength(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_DIMDIAMETER) {
+            elif(objType == OBJ_TYPE_DIMDIAMETER) {
                 /* addDimDiameter(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_DIMLEADER) {
+            elif(objType == OBJ_TYPE_DIMLEADER) {
                 /* addDimLeader(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_DIMLINEAR) {
+            elif(objType == OBJ_TYPE_DIMLINEAR) {
                 /* addDimLinear(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_DIMORDINATE)  {
+            elif(objType == OBJ_TYPE_DIMORDINATE)  {
                 /* addDimOrdinate(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_DIMRADIUS)    {
+            elif(objType == OBJ_TYPE_DIMRADIUS)    {
                 /* addDimRadius(pattern, item); */
             }
-            else if(objType == OBJ_TYPE_ELLIPSE) {
+            elif(objType == OBJ_TYPE_ELLIPSE) {
     EllipseObject* obj = static_cast<EllipseObject*>(item)
     if(obj)
     {
@@ -10101,12 +10063,12 @@ int MdiWindow::saveFile(const QString &fileName):
         }
     }
             }
-            else if(objType == OBJ_TYPE_ELLIPSEARC)   { /* addEllipseArc(pattern, item);  */ }
-            else if(objType == OBJ_TYPE_GRID)         { /* addGrid(pattern, item);     */    }
-            else if(objType == OBJ_TYPE_HATCH)        { /* addHatch(pattern, item);       */ }
-            else if(objType == OBJ_TYPE_IMAGE)        { /* addImage(pattern, item);       */ }
-            else if(objType == OBJ_TYPE_INFINITELINE) { /* addInfiniteLine(pattern, item); */ }
-            else if(objType == OBJ_TYPE_LINE)         { 
+            elif(objType == OBJ_TYPE_ELLIPSEARC)   { /* addEllipseArc(pattern, item);  */ }
+            elif(objType == OBJ_TYPE_GRID)         { /* addGrid(pattern, item);     */    }
+            elif(objType == OBJ_TYPE_HATCH)        { /* addHatch(pattern, item);       */ }
+            elif(objType == OBJ_TYPE_IMAGE)        { /* addImage(pattern, item);       */ }
+            elif(objType == OBJ_TYPE_INFINITELINE) { /* addInfiniteLine(pattern, item); */ }
+            elif(objType == OBJ_TYPE_LINE)         { 
     LineObject* obj = static_cast<LineObject*>(item)
     if(obj)
     {
@@ -10120,7 +10082,7 @@ int MdiWindow::saveFile(const QString &fileName):
         }
     }
       }
-            else if (objType == OBJ_TYPE_PATH) {
+            elif (objType == OBJ_TYPE_PATH) {
     /*TODO: Reimplement addPolyline() using the libembroidery C API*/
     /*
     debug_message("addPolyline()")
@@ -10145,11 +10107,11 @@ int MdiWindow::saveFile(const QString &fileName):
             {
                 pattern.AddStitchAbs((element.x + startX), -(element.y + startY), TRIM)
             }
-            else if(element.isLineTo())
+            elif(element.isLineTo())
             {
                 pattern.AddStitchAbs((element.x + startX), -(element.y + startY), NORMAL)
             }
-            else if(element.isCurveTo())
+            elif(element.isCurveTo())
             {
                 P1 = path.elementAt(i-1); // start point
                 P2 = path.elementAt(i);   // control point
@@ -10166,7 +10128,7 @@ int MdiWindow::saveFile(const QString &fileName):
     }
     */
             }
-            else if(objType == OBJ_TYPE_POINT)        { 
+            elif(objType == OBJ_TYPE_POINT)        { 
     PointObject* obj = static_cast<PointObject*>(item)
     if(obj)
     {
@@ -10180,23 +10142,23 @@ int MdiWindow::saveFile(const QString &fileName):
         }
     }
              }
-            else if(objType == OBJ_TYPE_POLYGON) {
+            elif(objType == OBJ_TYPE_POLYGON) {
     PolygonObject* obj = static_cast<PolygonObject*>(item)
     if(obj)
     {
         toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight*/
     }
             }
-            else if(objType == OBJ_TYPE_POLYLINE) { 
+            elif(objType == OBJ_TYPE_POLYLINE) { 
                 PolylineObject* obj = static_cast<PolylineObject*>(item)
                 if (obj)  {
                     toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); /*TODO: proper layer/lineType/lineWeight*/
                 }
             }
-            else if(objType == OBJ_TYPE_RAY) {
+            elif(objType == OBJ_TYPE_RAY) {
                 /* addRay(pattern, item);       */
             }
-            else if(objType == OBJ_TYPE_RECTANGLE) { 
+            elif(objType == OBJ_TYPE_RECTANGLE) { 
     RectObject* obj = static_cast<RectObject*>(item)
     if(obj)
     {
@@ -10212,15 +10174,15 @@ int MdiWindow::saveFile(const QString &fileName):
         }
     }
             }
-            else if(objType == OBJ_TYPE_SLOT) {
+            elif(objType == OBJ_TYPE_SLOT) {
             }
-            else if(objType == OBJ_TYPE_SPLINE)       { 
+            elif(objType == OBJ_TYPE_SPLINE)       { 
     /*TODO: abstract bezier into geom-bezier... cubicBezierMagic(P1, P2, P3, P4, 0.0, 1.0, tPoints);*/
     }
-            else if(objType == OBJ_TYPE_TEXTMULTI)    { 
+            elif(objType == OBJ_TYPE_TEXTMULTI)    { 
     /*TODO: saving polygons, polylines and paths must be stable before we go here.*/
        }
-            else if (objType == OBJ_TYPE_TEXTSINGLE) {
+            elif (objType == OBJ_TYPE_TEXTSINGLE) {
     /*TODO: saving polygons, polylines and paths must be stable before we go here.*/
 
     /*TODO: This needs to work like a path, not a polyline. Improve this*/
@@ -10632,17 +10594,17 @@ StatusBarButton::StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* 
     if (objectName() == "StatusBarButtonSNAP") {
         connect(this, SIGNAL(toggled(int)), this, SLOT(toggleSnap(int)))
     }
-    else if (objectName() == "StatusBarButtonGRID") {
+    elif (objectName() == "StatusBarButtonGRID") {
         connect(this, SIGNAL(toggled(int)), this, SLOT(toggleGrid(int)))
     }
-    else if(objectName() == "StatusBarButtonRULER") {
+    elif(objectName() == "StatusBarButtonRULER") {
         connect(this, SIGNAL(toggled(int)), this, SLOT(toggleRuler(int)))
     }
-    else if(objectName() == "StatusBarButtonORTHO")  { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleOrtho(int))); }
-    else if(objectName() == "StatusBarButtonPOLAR")  { connect(this, SIGNAL(toggled(int)), this, SLOT(togglePolar(int))); }
-    else if(objectName() == "StatusBarButtonQSNAP")  { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleQSnap(int))); }
-    else if(objectName() == "StatusBarButtonQTRACK") { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleQTrack(int))); }
-    else if(objectName() == "StatusBarButtonLWT")    { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleLwt(int))); }
+    elif(objectName() == "StatusBarButtonORTHO")  { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleOrtho(int))); }
+    elif(objectName() == "StatusBarButtonPOLAR")  { connect(this, SIGNAL(toggled(int)), this, SLOT(togglePolar(int))); }
+    elif(objectName() == "StatusBarButtonQSNAP")  { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleQSnap(int))); }
+    elif(objectName() == "StatusBarButtonQTRACK") { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleQTrack(int))); }
+    elif(objectName() == "StatusBarButtonLWT")    { connect(this, SIGNAL(toggled(int)), this, SLOT(toggleLwt(int))); }
 }
 
 def StatusBarButton::contextMenuEvent(QContextMenuEvent *event):
@@ -10653,39 +10615,39 @@ def StatusBarButton::contextMenuEvent(QContextMenuEvent *event):
         connect(settingsSnapAction, SIGNAL(triggered()), this, SLOT(settingsSnap()))
         menu_.addAction(settingsSnapAction)
     }
-    else if (objectName() == "StatusBarButtonGRID") {
+    elif (objectName() == "StatusBarButtonGRID") {
         QAction* settingsGridAction = new QAction(loadIcon(gridsettings_xpm), "&Settings...", &menu_)
         connect(settingsGridAction, SIGNAL(triggered()), this, SLOT(settingsGrid()))
         menu_.addAction(settingsGridAction)
     }
-    else if (objectName() == "StatusBarButtonRULER") {
+    elif (objectName() == "StatusBarButtonRULER") {
         QAction* settingsRulerAction = new QAction(QIcon("icons/rulersettings.png"), "&Settings...", &menu_)
         connect(settingsRulerAction, SIGNAL(triggered()), this, SLOT(settingsRuler()))
         menu_.addAction(settingsRulerAction)
     }
-    else if (objectName() == "StatusBarButtonORTHO") {
+    elif (objectName() == "StatusBarButtonORTHO") {
         QAction* settingsOrthoAction = new QAction(QIcon("icons/orthosettings.png"), "&Settings...", &menu_)
         connect(settingsOrthoAction, SIGNAL(triggered()), this, SLOT(settingsOrtho()))
         menu_.addAction(settingsOrthoAction)
     }
-    else if (objectName() == "StatusBarButtonPOLAR") {
+    elif (objectName() == "StatusBarButtonPOLAR") {
         QAction* settingsPolarAction = new QAction(QIcon("icons/polarsettings.png"), "&Settings...", &menu_)
         connect(settingsPolarAction, SIGNAL(triggered()), this, SLOT(settingsPolar()))
         menu_.addAction(settingsPolarAction)
     }
-    else if(objectName() == "StatusBarButtonQSNAP")
+    elif(objectName() == "StatusBarButtonQSNAP")
     {
         QAction* settingsQSnapAction = new QAction(QIcon("icons/qsnapsettings.png"), "&Settings...", &menu_)
         connect(settingsQSnapAction, SIGNAL(triggered()), this, SLOT(settingsQSnap()))
         menu_.addAction(settingsQSnapAction)
     }
-    else if(objectName() == "StatusBarButtonQTRACK")
+    elif(objectName() == "StatusBarButtonQTRACK")
     {
         QAction* settingsQTrackAction = new QAction(QIcon("icons/qtracksettings.png"), "&Settings...", &menu_)
         connect(settingsQTrackAction, SIGNAL(triggered()), this, SLOT(settingsQTrack()))
         menu_.addAction(settingsQTrackAction)
     }
-    else if(objectName() == "StatusBarButtonLWT") {
+    elif(objectName() == "StatusBarButtonLWT") {
         View* gview = _mainWin->activeView()
         if (gview) {
             QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu_)
@@ -10787,24 +10749,8 @@ def main_about():
     QApplication::restoreOverrideCursor()
     """
 
-def dayVision():
-    gview = _mainWin->activeView()
-    if gview:
-        gview->setBackgroundColor(qRgb(255,255,255))
-        # TODO: Make day vision color settings.
-        gview->setCrossHairColor(qRgb(0,0,0))
-        gview->setGridColor(qRgb(0,0,0))
 
-
-def nightVision():
-    gview = _mainWin->activeView()
-    if (gview) 
-        gview->setBackgroundColor(qRgb(0,0,0)); /* TODO: Make night vision color settings. */
-        gview->setCrossHairColor(qRgb(255,255,255)); /*TODO: Make night vision color settings.*/
-        gview->setGridColor(qRgb(255,255,255));      /*TODO: Make night vision color settings.*/
-
-
-def actuator(char *call):
+def actuator(call):
     undo_history_position++
     /* an action has been taken, we are at the current head of the stack */
     undo_history_length = undo_history_position
