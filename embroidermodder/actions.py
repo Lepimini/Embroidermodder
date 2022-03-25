@@ -16,6 +16,7 @@ r"""
 """
 
 import tkinter as tk
+from PIL import Image, ImageTk
 from .data import load_image
 
 debug_mode = True
@@ -830,11 +831,14 @@ def build_menubar(root, menu_layout):
         menubar.add_cascade(label=m, menu=menu_)
     root.config(menu=menubar)
 
+# to stop the garbage collector stealing it
+tkimg = {}
 
 def build_buttongrid(root, button_layout):
     r"""
     Create the toolbars in the order given by the "order" list.
     """
+    global tkimg
     debug_message("build_buttongrid")
     for toolbar in button_layout["order"]:
         debug_message(toolbar)
@@ -842,11 +846,11 @@ def build_buttongrid(root, button_layout):
             debug_message(button)
             B = button_layout[toolbar][button]
             cmd = globals()[B["command"]]
+            tkimg[button] = load_image(B["icon"])
             button_ = tk.Button(
                 root,
-                text=button,
                 command=cmd,
-                image=load_image('icons/default/dolphin.png')
+                image=tkimg[button]
             )
             button_.grid(row=B["row"], column=B["column"])
 

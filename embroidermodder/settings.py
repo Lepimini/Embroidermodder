@@ -46,9 +46,9 @@ def draw_pixmap(description):
         # Other functions we can use are eraseRect, drawArc etc. https://doc.qt.io/qt-5/qpainter.html
         if (strncmp(ptr, "rect", 4)==0) {
             pen.setColor(QColor(QRgb(0x000000)))
-            painter->setPen(pen)
+            painter.setPen(pen)
             get_n_ints(ptr+5, int_buffer, 4)
-            painter->fillRect(int_buffer[0], int_buffer[1],
+            painter.fillRect(int_buffer[0], int_buffer[1],
                 int_buffer[2], int_buffer[3], Qt::SolidPattern);
 
     """
@@ -61,26 +61,26 @@ def add_to_path(path, command, pos, scale):
     for j in range(len(command)):
         if command[j] == "M":
             get_n_floats(command+j+2, out, 2)
-            path->moveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1])
+            path.moveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1])
         elif command[j] == "L":
             get_n_floats(command+j+2, out, 2)
-            path->lineTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1])
+            path.lineTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1])
         elif command[j] == "A":
             get_n_floats(command+j+2, out, 6)
-            path->arcTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
+            path.arcTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
                         out[2], out[3], out[4], out[5])
         elif command[j] == "a":
             get_n_floats(command+j+2, out, 5)
-            path->arcMoveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
+            path.arcMoveTo(pos[0]+out[0]*scale[0], pos[1]+out[1]*scale[1],
                         out[2]*scale[0], out[3]*scale[1],
                         out[4])
         elif command[j] == "E":
             get_n_floats(command+j+2, out, 4)
-            path->addEllipse(
+            path.addEllipse(
                 QPointF(pos[0]+out[0]*scale[0],  pos[1]+out[1]*scale[1]),
                 out[2]*scale[0], out[3]*scale[1])
         elif command[j] == "Z":
-            path->closeSubpath()
+            path.closeSubpath()
     """
     debug_message("add_to_path()")
 
@@ -109,9 +109,9 @@ def toPolyline(pattern, objPos, objPath, layer, color, lineType, lineWeight):
     }
     EmbPolylineObject* polyObject
     polyObject = (EmbPolylineObject *) malloc(sizeof(EmbPolylineObject))
-    polyObject->pointList = pointList
-    polyObject->color = embColor_make(color.red(), color.green(), color.blue())
-    polyObject->lineType = 1; #TODO: proper lineType
+    polyObject.pointList = pointList
+    polyObject.color = embColor_make(color.red(), color.green(), color.blue())
+    polyObject.lineType = 1; #TODO: proper lineType
     embPattern_addPolylineObjectAbs(pattern, polyObject)
 
 def app_dir(output, folder):
@@ -161,13 +161,13 @@ def make_texture(output, icon, position):
             data[pixel+1] = ui_palette[3*k+1]
             data[pixel+2] = ui_palette[3*k+2]
 
-    output->width = ui_scale
-    output->height = ui_scale
-    output->left = position.x
-    output->right = position.x+ui_scale
-    output->top = position.y-ui_scale*aspect
-    output->bottom = position.y
-    output->texture_id = ntextures
+    output.width = ui_scale
+    output.height = ui_scale
+    output.left = position.x
+    output.right = position.x+ui_scale
+    output.top = position.y-ui_scale*aspect
+    output.bottom = position.y
+    output.texture_id = ntextures
     glBindTexture(GL_TEXTURE_2D, texture[ntextures])
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
@@ -177,24 +177,23 @@ def make_texture(output, icon, position):
 
 
 def usage():
-    fprintf(stderr,
-  " ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ " "\n"
-  "| __|     | _ \\| _ \\ /  \\| |   \\| __| _ \\ |     |/  \\|   \\|   \\| __| _ \\  |__ \\" "\n"
-  "| __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/" "\n"
-  "|___|_|_|_|___/|_|\\_\\\\__/|_|___/|___|_|\\_\\|_|_|_|\\__/|___/|___/|___|_|\\_\\ |___|" "\n"
-  " _____________________________________________________________________________ " "\n"
-  "|                                                                             | "  "\n"
-  "|                   http://embroidermodder.github.io                          | "  "\n"
-  "|_____________________________________________________________________________| "  "\n"
-  " " "\n"
-  "Usage: embroidermodder [options] files ..."  "\n"
-   #80CHARS======================================================================MAX
-  "Options:"  "\n"
-  "  -d, --debug      Print lots of debugging information." "\n"
-  "  -h, --help       Print this message and exit." "\n"
-  "  -v, --version    Print the version number of embroidermodder and exit."  "\n"
-  "\n"
-           )
+    puts(r"""
+ ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ 
+| __|     | _ \| _ \ /  \| |   \| __| _ \ |     |/  \|   \|   \| __| _ \  |__ \
+| __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/
+|___|_|_|_|___/|_|\_\\__/|_|___/|___|_|\_\|_|_|_|\__/|___/|___/|___|_|\_\ |___|
+ _____________________________________________________________________________ 
+|                                                                             |
+|                         http://embroidermodder.org                          |
+|_____________________________________________________________________________|
+
+Usage: embroidermodder [options] files ...
+
+Options:
+  -d, --debug      Print lots of debugging information.
+  -h, --help       Print this message and exit.
+  -v, --version    Print the version number of embroidermodder and exit.
+""")
     exitApp = 1
 
 def version():
@@ -1125,14 +1124,6 @@ QComboBox*   comboBoxTextSingleUpsideDown
 
 MainWindow* _mainWin = 0
 
-#
- * WARNING
- * -------
- * DO NOT enable QGraphicsItem::ItemIsMovable. If it is enabled,
- * and the item is double clicked, the scene will erratically move the item while zooming.
- * All movement has to be handled explicitly by us, not by the scene.
-
-
 
 def MainWindow::readSettings():
     debug_message("Reading Settings...")
@@ -1143,11 +1134,9 @@ def MainWindow::readSettings():
 
     #
     layoutState = settings_file.value("LayoutState").toByteArray()
-    if(!restoreState(layoutState))
-    {
+    if(!restoreState(layoutState)):
         debug_message("LayoutState NOT restored! Setting Default Layout...")
-        //someToolBar->setVisible(1)
-    }
+        //someToolBar.setVisible(1)
 
 
     load_settings()
@@ -1158,10 +1147,10 @@ def MainWindow::readSettings():
 def MainWindow::writeSettings():
     debug_message("Writing Settings...")
 
-    settings.window_x = _mainWin->pos().x()
-    settings.window_y = _mainWin->pos().y()
-    settings.window_width = _mainWin->size().width()
-    settings.window_height = _mainWin->size().height()
+    settings.window_x = _mainWin.pos().x()
+    settings.window_y = _mainWin.pos().y()
+    settings.window_width = _mainWin.size().width()
+    settings.window_height = _mainWin.size().height()
 
     save_settings()
 
@@ -1177,30 +1166,30 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
 
     # NOTE: This has to be done before setting mouse tracking.
     #TODO: Review OpenGL for Qt5 later
-    #if (mainWin->settings.display_use_opengl) {
+    #if (mainWin.settings.display_use_opengl) {
     #    debug_message("Using OpenGL...");
     #    setViewport(new QGLWidget(QGLFormat(QGL::DoubleBuffer)));
     #}
 
     #TODO: Review RenderHints later
-    #setRenderHint(QPainter::Antialiasing, mainWin->settings.display_render_hintAA());
-    #setRenderHint(QPainter::TextAntialiasing, mainWin->settings.display_render_hintTextAA());
-    #setRenderHint(QPainter::SmoothPixmapTransform, mainWin->settings.display_render_hintSmoothPix());
-    #setRenderHint(QPainter::HighQualityAntialiasing, mainWin->settings.display_render_hintHighAA());
-    #setRenderHint(QPainter::NonCosmeticDefaultPen, mainWin->settings.display_render_hint_noncosmetic);
+    #setRenderHint(QPainter::Antialiasing, mainWin.settings.display_render_hintAA());
+    #setRenderHint(QPainter::TextAntialiasing, mainWin.settings.display_render_hintTextAA());
+    #setRenderHint(QPainter::SmoothPixmapTransform, mainWin.settings.display_render_hintSmoothPix());
+    #setRenderHint(QPainter::HighQualityAntialiasing, mainWin.settings.display_render_hintHighAA());
+    #setRenderHint(QPainter::NonCosmeticDefaultPen, mainWin.settings.display_render_hint_noncosmetic);
 
     # NOTE
-     * ----
-     * FullViewportUpdate MUST be used for both the GL and Qt renderers.
-     * Qt renderer will not draw the foreground properly if it isnt set.
+    # ----
+    # FullViewportUpdate MUST be used for both the GL and Qt renderers.
+    # Qt renderer will not draw the foreground properly if it isnt set.
 
     setViewportUpdateMode(QGraphicsView::FullViewportUpdate)
 
     panDistance = 10; #TODO: should there be a setting for this???
 
     setCursor(Qt::BlankCursor)
-    horizontalScrollBar()->setCursor(Qt::ArrowCursor)
-    verticalScrollBar()->setCursor(Qt::ArrowCursor)
+    horizontalScrollBar().setCursor(Qt::ArrowCursor)
+    verticalScrollBar().setCursor(Qt::ArrowCursor)
     qsnapLocatorColor = settings.qsnap_locator_color
     gripColorCool = settings.selection_coolgrip_color
     gripColorHot = settings.selection_hotgrip_color
@@ -1242,7 +1231,7 @@ View::View(MainWindow* mw, QGraphicsScene* theScene, QWidget* parent) : QGraphic
     tempBaseObj = 0
 
     selectBox = new SelectBox(QRubberBand::Rectangle, this)
-    selectBox->setColors(QColor(settings.display_selectbox_left_color),
+    selectBox.setColors(QColor(settings.display_selectbox_left_color),
                          QColor(settings.display_selectbox_left_fill),
                          QColor(settings.display_selectbox_right_color),
                          QColor(settings.display_selectbox_right_fill),
@@ -1267,22 +1256,22 @@ Settings_Dialog::Settings_Dialog(MainWindow* mw, const QString& showTab, QWidget
     tabWidget = new QTabWidget(this)
 
     #TODO: Add icons to tabs
-    tabWidget->addTab(createTabGeneral(), tr("General"))
-    tabWidget->addTab(createTabFilesPaths(), tr("Files/Paths"))
-    tabWidget->addTab(createTabDisplay(), tr("Display"))
-    tabWidget->addTab(createTabOpenSave(), tr("Open/Save"))
-    tabWidget->addTab(createTabPrinting(), tr("Printing"))
-    tabWidget->addTab(createTabSnap(), tr("Snap"))
-    tabWidget->addTab(createTabGridRuler(), tr("Grid/Ruler"))
-    tabWidget->addTab(createTabOrthoPolar(), tr("Ortho/Polar"))
-    tabWidget->addTab(createTabQuickSnap(), tr("QuickSnap"))
-    tabWidget->addTab(createTabQuickTrack(), tr("QuickTrack"))
-    tabWidget->addTab(createTabLineWeight(), tr("LineWeight"))
-    tabWidget->addTab(createTabSelection(), tr("Selection"))
+    tabWidget.addTab(createTabGeneral(), tr("General"))
+    tabWidget.addTab(createTabFilesPaths(), tr("Files/Paths"))
+    tabWidget.addTab(createTabDisplay(), tr("Display"))
+    tabWidget.addTab(createTabOpenSave(), tr("Open/Save"))
+    tabWidget.addTab(createTabPrinting(), tr("Printing"))
+    tabWidget.addTab(createTabSnap(), tr("Snap"))
+    tabWidget.addTab(createTabGridRuler(), tr("Grid/Ruler"))
+    tabWidget.addTab(createTabOrthoPolar(), tr("Ortho/Polar"))
+    tabWidget.addTab(createTabQuickSnap(), tr("QuickSnap"))
+    tabWidget.addTab(createTabQuickTrack(), tr("QuickTrack"))
+    tabWidget.addTab(createTabLineWeight(), tr("LineWeight"))
+    tabWidget.addTab(createTabSelection(), tr("Selection"))
 
     for i in range(12):
         if (showTab == settings_tab_label[i]) {
-            tabWidget->setCurrentIndex(i)
+            tabWidget.setCurrentIndex(i)
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel)
 
@@ -1290,8 +1279,8 @@ Settings_Dialog::Settings_Dialog(MainWindow* mw, const QString& showTab, QWidget
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(rejectChanges()))
 
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(this)
-    vboxLayoutMain->addWidget(tabWidget)
-    vboxLayoutMain->addWidget(buttonBox)
+    vboxLayoutMain.addWidget(tabWidget)
+    vboxLayoutMain.addWidget(buttonBox)
     setLayout(vboxLayoutMain)
 
     setWindowTitle(tr("Settings"))
@@ -1310,59 +1299,59 @@ QWidget* Settings_Dialog::createTabGeneral():
     QLabel* labelLanguage = new QLabel(tr("Language (Requires Restart)"), groupBoxLanguage)
     QComboBox* comboBoxLanguage = new QComboBox(groupBoxLanguage)
     to_lower(dialog.general_language, settings.general_language)
-    comboBoxLanguage->addItem("Default")
-    comboBoxLanguage->addItem("System")
-    comboBoxLanguage->insertSeparator(2)
-    QDir trDir(qApp->applicationDirPath())
+    comboBoxLanguage.addItem("Default")
+    comboBoxLanguage.addItem("System")
+    comboBoxLanguage.insertSeparator(2)
+    QDir trDir(qApp.applicationDirPath())
     trDir.cd("translations")
     foreach(QString dirName, trDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
     {
         dirName[0] = dirName[0].toUpper()
-        comboBoxLanguage->addItem(dirName)
+        comboBoxLanguage.addItem(dirName)
     }
     QString current = dialog.general_language
     current[0] = current[0].toUpper()
-    comboBoxLanguage->setCurrentIndex(comboBoxLanguage->findText(current))
+    comboBoxLanguage.setCurrentIndex(comboBoxLanguage.findText(current))
     connect(comboBoxLanguage, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(comboBoxLanguageCurrentIndexChanged(const QString&)))
 
     QVBoxLayout* vboxLayoutLanguage = new QVBoxLayout(groupBoxLanguage)
-    vboxLayoutLanguage->addWidget(labelLanguage)
-    vboxLayoutLanguage->addWidget(comboBoxLanguage)
-    groupBoxLanguage->setLayout(vboxLayoutLanguage)
+    vboxLayoutLanguage.addWidget(labelLanguage)
+    vboxLayoutLanguage.addWidget(comboBoxLanguage)
+    groupBoxLanguage.setLayout(vboxLayoutLanguage)
 
     #Icons
     QGroupBox* groupBoxIcon = new QGroupBox(tr("Icons"), widget)
 
     QLabel* labelIconTheme = new QLabel(tr("Icon Theme"), groupBoxIcon)
     QComboBox* comboBoxIconTheme = new QComboBox(groupBoxIcon)
-    QDir dir(qApp->applicationDirPath())
+    QDir dir(qApp.applicationDirPath())
     dir.cd("icons")
     strcpy(dialog.general_icon_theme, settings.general_icon_theme)
     foreach(QString dirName, dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot))
     {
-        comboBoxIconTheme->addItem(loadIcon(theme_xpm), dirName)
+        comboBoxIconTheme.addItem(loadIcon(theme_xpm), dirName)
     }
-    comboBoxIconTheme->setCurrentIndex(comboBoxIconTheme->findText(dialog.general_icon_theme))
+    comboBoxIconTheme.setCurrentIndex(comboBoxIconTheme.findText(dialog.general_icon_theme))
     connect(comboBoxIconTheme, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(comboBoxIconThemeCurrentIndexChanged(const QString&)))
 
     QLabel* labelIconSize = new QLabel(tr("Icon Size"), groupBoxIcon)
     QComboBox* comboBoxIconSize = new QComboBox(groupBoxIcon)
-    comboBoxIconSize->addItem(loadIcon(icon16_xpm), "Very Small", 16)
-    comboBoxIconSize->addItem(loadIcon(icon24_xpm), "Small", 24)
-    comboBoxIconSize->addItem(loadIcon(icon32_xpm), "Medium", 32)
-    comboBoxIconSize->addItem(loadIcon(icon48_xpm), "Large", 48)
-    comboBoxIconSize->addItem(loadIcon(icon64_xpm), "Very Large", 64)
-    comboBoxIconSize->addItem(loadIcon(icon128_xpm), "I'm Blind", 128)
+    comboBoxIconSize.addItem(loadIcon(icon16_xpm), "Very Small", 16)
+    comboBoxIconSize.addItem(loadIcon(icon24_xpm), "Small", 24)
+    comboBoxIconSize.addItem(loadIcon(icon32_xpm), "Medium", 32)
+    comboBoxIconSize.addItem(loadIcon(icon48_xpm), "Large", 48)
+    comboBoxIconSize.addItem(loadIcon(icon64_xpm), "Very Large", 64)
+    comboBoxIconSize.addItem(loadIcon(icon128_xpm), "I'm Blind", 128)
     dialog.general_icon_size = settings.general_icon_size
-    comboBoxIconSize->setCurrentIndex(comboBoxIconSize->findData(dialog.general_icon_size))
+    comboBoxIconSize.setCurrentIndex(comboBoxIconSize.findData(dialog.general_icon_size))
     connect(comboBoxIconSize, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxIconSizeCurrentIndexChanged(int)))
 
     QVBoxLayout* vboxLayoutIcon = new QVBoxLayout(groupBoxIcon)
-    vboxLayoutIcon->addWidget(labelIconTheme)
-    vboxLayoutIcon->addWidget(comboBoxIconTheme)
-    vboxLayoutIcon->addWidget(labelIconSize)
-    vboxLayoutIcon->addWidget(comboBoxIconSize)
-    groupBoxIcon->setLayout(vboxLayoutIcon)
+    vboxLayoutIcon.addWidget(labelIconTheme)
+    vboxLayoutIcon.addWidget(comboBoxIconTheme)
+    vboxLayoutIcon.addWidget(labelIconSize)
+    vboxLayoutIcon.addWidget(comboBoxIconSize)
+    groupBoxIcon.setLayout(vboxLayoutIcon)
 
     #Mdi Background
     QGroupBox* groupBoxMdiBG = new QGroupBox(tr("Background"), widget)
@@ -1370,11 +1359,11 @@ QWidget* Settings_Dialog::createTabGeneral():
     QCheckBox* checkBoxMdiBGUseLogo = new QCheckBox(tr("Use Logo"), groupBoxMdiBG)
     dialog.general_mdi_bg_use_logo = settings.general_mdi_bg_use_logo
     preview.general_mdi_bg_use_logo = dialog.general_mdi_bg_use_logo
-    checkBoxMdiBGUseLogo->setChecked(preview.general_mdi_bg_use_logo)
+    checkBoxMdiBGUseLogo.setChecked(preview.general_mdi_bg_use_logo)
     connect(checkBoxMdiBGUseLogo, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGeneralMdiBGUseLogoStateChanged(int)))
 
     QPushButton* buttonMdiBGLogo = new QPushButton(tr("Choose"), groupBoxMdiBG)
-    buttonMdiBGLogo->setEnabled(dialog.general_mdi_bg_use_logo)
+    buttonMdiBGLogo.setEnabled(dialog.general_mdi_bg_use_logo)
     strcpy(dialog.general_mdi_bg_logo, settings.general_mdi_bg_logo)
     strcpy(accept_.general_mdi_bg_logo, dialog.general_mdi_bg_logo)
     connect(buttonMdiBGLogo, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundLogo()))
@@ -1383,11 +1372,11 @@ QWidget* Settings_Dialog::createTabGeneral():
     QCheckBox* checkBoxMdiBGUseTexture = new QCheckBox(tr("Use Texture"), groupBoxMdiBG)
     dialog.general_mdi_bg_use_texture = settings.general_mdi_bg_use_texture
     preview.general_mdi_bg_use_texture = dialog.general_mdi_bg_use_texture
-    checkBoxMdiBGUseTexture->setChecked(preview.general_mdi_bg_use_texture)
+    checkBoxMdiBGUseTexture.setChecked(preview.general_mdi_bg_use_texture)
     connect(checkBoxMdiBGUseTexture, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGeneralMdiBGUseTextureStateChanged(int)))
 
     QPushButton* buttonMdiBGTexture = new QPushButton(tr("Choose"), groupBoxMdiBG)
-    buttonMdiBGTexture->setEnabled(dialog.general_mdi_bg_use_texture)
+    buttonMdiBGTexture.setEnabled(dialog.general_mdi_bg_use_texture)
     strcpy(dialog.general_mdi_bg_texture, settings.general_mdi_bg_texture)
     strcpy(accept_.general_mdi_bg_texture, dialog.general_mdi_bg_texture)
     connect(buttonMdiBGTexture, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundTexture()))
@@ -1396,76 +1385,76 @@ QWidget* Settings_Dialog::createTabGeneral():
     QCheckBox* checkBoxMdiBGUseColor = new QCheckBox(tr("Use Color"), groupBoxMdiBG)
     dialog.general_mdi_bg_use_color = settings.general_mdi_bg_use_color
     preview.general_mdi_bg_use_color = dialog.general_mdi_bg_use_color
-    checkBoxMdiBGUseColor->setChecked(preview.general_mdi_bg_use_color)
+    checkBoxMdiBGUseColor.setChecked(preview.general_mdi_bg_use_color)
     connect(checkBoxMdiBGUseColor, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGeneralMdiBGUseColorStateChanged(int)))
 
     QPushButton* buttonMdiBGColor = new QPushButton(tr("Choose"), groupBoxMdiBG)
-    buttonMdiBGColor->setEnabled(dialog.general_mdi_bg_use_color)
+    buttonMdiBGColor.setEnabled(dialog.general_mdi_bg_use_color)
     dialog.general_mdi_bg_color = settings.general_mdi_bg_color
     preview.general_mdi_bg_color = dialog.general_mdi_bg_color
     accept_.general_mdi_bg_color = dialog.general_mdi_bg_color
     QPixmap mdiBGPix(16,16)
     mdiBGPix.fill(QColor(preview.general_mdi_bg_color))
-    buttonMdiBGColor->setIcon(QIcon(mdiBGPix))
+    buttonMdiBGColor.setIcon(QIcon(mdiBGPix))
     connect(buttonMdiBGColor, SIGNAL(clicked()), this, SLOT(chooseGeneralMdiBackgroundColor()))
     connect(checkBoxMdiBGUseColor, SIGNAL(toggled(int)), buttonMdiBGColor, SLOT(setEnabled(int)))
 
     QGridLayout* gridLayoutMdiBG = new QGridLayout(widget)
-    gridLayoutMdiBG->addWidget(checkBoxMdiBGUseLogo, 0, 0, Qt::AlignLeft)
-    gridLayoutMdiBG->addWidget(buttonMdiBGLogo, 0, 1, Qt::AlignRight)
-    gridLayoutMdiBG->addWidget(checkBoxMdiBGUseTexture, 1, 0, Qt::AlignLeft)
-    gridLayoutMdiBG->addWidget(buttonMdiBGTexture, 1, 1, Qt::AlignRight)
-    gridLayoutMdiBG->addWidget(checkBoxMdiBGUseColor, 2, 0, Qt::AlignLeft)
-    gridLayoutMdiBG->addWidget(buttonMdiBGColor, 2, 1, Qt::AlignRight)
-    groupBoxMdiBG->setLayout(gridLayoutMdiBG)
+    gridLayoutMdiBG.addWidget(checkBoxMdiBGUseLogo, 0, 0, Qt::AlignLeft)
+    gridLayoutMdiBG.addWidget(buttonMdiBGLogo, 0, 1, Qt::AlignRight)
+    gridLayoutMdiBG.addWidget(checkBoxMdiBGUseTexture, 1, 0, Qt::AlignLeft)
+    gridLayoutMdiBG.addWidget(buttonMdiBGTexture, 1, 1, Qt::AlignRight)
+    gridLayoutMdiBG.addWidget(checkBoxMdiBGUseColor, 2, 0, Qt::AlignLeft)
+    gridLayoutMdiBG.addWidget(buttonMdiBGColor, 2, 1, Qt::AlignRight)
+    groupBoxMdiBG.setLayout(gridLayoutMdiBG)
 
     #Tips
     QGroupBox* groupBoxTips = new QGroupBox(tr("Tips"), widget)
 
     QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("Show Tip of the Day on startup"), groupBoxTips)
     dialog.general_tip_of_the_day = settings.general_tip_of_the_day
-    checkBoxTipOfTheDay->setChecked(dialog.general_tip_of_the_day)
+    checkBoxTipOfTheDay.setChecked(dialog.general_tip_of_the_day)
     connect(checkBoxTipOfTheDay, SIGNAL(stateChanged(int)), this, SLOT(checkBoxTipOfTheDayStateChanged(int)))
 
     QVBoxLayout* vboxLayoutTips = new QVBoxLayout(groupBoxTips)
-    vboxLayoutTips->addWidget(checkBoxTipOfTheDay)
-    groupBoxTips->setLayout(vboxLayoutTips)
+    vboxLayoutTips.addWidget(checkBoxTipOfTheDay)
+    groupBoxTips.setLayout(vboxLayoutTips)
 
     #Help Browser
     QGroupBox* groupBoxHelpBrowser = new QGroupBox(tr("Help Browser"), widget)
 
     QRadioButton* radioButtonSystemHelpBrowser = new QRadioButton(tr("System"), groupBoxHelpBrowser)
-    radioButtonSystemHelpBrowser->setChecked(settings.general_system_help_browser)
+    radioButtonSystemHelpBrowser.setChecked(settings.general_system_help_browser)
     QRadioButton* radioButtonCustomHelpBrowser = new QRadioButton(tr("Custom"), groupBoxHelpBrowser)
-    radioButtonCustomHelpBrowser->setChecked(!settings.general_system_help_browser)
-    radioButtonCustomHelpBrowser->setEnabled(0); #TODO: finish this
+    radioButtonCustomHelpBrowser.setChecked(!settings.general_system_help_browser)
+    radioButtonCustomHelpBrowser.setEnabled(0); #TODO: finish this
 
     QVBoxLayout* vboxLayoutHelpBrowser = new QVBoxLayout(groupBoxHelpBrowser)
-    vboxLayoutHelpBrowser->addWidget(radioButtonSystemHelpBrowser)
-    vboxLayoutHelpBrowser->addWidget(radioButtonCustomHelpBrowser)
-    groupBoxHelpBrowser->setLayout(vboxLayoutHelpBrowser)
+    vboxLayoutHelpBrowser.addWidget(radioButtonSystemHelpBrowser)
+    vboxLayoutHelpBrowser.addWidget(radioButtonCustomHelpBrowser)
+    groupBoxHelpBrowser.setLayout(vboxLayoutHelpBrowser)
 
     #Widget Layout
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxLanguage)
-    vboxLayoutMain->addWidget(groupBoxIcon)
-    vboxLayoutMain->addWidget(groupBoxMdiBG)
-    vboxLayoutMain->addWidget(groupBoxTips)
-    vboxLayoutMain->addWidget(groupBoxHelpBrowser)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxLanguage)
+    vboxLayoutMain.addWidget(groupBoxIcon)
+    vboxLayoutMain.addWidget(groupBoxMdiBG)
+    vboxLayoutMain.addWidget(groupBoxTips)
+    vboxLayoutMain.addWidget(groupBoxHelpBrowser)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 QWidget* Settings_Dialog::createTabFilesPaths():
     QWidget* widget = new QWidget(this)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 QWidget* Settings_Dialog::createTabDisplay():
@@ -1478,42 +1467,42 @@ QWidget* Settings_Dialog::createTabDisplay():
 
     QCheckBox* checkBoxUseOpenGL = new QCheckBox(tr("Use OpenGL"), groupBoxRender)
     dialog.display_use_opengl = settings.display_use_open_gl
-    checkBoxUseOpenGL->setChecked(dialog.display_use_opengl)
+    checkBoxUseOpenGL.setChecked(dialog.display_use_opengl)
     connect(checkBoxUseOpenGL, SIGNAL(stateChanged(int)), this, SLOT(checkBoxUseOpenGLStateChanged(int)))
 
     QCheckBox* checkBoxRenderHintAA = new QCheckBox(tr("Antialias"), groupBoxRender)
     dialog.display_renderhint_aa = settings.display_render_hint_aa
-    checkBoxRenderHintAA->setChecked(dialog.display_renderhint_aa)
+    checkBoxRenderHintAA.setChecked(dialog.display_renderhint_aa)
     connect(checkBoxRenderHintAA, SIGNAL(stateChanged(int)), this, SLOT(checkBoxRenderHintAAStateChanged(int)))
 
     QCheckBox* checkBoxRenderHintTextAA = new QCheckBox(tr("Antialias Text"), groupBoxRender)
     dialog.display_renderhint_text_aa = settings.display_render_hint_text_aa
-    checkBoxRenderHintTextAA->setChecked(dialog.display_renderhint_text_aa)
+    checkBoxRenderHintTextAA.setChecked(dialog.display_renderhint_text_aa)
     connect(checkBoxRenderHintTextAA, SIGNAL(stateChanged(int)), this, SLOT(checkBoxRenderHintTextAAStateChanged(int)))
 
     QCheckBox* checkBoxRenderHintSmoothPix = new QCheckBox(tr("Smooth Pixmap"), groupBoxRender)
     dialog.display_renderhint_smooth_pix = settings.display_render_hint_smooth_pix
-    checkBoxRenderHintSmoothPix->setChecked(dialog.display_renderhint_smooth_pix)
+    checkBoxRenderHintSmoothPix.setChecked(dialog.display_renderhint_smooth_pix)
     connect(checkBoxRenderHintSmoothPix, SIGNAL(stateChanged(int)), this, SLOT(checkBoxRenderHintSmoothPixStateChanged(int)))
 
     QCheckBox* checkBoxRenderHintHighAA = new QCheckBox(tr("High Quality Antialiasing (OpenGL)"), groupBoxRender)
     dialog.display_renderhint_high_aa = settings.display_render_hint_high_aa
-    checkBoxRenderHintHighAA->setChecked(dialog.display_renderhint_high_aa)
+    checkBoxRenderHintHighAA.setChecked(dialog.display_renderhint_high_aa)
     connect(checkBoxRenderHintHighAA, SIGNAL(stateChanged(int)), this, SLOT(checkBoxRenderHintHighAAStateChanged(int)))
 
     QCheckBox* checkBoxRenderHintNonCosmetic = new QCheckBox(tr("Non Cosmetic"), groupBoxRender)
     dialog.display_renderhint_noncosmetic = settings.display_render_hint_non_cosmetic
-    checkBoxRenderHintNonCosmetic->setChecked(dialog.display_renderhint_noncosmetic)
+    checkBoxRenderHintNonCosmetic.setChecked(dialog.display_renderhint_noncosmetic)
     connect(checkBoxRenderHintNonCosmetic, SIGNAL(stateChanged(int)), this, SLOT(checkBoxRenderHintNonCosmeticStateChanged(int)))
 
     QVBoxLayout* vboxLayoutRender = new QVBoxLayout(groupBoxRender)
-    vboxLayoutRender->addWidget(checkBoxUseOpenGL)
-    vboxLayoutRender->addWidget(checkBoxRenderHintAA)
-    vboxLayoutRender->addWidget(checkBoxRenderHintTextAA)
-    vboxLayoutRender->addWidget(checkBoxRenderHintSmoothPix)
-    vboxLayoutRender->addWidget(checkBoxRenderHintHighAA)
-    vboxLayoutRender->addWidget(checkBoxRenderHintNonCosmetic)
-    groupBoxRender->setLayout(vboxLayoutRender)
+    vboxLayoutRender.addWidget(checkBoxUseOpenGL)
+    vboxLayoutRender.addWidget(checkBoxRenderHintAA)
+    vboxLayoutRender.addWidget(checkBoxRenderHintTextAA)
+    vboxLayoutRender.addWidget(checkBoxRenderHintSmoothPix)
+    vboxLayoutRender.addWidget(checkBoxRenderHintHighAA)
+    vboxLayoutRender.addWidget(checkBoxRenderHintNonCosmetic)
+    groupBoxRender.setLayout(vboxLayoutRender)
 
 
     #ScrollBars
@@ -1522,26 +1511,26 @@ QWidget* Settings_Dialog::createTabDisplay():
     QCheckBox* checkBoxShowScrollBars = new QCheckBox(tr("Show ScrollBars"), groupBoxScrollBars)
     dialog.display_show_scrollbars = settings.display_show_scrollbars
     preview.display_show_scrollbars = dialog.display_show_scrollbars
-    checkBoxShowScrollBars->setChecked(preview.display_show_scrollbars)
+    checkBoxShowScrollBars.setChecked(preview.display_show_scrollbars)
     connect(checkBoxShowScrollBars, SIGNAL(stateChanged(int)), this, SLOT(checkBoxShowScrollBarsStateChanged(int)))
 
     QLabel* labelScrollBarWidget = new QLabel(tr("Perform action when clicking corner widget"), groupBoxScrollBars)
     QComboBox* comboBoxScrollBarWidget = new QComboBox(groupBoxScrollBars)
     dialog.display_scrollbar_widget_num = settings.display_scrollbar_widget_num
-    int numActions = mainWin->actionHash.size()
+    int numActions = mainWin.actionHash.size()
     for(int i = 0; i < numActions; i++)
     {
-        QAction* action = mainWin->actionHash.value(i)
-        if(action) comboBoxScrollBarWidget->addItem(action->icon(), action->text().replace("&", ""))
+        QAction* action = mainWin.actionHash.value(i)
+        if(action) comboBoxScrollBarWidget.addItem(action.icon(), action.text().replace("&", ""))
     }
-    comboBoxScrollBarWidget->setCurrentIndex(dialog.display_scrollbar_widget_num)
+    comboBoxScrollBarWidget.setCurrentIndex(dialog.display_scrollbar_widget_num)
     connect(comboBoxScrollBarWidget, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxScrollBarWidgetCurrentIndexChanged(int)))
 
     QVBoxLayout* vboxLayoutScrollBars = new QVBoxLayout(groupBoxScrollBars)
-    vboxLayoutScrollBars->addWidget(checkBoxShowScrollBars)
-    vboxLayoutScrollBars->addWidget(labelScrollBarWidget)
-    vboxLayoutScrollBars->addWidget(comboBoxScrollBarWidget)
-    groupBoxScrollBars->setLayout(vboxLayoutScrollBars)
+    vboxLayoutScrollBars.addWidget(checkBoxShowScrollBars)
+    vboxLayoutScrollBars.addWidget(labelScrollBarWidget)
+    vboxLayoutScrollBars.addWidget(comboBoxScrollBarWidget)
+    groupBoxScrollBars.setLayout(vboxLayoutScrollBars)
 
     #Colors
     QGroupBox* groupBoxColor = new QGroupBox(tr("Colors"), widget)
@@ -1553,7 +1542,7 @@ QWidget* Settings_Dialog::createTabDisplay():
     accept_.display_crosshair_color = dialog.display_crosshair_color
     QPixmap crosshairPix(16,16)
     crosshairPix.fill(QColor(preview.display_crosshair_color))
-    buttonCrossHairColor->setIcon(QIcon(crosshairPix))
+    buttonCrossHairColor.setIcon(QIcon(crosshairPix))
     connect(buttonCrossHairColor, SIGNAL(clicked()), this, SLOT(chooseDisplayCrossHairColor()))
 
     QLabel* labelBGColor = new QLabel(tr("Background Color"), groupBoxColor)
@@ -1563,7 +1552,7 @@ QWidget* Settings_Dialog::createTabDisplay():
     accept_.display_bg_color = dialog.display_bg_color
     QPixmap bgPix(16,16)
     bgPix.fill(QColor(preview.display_bg_color))
-    buttonBGColor->setIcon(QIcon(bgPix))
+    buttonBGColor.setIcon(QIcon(bgPix))
     connect(buttonBGColor, SIGNAL(clicked()), this, SLOT(chooseDisplayBackgroundColor()))
 
     QLabel* labelSelectBoxLeftColor = new QLabel(tr("Selection Box Color (Crossing)"), groupBoxColor)
@@ -1573,7 +1562,7 @@ QWidget* Settings_Dialog::createTabDisplay():
     accept_.display_selectbox_left_color = dialog.display_selectbox_left_color
     QPixmap sBoxLCPix(16,16)
     sBoxLCPix.fill(QColor(preview.display_selectbox_left_color))
-    buttonSelectBoxLeftColor->setIcon(QIcon(sBoxLCPix))
+    buttonSelectBoxLeftColor.setIcon(QIcon(sBoxLCPix))
     connect(buttonSelectBoxLeftColor, SIGNAL(clicked()), this, SLOT(chooseDisplaySelectBoxLeftColor()))
 
     QLabel* labelSelectBoxLeftFill = new QLabel(tr("Selection Box Fill (Crossing)"), groupBoxColor)
@@ -1583,7 +1572,7 @@ QWidget* Settings_Dialog::createTabDisplay():
     accept_.display_selectbox_left_fill = dialog.display_selectbox_left_fill
     QPixmap sBoxLFPix(16,16)
     sBoxLFPix.fill(QColor(preview.display_selectbox_left_fill))
-    buttonSelectBoxLeftFill->setIcon(QIcon(sBoxLFPix))
+    buttonSelectBoxLeftFill.setIcon(QIcon(sBoxLFPix))
     connect(buttonSelectBoxLeftFill, SIGNAL(clicked()), this, SLOT(chooseDisplaySelectBoxLeftFill()))
 
     QLabel* labelSelectBoxRightColor = new QLabel(tr("Selection Box Color (Window)"), groupBoxColor)
@@ -1593,7 +1582,7 @@ QWidget* Settings_Dialog::createTabDisplay():
     accept_.display_selectbox_right_color = dialog.display_selectbox_right_color
     QPixmap sBoxRCPix(16,16)
     sBoxRCPix.fill(QColor(preview.display_selectbox_right_color))
-    buttonSelectBoxRightColor->setIcon(QIcon(sBoxRCPix))
+    buttonSelectBoxRightColor.setIcon(QIcon(sBoxRCPix))
     connect(buttonSelectBoxRightColor, SIGNAL(clicked()), this, SLOT(chooseDisplaySelectBoxRightColor()))
 
     QLabel* labelSelectBoxRightFill = new QLabel(tr("Selection Box Fill (Window)"), groupBoxColor)
@@ -1603,33 +1592,33 @@ QWidget* Settings_Dialog::createTabDisplay():
     accept_.display_selectbox_right_fill = dialog.display_selectbox_right_fill
     QPixmap sBoxRFPix(16,16)
     sBoxRFPix.fill(QColor(preview.display_selectbox_right_fill))
-    buttonSelectBoxRightFill->setIcon(QIcon(sBoxRFPix))
+    buttonSelectBoxRightFill.setIcon(QIcon(sBoxRFPix))
     connect(buttonSelectBoxRightFill, SIGNAL(clicked()), this, SLOT(chooseDisplaySelectBoxRightFill()))
 
     QLabel* labelSelectBoxAlpha = new QLabel(tr("Selection Box Fill Alpha"), groupBoxColor)
     QSpinBox* spinBoxSelectBoxAlpha = new QSpinBox(groupBoxColor)
-    spinBoxSelectBoxAlpha->setRange(0, 255)
+    spinBoxSelectBoxAlpha.setRange(0, 255)
     dialog.display_selectbox_alpha = settings.display_selectbox_alpha
     preview.display_selectbox_alpha = dialog.display_selectbox_alpha
-    spinBoxSelectBoxAlpha->setValue(preview.display_selectbox_alpha)
+    spinBoxSelectBoxAlpha.setValue(preview.display_selectbox_alpha)
     connect(spinBoxSelectBoxAlpha, SIGNAL(valueChanged(int)), this, SLOT(spinBoxDisplaySelectBoxAlphaValueChanged(int)))
 
     QGridLayout* gridLayoutColor = new QGridLayout(widget)
-    gridLayoutColor->addWidget(labelCrossHairColor, 0, 0, Qt::AlignLeft)
-    gridLayoutColor->addWidget(buttonCrossHairColor, 0, 1, Qt::AlignRight)
-    gridLayoutColor->addWidget(labelBGColor, 1, 0, Qt::AlignLeft)
-    gridLayoutColor->addWidget(buttonBGColor, 1, 1, Qt::AlignRight)
-    gridLayoutColor->addWidget(labelSelectBoxLeftColor, 2, 0, Qt::AlignLeft)
-    gridLayoutColor->addWidget(buttonSelectBoxLeftColor, 2, 1, Qt::AlignRight)
-    gridLayoutColor->addWidget(labelSelectBoxLeftFill, 3, 0, Qt::AlignLeft)
-    gridLayoutColor->addWidget(buttonSelectBoxLeftFill, 3, 1, Qt::AlignRight)
-    gridLayoutColor->addWidget(labelSelectBoxRightColor, 4, 0, Qt::AlignLeft)
-    gridLayoutColor->addWidget(buttonSelectBoxRightColor, 4, 1, Qt::AlignRight)
-    gridLayoutColor->addWidget(labelSelectBoxRightFill, 5, 0, Qt::AlignLeft)
-    gridLayoutColor->addWidget(buttonSelectBoxRightFill, 5, 1, Qt::AlignRight)
-    gridLayoutColor->addWidget(labelSelectBoxAlpha, 6, 0, Qt::AlignLeft)
-    gridLayoutColor->addWidget(spinBoxSelectBoxAlpha, 6, 1, Qt::AlignRight)
-    groupBoxColor->setLayout(gridLayoutColor)
+    gridLayoutColor.addWidget(labelCrossHairColor, 0, 0, Qt::AlignLeft)
+    gridLayoutColor.addWidget(buttonCrossHairColor, 0, 1, Qt::AlignRight)
+    gridLayoutColor.addWidget(labelBGColor, 1, 0, Qt::AlignLeft)
+    gridLayoutColor.addWidget(buttonBGColor, 1, 1, Qt::AlignRight)
+    gridLayoutColor.addWidget(labelSelectBoxLeftColor, 2, 0, Qt::AlignLeft)
+    gridLayoutColor.addWidget(buttonSelectBoxLeftColor, 2, 1, Qt::AlignRight)
+    gridLayoutColor.addWidget(labelSelectBoxLeftFill, 3, 0, Qt::AlignLeft)
+    gridLayoutColor.addWidget(buttonSelectBoxLeftFill, 3, 1, Qt::AlignRight)
+    gridLayoutColor.addWidget(labelSelectBoxRightColor, 4, 0, Qt::AlignLeft)
+    gridLayoutColor.addWidget(buttonSelectBoxRightColor, 4, 1, Qt::AlignRight)
+    gridLayoutColor.addWidget(labelSelectBoxRightFill, 5, 0, Qt::AlignLeft)
+    gridLayoutColor.addWidget(buttonSelectBoxRightFill, 5, 1, Qt::AlignRight)
+    gridLayoutColor.addWidget(labelSelectBoxAlpha, 6, 0, Qt::AlignLeft)
+    gridLayoutColor.addWidget(spinBoxSelectBoxAlpha, 6, 1, Qt::AlignRight)
+    groupBoxColor.setLayout(gridLayoutColor)
 
     #Zoom
     QGroupBox* groupBoxZoom = new QGroupBox(tr("Zoom"), widget)
@@ -1637,38 +1626,38 @@ QWidget* Settings_Dialog::createTabDisplay():
     QLabel* labelZoomScaleIn = new QLabel(tr("Zoom In Scale"), groupBoxZoom)
     QDoubleSpinBox* spinBoxZoomScaleIn = new QDoubleSpinBox(groupBoxZoom)
     dialog.display_zoomscale_in = settings.display_zoomscale_in
-    spinBoxZoomScaleIn->setValue(dialog.display_zoomscale_in)
-    spinBoxZoomScaleIn->setSingleStep(0.01)
-    spinBoxZoomScaleIn->setRange(1.01, 10.00)
+    spinBoxZoomScaleIn.setValue(dialog.display_zoomscale_in)
+    spinBoxZoomScaleIn.setSingleStep(0.01)
+    spinBoxZoomScaleIn.setRange(1.01, 10.00)
     connect(spinBoxZoomScaleIn, SIGNAL(valueChanged(double)), this, SLOT(spinBoxZoomScaleInValueChanged(double)))
 
     QLabel* labelZoomScaleOut = new QLabel(tr("Zoom Out Scale"), groupBoxZoom)
     QDoubleSpinBox* spinBoxZoomScaleOut = new QDoubleSpinBox(groupBoxZoom)
     dialog.display_zoomscale_out = settings.display_zoomscale_out
-    spinBoxZoomScaleOut->setValue(dialog.display_zoomscale_out)
-    spinBoxZoomScaleOut->setSingleStep(0.01)
-    spinBoxZoomScaleOut->setRange(0.01, 0.99)
+    spinBoxZoomScaleOut.setValue(dialog.display_zoomscale_out)
+    spinBoxZoomScaleOut.setSingleStep(0.01)
+    spinBoxZoomScaleOut.setRange(0.01, 0.99)
     connect(spinBoxZoomScaleOut, SIGNAL(valueChanged(double)), this, SLOT(spinBoxZoomScaleOutValueChanged(double)))
 
     QGridLayout* gridLayoutZoom = new QGridLayout(groupBoxZoom)
-    gridLayoutZoom->addWidget(labelZoomScaleIn, 0, 0, Qt::AlignLeft)
-    gridLayoutZoom->addWidget(spinBoxZoomScaleIn, 0, 1, Qt::AlignRight)
-    gridLayoutZoom->addWidget(labelZoomScaleOut, 1, 0, Qt::AlignLeft)
-    gridLayoutZoom->addWidget(spinBoxZoomScaleOut, 1, 1, Qt::AlignRight)
-    groupBoxZoom->setLayout(gridLayoutZoom)
+    gridLayoutZoom.addWidget(labelZoomScaleIn, 0, 0, Qt::AlignLeft)
+    gridLayoutZoom.addWidget(spinBoxZoomScaleIn, 0, 1, Qt::AlignRight)
+    gridLayoutZoom.addWidget(labelZoomScaleOut, 1, 0, Qt::AlignLeft)
+    gridLayoutZoom.addWidget(spinBoxZoomScaleOut, 1, 1, Qt::AlignRight)
+    groupBoxZoom.setLayout(gridLayoutZoom)
 
     #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
-    #vboxLayoutMain->addWidget(groupBoxRender); //TODO: Review OpenGL and Rendering settings for future inclusion
-    vboxLayoutMain->addWidget(groupBoxScrollBars)
-    vboxLayoutMain->addWidget(groupBoxColor)
-    vboxLayoutMain->addWidget(groupBoxZoom)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    #vboxLayoutMain.addWidget(groupBoxRender); //TODO: Review OpenGL and Rendering settings for future inclusion
+    vboxLayoutMain.addWidget(groupBoxScrollBars)
+    vboxLayoutMain.addWidget(groupBoxColor)
+    vboxLayoutMain.addWidget(groupBoxZoom)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 # TODO: finish open/save options
@@ -1677,7 +1666,7 @@ QWidget* Settings_Dialog::createTabOpenSave():
 
     #Custom Filter
     QGroupBox* groupBoxCustomFilter = new QGroupBox(tr("Custom Filter"), widget)
-    groupBoxCustomFilter->setEnabled(0); #TODO: Fixup custom filter
+    groupBoxCustomFilter.setEnabled(0); #TODO: Fixup custom filter
 
     QPushButton* buttonCustomFilterSelectAll = new QPushButton(tr("Select All"), groupBoxCustomFilter)
     connect(buttonCustomFilterSelectAll, SIGNAL(clicked()), this, SLOT(buttonCustomFilterSelectAllClicked()))
@@ -1688,17 +1677,17 @@ QWidget* Settings_Dialog::createTabOpenSave():
     int i
     for (i=0; i<numberOfFormats; i++) {
         QCheckBox* c = new QCheckBox(formatTable[i].extension, groupBoxCustomFilter)
-        c->setChecked(opensave_custom_filter.contains(QString("*") + formatTable[i].extension, Qt::CaseInsensitive))
+        c.setChecked(opensave_custom_filter.contains(QString("*") + formatTable[i].extension, Qt::CaseInsensitive))
         connect(c, SIGNAL(stateChanged(int)), this, SLOT(checkBoxCustomFilterStateChanged(int)))
         connect(this, SIGNAL(buttonCustomFilterSelectAll(int)), c, SLOT(setChecked(int)))
         connect(this, SIGNAL(buttonCustomFilterClearAll(int)), c, SLOT(setChecked(int)))
-        gridLayoutCustomFilter->addWidget(c, i%10, i/10, Qt::AlignLeft)
+        gridLayoutCustomFilter.addWidget(c, i%10, i/10, Qt::AlignLeft)
     }
 
-    gridLayoutCustomFilter->addWidget(buttonCustomFilterSelectAll, 0, 7, Qt::AlignLeft)
-    gridLayoutCustomFilter->addWidget(buttonCustomFilterClearAll, 1, 7, Qt::AlignLeft)
-    gridLayoutCustomFilter->setColumnStretch(7,1)
-    groupBoxCustomFilter->setLayout(gridLayoutCustomFilter)
+    gridLayoutCustomFilter.addWidget(buttonCustomFilterSelectAll, 0, 7, Qt::AlignLeft)
+    gridLayoutCustomFilter.addWidget(buttonCustomFilterClearAll, 1, 7, Qt::AlignLeft)
+    gridLayoutCustomFilter.setColumnStretch(7,1)
+    groupBoxCustomFilter.setLayout(gridLayoutCustomFilter)
 
     if(opensave_custom_filter.contains("supported", Qt::CaseInsensitive)) buttonCustomFilterSelectAllClicked()
 
@@ -1708,28 +1697,28 @@ QWidget* Settings_Dialog::createTabOpenSave():
     QComboBox* comboBoxOpenFormat = new QComboBox(groupBoxOpening)
 
     QCheckBox* checkBoxOpenThumbnail = new QCheckBox(tr("Preview Thumbnails"), groupBoxOpening)
-    checkBoxOpenThumbnail->setChecked(0)
+    checkBoxOpenThumbnail.setChecked(0)
 
     # TODO: Add a button to clear the recent history.
 
     QLabel* labelRecentMaxFiles = new QLabel(tr("Number of recently accessed files to show"), groupBoxOpening)
     QSpinBox* spinBoxRecentMaxFiles = new QSpinBox(groupBoxOpening)
-    spinBoxRecentMaxFiles->setRange(0, 10)
+    spinBoxRecentMaxFiles.setRange(0, 10)
     dialog.opensave_recent_max_files = settings.opensave_recent_max_files
-    spinBoxRecentMaxFiles->setValue(dialog.opensave_recent_max_files)
+    spinBoxRecentMaxFiles.setValue(dialog.opensave_recent_max_files)
     connect(spinBoxRecentMaxFiles, SIGNAL(valueChanged(int)), this, SLOT(spinBoxRecentMaxFilesValueChanged(int)))
 
     QFrame* frameRecent = new QFrame(groupBoxOpening)
     QGridLayout* gridLayoutRecent = new QGridLayout(frameRecent)
-    gridLayoutRecent->addWidget(labelRecentMaxFiles, 0, 0, Qt::AlignLeft)
-    gridLayoutRecent->addWidget(spinBoxRecentMaxFiles, 0, 1, Qt::AlignRight)
-    frameRecent->setLayout(gridLayoutRecent)
+    gridLayoutRecent.addWidget(labelRecentMaxFiles, 0, 0, Qt::AlignLeft)
+    gridLayoutRecent.addWidget(spinBoxRecentMaxFiles, 0, 1, Qt::AlignRight)
+    frameRecent.setLayout(gridLayoutRecent)
 
     QVBoxLayout* vboxLayoutOpening = new QVBoxLayout(groupBoxOpening)
-    vboxLayoutOpening->addWidget(comboBoxOpenFormat)
-    vboxLayoutOpening->addWidget(checkBoxOpenThumbnail)
-    vboxLayoutOpening->addWidget(frameRecent)
-    groupBoxOpening->setLayout(vboxLayoutOpening)
+    vboxLayoutOpening.addWidget(comboBoxOpenFormat)
+    vboxLayoutOpening.addWidget(checkBoxOpenThumbnail)
+    vboxLayoutOpening.addWidget(frameRecent)
+    groupBoxOpening.setLayout(vboxLayoutOpening)
 
     #Saving
     QGroupBox* groupBoxSaving = new QGroupBox(tr("File Save"), widget)
@@ -1737,49 +1726,49 @@ QWidget* Settings_Dialog::createTabOpenSave():
     QComboBox* comboBoxSaveFormat = new QComboBox(groupBoxSaving)
 
     QCheckBox* checkBoxSaveThumbnail = new QCheckBox(tr("Save Thumbnails"), groupBoxSaving)
-    checkBoxSaveThumbnail->setChecked(0)
+    checkBoxSaveThumbnail.setChecked(0)
 
     QCheckBox* checkBoxAutoSave = new QCheckBox(tr("AutoSave"), groupBoxSaving)
-    checkBoxAutoSave->setChecked(0)
+    checkBoxAutoSave.setChecked(0)
 
     QVBoxLayout* vboxLayoutSaving = new QVBoxLayout(groupBoxSaving)
-    vboxLayoutSaving->addWidget(comboBoxSaveFormat)
-    vboxLayoutSaving->addWidget(checkBoxSaveThumbnail)
-    vboxLayoutSaving->addWidget(checkBoxAutoSave)
-    groupBoxSaving->setLayout(vboxLayoutSaving)
+    vboxLayoutSaving.addWidget(comboBoxSaveFormat)
+    vboxLayoutSaving.addWidget(checkBoxSaveThumbnail)
+    vboxLayoutSaving.addWidget(checkBoxAutoSave)
+    groupBoxSaving.setLayout(vboxLayoutSaving)
 
     #Trimming
     QGroupBox* groupBoxTrim = new QGroupBox(tr("Trimming"), widget)
 
     QLabel* labelTrimDstNumJumps = new QLabel(tr("DST Only: Minimum number of jumps to trim"), groupBoxTrim)
     QSpinBox* spinBoxTrimDstNumJumps = new QSpinBox(groupBoxTrim)
-    spinBoxTrimDstNumJumps->setRange(1, 20)
+    spinBoxTrimDstNumJumps.setRange(1, 20)
     dialog.opensave_trim_dst_num_jumps = settings.opensave_trim_dst_num_jumps
-    spinBoxTrimDstNumJumps->setValue(dialog.opensave_trim_dst_num_jumps)
+    spinBoxTrimDstNumJumps.setValue(dialog.opensave_trim_dst_num_jumps)
     connect(spinBoxTrimDstNumJumps, SIGNAL(valueChanged(int)), this, SLOT(spinBoxTrimDstNumJumpsValueChanged(int)))
 
     QFrame* frameTrimDstNumJumps = new QFrame(groupBoxTrim)
     QGridLayout* gridLayoutTrimDstNumJumps = new QGridLayout(frameTrimDstNumJumps)
-    gridLayoutTrimDstNumJumps->addWidget(labelTrimDstNumJumps, 0, 0, Qt::AlignLeft)
-    gridLayoutTrimDstNumJumps->addWidget(spinBoxTrimDstNumJumps, 0, 1, Qt::AlignRight)
-    frameTrimDstNumJumps->setLayout(gridLayoutTrimDstNumJumps)
+    gridLayoutTrimDstNumJumps.addWidget(labelTrimDstNumJumps, 0, 0, Qt::AlignLeft)
+    gridLayoutTrimDstNumJumps.addWidget(spinBoxTrimDstNumJumps, 0, 1, Qt::AlignRight)
+    frameTrimDstNumJumps.setLayout(gridLayoutTrimDstNumJumps)
 
     QVBoxLayout* vboxLayoutTrim = new QVBoxLayout(groupBoxTrim)
-    vboxLayoutTrim->addWidget(frameTrimDstNumJumps)
-    groupBoxTrim->setLayout(vboxLayoutTrim)
+    vboxLayoutTrim.addWidget(frameTrimDstNumJumps)
+    groupBoxTrim.setLayout(vboxLayoutTrim)
 
     #Widget Layout
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxCustomFilter)
-    vboxLayoutMain->addWidget(groupBoxOpening)
-    vboxLayoutMain->addWidget(groupBoxSaving)
-    vboxLayoutMain->addWidget(groupBoxTrim)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxCustomFilter)
+    vboxLayoutMain.addWidget(groupBoxOpening)
+    vboxLayoutMain.addWidget(groupBoxSaving)
+    vboxLayoutMain.addWidget(groupBoxTrim)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 QWidget* Settings_Dialog::createTabPrinting():
@@ -1790,46 +1779,46 @@ QWidget* Settings_Dialog::createTabPrinting():
     QGroupBox* groupBoxDefaultPrinter = new QGroupBox(tr("Default Printer"), widget)
 
     QRadioButton* radioButtonUseSame = new QRadioButton(tr("Use as default device"), groupBoxDefaultPrinter)
-    radioButtonUseSame->setChecked(!settings.printing_use_last_device)
+    radioButtonUseSame.setChecked(!settings.printing_use_last_device)
     QRadioButton* radioButtonUseLast = new QRadioButton(tr("Use last used device"), groupBoxDefaultPrinter)
-    radioButtonUseLast->setChecked(settings.printing_use_last_device)
+    radioButtonUseLast.setChecked(settings.printing_use_last_device)
 
     QComboBox* comboBoxDefaultDevice = new QComboBox(groupBoxDefaultPrinter)
     QList<QPrinterInfo> listAvailPrinters = QPrinterInfo::availablePrinters()
     foreach(QPrinterInfo info, listAvailPrinters)
     {
-        comboBoxDefaultDevice->addItem(loadIcon(print_xpm), info.printerName())
+        comboBoxDefaultDevice.addItem(loadIcon(print_xpm), info.printerName())
     }
 
     QVBoxLayout* vboxLayoutDefaultPrinter = new QVBoxLayout(groupBoxDefaultPrinter)
-    vboxLayoutDefaultPrinter->addWidget(radioButtonUseSame)
-    vboxLayoutDefaultPrinter->addWidget(comboBoxDefaultDevice)
-    vboxLayoutDefaultPrinter->addWidget(radioButtonUseLast)
-    groupBoxDefaultPrinter->setLayout(vboxLayoutDefaultPrinter)
+    vboxLayoutDefaultPrinter.addWidget(radioButtonUseSame)
+    vboxLayoutDefaultPrinter.addWidget(comboBoxDefaultDevice)
+    vboxLayoutDefaultPrinter.addWidget(radioButtonUseLast)
+    groupBoxDefaultPrinter.setLayout(vboxLayoutDefaultPrinter)
 
     //Save Ink
     QGroupBox* groupBoxSaveInk = new QGroupBox(tr("Save Ink"), widget)
 
     QCheckBox* checkBoxDisableBG = new QCheckBox(tr("Disable Background"), groupBoxSaveInk)
     dialog.printing_disable_bg = settings.printing_disable_bg
-    checkBoxDisableBG->setChecked(dialog.printing_disable_bg)
+    checkBoxDisableBG.setChecked(dialog.printing_disable_bg)
     connect(checkBoxDisableBG, SIGNAL(stateChanged(int)), this, SLOT(checkBoxDisableBGStateChanged(int)))
 
     QVBoxLayout* vboxLayoutSaveInk = new QVBoxLayout(groupBoxSaveInk)
-    vboxLayoutSaveInk->addWidget(checkBoxDisableBG)
-    groupBoxSaveInk->setLayout(vboxLayoutSaveInk)
+    vboxLayoutSaveInk.addWidget(checkBoxDisableBG)
+    groupBoxSaveInk.setLayout(vboxLayoutSaveInk)
 
     //Widget Layout
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxDefaultPrinter)
-    vboxLayoutMain->addWidget(groupBoxSaveInk)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxDefaultPrinter)
+    vboxLayoutMain.addWidget(groupBoxSaveInk)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    #scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget);
+    #scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget);
     return scrollArea
 
 QWidget* Settings_Dialog::createTabSnap():
@@ -1838,8 +1827,8 @@ QWidget* Settings_Dialog::createTabSnap():
     #TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 QWidget* Settings_Dialog::createTabGridRuler():
@@ -1850,302 +1839,302 @@ QWidget* Settings_Dialog::createTabGridRuler():
 
     QCheckBox* checkBoxGridShowOnLoad = new QCheckBox(tr("Initially show grid when loading a file"), groupBoxGridMisc)
     dialog.grid_show_on_load = settings.grid_show_on_load
-    checkBoxGridShowOnLoad->setChecked(dialog.grid_show_on_load)
+    checkBoxGridShowOnLoad.setChecked(dialog.grid_show_on_load)
     connect(checkBoxGridShowOnLoad, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGridShowOnLoadStateChanged(int)))
 
     QCheckBox* checkBoxGridShowOrigin = new QCheckBox(tr("Show the origin when the grid is enabled"), groupBoxGridMisc)
     dialog.grid_show_origin = settings.grid_show_origin
-    checkBoxGridShowOrigin->setChecked(dialog.grid_show_origin)
+    checkBoxGridShowOrigin.setChecked(dialog.grid_show_origin)
     connect(checkBoxGridShowOrigin, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGridShowOriginStateChanged(int)))
 
     QGridLayout* gridLayoutGridMisc = new QGridLayout(widget)
-    gridLayoutGridMisc->addWidget(checkBoxGridShowOnLoad, 0, 0, Qt::AlignLeft)
-    gridLayoutGridMisc->addWidget(checkBoxGridShowOrigin, 1, 0, Qt::AlignLeft)
-    groupBoxGridMisc->setLayout(gridLayoutGridMisc)
+    gridLayoutGridMisc.addWidget(checkBoxGridShowOnLoad, 0, 0, Qt::AlignLeft)
+    gridLayoutGridMisc.addWidget(checkBoxGridShowOrigin, 1, 0, Qt::AlignLeft)
+    groupBoxGridMisc.setLayout(gridLayoutGridMisc)
 
     #Grid Color
     QGroupBox* groupBoxGridColor = new QGroupBox(tr("Grid Color"), widget)
 
     QCheckBox* checkBoxGridColorMatchCrossHair = new QCheckBox(tr("Match grid color to crosshair color"), groupBoxGridColor)
     dialog.grid_color_match_crosshair = settings.grid_color_match_crosshair
-    checkBoxGridColorMatchCrossHair->setChecked(dialog.grid_color_match_crosshair)
+    checkBoxGridColorMatchCrossHair.setChecked(dialog.grid_color_match_crosshair)
     connect(checkBoxGridColorMatchCrossHair, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGridColorMatchCrossHairStateChanged(int)))
 
     QLabel* labelGridColor = new QLabel(tr("Grid Color"), groupBoxGridColor)
-    labelGridColor->setObjectName("labelGridColor")
+    labelGridColor.setObjectName("labelGridColor")
     QPushButton* buttonGridColor = new QPushButton(tr("Choose"), groupBoxGridColor)
-    buttonGridColor->setObjectName("buttonGridColor")
+    buttonGridColor.setObjectName("buttonGridColor")
     if(dialog.grid_color_match_crosshair) { dialog.grid_color = settings.display_crosshair_color; }
     else                                  { dialog.grid_color = settings.grid_color;             }
     preview.grid_color = dialog.grid_color
     accept_.grid_color = dialog.grid_color
     QPixmap gridPix(16,16)
     gridPix.fill(QColor(preview.grid_color))
-    buttonGridColor->setIcon(QIcon(gridPix))
+    buttonGridColor.setIcon(QIcon(gridPix))
     connect(buttonGridColor, SIGNAL(clicked()), this, SLOT(chooseGridColor()))
 
-    labelGridColor->setEnabled(!dialog.grid_color_match_crosshair)
-    buttonGridColor->setEnabled(!dialog.grid_color_match_crosshair)
+    labelGridColor.setEnabled(!dialog.grid_color_match_crosshair)
+    buttonGridColor.setEnabled(!dialog.grid_color_match_crosshair)
 
     QGridLayout* gridLayoutGridColor = new QGridLayout(widget)
-    gridLayoutGridColor->addWidget(checkBoxGridColorMatchCrossHair, 0, 0, Qt::AlignLeft)
-    gridLayoutGridColor->addWidget(labelGridColor, 1, 0, Qt::AlignLeft)
-    gridLayoutGridColor->addWidget(buttonGridColor, 1, 1, Qt::AlignRight)
-    groupBoxGridColor->setLayout(gridLayoutGridColor)
+    gridLayoutGridColor.addWidget(checkBoxGridColorMatchCrossHair, 0, 0, Qt::AlignLeft)
+    gridLayoutGridColor.addWidget(labelGridColor, 1, 0, Qt::AlignLeft)
+    gridLayoutGridColor.addWidget(buttonGridColor, 1, 1, Qt::AlignRight)
+    groupBoxGridColor.setLayout(gridLayoutGridColor)
 
     #Grid Geometry
     QGroupBox* groupBoxGridGeom = new QGroupBox(tr("Grid Geometry"), widget)
 
     QCheckBox* checkBoxGridLoadFromFile = new QCheckBox(tr("Set grid size from opened file"), groupBoxGridGeom)
     dialog.grid_load_from_file = settings.grid_load_from_file
-    checkBoxGridLoadFromFile->setChecked(dialog.grid_load_from_file)
+    checkBoxGridLoadFromFile.setChecked(dialog.grid_load_from_file)
     connect(checkBoxGridLoadFromFile, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGridLoadFromFileStateChanged(int)))
 
     QLabel* labelGridType = new QLabel(tr("Grid Type"), groupBoxGridGeom)
-    labelGridType->setObjectName("labelGridType")
+    labelGridType.setObjectName("labelGridType")
     QComboBox* comboBoxGridType = new QComboBox(groupBoxGridGeom)
-    comboBoxGridType->setObjectName("comboBoxGridType")
-    comboBoxGridType->addItem("Rectangular")
-    comboBoxGridType->addItem("Circular")
-    comboBoxGridType->addItem("Isometric")
+    comboBoxGridType.setObjectName("comboBoxGridType")
+    comboBoxGridType.addItem("Rectangular")
+    comboBoxGridType.addItem("Circular")
+    comboBoxGridType.addItem("Isometric")
     strcpy(dialog.grid_type, settings.grid_type)
-    comboBoxGridType->setCurrentIndex(comboBoxGridType->findText(dialog.grid_type))
+    comboBoxGridType.setCurrentIndex(comboBoxGridType.findText(dialog.grid_type))
     connect(comboBoxGridType, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(comboBoxGridTypeCurrentIndexChanged(const QString&)))
 
     QCheckBox* checkBoxGridCenterOnOrigin = new QCheckBox(tr("Center the grid on the origin"), groupBoxGridGeom)
-    checkBoxGridCenterOnOrigin->setObjectName("checkBoxGridCenterOnOrigin")
+    checkBoxGridCenterOnOrigin.setObjectName("checkBoxGridCenterOnOrigin")
     dialog.grid_center_on_origin = settings.grid_center_on_origin
-    checkBoxGridCenterOnOrigin->setChecked(dialog.grid_center_on_origin)
+    checkBoxGridCenterOnOrigin.setChecked(dialog.grid_center_on_origin)
     connect(checkBoxGridCenterOnOrigin, SIGNAL(stateChanged(int)), this, SLOT(checkBoxGridCenterOnOriginStateChanged(int)))
 
     QLabel* labelGridCenterX = new QLabel(tr("Grid Center X"), groupBoxGridGeom)
-    labelGridCenterX->setObjectName("labelGridCenterX")
+    labelGridCenterX.setObjectName("labelGridCenterX")
     QDoubleSpinBox* spinBoxGridCenterX = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridCenterX->setObjectName("spinBoxGridCenterX")
+    spinBoxGridCenterX.setObjectName("spinBoxGridCenterX")
     dialog.grid_center.x = settings.grid_center.x
-    spinBoxGridCenterX->setSingleStep(1.000)
-    spinBoxGridCenterX->setRange(-1000.000, 1000.000)
-    spinBoxGridCenterX->setValue(dialog.grid_center.x)
+    spinBoxGridCenterX.setSingleStep(1.000)
+    spinBoxGridCenterX.setRange(-1000.000, 1000.000)
+    spinBoxGridCenterX.setValue(dialog.grid_center.x)
     connect(spinBoxGridCenterX, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridCenterXValueChanged(double)))
 
     QLabel* labelGridCenterY = new QLabel(tr("Grid Center Y"), groupBoxGridGeom)
-    labelGridCenterY->setObjectName("labelGridCenterY")
+    labelGridCenterY.setObjectName("labelGridCenterY")
     QDoubleSpinBox* spinBoxGridCenterY = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridCenterY->setObjectName("spinBoxGridCenterY")
+    spinBoxGridCenterY.setObjectName("spinBoxGridCenterY")
     dialog.grid_center.y = settings.grid_center.y
-    spinBoxGridCenterY->setSingleStep(1.000)
-    spinBoxGridCenterY->setRange(-1000.000, 1000.000)
-    spinBoxGridCenterY->setValue(dialog.grid_center.y)
+    spinBoxGridCenterY.setSingleStep(1.000)
+    spinBoxGridCenterY.setRange(-1000.000, 1000.000)
+    spinBoxGridCenterY.setValue(dialog.grid_center.y)
     connect(spinBoxGridCenterY, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridCenterYValueChanged(double)))
 
     QLabel* labelGridSizeX = new QLabel(tr("Grid Size X"), groupBoxGridGeom)
-    labelGridSizeX->setObjectName("labelGridSizeX")
+    labelGridSizeX.setObjectName("labelGridSizeX")
     QDoubleSpinBox* spinBoxGridSizeX = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridSizeX->setObjectName("spinBoxGridSizeX")
+    spinBoxGridSizeX.setObjectName("spinBoxGridSizeX")
     dialog.grid_size.x = settings.grid_size.x
-    spinBoxGridSizeX->setSingleStep(1.000)
-    spinBoxGridSizeX->setRange(1.000, 1000.000)
-    spinBoxGridSizeX->setValue(dialog.grid_size.x)
+    spinBoxGridSizeX.setSingleStep(1.000)
+    spinBoxGridSizeX.setRange(1.000, 1000.000)
+    spinBoxGridSizeX.setValue(dialog.grid_size.x)
     connect(spinBoxGridSizeX, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSizeXValueChanged(double)))
 
     QLabel* labelGridSizeY = new QLabel(tr("Grid Size Y"), groupBoxGridGeom)
-    labelGridSizeY->setObjectName("labelGridSizeY")
+    labelGridSizeY.setObjectName("labelGridSizeY")
     QDoubleSpinBox* spinBoxGridSizeY = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridSizeY->setObjectName("spinBoxGridSizeY")
+    spinBoxGridSizeY.setObjectName("spinBoxGridSizeY")
     dialog.grid_size.y = settings.grid_size.y
-    spinBoxGridSizeY->setSingleStep(1.000)
-    spinBoxGridSizeY->setRange(1.000, 1000.000)
-    spinBoxGridSizeY->setValue(dialog.grid_size.y)
+    spinBoxGridSizeY.setSingleStep(1.000)
+    spinBoxGridSizeY.setRange(1.000, 1000.000)
+    spinBoxGridSizeY.setValue(dialog.grid_size.y)
     connect(spinBoxGridSizeY, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSizeYValueChanged(double)))
 
     QLabel* labelGridSpacingX = new QLabel(tr("Grid Spacing X"), groupBoxGridGeom)
-    labelGridSpacingX->setObjectName("labelGridSpacingX")
+    labelGridSpacingX.setObjectName("labelGridSpacingX")
     QDoubleSpinBox* spinBoxGridSpacingX = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridSpacingX->setObjectName("spinBoxGridSpacingX")
+    spinBoxGridSpacingX.setObjectName("spinBoxGridSpacingX")
     dialog.grid_spacing.x = settings.grid_spacing.x
-    spinBoxGridSpacingX->setSingleStep(1.000)
-    spinBoxGridSpacingX->setRange(0.001, 1000.000)
-    spinBoxGridSpacingX->setValue(dialog.grid_spacing.x)
+    spinBoxGridSpacingX.setSingleStep(1.000)
+    spinBoxGridSpacingX.setRange(0.001, 1000.000)
+    spinBoxGridSpacingX.setValue(dialog.grid_spacing.x)
     connect(spinBoxGridSpacingX, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSpacingXValueChanged(double)))
 
     QLabel* labelGridSpacingY = new QLabel(tr("Grid Spacing Y"), groupBoxGridGeom)
-    labelGridSpacingY->setObjectName("labelGridSpacingY")
+    labelGridSpacingY.setObjectName("labelGridSpacingY")
     QDoubleSpinBox* spinBoxGridSpacingY = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridSpacingY->setObjectName("spinBoxGridSpacingY")
+    spinBoxGridSpacingY.setObjectName("spinBoxGridSpacingY")
     dialog.grid_spacing.y = settings.grid_spacing.y
-    spinBoxGridSpacingY->setSingleStep(1.000)
-    spinBoxGridSpacingY->setRange(0.001, 1000.000)
-    spinBoxGridSpacingY->setValue(dialog.grid_spacing.y)
+    spinBoxGridSpacingY.setSingleStep(1.000)
+    spinBoxGridSpacingY.setRange(0.001, 1000.000)
+    spinBoxGridSpacingY.setValue(dialog.grid_spacing.y)
     connect(spinBoxGridSpacingY, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSpacingYValueChanged(double)))
 
     QLabel* labelGridSizeRadius = new QLabel(tr("Grid Size Radius"), groupBoxGridGeom)
-    labelGridSizeRadius->setObjectName("labelGridSizeRadius")
+    labelGridSizeRadius.setObjectName("labelGridSizeRadius")
     QDoubleSpinBox* spinBoxGridSizeRadius = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridSizeRadius->setObjectName("spinBoxGridSizeRadius")
+    spinBoxGridSizeRadius.setObjectName("spinBoxGridSizeRadius")
     dialog.grid_size_radius = settings.grid_size_radius
-    spinBoxGridSizeRadius->setSingleStep(1.000)
-    spinBoxGridSizeRadius->setRange(1.000, 1000.000)
-    spinBoxGridSizeRadius->setValue(dialog.grid_size_radius)
+    spinBoxGridSizeRadius.setSingleStep(1.000)
+    spinBoxGridSizeRadius.setRange(1.000, 1000.000)
+    spinBoxGridSizeRadius.setValue(dialog.grid_size_radius)
     connect(spinBoxGridSizeRadius, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSizeRadiusValueChanged(double)))
 
     QLabel* labelGridSpacingRadius = new QLabel(tr("Grid Spacing Radius"), groupBoxGridGeom)
-    labelGridSpacingRadius->setObjectName("labelGridSpacingRadius")
+    labelGridSpacingRadius.setObjectName("labelGridSpacingRadius")
     QDoubleSpinBox* spinBoxGridSpacingRadius = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridSpacingRadius->setObjectName("spinBoxGridSpacingRadius")
+    spinBoxGridSpacingRadius.setObjectName("spinBoxGridSpacingRadius")
     dialog.grid_spacing_radius = settings.grid_spacing_radius
-    spinBoxGridSpacingRadius->setSingleStep(1.000)
-    spinBoxGridSpacingRadius->setRange(0.001, 1000.000)
-    spinBoxGridSpacingRadius->setValue(dialog.grid_spacing_radius)
+    spinBoxGridSpacingRadius.setSingleStep(1.000)
+    spinBoxGridSpacingRadius.setRange(0.001, 1000.000)
+    spinBoxGridSpacingRadius.setValue(dialog.grid_spacing_radius)
     connect(spinBoxGridSpacingRadius, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSpacingRadiusValueChanged(double)))
 
     QLabel* labelGridSpacingAngle = new QLabel(tr("Grid Spacing Angle"), groupBoxGridGeom)
-    labelGridSpacingAngle->setObjectName("labelGridSpacingAngle")
+    labelGridSpacingAngle.setObjectName("labelGridSpacingAngle")
     QDoubleSpinBox* spinBoxGridSpacingAngle = new QDoubleSpinBox(groupBoxGridGeom)
-    spinBoxGridSpacingAngle->setObjectName("spinBoxGridSpacingAngle")
+    spinBoxGridSpacingAngle.setObjectName("spinBoxGridSpacingAngle")
     dialog.grid_spacing_angle = settings.grid_spacing_angle
-    spinBoxGridSpacingAngle->setSingleStep(1.000)
-    spinBoxGridSpacingAngle->setRange(0.001, 1000.000)
-    spinBoxGridSpacingAngle->setValue(dialog.grid_spacing_angle)
+    spinBoxGridSpacingAngle.setSingleStep(1.000)
+    spinBoxGridSpacingAngle.setRange(0.001, 1000.000)
+    spinBoxGridSpacingAngle.setValue(dialog.grid_spacing_angle)
     connect(spinBoxGridSpacingAngle, SIGNAL(valueChanged(double)), this, SLOT(spinBoxGridSpacingAngleValueChanged(double)))
 
-    labelGridType->setEnabled(!dialog.grid_load_from_file)
-    comboBoxGridType->setEnabled(!dialog.grid_load_from_file)
-    checkBoxGridCenterOnOrigin->setEnabled(!dialog.grid_load_from_file)
-    labelGridCenterX->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridCenterX->setEnabled(!dialog.grid_load_from_file)
-    labelGridCenterY->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridCenterY->setEnabled(!dialog.grid_load_from_file)
-    labelGridSizeX->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridSizeX->setEnabled(!dialog.grid_load_from_file)
-    labelGridSizeY->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridSizeY->setEnabled(!dialog.grid_load_from_file)
-    labelGridSpacingX->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridSpacingX->setEnabled(!dialog.grid_load_from_file)
-    labelGridSpacingY->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridSpacingY->setEnabled(!dialog.grid_load_from_file)
-    labelGridSizeRadius->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridSizeRadius->setEnabled(!dialog.grid_load_from_file)
-    labelGridSpacingRadius->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridSpacingRadius->setEnabled(!dialog.grid_load_from_file)
-    labelGridSpacingAngle->setEnabled(!dialog.grid_load_from_file)
-    spinBoxGridSpacingAngle->setEnabled(!dialog.grid_load_from_file)
+    labelGridType.setEnabled(!dialog.grid_load_from_file)
+    comboBoxGridType.setEnabled(!dialog.grid_load_from_file)
+    checkBoxGridCenterOnOrigin.setEnabled(!dialog.grid_load_from_file)
+    labelGridCenterX.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridCenterX.setEnabled(!dialog.grid_load_from_file)
+    labelGridCenterY.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridCenterY.setEnabled(!dialog.grid_load_from_file)
+    labelGridSizeX.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridSizeX.setEnabled(!dialog.grid_load_from_file)
+    labelGridSizeY.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridSizeY.setEnabled(!dialog.grid_load_from_file)
+    labelGridSpacingX.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridSpacingX.setEnabled(!dialog.grid_load_from_file)
+    labelGridSpacingY.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridSpacingY.setEnabled(!dialog.grid_load_from_file)
+    labelGridSizeRadius.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridSizeRadius.setEnabled(!dialog.grid_load_from_file)
+    labelGridSpacingRadius.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridSpacingRadius.setEnabled(!dialog.grid_load_from_file)
+    labelGridSpacingAngle.setEnabled(!dialog.grid_load_from_file)
+    spinBoxGridSpacingAngle.setEnabled(!dialog.grid_load_from_file)
 
     int visibility = 0
     if(dialog.grid_type == "Circular") visibility = 1
-    labelGridSizeX->setVisible(!visibility)
-    spinBoxGridSizeX->setVisible(!visibility)
-    labelGridSizeY->setVisible(!visibility)
-    spinBoxGridSizeY->setVisible(!visibility)
-    labelGridSpacingX->setVisible(!visibility)
-    spinBoxGridSpacingX->setVisible(!visibility)
-    labelGridSpacingY->setVisible(!visibility)
-    spinBoxGridSpacingY->setVisible(!visibility)
-    labelGridSizeRadius->setVisible(visibility)
-    spinBoxGridSizeRadius->setVisible(visibility)
-    labelGridSpacingRadius->setVisible(visibility)
-    spinBoxGridSpacingRadius->setVisible(visibility)
-    labelGridSpacingAngle->setVisible(visibility)
-    spinBoxGridSpacingAngle->setVisible(visibility)
+    labelGridSizeX.setVisible(!visibility)
+    spinBoxGridSizeX.setVisible(!visibility)
+    labelGridSizeY.setVisible(!visibility)
+    spinBoxGridSizeY.setVisible(!visibility)
+    labelGridSpacingX.setVisible(!visibility)
+    spinBoxGridSpacingX.setVisible(!visibility)
+    labelGridSpacingY.setVisible(!visibility)
+    spinBoxGridSpacingY.setVisible(!visibility)
+    labelGridSizeRadius.setVisible(visibility)
+    spinBoxGridSizeRadius.setVisible(visibility)
+    labelGridSpacingRadius.setVisible(visibility)
+    spinBoxGridSpacingRadius.setVisible(visibility)
+    labelGridSpacingAngle.setVisible(visibility)
+    spinBoxGridSpacingAngle.setVisible(visibility)
 
     QGridLayout* gridLayoutGridGeom = new QGridLayout(groupBoxGridGeom)
-    gridLayoutGridGeom->addWidget(checkBoxGridLoadFromFile, 0, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(labelGridType, 1, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(comboBoxGridType, 1, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(checkBoxGridCenterOnOrigin, 2, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(labelGridCenterX, 3, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridCenterX, 3, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridCenterY, 4, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridCenterY, 4, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridSizeX, 5, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridSizeX, 5, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridSizeY, 6, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridSizeY, 6, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridSpacingX, 7, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridSpacingX, 7, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridSpacingY, 8, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridSpacingY, 8, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridSizeRadius, 9, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridSizeRadius, 9, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridSpacingRadius, 10, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridSpacingRadius, 10, 1, Qt::AlignRight)
-    gridLayoutGridGeom->addWidget(labelGridSpacingAngle, 11, 0, Qt::AlignLeft)
-    gridLayoutGridGeom->addWidget(spinBoxGridSpacingAngle, 11, 1, Qt::AlignRight)
-    groupBoxGridGeom->setLayout(gridLayoutGridGeom)
+    gridLayoutGridGeom.addWidget(checkBoxGridLoadFromFile, 0, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(labelGridType, 1, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(comboBoxGridType, 1, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(checkBoxGridCenterOnOrigin, 2, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(labelGridCenterX, 3, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridCenterX, 3, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridCenterY, 4, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridCenterY, 4, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridSizeX, 5, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridSizeX, 5, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridSizeY, 6, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridSizeY, 6, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridSpacingX, 7, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridSpacingX, 7, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridSpacingY, 8, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridSpacingY, 8, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridSizeRadius, 9, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridSizeRadius, 9, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridSpacingRadius, 10, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridSpacingRadius, 10, 1, Qt::AlignRight)
+    gridLayoutGridGeom.addWidget(labelGridSpacingAngle, 11, 0, Qt::AlignLeft)
+    gridLayoutGridGeom.addWidget(spinBoxGridSpacingAngle, 11, 1, Qt::AlignRight)
+    groupBoxGridGeom.setLayout(gridLayoutGridGeom)
 
     #Ruler Misc
     QGroupBox* groupBoxRulerMisc = new QGroupBox(tr("Ruler Misc"), widget)
 
     QCheckBox* checkBoxRulerShowOnLoad = new QCheckBox(tr("Initially show ruler when loading a file"), groupBoxRulerMisc)
     dialog.ruler_show_on_load = settings.ruler_show_on_load
-    checkBoxRulerShowOnLoad->setChecked(dialog.ruler_show_on_load)
+    checkBoxRulerShowOnLoad.setChecked(dialog.ruler_show_on_load)
     connect(checkBoxRulerShowOnLoad, SIGNAL(stateChanged(int)), this, SLOT(checkBoxRulerShowOnLoadStateChanged(int)))
 
     QLabel* labelRulerMetric = new QLabel(tr("Ruler Units"), groupBoxRulerMisc)
     QComboBox* comboBoxRulerMetric = new QComboBox(groupBoxRulerMisc)
-    comboBoxRulerMetric->addItem("Imperial", 0)
-    comboBoxRulerMetric->addItem("Metric", 1)
+    comboBoxRulerMetric.addItem("Imperial", 0)
+    comboBoxRulerMetric.addItem("Metric", 1)
     dialog.ruler_metric = settings.ruler_metric
-    comboBoxRulerMetric->setCurrentIndex(comboBoxRulerMetric->findData(dialog.ruler_metric))
+    comboBoxRulerMetric.setCurrentIndex(comboBoxRulerMetric.findData(dialog.ruler_metric))
     connect(comboBoxRulerMetric, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxRulerMetricCurrentIndexChanged(int)))
 
     QGridLayout* gridLayoutRulerMisc = new QGridLayout(widget)
-    gridLayoutRulerMisc->addWidget(checkBoxRulerShowOnLoad, 0, 0, Qt::AlignLeft)
-    gridLayoutRulerMisc->addWidget(labelRulerMetric, 1, 0, Qt::AlignLeft)
-    gridLayoutRulerMisc->addWidget(comboBoxRulerMetric, 1, 1, Qt::AlignRight)
-    groupBoxRulerMisc->setLayout(gridLayoutRulerMisc)
+    gridLayoutRulerMisc.addWidget(checkBoxRulerShowOnLoad, 0, 0, Qt::AlignLeft)
+    gridLayoutRulerMisc.addWidget(labelRulerMetric, 1, 0, Qt::AlignLeft)
+    gridLayoutRulerMisc.addWidget(comboBoxRulerMetric, 1, 1, Qt::AlignRight)
+    groupBoxRulerMisc.setLayout(gridLayoutRulerMisc)
 
     #Ruler Color
     QGroupBox* groupBoxRulerColor = new QGroupBox(tr("Ruler Color"), widget)
 
     QLabel* labelRulerColor = new QLabel(tr("Ruler Color"), groupBoxRulerColor)
-    labelRulerColor->setObjectName("labelRulerColor")
+    labelRulerColor.setObjectName("labelRulerColor")
     QPushButton* buttonRulerColor = new QPushButton(tr("Choose"), groupBoxRulerColor)
-    buttonRulerColor->setObjectName("buttonRulerColor")
+    buttonRulerColor.setObjectName("buttonRulerColor")
     dialog.ruler_color = settings.ruler_color
     preview.ruler_color = dialog.ruler_color
     accept_.ruler_color = dialog.ruler_color
     QPixmap rulerPix(16,16)
     rulerPix.fill(QColor(preview.ruler_color))
-    buttonRulerColor->setIcon(QIcon(rulerPix))
+    buttonRulerColor.setIcon(QIcon(rulerPix))
     connect(buttonRulerColor, SIGNAL(clicked()), this, SLOT(chooseRulerColor()))
 
     QGridLayout* gridLayoutRulerColor = new QGridLayout(widget)
-    gridLayoutRulerColor->addWidget(labelRulerColor, 1, 0, Qt::AlignLeft)
-    gridLayoutRulerColor->addWidget(buttonRulerColor, 1, 1, Qt::AlignRight)
-    groupBoxRulerColor->setLayout(gridLayoutRulerColor)
+    gridLayoutRulerColor.addWidget(labelRulerColor, 1, 0, Qt::AlignLeft)
+    gridLayoutRulerColor.addWidget(buttonRulerColor, 1, 1, Qt::AlignRight)
+    groupBoxRulerColor.setLayout(gridLayoutRulerColor)
 
     #Ruler Geometry
     QGroupBox* groupBoxRulerGeom = new QGroupBox(tr("Ruler Geometry"), widget)
 
     QLabel* labelRulerPixelSize = new QLabel(tr("Ruler Pixel Size"), groupBoxRulerGeom)
-    labelRulerPixelSize->setObjectName("labelRulerPixelSize")
+    labelRulerPixelSize.setObjectName("labelRulerPixelSize")
     QDoubleSpinBox* spinBoxRulerPixelSize = new QDoubleSpinBox(groupBoxRulerGeom)
-    spinBoxRulerPixelSize->setObjectName("spinBoxRulerPixelSize")
+    spinBoxRulerPixelSize.setObjectName("spinBoxRulerPixelSize")
     dialog.ruler_pixel_size = settings.ruler_pixel_size
-    spinBoxRulerPixelSize->setSingleStep(1.000)
-    spinBoxRulerPixelSize->setRange(20.000, 100.000)
-    spinBoxRulerPixelSize->setValue(dialog.ruler_pixel_size)
+    spinBoxRulerPixelSize.setSingleStep(1.000)
+    spinBoxRulerPixelSize.setRange(20.000, 100.000)
+    spinBoxRulerPixelSize.setValue(dialog.ruler_pixel_size)
     connect(spinBoxRulerPixelSize, SIGNAL(valueChanged(double)), this, SLOT(spinBoxRulerPixelSizeValueChanged(double)))
 
     QGridLayout* gridLayoutRulerGeom = new QGridLayout(groupBoxRulerGeom)
-    gridLayoutRulerGeom->addWidget(labelRulerPixelSize, 0, 0, Qt::AlignLeft)
-    gridLayoutRulerGeom->addWidget(spinBoxRulerPixelSize, 0, 1, Qt::AlignRight)
-    groupBoxRulerGeom->setLayout(gridLayoutRulerGeom)
+    gridLayoutRulerGeom.addWidget(labelRulerPixelSize, 0, 0, Qt::AlignLeft)
+    gridLayoutRulerGeom.addWidget(spinBoxRulerPixelSize, 0, 1, Qt::AlignRight)
+    groupBoxRulerGeom.setLayout(gridLayoutRulerGeom)
 
     #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxGridMisc)
-    vboxLayoutMain->addWidget(groupBoxGridColor)
-    vboxLayoutMain->addWidget(groupBoxGridGeom)
-    vboxLayoutMain->addWidget(groupBoxRulerMisc)
-    vboxLayoutMain->addWidget(groupBoxRulerColor)
-    vboxLayoutMain->addWidget(groupBoxRulerGeom)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxGridMisc)
+    vboxLayoutMain.addWidget(groupBoxGridColor)
+    vboxLayoutMain.addWidget(groupBoxGridGeom)
+    vboxLayoutMain.addWidget(groupBoxRulerMisc)
+    vboxLayoutMain.addWidget(groupBoxRulerColor)
+    vboxLayoutMain.addWidget(groupBoxRulerGeom)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 QWidget* Settings_Dialog::createTabOrthoPolar():
@@ -2154,19 +2143,19 @@ QWidget* Settings_Dialog::createTabOrthoPolar():
     #TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 #define make_check_box(label, checked, icon, f, x, y) \
     { \
         QCheckBox* c = new QCheckBox(tr(label), groupBoxQSnapLoc); \
-        c->setChecked(settings.checked); \
-        c->setIcon(loadIcon(icon)); \
+        c.setChecked(settings.checked); \
+        c.setIcon(loadIcon(icon)); \
         connect(c, SIGNAL(stateChanged(int)), this, SLOT(f(int))); \
         connect(this, SIGNAL(buttonQSnapSelectAll(int)), c, SLOT(setChecked(int))); \
         connect(this, SIGNAL(buttonQSnapClearAll(int)), c, SLOT(setChecked(int))); \
-        gridLayoutQSnap->addWidget(c, x, y, Qt::AlignLeft); \
+        gridLayoutQSnap.addWidget(c, x, y, Qt::AlignLeft); \
         dialog.checked = settings.checked; \
     }
 
@@ -2196,10 +2185,10 @@ QWidget* Settings_Dialog::createTabQuickSnap():
     make_check_box("Apparent Intersection", qsnap_apparent, locator_snaptoapparentintersection_xpm, checkBoxQSnapApparentIntersectionStateChanged, 4, 1)
     make_check_box("Parallel", qsnap_parallel, locator_snaptoparallel_xpm, checkBoxQSnapParallelStateChanged, 5, 1)
 
-    gridLayoutQSnap->addWidget(buttonQSnapSelectAll, 0, 2, Qt::AlignLeft)
-    gridLayoutQSnap->addWidget(buttonQSnapClearAll, 1, 2, Qt::AlignLeft)
-    gridLayoutQSnap->setColumnStretch(2,1)
-    groupBoxQSnapLoc->setLayout(gridLayoutQSnap)
+    gridLayoutQSnap.addWidget(buttonQSnapSelectAll, 0, 2, Qt::AlignLeft)
+    gridLayoutQSnap.addWidget(buttonQSnapClearAll, 1, 2, Qt::AlignLeft)
+    gridLayoutQSnap.setColumnStretch(2,1)
+    groupBoxQSnapLoc.setLayout(gridLayoutQSnap)
 
     #QSnap Visual Config
     QGroupBox* groupBoxQSnapVisual = new QGroupBox(tr("Visual Configuration"), widget)
@@ -2208,49 +2197,49 @@ QWidget* Settings_Dialog::createTabQuickSnap():
     QComboBox* comboBoxQSnapLocColor = new QComboBox(groupBoxQSnapVisual)
     addColorsToComboBox(comboBoxQSnapLocColor)
     dialog.qsnap_locator_color = settings.qsnap_locator_color
-    comboBoxQSnapLocColor->setCurrentIndex(comboBoxQSnapLocColor->findData(dialog.qsnap_locator_color))
+    comboBoxQSnapLocColor.setCurrentIndex(comboBoxQSnapLocColor.findData(dialog.qsnap_locator_color))
     connect(comboBoxQSnapLocColor, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxQSnapLocatorColorCurrentIndexChanged(int)))
 
     QLabel* labelQSnapLocSize = new QLabel(tr("Locator Size"), groupBoxQSnapVisual)
     QSlider* sliderQSnapLocSize = new QSlider(Qt::Horizontal, groupBoxQSnapVisual)
-    sliderQSnapLocSize->setRange(1,20)
+    sliderQSnapLocSize.setRange(1,20)
     dialog.qsnap_locator_size = settings.qsnap_locator_size
-    sliderQSnapLocSize->setValue(dialog.qsnap_locator_size)
+    sliderQSnapLocSize.setValue(dialog.qsnap_locator_size)
     connect(sliderQSnapLocSize, SIGNAL(valueChanged(int)), this, SLOT(sliderQSnapLocatorSizeValueChanged(int)))
 
     QVBoxLayout* vboxLayoutQSnapVisual = new QVBoxLayout(groupBoxQSnapVisual)
-    vboxLayoutQSnapVisual->addWidget(labelQSnapLocColor)
-    vboxLayoutQSnapVisual->addWidget(comboBoxQSnapLocColor)
-    vboxLayoutQSnapVisual->addWidget(labelQSnapLocSize)
-    vboxLayoutQSnapVisual->addWidget(sliderQSnapLocSize)
-    groupBoxQSnapVisual->setLayout(vboxLayoutQSnapVisual)
+    vboxLayoutQSnapVisual.addWidget(labelQSnapLocColor)
+    vboxLayoutQSnapVisual.addWidget(comboBoxQSnapLocColor)
+    vboxLayoutQSnapVisual.addWidget(labelQSnapLocSize)
+    vboxLayoutQSnapVisual.addWidget(sliderQSnapLocSize)
+    groupBoxQSnapVisual.setLayout(vboxLayoutQSnapVisual)
 
     #QSnap Sensitivity Config
     QGroupBox* groupBoxQSnapSensitivity = new QGroupBox(tr("Sensitivity"), widget)
 
     QLabel* labelQSnapApertureSize = new QLabel(tr("Aperture Size"), groupBoxQSnapSensitivity)
     QSlider* sliderQSnapApertureSize = new QSlider(Qt::Horizontal, groupBoxQSnapSensitivity)
-    sliderQSnapApertureSize->setRange(1,20)
+    sliderQSnapApertureSize.setRange(1,20)
     dialog.qsnap_aperture_size = settings.qsnap_aperture_size
-    sliderQSnapApertureSize->setValue(dialog.qsnap_aperture_size)
+    sliderQSnapApertureSize.setValue(dialog.qsnap_aperture_size)
     connect(sliderQSnapApertureSize, SIGNAL(valueChanged(int)), this, SLOT(sliderQSnapApertureSizeValueChanged(int)))
 
     QVBoxLayout* vboxLayoutQSnapSensitivity = new QVBoxLayout(groupBoxQSnapSensitivity)
-    vboxLayoutQSnapSensitivity->addWidget(labelQSnapApertureSize)
-    vboxLayoutQSnapSensitivity->addWidget(sliderQSnapApertureSize)
-    groupBoxQSnapSensitivity->setLayout(vboxLayoutQSnapSensitivity)
+    vboxLayoutQSnapSensitivity.addWidget(labelQSnapApertureSize)
+    vboxLayoutQSnapSensitivity.addWidget(sliderQSnapApertureSize)
+    groupBoxQSnapSensitivity.setLayout(vboxLayoutQSnapSensitivity)
 
     #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxQSnapLoc)
-    vboxLayoutMain->addWidget(groupBoxQSnapVisual)
-    vboxLayoutMain->addWidget(groupBoxQSnapSensitivity)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxQSnapLoc)
+    vboxLayoutMain.addWidget(groupBoxQSnapVisual)
+    vboxLayoutMain.addWidget(groupBoxQSnapSensitivity)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 #undef make_check_box
@@ -2261,8 +2250,8 @@ QWidget* Settings_Dialog::createTabQuickTrack():
     # TODO: finish this
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 QWidget* Settings_Dialog::createTabLineWeight():
@@ -2273,56 +2262,56 @@ QWidget* Settings_Dialog::createTabLineWeight():
     # Misc
     QGroupBox* groupBoxLwtMisc = new QGroupBox(tr("LineWeight Misc"), widget)
 
-    QGraphicsScene* s = mainWin->activeScene()
+    QGraphicsScene* s = mainWin.activeScene()
 
     QCheckBox* checkBoxShowLwt = new QCheckBox(tr("Show LineWeight"), groupBoxLwtMisc)
     if (s) {
-        dialog.lwt_show_lwt = s->property("ENABLE_LWT").toBool()
+        dialog.lwt_show_lwt = s.property("ENABLE_LWT").toBool()
     }
     else {
         dialog.lwt_show_lwt = settings.lwt_show_lwt
     }
     preview.lwt_show_lwt = dialog.lwt_show_lwt
-    checkBoxShowLwt->setChecked(preview.lwt_show_lwt)
+    checkBoxShowLwt.setChecked(preview.lwt_show_lwt)
     connect(checkBoxShowLwt, SIGNAL(stateChanged(int)), this, SLOT(checkBoxLwtShowLwtStateChanged(int)))
 
     QCheckBox* checkBoxRealRender = new QCheckBox(tr("RealRender"), groupBoxLwtMisc)
-    checkBoxRealRender->setObjectName("checkBoxRealRender")
+    checkBoxRealRender.setObjectName("checkBoxRealRender")
     if (s) {
-        dialog.lwt_real_render = s->property("ENABLE_REAL").toBool()
+        dialog.lwt_real_render = s.property("ENABLE_REAL").toBool()
     }
     else {
         dialog.lwt_real_render = settings.lwt_real_render
     }
     preview.lwt_real_render = dialog.lwt_real_render
-    checkBoxRealRender->setChecked(preview.lwt_real_render)
+    checkBoxRealRender.setChecked(preview.lwt_real_render)
     connect(checkBoxRealRender, SIGNAL(stateChanged(int)), this, SLOT(checkBoxLwtRealRenderStateChanged(int)))
-    checkBoxRealRender->setEnabled(dialog.lwt_show_lwt)
+    checkBoxRealRender.setEnabled(dialog.lwt_show_lwt)
 
     QLabel* labelDefaultLwt = new QLabel(tr("Default weight"), groupBoxLwtMisc)
-    labelDefaultLwt->setEnabled(0); # TODO: remove later
+    labelDefaultLwt.setEnabled(0); # TODO: remove later
     QComboBox* comboBoxDefaultLwt = new QComboBox(groupBoxLwtMisc)
     dialog.lwt_default_lwt = settings.lwt_default_lwt
     # TODO: populate the comboBox and set the initial value
-    comboBoxDefaultLwt->addItem(QString().setNum(dialog.lwt_default_lwt, 'F', 2).append(" mm"), dialog.lwt_default_lwt)
-    comboBoxDefaultLwt->setEnabled(0); # TODO: remove later
+    comboBoxDefaultLwt.addItem(QString().setNum(dialog.lwt_default_lwt, 'F', 2).append(" mm"), dialog.lwt_default_lwt)
+    comboBoxDefaultLwt.setEnabled(0); # TODO: remove later
 
     QVBoxLayout* vboxLayoutLwtMisc = new QVBoxLayout(groupBoxLwtMisc)
-    vboxLayoutLwtMisc->addWidget(checkBoxShowLwt)
-    vboxLayoutLwtMisc->addWidget(checkBoxRealRender)
-    vboxLayoutLwtMisc->addWidget(labelDefaultLwt)
-    vboxLayoutLwtMisc->addWidget(comboBoxDefaultLwt)
-    groupBoxLwtMisc->setLayout(vboxLayoutLwtMisc)
+    vboxLayoutLwtMisc.addWidget(checkBoxShowLwt)
+    vboxLayoutLwtMisc.addWidget(checkBoxRealRender)
+    vboxLayoutLwtMisc.addWidget(labelDefaultLwt)
+    vboxLayoutLwtMisc.addWidget(comboBoxDefaultLwt)
+    groupBoxLwtMisc.setLayout(vboxLayoutLwtMisc)
 
     #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxLwtMisc)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxLwtMisc)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 QWidget* Settings_Dialog::createTabSelection():
@@ -2333,26 +2322,26 @@ QWidget* Settings_Dialog::createTabSelection():
 
     QCheckBox* checkBoxSelectionModePickFirst = new QCheckBox(tr("Allow Preselection (PickFirst)"), groupBoxSelectionModes)
     dialog.selection_mode_pickfirst = settings.selection_mode_pickfirst
-    checkBoxSelectionModePickFirst->setChecked(dialog.selection_mode_pickfirst)
-    checkBoxSelectionModePickFirst->setChecked(1); checkBoxSelectionModePickFirst->setEnabled(0); # TODO: Remove this line when Post-selection is available
+    checkBoxSelectionModePickFirst.setChecked(dialog.selection_mode_pickfirst)
+    checkBoxSelectionModePickFirst.setChecked(1); checkBoxSelectionModePickFirst.setEnabled(0); # TODO: Remove this line when Post-selection is available
     connect(checkBoxSelectionModePickFirst, SIGNAL(stateChanged(int)), this, SLOT(checkBoxSelectionModePickFirstStateChanged(int)))
 
     QCheckBox* checkBoxSelectionModePickAdd = new QCheckBox(tr("Add to Selection (PickAdd)"), groupBoxSelectionModes)
     dialog.selection_mode_pickadd = settings.selection_mode_pickadd
-    checkBoxSelectionModePickAdd->setChecked(dialog.selection_mode_pickadd)
+    checkBoxSelectionModePickAdd.setChecked(dialog.selection_mode_pickadd)
     connect(checkBoxSelectionModePickAdd, SIGNAL(stateChanged(int)), this, SLOT(checkBoxSelectionModePickAddStateChanged(int)))
 
     QCheckBox* checkBoxSelectionModePickDrag = new QCheckBox(tr("Drag to Select (PickDrag)"), groupBoxSelectionModes)
     dialog.selection_mode_pickdrag = settings.selection_mode_pickdrag
-    checkBoxSelectionModePickDrag->setChecked(dialog.selection_mode_pickdrag)
-    checkBoxSelectionModePickDrag->setChecked(0); checkBoxSelectionModePickDrag->setEnabled(0); #TODO: Remove this line when this functionality is available
+    checkBoxSelectionModePickDrag.setChecked(dialog.selection_mode_pickdrag)
+    checkBoxSelectionModePickDrag.setChecked(0); checkBoxSelectionModePickDrag.setEnabled(0); #TODO: Remove this line when this functionality is available
     connect(checkBoxSelectionModePickDrag, SIGNAL(stateChanged(int)), this, SLOT(checkBoxSelectionModePickDragStateChanged(int)))
 
     QVBoxLayout* vboxLayoutSelectionModes = new QVBoxLayout(groupBoxSelectionModes)
-    vboxLayoutSelectionModes->addWidget(checkBoxSelectionModePickFirst)
-    vboxLayoutSelectionModes->addWidget(checkBoxSelectionModePickAdd)
-    vboxLayoutSelectionModes->addWidget(checkBoxSelectionModePickDrag)
-    groupBoxSelectionModes->setLayout(vboxLayoutSelectionModes)
+    vboxLayoutSelectionModes.addWidget(checkBoxSelectionModePickFirst)
+    vboxLayoutSelectionModes.addWidget(checkBoxSelectionModePickAdd)
+    vboxLayoutSelectionModes.addWidget(checkBoxSelectionModePickDrag)
+    groupBoxSelectionModes.setLayout(vboxLayoutSelectionModes)
 
     #Selection Colors
     QGroupBox* groupBoxSelectionColors = new QGroupBox(tr("Colors"), widget)
@@ -2361,68 +2350,68 @@ QWidget* Settings_Dialog::createTabSelection():
     QComboBox* comboBoxCoolGripColor = new QComboBox(groupBoxSelectionColors)
     addColorsToComboBox(comboBoxCoolGripColor)
     dialog.selection_coolgrip_color = settings.selection_coolgrip_color
-    comboBoxCoolGripColor->setCurrentIndex(comboBoxCoolGripColor->findData(dialog.selection_coolgrip_color))
+    comboBoxCoolGripColor.setCurrentIndex(comboBoxCoolGripColor.findData(dialog.selection_coolgrip_color))
     connect(comboBoxCoolGripColor, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxSelectionCoolGripColorCurrentIndexChanged(int)))
 
     QLabel* labelHotGripColor = new QLabel(tr("Hot Grip (Selected)"), groupBoxSelectionColors)
     QComboBox* comboBoxHotGripColor = new QComboBox(groupBoxSelectionColors)
     addColorsToComboBox(comboBoxHotGripColor)
     dialog.selection_hotgrip_color = settings.selection_hotgrip_color
-    comboBoxHotGripColor->setCurrentIndex(comboBoxHotGripColor->findData(dialog.selection_hotgrip_color))
+    comboBoxHotGripColor.setCurrentIndex(comboBoxHotGripColor.findData(dialog.selection_hotgrip_color))
     connect(comboBoxHotGripColor, SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxSelectionHotGripColorCurrentIndexChanged(int)))
 
     QVBoxLayout* vboxLayoutSelectionColors = new QVBoxLayout(groupBoxSelectionColors)
-    vboxLayoutSelectionColors->addWidget(labelCoolGripColor)
-    vboxLayoutSelectionColors->addWidget(comboBoxCoolGripColor)
-    vboxLayoutSelectionColors->addWidget(labelHotGripColor)
-    vboxLayoutSelectionColors->addWidget(comboBoxHotGripColor)
-    groupBoxSelectionColors->setLayout(vboxLayoutSelectionColors)
+    vboxLayoutSelectionColors.addWidget(labelCoolGripColor)
+    vboxLayoutSelectionColors.addWidget(comboBoxCoolGripColor)
+    vboxLayoutSelectionColors.addWidget(labelHotGripColor)
+    vboxLayoutSelectionColors.addWidget(comboBoxHotGripColor)
+    groupBoxSelectionColors.setLayout(vboxLayoutSelectionColors)
 
     #Selection Sizes
     QGroupBox* groupBoxSelectionSizes = new QGroupBox(tr("Sizes"), widget)
 
     QLabel* labelSelectionGripSize = new QLabel(tr("Grip Size"), groupBoxSelectionSizes)
     QSlider* sliderSelectionGripSize = new QSlider(Qt::Horizontal, groupBoxSelectionSizes)
-    sliderSelectionGripSize->setRange(1,20)
+    sliderSelectionGripSize.setRange(1,20)
     dialog.selection_grip_size = settings.selection_grip_size
-    sliderSelectionGripSize->setValue(dialog.selection_grip_size)
+    sliderSelectionGripSize.setValue(dialog.selection_grip_size)
     connect(sliderSelectionGripSize, SIGNAL(valueChanged(int)), this, SLOT(sliderSelectionGripSizeValueChanged(int)))
 
     QLabel* labelSelectionPickBoxSize = new QLabel(tr("Pickbox Size"), groupBoxSelectionSizes)
     QSlider* sliderSelectionPickBoxSize = new QSlider(Qt::Horizontal, groupBoxSelectionSizes)
-    sliderSelectionPickBoxSize->setRange(1,20)
+    sliderSelectionPickBoxSize.setRange(1,20)
     dialog.selection_pickbox_size = settings.selection_pickbox_size
-    sliderSelectionPickBoxSize->setValue(dialog.selection_pickbox_size)
+    sliderSelectionPickBoxSize.setValue(dialog.selection_pickbox_size)
     connect(sliderSelectionPickBoxSize, SIGNAL(valueChanged(int)), this, SLOT(sliderSelectionPickBoxSizeValueChanged(int)))
 
     QVBoxLayout* vboxLayoutSelectionSizes = new QVBoxLayout(groupBoxSelectionSizes)
-    vboxLayoutSelectionSizes->addWidget(labelSelectionGripSize)
-    vboxLayoutSelectionSizes->addWidget(sliderSelectionGripSize)
-    vboxLayoutSelectionSizes->addWidget(labelSelectionPickBoxSize)
-    vboxLayoutSelectionSizes->addWidget(sliderSelectionPickBoxSize)
-    groupBoxSelectionSizes->setLayout(vboxLayoutSelectionSizes)
+    vboxLayoutSelectionSizes.addWidget(labelSelectionGripSize)
+    vboxLayoutSelectionSizes.addWidget(sliderSelectionGripSize)
+    vboxLayoutSelectionSizes.addWidget(labelSelectionPickBoxSize)
+    vboxLayoutSelectionSizes.addWidget(sliderSelectionPickBoxSize)
+    groupBoxSelectionSizes.setLayout(vboxLayoutSelectionSizes)
 
     #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxSelectionModes)
-    vboxLayoutMain->addWidget(groupBoxSelectionColors)
-    vboxLayoutMain->addWidget(groupBoxSelectionSizes)
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxSelectionModes)
+    vboxLayoutMain.addWidget(groupBoxSelectionColors)
+    vboxLayoutMain.addWidget(groupBoxSelectionSizes)
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 def Settings_Dialog::addColorsToComboBox(QComboBox* comboBox):
-    comboBox->addItem(loadIcon(colorred_xpm), tr("Red"), qRgb(255, 0, 0))
-    comboBox->addItem(loadIcon(coloryellow_xpm), tr("Yellow"), qRgb(255,255, 0))
-    comboBox->addItem(loadIcon(colorgreen_xpm), tr("Green"), qRgb(  0,255, 0))
-    comboBox->addItem(loadIcon(colorcyan_xpm), tr("Cyan"), qRgb(  0,255,255))
-    comboBox->addItem(loadIcon(colorblue_xpm), tr("Blue"), qRgb(  0, 0,255))
-    comboBox->addItem(loadIcon(colormagenta_xpm), tr("Magenta"), qRgb(255, 0,255))
-    comboBox->addItem(loadIcon(colorwhite_xpm), tr("White"), qRgb(255,255,255))
+    comboBox.addItem(loadIcon(colorred_xpm), tr("Red"), qRgb(255, 0, 0))
+    comboBox.addItem(loadIcon(coloryellow_xpm), tr("Yellow"), qRgb(255,255, 0))
+    comboBox.addItem(loadIcon(colorgreen_xpm), tr("Green"), qRgb(  0,255, 0))
+    comboBox.addItem(loadIcon(colorcyan_xpm), tr("Cyan"), qRgb(  0,255,255))
+    comboBox.addItem(loadIcon(colorblue_xpm), tr("Blue"), qRgb(  0, 0,255))
+    comboBox.addItem(loadIcon(colormagenta_xpm), tr("Magenta"), qRgb(255, 0,255))
+    comboBox.addItem(loadIcon(colorwhite_xpm), tr("White"), qRgb(255,255,255))
     # TODO: Add Other... so the user can select custom colors
 }
 
@@ -2437,7 +2426,7 @@ def Settings_Dialog::comboBoxIconSizeCurrentIndexChanged(int index):
     if(comboBox)
     {
         bool ok = 0
-        dialog.general_icon_size = comboBox->itemData(index).toUInt(&ok)
+        dialog.general_icon_size = comboBox.itemData(index).toUInt(&ok)
         if(!ok)
             dialog.general_icon_size = 16
     }
@@ -2446,7 +2435,7 @@ def Settings_Dialog::comboBoxIconSizeCurrentIndexChanged(int index):
 
 def Settings_Dialog::checkBoxGeneralMdiBGUseLogoStateChanged(checked):
     preview.general_mdi_bg_use_logo = checked
-    mainWin->mdiArea->useBackgroundLogo(checked)
+    mainWin.mdiArea.useBackgroundLogo(checked)
 
 def Settings_Dialog::chooseGeneralMdiBackgroundLogo():
     QPushButton* button = qobject_cast<QPushButton*>(sender())
@@ -2461,13 +2450,13 @@ def Settings_Dialog::chooseGeneralMdiBackgroundLogo():
             strcpy(accept_.general_mdi_bg_logo, selectedImage.toLocal8Bit().constData())
 
         #Update immediately so it can be previewed
-        mainWin->mdiArea->setBackgroundLogo(accept_.general_mdi_bg_logo)
+        mainWin.mdiArea.setBackgroundLogo(accept_.general_mdi_bg_logo)
     }
 }
 
 def Settings_Dialog::checkBoxGeneralMdiBGUseTextureStateChanged(checked):
     preview.general_mdi_bg_use_texture = checked
-    mainWin->mdiArea->useBackgroundTexture(checked)
+    mainWin.mdiArea.useBackgroundTexture(checked)
 
 def Settings_Dialog::chooseGeneralMdiBackgroundTexture():
     QPushButton* button = qobject_cast<QPushButton*>(sender())
@@ -2482,35 +2471,35 @@ def Settings_Dialog::chooseGeneralMdiBackgroundTexture():
         }
 
         #Update immediately so it can be previewed
-        mainWin->mdiArea->setBackgroundTexture(accept_.general_mdi_bg_texture)
+        mainWin.mdiArea.setBackgroundTexture(accept_.general_mdi_bg_texture)
     }
 }
 
 def Settings_Dialog::checkBoxGeneralMdiBGUseColorStateChanged(checked):
     preview.general_mdi_bg_use_color = checked
-    mainWin->mdiArea->useBackgroundColor(checked)
+    mainWin.mdiArea.useBackgroundColor(checked)
 
 def Settings_Dialog::chooseGeneralMdiBackgroundColor():
     QPushButton* button = qobject_cast<QPushButton*>(sender())
     if (button) {
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.general_mdi_bg_color), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentGeneralMdiBackgroundColorChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.general_mdi_bg_color = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.general_mdi_bg_color = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.general_mdi_bg_color))
-            button->setIcon(QIcon(pix))
-            mainWin->mdiArea->setBackgroundColor(QColor(accept_.general_mdi_bg_color))
+            button.setIcon(QIcon(pix))
+            mainWin.mdiArea.setBackgroundColor(QColor(accept_.general_mdi_bg_color))
         }
         else:
-            mainWin->mdiArea->setBackgroundColor(QColor(dialog.general_mdi_bg_color))
+            mainWin.mdiArea.setBackgroundColor(QColor(dialog.general_mdi_bg_color))
 
 
 def Settings_Dialog::currentGeneralMdiBackgroundColorChanged(const QColor& color):
     preview.general_mdi_bg_color = color.rgb()
-    mainWin->mdiArea->setBackgroundColor(QColor(preview.general_mdi_bg_color))
+    mainWin.mdiArea.setBackgroundColor(QColor(preview.general_mdi_bg_color))
 
 
 #
@@ -2525,7 +2514,7 @@ check_func(checkBoxRenderHintNonCosmeticStateChanged, display_renderhint_noncosm
 
 def Settings_Dialog::checkBoxShowScrollBarsStateChanged(checked):
     preview.display_show_scrollbars = checked
-    mainWin->updateAllViewScrollBars(preview.display_show_scrollbars)
+    mainWin.updateAllViewScrollBars(preview.display_show_scrollbars)
 
 def Settings_Dialog::spinBoxZoomScaleInValueChanged(value):
     dialog.display_zoomscale_in = value
@@ -2541,67 +2530,64 @@ def Settings_Dialog::chooseDisplayCrossHairColor():
     if (button) {
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_crosshair_color), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplayCrossHairColorChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.display_crosshair_color = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.display_crosshair_color = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.display_crosshair_color))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewCrossHairColors(accept_.display_crosshair_color)
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewCrossHairColors(accept_.display_crosshair_color)
         }
         else {
-            mainWin->updateAllViewCrossHairColors(dialog.display_crosshair_color)
+            mainWin.updateAllViewCrossHairColors(dialog.display_crosshair_color)
 
 
 def Settings_Dialog::currentDisplayCrossHairColorChanged(const QColor& color):
     preview.display_crosshair_color = color.rgb()
-    mainWin->updateAllViewCrossHairColors(preview.display_crosshair_color)
+    mainWin.updateAllViewCrossHairColors(preview.display_crosshair_color)
 
 def Settings_Dialog::chooseDisplayBackgroundColor():
     QPushButton* button = qobject_cast<QPushButton*>(sender())
     if (button) {
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_bg_color), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplayBackgroundColorChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.display_bg_color = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.display_bg_color = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.display_bg_color))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewBackgroundColors(accept_.display_bg_color)
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewBackgroundColors(accept_.display_bg_color)
         }
         else:
-            mainWin->updateAllViewBackgroundColors(dialog.display_bg_color)
+            mainWin.updateAllViewBackgroundColors(dialog.display_bg_color)
 
 
 def Settings_Dialog::currentDisplayBackgroundColorChanged(const QColor& color):
     preview.display_bg_color = color.rgb()
-    mainWin->updateAllViewBackgroundColors(preview.display_bg_color)
+    mainWin.updateAllViewBackgroundColors(preview.display_bg_color)
 
 def Settings_Dialog::chooseDisplaySelectBoxLeftColor():
     QPushButton* button = qobject_cast<QPushButton*>(sender())
-    if(button)
-    {
+    if button:
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_left_color), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxLeftColorChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.display_selectbox_left_color = colorDialog->selectedColor().rgb()
+        if colorDialog.result() == QDialog::Accepted:
+            accept_.display_selectbox_left_color = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.display_selectbox_left_color))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
                 accept_.display_selectbox_left_fill,
                 accept_.display_selectbox_right_color,
                 accept_.display_selectbox_right_fill,
                 preview.display_selectbox_alpha)
-        }
-        else
-        {
-            mainWin->updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
+        else:
+            mainWin.updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
                 dialog.display_selectbox_left_fill,
                 dialog.display_selectbox_right_color,
                 dialog.display_selectbox_right_fill,
@@ -2610,7 +2596,7 @@ def Settings_Dialog::chooseDisplaySelectBoxLeftColor():
 
 def Settings_Dialog::currentDisplaySelectBoxLeftColorChanged(const QColor& color):
     preview.display_selectbox_left_color = color.rgb()
-    mainWin->updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
+    mainWin.updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
                                           preview.display_selectbox_left_fill,
                                           preview.display_selectbox_right_color,
                                           preview.display_selectbox_right_fill,
@@ -2621,14 +2607,14 @@ def Settings_Dialog::chooseDisplaySelectBoxLeftFill():
     if (button) {
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_left_fill), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxLeftFillChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.display_selectbox_left_fill = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.display_selectbox_left_fill = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.display_selectbox_left_fill))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewSelectBoxColors(
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewSelectBoxColors(
                 accept_.display_selectbox_left_color,
                 accept_.display_selectbox_left_fill,
                 accept_.display_selectbox_right_color,
@@ -2636,7 +2622,7 @@ def Settings_Dialog::chooseDisplaySelectBoxLeftFill():
                 preview.display_selectbox_alpha)
         }
         else {
-            mainWin->updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
+            mainWin.updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
                                                   dialog.display_selectbox_left_fill,
                                                   dialog.display_selectbox_right_color,
                                                   dialog.display_selectbox_right_fill,
@@ -2645,7 +2631,7 @@ def Settings_Dialog::chooseDisplaySelectBoxLeftFill():
 
 def Settings_Dialog::currentDisplaySelectBoxLeftFillChanged(const QColor& color):
     preview.display_selectbox_left_fill = color.rgb()
-    mainWin->updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
+    mainWin.updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
         preview.display_selectbox_left_fill,
         preview.display_selectbox_right_color,
         preview.display_selectbox_right_fill,
@@ -2656,21 +2642,21 @@ def Settings_Dialog::chooseDisplaySelectBoxRightColor():
     if (button) {
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_right_color), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxRightColorChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.display_selectbox_right_color = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.display_selectbox_right_color = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.display_selectbox_right_color))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
                                                   accept_.display_selectbox_left_fill,
                                                   accept_.display_selectbox_right_color,
                                                   accept_.display_selectbox_right_fill,
                                                   preview.display_selectbox_alpha)
         }
         else {
-            mainWin->updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
+            mainWin.updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
                                                   dialog.display_selectbox_left_fill,
                                                   dialog.display_selectbox_right_color,
                                                   dialog.display_selectbox_right_fill,
@@ -2679,7 +2665,7 @@ def Settings_Dialog::chooseDisplaySelectBoxRightColor():
 
 def Settings_Dialog::currentDisplaySelectBoxRightColorChanged(const QColor& color):
     preview.display_selectbox_right_color = color.rgb()
-    mainWin->updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
+    mainWin.updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
         preview.display_selectbox_left_fill,
         preview.display_selectbox_right_color,
         preview.display_selectbox_right_fill,
@@ -2690,21 +2676,21 @@ def Settings_Dialog::chooseDisplaySelectBoxRightFill():
     if (button) {
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.display_selectbox_right_fill), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentDisplaySelectBoxRightFillChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.display_selectbox_right_fill = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.display_selectbox_right_fill = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.display_selectbox_right_fill))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
                  accept_.display_selectbox_left_fill,
                  accept_.display_selectbox_right_color,
                  accept_.display_selectbox_right_fill,
                  preview.display_selectbox_alpha)
         }
         else {
-            mainWin->updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
+            mainWin.updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
                                                   dialog.display_selectbox_left_fill,
                                                   dialog.display_selectbox_right_color,
                                                   dialog.display_selectbox_right_fill,
@@ -2712,7 +2698,7 @@ def Settings_Dialog::chooseDisplaySelectBoxRightFill():
 
 def Settings_Dialog::currentDisplaySelectBoxRightFillChanged(const QColor& color):
     preview.display_selectbox_right_fill = color.rgb()
-    mainWin->updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
+    mainWin.updateAllViewSelectBoxColors(preview.display_selectbox_left_color,
         preview.display_selectbox_left_fill,
         preview.display_selectbox_right_color,
         preview.display_selectbox_right_fill,
@@ -2720,7 +2706,7 @@ def Settings_Dialog::currentDisplaySelectBoxRightFillChanged(const QColor& color
 
 def Settings_Dialog::spinBoxDisplaySelectBoxAlphaValueChanged(value):
     preview.display_selectbox_alpha = value
-    mainWin->updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
+    mainWin.updateAllViewSelectBoxColors(accept_.display_selectbox_left_color,
         accept_.display_selectbox_left_fill,
         accept_.display_selectbox_right_color,
         accept_.display_selectbox_right_fill,
@@ -2730,7 +2716,7 @@ def Settings_Dialog::checkBoxCustomFilterStateChanged(checked):
     QCheckBox* checkBox = qobject_cast<QCheckBox*>(sender())
     if(checkBox)
     {
-        QString format = checkBox->text()
+        QString format = checkBox.text()
         debug_message("CustomFilter: %s %d", qPrintable(format), checked)
         if(checked)
             opensave_custom_filter.append(" *." + format.toLower())
@@ -2750,22 +2736,22 @@ def Settings_Dialog::buttonCustomFilterClearAllClicked():
 def Settings_Dialog::checkBoxGridColorMatchCrossHairStateChanged(checked):
     dialog.grid_color_match_crosshair = checked
     if (dialog.grid_color_match_crosshair) {
-        mainWin->updateAllViewGridColors(accept_.display_crosshair_color)
+        mainWin.updateAllViewGridColors(accept_.display_crosshair_color)
     }
     else {
-        mainWin->updateAllViewGridColors(accept_.grid_color)
+        mainWin.updateAllViewGridColors(accept_.grid_color)
     }
 
     QObject* senderObj = sender()
     if (senderObj) {
-        QObject* parent = senderObj->parent()
+        QObject* parent = senderObj.parent()
         if (parent) {
-            QLabel* labelGridColor = parent->findChild<QLabel*>("labelGridColor")
+            QLabel* labelGridColor = parent.findChild<QLabel*>("labelGridColor")
             if (labelGridColor)
-                labelGridColor->setEnabled(!dialog.grid_color_match_crosshair)
-            QPushButton* buttonGridColor = parent->findChild<QPushButton*>("buttonGridColor")
+                labelGridColor.setEnabled(!dialog.grid_color_match_crosshair)
+            QPushButton* buttonGridColor = parent.findChild<QPushButton*>("buttonGridColor")
             if (buttonGridColor)
-                buttonGridColor->setEnabled(!dialog.grid_color_match_crosshair)
+                buttonGridColor.setEnabled(!dialog.grid_color_match_crosshair)
 
 
 def Settings_Dialog::chooseGridColor():
@@ -2773,126 +2759,129 @@ def Settings_Dialog::chooseGridColor():
     if (button) {
         QColorDialog* colorDialog = new QColorDialog(QColor(accept_.grid_color), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(currentGridColorChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.grid_color = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.grid_color = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.grid_color))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewGridColors(accept_.grid_color)
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewGridColors(accept_.grid_color)
         }
         else {
-            mainWin->updateAllViewGridColors(dialog.grid_color)
+            mainWin.updateAllViewGridColors(dialog.grid_color)
 
 
 def Settings_Dialog::currentGridColorChanged(const QColor& color):
     preview.grid_color = color.rgb()
-    mainWin->updateAllViewGridColors(preview.grid_color)
+    mainWin.updateAllViewGridColors(preview.grid_color)
 
 def Settings_Dialog::checkBoxGridLoadFromFileStateChanged(checked):
     dialog.grid_load_from_file = checked
 
     QObject* senderObj = sender()
     if (senderObj) {
-        QObject* parent = senderObj->parent()
+        QObject* parent = senderObj.parent()
         if (parent) {
-            QLabel* labelGridType = parent->findChild<QLabel*>("labelGridType")
-            if(labelGridType) labelGridType->setEnabled(!dialog.grid_load_from_file)
-            QComboBox* comboBoxGridType = parent->findChild<QComboBox*>("comboBoxGridType")
-            if(comboBoxGridType) comboBoxGridType->setEnabled(!dialog.grid_load_from_file)
-            QCheckBox* checkBoxGridCenterOnOrigin = parent->findChild<QCheckBox*>("checkBoxGridCenterOnOrigin")
-            if(checkBoxGridCenterOnOrigin) checkBoxGridCenterOnOrigin->setEnabled(!dialog.grid_load_from_file)
-            QLabel* labelGridCenterX = parent->findChild<QLabel*>("labelGridCenterX")
-            if(labelGridCenterX) labelGridCenterX->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
-            QDoubleSpinBox* spinBoxGridCenterX = parent->findChild<QDoubleSpinBox*>("spinBoxGridCenterX")
-            if(spinBoxGridCenterX) spinBoxGridCenterX->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
-            QLabel* labelGridCenterY = parent->findChild<QLabel*>("labelGridCenterY")
-            if(labelGridCenterY) labelGridCenterY->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
-            QDoubleSpinBox* spinBoxGridCenterY = parent->findChild<QDoubleSpinBox*>("spinBoxGridCenterY")
-            if(spinBoxGridCenterY) spinBoxGridCenterY->setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
-            QLabel* labelGridSizeX = parent->findChild<QLabel*>("labelGridSizeX")
-            if(labelGridSizeX) labelGridSizeX->setEnabled(!dialog.grid_load_from_file)
-            QDoubleSpinBox* spinBoxGridSizeX = parent->findChild<QDoubleSpinBox*>("spinBoxGridSizeX")
-            if(spinBoxGridSizeX) spinBoxGridSizeX->setEnabled(!dialog.grid_load_from_file)
-            QLabel* labelGridSizeY = parent->findChild<QLabel*>("labelGridSizeY")
-            if(labelGridSizeY) labelGridSizeY->setEnabled(!dialog.grid_load_from_file)
-            QDoubleSpinBox* spinBoxGridSizeY = parent->findChild<QDoubleSpinBox*>("spinBoxGridSizeY")
-            if(spinBoxGridSizeY) spinBoxGridSizeY->setEnabled(!dialog.grid_load_from_file)
-            QLabel* labelGridSpacingX = parent->findChild<QLabel*>("labelGridSpacingX")
-            if(labelGridSpacingX) labelGridSpacingX->setEnabled(!dialog.grid_load_from_file)
-            QDoubleSpinBox* spinBoxGridSpacingX = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingX")
-            if(spinBoxGridSpacingX) spinBoxGridSpacingX->setEnabled(!dialog.grid_load_from_file)
-            QLabel* labelGridSpacingY = parent->findChild<QLabel*>("labelGridSpacingY")
-            if(labelGridSpacingY) labelGridSpacingY->setEnabled(!dialog.grid_load_from_file)
-            QDoubleSpinBox* spinBoxGridSpacingY = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingY")
-            if(spinBoxGridSpacingY) spinBoxGridSpacingY->setEnabled(!dialog.grid_load_from_file)
-            QLabel* labelGridSizeRadius = parent->findChild<QLabel*>("labelGridSizeRadius")
-            if(labelGridSizeRadius) labelGridSizeRadius->setEnabled(!dialog.grid_load_from_file)
-            QDoubleSpinBox* spinBoxGridSizeRadius = parent->findChild<QDoubleSpinBox*>("spinBoxGridSizeRadius")
-            if(spinBoxGridSizeRadius) spinBoxGridSizeRadius->setEnabled(!dialog.grid_load_from_file)
-            QLabel* labelGridSpacingRadius = parent->findChild<QLabel*>("labelGridSpacingRadius")
+            QLabel* labelGridType = parent.findChild<QLabel*>("labelGridType")
+            if(labelGridType) labelGridType.setEnabled(!dialog.grid_load_from_file)
+            QComboBox* comboBoxGridType = parent.findChild<QComboBox*>("comboBoxGridType")
+            if(comboBoxGridType) comboBoxGridType.setEnabled(!dialog.grid_load_from_file)
+            QCheckBox* checkBoxGridCenterOnOrigin = parent.findChild<QCheckBox*>("checkBoxGridCenterOnOrigin")
+            if(checkBoxGridCenterOnOrigin) checkBoxGridCenterOnOrigin.setEnabled(!dialog.grid_load_from_file)
+            QLabel* labelGridCenterX = parent.findChild<QLabel*>("labelGridCenterX")
+            if(labelGridCenterX) labelGridCenterX.setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
+            QDoubleSpinBox* spinBoxGridCenterX = parent.findChild<QDoubleSpinBox*>("spinBoxGridCenterX")
+            if(spinBoxGridCenterX) spinBoxGridCenterX.setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
+            QLabel* labelGridCenterY = parent.findChild<QLabel*>("labelGridCenterY")
+            if(labelGridCenterY) labelGridCenterY.setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
+            QDoubleSpinBox* spinBoxGridCenterY = parent.findChild<QDoubleSpinBox*>("spinBoxGridCenterY")
+            if(spinBoxGridCenterY) spinBoxGridCenterY.setEnabled(!dialog.grid_load_from_file and !dialog.grid_center_on_origin)
+            QLabel* labelGridSizeX = parent.findChild<QLabel*>("labelGridSizeX")
+            if(labelGridSizeX) labelGridSizeX.setEnabled(!dialog.grid_load_from_file)
+            QDoubleSpinBox* spinBoxGridSizeX = parent.findChild<QDoubleSpinBox*>("spinBoxGridSizeX")
+            if(spinBoxGridSizeX) spinBoxGridSizeX.setEnabled(!dialog.grid_load_from_file)
+            QLabel* labelGridSizeY = parent.findChild<QLabel*>("labelGridSizeY")
+            if(labelGridSizeY) labelGridSizeY.setEnabled(!dialog.grid_load_from_file)
+            QDoubleSpinBox* spinBoxGridSizeY = parent.findChild<QDoubleSpinBox*>("spinBoxGridSizeY")
+            if(spinBoxGridSizeY) spinBoxGridSizeY.setEnabled(!dialog.grid_load_from_file)
+            QLabel* labelGridSpacingX = parent.findChild<QLabel*>("labelGridSpacingX")
+            if(labelGridSpacingX) labelGridSpacingX.setEnabled(!dialog.grid_load_from_file)
+            QDoubleSpinBox* spinBoxGridSpacingX = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingX")
+            if(spinBoxGridSpacingX) spinBoxGridSpacingX.setEnabled(!dialog.grid_load_from_file)
+            QLabel* labelGridSpacingY = parent.findChild<QLabel*>("labelGridSpacingY")
+            if(labelGridSpacingY) labelGridSpacingY.setEnabled(!dialog.grid_load_from_file)
+            QDoubleSpinBox* spinBoxGridSpacingY = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingY")
+            if(spinBoxGridSpacingY) spinBoxGridSpacingY.setEnabled(!dialog.grid_load_from_file)
+            QLabel* labelGridSizeRadius = parent.findChild<QLabel*>("labelGridSizeRadius")
+            if(labelGridSizeRadius) labelGridSizeRadius.setEnabled(!dialog.grid_load_from_file)
+            QDoubleSpinBox* spinBoxGridSizeRadius = parent.findChild<QDoubleSpinBox*>("spinBoxGridSizeRadius")
+            if(spinBoxGridSizeRadius) spinBoxGridSizeRadius.setEnabled(!dialog.grid_load_from_file)
+            QLabel* labelGridSpacingRadius = parent.findChild<QLabel*>("labelGridSpacingRadius")
             if (labelGridSpacingRadius) {
-                labelGridSpacingRadius->setEnabled(!dialog.grid_load_from_file)
+                labelGridSpacingRadius.setEnabled(!dialog.grid_load_from_file)
             }
-            QDoubleSpinBox* spinBoxGridSpacingRadius = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingRadius")
+            QDoubleSpinBox* spinBoxGridSpacingRadius = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingRadius")
             if (spinBoxGridSpacingRadius) {
-                spinBoxGridSpacingRadius->setEnabled(!dialog.grid_load_from_file)
+                spinBoxGridSpacingRadius.setEnabled(!dialog.grid_load_from_file)
             }
-            QLabel* labelGridSpacingAngle = parent->findChild<QLabel*>("labelGridSpacingAngle")
+            QLabel* labelGridSpacingAngle = parent.findChild<QLabel*>("labelGridSpacingAngle")
             if (labelGridSpacingAngle) {
-                labelGridSpacingAngle->setEnabled(!dialog.grid_load_from_file)
+                labelGridSpacingAngle.setEnabled(!dialog.grid_load_from_file)
             }
-            QDoubleSpinBox* spinBoxGridSpacingAngle = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingAngle")
-            if(spinBoxGridSpacingAngle) spinBoxGridSpacingAngle->setEnabled(!dialog.grid_load_from_file)
+            QDoubleSpinBox* spinBoxGridSpacingAngle = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingAngle")
+            if(spinBoxGridSpacingAngle) spinBoxGridSpacingAngle.setEnabled(!dialog.grid_load_from_file)
 
 
 def Settings_Dialog::comboBoxGridTypeCurrentIndexChanged(const QString& type):
     strcpy(dialog.grid_type, type.toLocal8Bit().constData())
 
-    QObject* senderObj = sender()
-    if (senderObj) {
-        QObject* parent = senderObj->parent()
-        if (parent) {
-            int visibility = 0
-            if(type == "Circular") visibility = 1
+    senderObj = sender()
+    if senderObj:
+        parent = senderObj.parent()
+        if parent:
+            int visibility = False
+            if type == "Circular":
+                visibility = True
 
-            QLabel* labelGridSizeX = parent->findChild<QLabel*>("labelGridSizeX")
+            QLabel* labelGridSizeX = parent.findChild<QLabel*>("labelGridSizeX")
             if (labelGridSizeX) {
-                labelGridSizeX->setVisible(!visibility)
+                labelGridSizeX.setVisible(!visibility)
             }
-            QDoubleSpinBox* spinBoxGridSizeX = parent->findChild<QDoubleSpinBox*>("spinBoxGridSizeX")
+            QDoubleSpinBox* spinBoxGridSizeX = parent.findChild<QDoubleSpinBox*>("spinBoxGridSizeX")
             if (spinBoxGridSizeX) {
-                spinBoxGridSizeX->setVisible(!visibility)
+                spinBoxGridSizeX.setVisible(!visibility)
             }
-            QLabel* labelGridSizeY = parent->findChild<QLabel*>("labelGridSizeY")
+            QLabel* labelGridSizeY = parent.findChild<QLabel*>("labelGridSizeY")
             if (labelGridSizeY) {
-                labelGridSizeY->setVisible(!visibility)
+                labelGridSizeY.setVisible(!visibility)
             }
-            QDoubleSpinBox* spinBoxGridSizeY = parent->findChild<QDoubleSpinBox*>("spinBoxGridSizeY")
+            QDoubleSpinBox* spinBoxGridSizeY = parent.findChild<QDoubleSpinBox*>("spinBoxGridSizeY")
             if (spinBoxGridSizeY) {
-                spinBoxGridSizeY->setVisible(!visibility)
+                spinBoxGridSizeY.setVisible(!visibility)
             }
-            QLabel* labelGridSpacingX = parent->findChild<QLabel*>("labelGridSpacingX")
-            if(labelGridSpacingX) labelGridSpacingX->setVisible(!visibility)
-            QDoubleSpinBox* spinBoxGridSpacingX = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingX")
-            if(spinBoxGridSpacingX) spinBoxGridSpacingX->setVisible(!visibility)
-            QLabel* labelGridSpacingY = parent->findChild<QLabel*>("labelGridSpacingY")
-            if(labelGridSpacingY) labelGridSpacingY->setVisible(!visibility)
-            QDoubleSpinBox* spinBoxGridSpacingY = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingY")
-            if(spinBoxGridSpacingY) spinBoxGridSpacingY->setVisible(!visibility)
-            QLabel* labelGridSizeRadius = parent->findChild<QLabel*>("labelGridSizeRadius")
-            if(labelGridSizeRadius) labelGridSizeRadius->setVisible(visibility)
-            QDoubleSpinBox* spinBoxGridSizeRadius = parent->findChild<QDoubleSpinBox*>("spinBoxGridSizeRadius")
-            if(spinBoxGridSizeRadius) spinBoxGridSizeRadius->setVisible(visibility)
-            QLabel* labelGridSpacingRadius = parent->findChild<QLabel*>("labelGridSpacingRadius")
-            if(labelGridSpacingRadius) labelGridSpacingRadius->setVisible(visibility)
-            QDoubleSpinBox* spinBoxGridSpacingRadius = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingRadius")
-            if(spinBoxGridSpacingRadius) spinBoxGridSpacingRadius->setVisible(visibility)
-            QLabel* labelGridSpacingAngle = parent->findChild<QLabel*>("labelGridSpacingAngle")
-            if(labelGridSpacingAngle) labelGridSpacingAngle->setVisible(visibility)
-            QDoubleSpinBox* spinBoxGridSpacingAngle = parent->findChild<QDoubleSpinBox*>("spinBoxGridSpacingAngle")
-            if(spinBoxGridSpacingAngle) spinBoxGridSpacingAngle->setVisible(visibility)
+            QLabel* labelGridSpacingX = parent.findChild<QLabel*>("labelGridSpacingX")
+            if(labelGridSpacingX) labelGridSpacingX.setVisible(!visibility)
+            QDoubleSpinBox* spinBoxGridSpacingX = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingX")
+            if(spinBoxGridSpacingX) spinBoxGridSpacingX.setVisible(!visibility)
+            QLabel* labelGridSpacingY = parent.findChild<QLabel*>("labelGridSpacingY")
+            if(labelGridSpacingY) labelGridSpacingY.setVisible(!visibility)
+            spinBoxGridSpacingY = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingY")
+            if spinBoxGridSpacingY:
+                spinBoxGridSpacingY.setVisible(not visibility)
+            labelGridSizeRadius = parent.findChild<QLabel*>("labelGridSizeRadius")
+            if labelGridSizeRadius:
+                labelGridSizeRadius.setVisible(visibility)
+            QDoubleSpinBox* spinBoxGridSizeRadius = parent.findChild<QDoubleSpinBox*>("spinBoxGridSizeRadius")
+            if(spinBoxGridSizeRadius) spinBoxGridSizeRadius.setVisible(visibility)
+            QLabel* labelGridSpacingRadius = parent.findChild<QLabel*>("labelGridSpacingRadius")
+            if(labelGridSpacingRadius) labelGridSpacingRadius.setVisible(visibility)
+            QDoubleSpinBox* spinBoxGridSpacingRadius = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingRadius")
+            if(spinBoxGridSpacingRadius) spinBoxGridSpacingRadius.setVisible(visibility)
+            QLabel* labelGridSpacingAngle = parent.findChild<QLabel*>("labelGridSpacingAngle")
+            if(labelGridSpacingAngle) labelGridSpacingAngle.setVisible(visibility)
+            QDoubleSpinBox* spinBoxGridSpacingAngle = parent.findChild<QDoubleSpinBox*>("spinBoxGridSpacingAngle")
+            if(spinBoxGridSpacingAngle) spinBoxGridSpacingAngle.setVisible(visibility)
 
 
 def Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(checked):
@@ -2900,27 +2889,27 @@ def Settings_Dialog::checkBoxGridCenterOnOriginStateChanged(checked):
 
     QObject* senderObj = sender()
     if (senderObj) {
-        QObject* parent = senderObj->parent()
+        QObject* parent = senderObj.parent()
         if (parent) {
-            QLabel* labelGridCenterX = parent->findChild<QLabel*>("labelGridCenterX")
+            QLabel* labelGridCenterX = parent.findChild<QLabel*>("labelGridCenterX")
             if (labelGridCenterX) {
-                labelGridCenterX->setEnabled(!dialog.grid_center_on_origin)
+                labelGridCenterX.setEnabled(!dialog.grid_center_on_origin)
             }
-            QDoubleSpinBox* spinBoxGridCenterX = parent->findChild<QDoubleSpinBox*>("spinBoxGridCenterX")
+            QDoubleSpinBox* spinBoxGridCenterX = parent.findChild<QDoubleSpinBox*>("spinBoxGridCenterX")
             if (spinBoxGridCenterX) {
-                spinBoxGridCenterX->setEnabled(!dialog.grid_center_on_origin)
+                spinBoxGridCenterX.setEnabled(!dialog.grid_center_on_origin)
             }
-            QLabel* labelGridCenterY = parent->findChild<QLabel*>("labelGridCenterY")
-            if(labelGridCenterY) labelGridCenterY->setEnabled(!dialog.grid_center_on_origin)
-            QDoubleSpinBox* spinBoxGridCenterY = parent->findChild<QDoubleSpinBox*>("spinBoxGridCenterY")
-            if(spinBoxGridCenterY) spinBoxGridCenterY->setEnabled(!dialog.grid_center_on_origin)
+            QLabel* labelGridCenterY = parent.findChild<QLabel*>("labelGridCenterY")
+            if(labelGridCenterY) labelGridCenterY.setEnabled(!dialog.grid_center_on_origin)
+            QDoubleSpinBox* spinBoxGridCenterY = parent.findChild<QDoubleSpinBox*>("spinBoxGridCenterY")
+            if(spinBoxGridCenterY) spinBoxGridCenterY.setEnabled(!dialog.grid_center_on_origin)
 
 
 def Settings_Dialog::comboBoxRulerMetricCurrentIndexChanged(int index):
     comboBox = qobject_cast<QComboBox*>(sender())
     if comboBox:
         ok = False
-        dialog.ruler_metric = comboBox->itemData(index).toBool()
+        dialog.ruler_metric = comboBox.itemData(index).toBool()
     else:
         dialog.ruler_metric = True
 
@@ -2931,21 +2920,21 @@ def Settings_Dialog::chooseRulerColor():
             QColor(accept_.ruler_color), this)
         connect(colorDialog, SIGNAL(currentColorChanged(const QColor&)),
             this, SLOT(currentRulerColorChanged(const QColor&)))
-        colorDialog->exec()
+        colorDialog.exec()
 
-        if (colorDialog->result() == QDialog::Accepted) {
-            accept_.ruler_color = colorDialog->selectedColor().rgb()
+        if (colorDialog.result() == QDialog::Accepted) {
+            accept_.ruler_color = colorDialog.selectedColor().rgb()
             QPixmap pix(16,16)
             pix.fill(QColor(accept_.ruler_color))
-            button->setIcon(QIcon(pix))
-            mainWin->updateAllViewRulerColors(accept_.ruler_color)
+            button.setIcon(QIcon(pix))
+            mainWin.updateAllViewRulerColors(accept_.ruler_color)
         }
         else {
-            mainWin->updateAllViewRulerColors(dialog.ruler_color)
+            mainWin.updateAllViewRulerColors(dialog.ruler_color)
 
 def Settings_Dialog::currentRulerColorChanged(const QColor& color):
     preview.ruler_color = color.rgb()
-    mainWin->updateAllViewRulerColors(preview.ruler_color)
+    mainWin.updateAllViewRulerColors(preview.ruler_color)
 
 def Settings_Dialog::buttonQSnapSelectAllClicked():
     emit buttonQSnapSelectAll(1)
@@ -2954,14 +2943,14 @@ def Settings_Dialog::buttonQSnapClearAllClicked():
     emit buttonQSnapClearAll(0)
 
 #
- * TODO:
- * Figure out how to abstract the slot in a way that it can be used for
- * comboBoxes in general
- * Currently comboBoxQSnapLocatorColorCurrentIndexChanged(int index)
- *        comboBoxSelectionCoolGripColorCurrentIndexChanged(int index)
- *        comboBoxSelectionHotGripColorCurrentIndexChanged(int index)
- * are all similar except the dialog. variable being worked on and the
- * QVariant.
+# TODO:
+# Figure out how to abstract the slot in a way that it can be used for
+# comboBoxes in general
+# Currently comboBoxQSnapLocatorColorCurrentIndexChanged(int index)
+#        comboBoxSelectionCoolGripColorCurrentIndexChanged(int index)
+#        comboBoxSelectionHotGripColorCurrentIndexChanged(int index)
+# are all similar except the dialog. variable being worked on and the
+# QVariant.
 
 
 def Settings_Dialog::comboBoxQSnapLocatorColorCurrentIndexChanged(int index):
@@ -2970,7 +2959,7 @@ def Settings_Dialog::comboBoxQSnapLocatorColorCurrentIndexChanged(int index):
     unsigned int defaultColor = qRgb(255,255,0); # Yellow
     if comboBox:
         bool ok = 0
-        dialog.qsnap_locator_color = comboBox->itemData(index).toUInt(&ok)
+        dialog.qsnap_locator_color = comboBox.itemData(index).toUInt(&ok)
         if(!ok)
             dialog.qsnap_locator_color = defaultColor
     else:
@@ -2993,11 +2982,11 @@ def Settings_Dialog::checkBoxLwtShowLwtStateChanged(checked):
 
     QObject* senderObj = sender()
     if (senderObj) {
-        QObject* parent = senderObj->parent()
+        QObject* parent = senderObj.parent()
         if (parent) {
-            QCheckBox* checkBoxRealRender = parent->findChild<QCheckBox*>("checkBoxRealRender")
+            QCheckBox* checkBoxRealRender = parent.findChild<QCheckBox*>("checkBoxRealRender")
             if (checkBoxRealRender) {
-                checkBoxRealRender->setEnabled(preview.lwt_show_lwt)
+                checkBoxRealRender.setEnabled(preview.lwt_show_lwt)
 
 def Settings_Dialog::checkBoxLwtRealRenderStateChanged(checked):
     preview.lwt_real_render = checked
@@ -3012,7 +3001,7 @@ def Settings_Dialog::comboBoxSelectionCoolGripColorCurrentIndexChanged(int index
     unsigned int defaultColor = qRgb(0,0,255); #Blue
     if (comboBox) {
         bool ok = 0
-        dialog.selection_coolgrip_color = comboBox->itemData(index).toUInt(&ok)
+        dialog.selection_coolgrip_color = comboBox.itemData(index).toUInt(&ok)
         if not ok:
             dialog.selection_coolgrip_color = defaultColor
     else {
@@ -3024,7 +3013,7 @@ def Settings_Dialog::comboBoxSelectionHotGripColorCurrentIndexChanged(int index)
     unsigned int defaultColor = qRgb(255,0,0); # Red
     if (comboBox) {
         ok = False
-        dialog.selection_hotgrip_color = comboBox->itemData(index).toUInt(&ok)
+        dialog.selection_hotgrip_color = comboBox.itemData(index).toUInt(&ok)
         if (!ok) {
             dialog.selection_hotgrip_color = defaultColor
     else:
@@ -3040,54 +3029,54 @@ def Settings_Dialog::acceptChanges():
         dialog["grid_color"] = accept_["display_crosshair_color"]
 
     # Make sure the user sees the changes applied immediately.
-    mainWin->mdiArea->useBackgroundLogo(dialog.general_mdi_bg_use_logo)
-    mainWin->mdiArea->useBackgroundTexture(dialog.general_mdi_bg_use_texture)
-    mainWin->mdiArea->useBackgroundColor(dialog.general_mdi_bg_use_color)
-    mainWin->mdiArea->setBackgroundLogo(dialog.general_mdi_bg_logo)
-    mainWin->mdiArea->setBackgroundTexture(dialog.general_mdi_bg_texture)
-    mainWin->mdiArea->setBackgroundColor(dialog.general_mdi_bg_color)
-    mainWin->iconResize(dialog.general_icon_size)
-    mainWin->updateAllViewScrollBars(dialog.display_show_scrollbars)
-    mainWin->updateAllViewCrossHairColors(dialog.display_crosshair_color)
-    mainWin->updateAllViewBackgroundColors(dialog.display_bg_color)
-    mainWin->updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
+    mainWin.mdiArea.useBackgroundLogo(dialog.general_mdi_bg_use_logo)
+    mainWin.mdiArea.useBackgroundTexture(dialog.general_mdi_bg_use_texture)
+    mainWin.mdiArea.useBackgroundColor(dialog.general_mdi_bg_use_color)
+    mainWin.mdiArea.setBackgroundLogo(dialog.general_mdi_bg_logo)
+    mainWin.mdiArea.setBackgroundTexture(dialog.general_mdi_bg_texture)
+    mainWin.mdiArea.setBackgroundColor(dialog.general_mdi_bg_color)
+    mainWin.iconResize(dialog.general_icon_size)
+    mainWin.updateAllViewScrollBars(dialog.display_show_scrollbars)
+    mainWin.updateAllViewCrossHairColors(dialog.display_crosshair_color)
+    mainWin.updateAllViewBackgroundColors(dialog.display_bg_color)
+    mainWin.updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
                                           dialog.display_selectbox_left_fill,
                                           dialog.display_selectbox_right_color,
                                           dialog.display_selectbox_right_fill,
                                           dialog.display_selectbox_alpha)
-    mainWin->updateAllViewGridColors(dialog.grid_color)
-    mainWin->updateAllViewRulerColors(dialog.ruler_color)
+    mainWin.updateAllViewGridColors(dialog.grid_color)
+    mainWin.updateAllViewRulerColors(dialog.ruler_color)
     if (dialog.lwt_show_lwt) {
         enableLwt()
     }
     else { disableLwt(); }
     if (dialog.lwt_real_render) { enableReal(); }
     else { disableReal(); }
-    mainWin->updatePickAddMode(dialog.selection_mode_pickadd)
+    mainWin.updatePickAddMode(dialog.selection_mode_pickadd)
 
-    mainWin->writeSettings()
+    mainWin.writeSettings()
     accept()
 
 def Settings_Dialog::rejectChanges():
     #TODO: inform the user if they have changed settings
 
     #Update the view since the user must accept the preview
-    mainWin->mdiArea->useBackgroundLogo(dialog.general_mdi_bg_use_logo)
-    mainWin->mdiArea->useBackgroundTexture(dialog.general_mdi_bg_use_texture)
-    mainWin->mdiArea->useBackgroundColor(dialog.general_mdi_bg_use_color)
-    mainWin->mdiArea->setBackgroundLogo(dialog.general_mdi_bg_logo)
-    mainWin->mdiArea->setBackgroundTexture(dialog.general_mdi_bg_texture)
-    mainWin->mdiArea->setBackgroundColor(dialog.general_mdi_bg_color)
-    mainWin->updateAllViewScrollBars(dialog.display_show_scrollbars)
-    mainWin->updateAllViewCrossHairColors(dialog.display_crosshair_color)
-    mainWin->updateAllViewBackgroundColors(dialog.display_bg_color)
-    mainWin->updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
+    mainWin.mdiArea.useBackgroundLogo(dialog.general_mdi_bg_use_logo)
+    mainWin.mdiArea.useBackgroundTexture(dialog.general_mdi_bg_use_texture)
+    mainWin.mdiArea.useBackgroundColor(dialog.general_mdi_bg_use_color)
+    mainWin.mdiArea.setBackgroundLogo(dialog.general_mdi_bg_logo)
+    mainWin.mdiArea.setBackgroundTexture(dialog.general_mdi_bg_texture)
+    mainWin.mdiArea.setBackgroundColor(dialog.general_mdi_bg_color)
+    mainWin.updateAllViewScrollBars(dialog.display_show_scrollbars)
+    mainWin.updateAllViewCrossHairColors(dialog.display_crosshair_color)
+    mainWin.updateAllViewBackgroundColors(dialog.display_bg_color)
+    mainWin.updateAllViewSelectBoxColors(dialog.display_selectbox_left_color,
                                           dialog.display_selectbox_left_fill,
                                           dialog.display_selectbox_right_color,
                                           dialog.display_selectbox_right_fill,
                                           dialog.display_selectbox_alpha)
-    mainWin->updateAllViewGridColors(dialog.grid_color)
-    mainWin->updateAllViewRulerColors(dialog.ruler_color)
+    mainWin.updateAllViewGridColors(dialog.grid_color)
+    mainWin.updateAllViewRulerColors(dialog.ruler_color)
     if(dialog.lwt_show_lwt) { enableLwt(); }
     else                    { disableLwt(); }
     if(dialog.lwt_real_render) { enableReal(); }
@@ -3123,10 +3112,10 @@ PropertyEditor::PropertyEditor(const QString& iconDirectory, int pickAddMode, QW
 
     QWidget* widgetSelection = new QWidget(this)
     QHBoxLayout* hboxLayoutSelection = new QHBoxLayout(this)
-    hboxLayoutSelection->addWidget(createComboBoxSelected())
-    hboxLayoutSelection->addWidget(createToolButtonQSelect())
-    hboxLayoutSelection->addWidget(createToolButtonPickAdd())
-    widgetSelection->setLayout(hboxLayoutSelection)
+    hboxLayoutSelection.addWidget(createComboBoxSelected())
+    hboxLayoutSelection.addWidget(createToolButtonQSelect())
+    hboxLayoutSelection.addWidget(createToolButtonPickAdd())
+    widgetSelection.setLayout(hboxLayoutSelection)
 
     for (i=1; i<OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE; i++) {
         groupBoxGeometry[i] = createGroupBoxGeometry(i+OBJ_TYPE_BASE)
@@ -3135,25 +3124,25 @@ PropertyEditor::PropertyEditor(const QString& iconDirectory, int pickAddMode, QW
     QScrollArea* scrollProperties = new QScrollArea(this)
     QWidget* widgetProperties = new QWidget(this)
     QVBoxLayout* vboxLayoutProperties = new QVBoxLayout(this)
-    vboxLayoutProperties->addWidget(createGroupBoxGeneral())
+    vboxLayoutProperties.addWidget(createGroupBoxGeneral())
     for (i=1; i<OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE; i++) {
-        vboxLayoutProperties->addWidget(groupBoxGeometry[i+OBJ_TYPE_BASE])
+        vboxLayoutProperties.addWidget(groupBoxGeometry[i+OBJ_TYPE_BASE])
     }
-    vboxLayoutProperties->addWidget(createGroupBoxMiscArc())
-    vboxLayoutProperties->addWidget(createGroupBoxMiscImage())
-    vboxLayoutProperties->addWidget(createGroupBoxMiscPath())
-    vboxLayoutProperties->addWidget(createGroupBoxMiscPolyline())
-    vboxLayoutProperties->addWidget(createGroupBoxTextTextSingle())
-    vboxLayoutProperties->addWidget(createGroupBoxMiscTextSingle())
-    vboxLayoutProperties->addStretch(1)
-    widgetProperties->setLayout(vboxLayoutProperties)
-    scrollProperties->setWidget(widgetProperties)
-    scrollProperties->setWidgetResizable(1)
+    vboxLayoutProperties.addWidget(createGroupBoxMiscArc())
+    vboxLayoutProperties.addWidget(createGroupBoxMiscImage())
+    vboxLayoutProperties.addWidget(createGroupBoxMiscPath())
+    vboxLayoutProperties.addWidget(createGroupBoxMiscPolyline())
+    vboxLayoutProperties.addWidget(createGroupBoxTextTextSingle())
+    vboxLayoutProperties.addWidget(createGroupBoxMiscTextSingle())
+    vboxLayoutProperties.addStretch(1)
+    widgetProperties.setLayout(vboxLayoutProperties)
+    scrollProperties.setWidget(widgetProperties)
+    scrollProperties.setWidgetResizable(1)
 
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(this)
-    vboxLayoutMain->addWidget(widgetSelection)
-    vboxLayoutMain->addWidget(scrollProperties)
-    widgetMain->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(widgetSelection)
+    vboxLayoutMain.addWidget(scrollProperties)
+    widgetMain.setLayout(vboxLayoutMain)
 
     setWidget(widgetMain)
     setWindowTitle(tr("Properties"))
@@ -3164,41 +3153,41 @@ PropertyEditor::PropertyEditor(const QString& iconDirectory, int pickAddMode, QW
     connect(signalMapper, SIGNAL(mapped(QObject*)), this, SLOT(fieldEdited(QObject*)))
 
     focusWidget = widgetToFocus
-    this->installEventFilter(this)
+    this.installEventFilter(this)
 
 PropertyEditor::~PropertyEditor():
 }
 
-bool PropertyEditor::eventFilter(QObject *obj, QEvent *event):
-    if(event->type() == QEvent::KeyPress)
+def PropertyEditor::eventFilter(QObject *obj, QEvent *event):
+    if(event.type() == QEvent::KeyPress)
     {
         QKeyEvent* pressedKey = (QKeyEvent*)event
-        int key = pressedKey->key()
+        int key = pressedKey.key()
         switch(key)
         {
             case Qt::Key_Escape:
                 if(focusWidget)
-                    focusWidget->setFocus(Qt::OtherFocusReason)
+                    focusWidget.setFocus(Qt::OtherFocusReason)
                 return 1
                 break
             default:
-                pressedKey->ignore()
+                pressedKey.ignore()
         }
     }
     return QObject::eventFilter(obj, event)
 
 QComboBox* PropertyEditor::createComboBoxSelected():
     comboBoxSelected = new QComboBox(this)
-    comboBoxSelected->addItem(tr("No Selection"))
+    comboBoxSelected.addItem(tr("No Selection"))
     return comboBoxSelected
 
 QToolButton* PropertyEditor::createToolButtonQSelect():
     toolButtonQSelect = new QToolButton(this)
-    toolButtonQSelect->setIcon(loadIcon(quickselect_xpm))
-    toolButtonQSelect->setIconSize(QSize(iconSize, iconSize))
-    toolButtonQSelect->setText("QSelect")
-    toolButtonQSelect->setToolTip("QSelect"); #TODO: Better Description
-    toolButtonQSelect->setToolButtonStyle(Qt::ToolButtonIconOnly)
+    toolButtonQSelect.setIcon(loadIcon(quickselect_xpm))
+    toolButtonQSelect.setIconSize(QSize(iconSize, iconSize))
+    toolButtonQSelect.setText("QSelect")
+    toolButtonQSelect.setToolTip("QSelect"); #TODO: Better Description
+    toolButtonQSelect.setToolButtonStyle(Qt::ToolButtonIconOnly)
     return toolButtonQSelect
 
 QToolButton* PropertyEditor::createToolButtonPickAdd():
@@ -3211,18 +3200,18 @@ QToolButton* PropertyEditor::createToolButtonPickAdd():
 def PropertyEditor::updatePickAddModeButton(int pickAddMode):
     pickAdd = pickAddMode
     if (pickAdd) {
-        toolButtonPickAdd->setIcon(loadIcon(pickadd_xpm))
-        toolButtonPickAdd->setIconSize(QSize(iconSize, iconSize))
-        toolButtonPickAdd->setText("PickAdd")
-        toolButtonPickAdd->setToolTip("PickAdd Mode - Add to current selection.\nClick to switch to PickNew Mode.")
-        toolButtonPickAdd->setToolButtonStyle(Qt::ToolButtonIconOnly)
+        toolButtonPickAdd.setIcon(loadIcon(pickadd_xpm))
+        toolButtonPickAdd.setIconSize(QSize(iconSize, iconSize))
+        toolButtonPickAdd.setText("PickAdd")
+        toolButtonPickAdd.setToolTip("PickAdd Mode - Add to current selection.\nClick to switch to PickNew Mode.")
+        toolButtonPickAdd.setToolButtonStyle(Qt::ToolButtonIconOnly)
     }
     else {
-        toolButtonPickAdd->setIcon(loadIcon(picknew_xpm))
-        toolButtonPickAdd->setIconSize(QSize(iconSize, iconSize))
-        toolButtonPickAdd->setText("PickNew")
-        toolButtonPickAdd->setToolTip("PickNew Mode - Replace current selection.\nClick to switch to PickAdd Mode.")
-        toolButtonPickAdd->setToolButtonStyle(Qt::ToolButtonIconOnly)
+        toolButtonPickAdd.setIcon(loadIcon(picknew_xpm))
+        toolButtonPickAdd.setIconSize(QSize(iconSize, iconSize))
+        toolButtonPickAdd.setText("PickNew")
+        toolButtonPickAdd.setToolTip("PickNew Mode - Replace current selection.\nClick to switch to PickAdd Mode.")
+        toolButtonPickAdd.setToolButtonStyle(Qt::ToolButtonIconOnly)
 
 def PropertyEditor::togglePickAddMode():
     emit pickAddModeToggled()
@@ -3231,11 +3220,11 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
     selectedItemList = itemList
     #Hide all the groups initially, then decide which ones to show
     hideAllGroups()
-    comboBoxSelected->clear()
+    comboBoxSelected.clear()
 
     if(itemList.isEmpty())
     {
-        comboBoxSelected->addItem(tr("No Selection"))
+        comboBoxSelected.addItem(tr("No Selection"))
         return
     }
 
@@ -3252,7 +3241,7 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
     foreach (QGraphicsItem* item, itemList) {
         if(!item) continue
 
-        int objType = item->type()
+        int objType = item.type()
         typeSet.insert(objType)
 
         if (objType > OBJ_TYPE_BASE and objType < OBJ_TYPE_UNKNOWN) {
@@ -3266,18 +3255,18 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
     #  Populate the selection comboBox
     # ==================================================
     if (numTypes > 1) {
-        comboBoxSelected->addItem(tr("Varies") + " (" + QString().setNum(numAll) + ")")
+        comboBoxSelected.addItem(tr("Varies") + " (" + QString().setNum(numAll) + ")")
         connect(comboBoxSelected, SIGNAL(currentIndexChanged(int)), this, SLOT(showOneType(int)))
 
     for (i=0; i<31; i++) {
         if (numObjects[i] > 0) {
             QString comboBoxStr = tr(obj_names[i])
                 + " (" + QString().setNum(numObjects[i]) + ")"
-            comboBoxSelected->addItem(comboBoxStr, OBJ_TYPE_BASE+i)
+            comboBoxSelected.addItem(comboBoxStr, OBJ_TYPE_BASE+i)
 
     # ==================================================
-     * Load Data into the fields
-     * ==================================================
+    # Load Data into the fields
+    # ==================================================
 
     # Clear fields first so if the selected data varies, the comparison is simple
     clearAllFields()
@@ -3287,27 +3276,27 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
 
         # TODO: load data into the General field
 
-        int objType = item->type()
+        int objType = item.type()
         switch (objType) {
         case OBJ_TYPE_ARC:
             {
             ArcObject* obj = static_cast<ArcObject*>(item)
             if (obj) {
-                QPointF p = obj->objectCenter()
+                QPointF p = obj.objectCenter()
                 updateLineEditNumIfVaries(lineEdit[ARC_CENTER_X], p.x(), 0)
                 updateLineEditNumIfVaries(lineEdit[ARC_CENTER_Y], -p.y(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_RADIUS], obj->objectRadius(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_START_ANGLE], obj->objectStartAngle(), 1)
-                updateLineEditNumIfVaries(lineEdit[ARC_END_ANGLE], obj->objectEndAngle(), 1)
-                updateLineEditNumIfVaries(lineEdit[ARC_START_X], obj->objectStartPoint().x(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_START_Y], -obj->objectStartPoint().y(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_END_X], obj->objectEndPoint().x(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_END_Y], -obj->objectEndPoint().y(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_AREA], obj->objectArea(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_LENGTH], obj->objectArcLength(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_CHORD], obj->objectChord(), 0)
-                updateLineEditNumIfVaries(lineEdit[ARC_INC_ANGLE], obj->objectIncludedAngle(), 1)
-                updateComboBoxintIfVaries(comboBox[ARC_CLOCKWISE], obj->objectClockwise(), 1)
+                updateLineEditNumIfVaries(lineEdit[ARC_RADIUS], obj.objectRadius(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_START_ANGLE], obj.objectStartAngle(), 1)
+                updateLineEditNumIfVaries(lineEdit[ARC_END_ANGLE], obj.objectEndAngle(), 1)
+                updateLineEditNumIfVaries(lineEdit[ARC_START_X], obj.objectStartPoint().x(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_START_Y], -obj.objectStartPoint().y(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_END_X], obj.objectEndPoint().x(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_END_Y], -obj.objectEndPoint().y(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_AREA], obj.objectArea(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_LENGTH], obj.objectArcLength(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_CHORD], obj.objectChord(), 0)
+                updateLineEditNumIfVaries(lineEdit[ARC_INC_ANGLE], obj.objectIncludedAngle(), 1)
+                updateComboBoxintIfVaries(comboBox[ARC_CLOCKWISE], obj.objectClockwise(), 1)
             }
             }
             break
@@ -3320,13 +3309,13 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             {
             CircleObject* obj = static_cast<CircleObject*>(item)
             if (obj) {
-                QPointF p = obj->objectCenter()
+                QPointF p = obj.objectCenter()
                 updateLineEditNumIfVaries(lineEdit[CIRCLE_CENTER_X], p.x(), 0)
                 updateLineEditNumIfVaries(lineEdit[CIRCLE_CENTER_Y], -p.y(), 0)
-                updateLineEditNumIfVaries(lineEdit[CIRCLE_RADIUS], obj->objectRadius(), 0)
-                updateLineEditNumIfVaries(lineEdit[CIRCLE_DIAMETER], obj->objectDiameter(), 0)
-                updateLineEditNumIfVaries(lineEdit[CIRCLE_AREA], obj->objectArea(), 0)
-                updateLineEditNumIfVaries(lineEdit[CIRCLE_CIRCUMFERENCE], obj->objectCircumference(), 0)
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_RADIUS], obj.objectRadius(), 0)
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_DIAMETER], obj.objectDiameter(), 0)
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_AREA], obj.objectArea(), 0)
+                updateLineEditNumIfVaries(lineEdit[CIRCLE_CIRCUMFERENCE], obj.objectCircumference(), 0)
             }
             }
             break
@@ -3374,13 +3363,13 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             {
             EllipseObject* obj = static_cast<EllipseObject*>(item)
             if (obj) {
-                QPointF p = obj->objectCenter()
+                QPointF p = obj.objectCenter()
                 updateLineEditNumIfVaries(lineEdit[ELLIPSE_CENTER_X], p.x(), 0)
                 updateLineEditNumIfVaries(lineEdit[ELLIPSE_CENTER_Y], -p.y(), 0)
-                updateLineEditNumIfVaries(lineEdit[ELLIPSE_RADIUS_MAJOR], obj->objectRadiusMajor(), 0)
-                updateLineEditNumIfVaries(lineEdit[ELLIPSE_RADIUS_MINOR], obj->objectRadiusMinor(), 0)
-                updateLineEditNumIfVaries(lineEdit[ELLIPSE_DIAMETER_MAJOR], obj->objectDiameterMajor(), 0)
-                updateLineEditNumIfVaries(lineEdit[ELLIPSE_DIAMETER_MINOR], obj->objectDiameterMinor(), 0)
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_RADIUS_MAJOR], obj.objectRadiusMajor(), 0)
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_RADIUS_MINOR], obj.objectRadiusMinor(), 0)
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_DIAMETER_MAJOR], obj.objectDiameterMajor(), 0)
+                updateLineEditNumIfVaries(lineEdit[ELLIPSE_DIAMETER_MINOR], obj.objectDiameterMinor(), 0)
             }
             }
             break
@@ -3398,14 +3387,14 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             {
             LineObject* obj = static_cast<LineObject*>(item)
             if (obj) {
-                updateLineEditNumIfVaries(lineEdit[LINE_START_X], obj->objectEndPoint1().x(), 0)
-                updateLineEditNumIfVaries(lineEdit[LINE_START_Y], -obj->objectEndPoint1().y(), 0)
-                updateLineEditNumIfVaries(lineEdit[LINE_END_X], obj->objectEndPoint2().x(), 0)
-                updateLineEditNumIfVaries(lineEdit[LINE_END_Y], -obj->objectEndPoint2().y(), 0)
-                updateLineEditNumIfVaries(lineEdit[LINE_DELTA_X], obj->objectDeltaX(), 0)
-                updateLineEditNumIfVaries(lineEdit[LINE_DELTA_Y], -obj->objectDeltaY(), 0)
-                updateLineEditNumIfVaries(lineEdit[LINE_ANGLE], obj->objectAngle(), 1)
-                updateLineEditNumIfVaries(lineEdit[LINE_LENGTH], obj->objectLength(), 0)
+                updateLineEditNumIfVaries(lineEdit[LINE_START_X], obj.objectEndPoint1().x(), 0)
+                updateLineEditNumIfVaries(lineEdit[LINE_START_Y], -obj.objectEndPoint1().y(), 0)
+                updateLineEditNumIfVaries(lineEdit[LINE_END_X], obj.objectEndPoint2().x(), 0)
+                updateLineEditNumIfVaries(lineEdit[LINE_END_Y], -obj.objectEndPoint2().y(), 0)
+                updateLineEditNumIfVaries(lineEdit[LINE_DELTA_X], obj.objectDeltaX(), 0)
+                updateLineEditNumIfVaries(lineEdit[LINE_DELTA_Y], -obj.objectDeltaY(), 0)
+                updateLineEditNumIfVaries(lineEdit[LINE_ANGLE], obj.objectAngle(), 1)
+                updateLineEditNumIfVaries(lineEdit[LINE_LENGTH], obj.objectLength(), 0)
             }
             }
             break
@@ -3418,8 +3407,8 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             {
             PointObject* obj = static_cast<PointObject*>(item)
             if (obj) {
-                updateLineEditNumIfVaries(lineEdit[POINT_X], obj->objectX(), 0)
-                updateLineEditNumIfVaries(lineEdit[POINT_Y], -obj->objectY(), 0)
+                updateLineEditNumIfVaries(lineEdit[POINT_X], obj.objectX(), 0)
+                updateLineEditNumIfVaries(lineEdit[POINT_Y], -obj.objectY(), 0)
             }
             }
             break
@@ -3442,10 +3431,10 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             {
             RectObject* obj = static_cast<RectObject*>(item)
             if(obj) {
-                QPointF corn1 = obj->objectTopLeft()
-                QPointF corn2 = obj->objectTopRight()
-                QPointF corn3 = obj->objectBottomLeft()
-                QPointF corn4 = obj->objectBottomRight()
+                QPointF corn1 = obj.objectTopLeft()
+                QPointF corn2 = obj.objectTopRight()
+                QPointF corn3 = obj.objectBottomLeft()
+                QPointF corn4 = obj.objectBottomRight()
 
                 updateLineEditNumIfVaries(lineEdit[RECT_CORNER_X1], corn1.x(), 0)
                 updateLineEditNumIfVaries(lineEdit[RECT_CORNER_Y1], -corn1.y(), 0)
@@ -3455,9 +3444,9 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
                 updateLineEditNumIfVaries(lineEdit[RECT_CORNER_Y3], -corn3.y(), 0)
                 updateLineEditNumIfVaries(lineEdit[RECT_CORNER_X4], corn4.x(), 0)
                 updateLineEditNumIfVaries(lineEdit[RECT_CORNER_Y4], -corn4.y(), 0)
-                updateLineEditNumIfVaries(lineEdit[RECT_WIDTH], obj->objectWidth(), 0)
-                updateLineEditNumIfVaries(lineEdit[RECT_HEIGHT], -obj->objectHeight(), 0)
-                updateLineEditNumIfVaries(lineEdit[RECT_AREA], obj->objectArea(), 0)
+                updateLineEditNumIfVaries(lineEdit[RECT_WIDTH], obj.objectWidth(), 0)
+                updateLineEditNumIfVaries(lineEdit[RECT_HEIGHT], -obj.objectHeight(), 0)
+                updateLineEditNumIfVaries(lineEdit[RECT_AREA], obj.objectArea(), 0)
             }
             }
             break
@@ -3470,15 +3459,15 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
             {
             TextSingleObject* obj = static_cast<TextSingleObject*>(item)
             if (obj) {
-                updateLineEditStrIfVaries(lineEditTextSingleContents, obj->objText)
-                updateFontComboBoxStrIfVaries(comboBoxTextSingleFont, obj->objTextFont)
-                updateComboBoxStrIfVaries(comboBoxTextSingleJustify, obj->objTextJustify, obj->objectTextJustifyList())
-                updateLineEditNumIfVaries(lineEditTextSingleHeight, obj->obj_text.size, 0)
-                updateLineEditNumIfVaries(lineEditTextSingleRotation, -obj->rotation(), 1)
-                updateLineEditNumIfVaries(lineEditTextSingleX, obj->objectX(), 0)
-                updateLineEditNumIfVaries(lineEditTextSingleY, -obj->objectY(), 0)
-                updateComboBoxintIfVaries(comboBoxTextSingleBackward, obj->obj_text.backward, 1)
-                updateComboBoxintIfVaries(comboBoxTextSingleUpsideDown, obj->obj_text.upsidedown, 1)
+                updateLineEditStrIfVaries(lineEditTextSingleContents, obj.objText)
+                updateFontComboBoxStrIfVaries(comboBoxTextSingleFont, obj.objTextFont)
+                updateComboBoxStrIfVaries(comboBoxTextSingleJustify, obj.objTextJustify, obj.objectTextJustifyList())
+                updateLineEditNumIfVaries(lineEditTextSingleHeight, obj.obj_text.size, 0)
+                updateLineEditNumIfVaries(lineEditTextSingleRotation, -obj.rotation(), 1)
+                updateLineEditNumIfVaries(lineEditTextSingleX, obj.objectX(), 0)
+                updateLineEditNumIfVaries(lineEditTextSingleY, -obj.objectY(), 0)
+                updateComboBoxintIfVaries(comboBoxTextSingleBackward, obj.obj_text.backward, 1)
+                updateComboBoxintIfVaries(comboBoxTextSingleUpsideDown, obj.obj_text.upsidedown, 1)
             }
             }
             break
@@ -3498,18 +3487,18 @@ def PropertyEditor::setSelectedItems(QList<QGraphicsItem*> itemList):
 }
 
 def PropertyEditor::updateLineEditStrIfVaries(QLineEdit* lineEdit, const QString& str):
-    fieldOldText = lineEdit->text()
+    fieldOldText = lineEdit.text()
     fieldNewText = str
 
-    if     (fieldOldText.isEmpty())       lineEdit->setText(fieldNewText)
-    elif(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText)
+    if     (fieldOldText.isEmpty())       lineEdit.setText(fieldNewText)
+    elif(fieldOldText != fieldNewText) lineEdit.setText(fieldVariesText)
 
 def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, num, int useAnglePrecision):
     int precision = 0
     if(useAnglePrecision) precision = precisionAngle
     else                  precision = precisionLength
 
-    fieldOldText = lineEdit->text()
+    fieldOldText = lineEdit.text()
     fieldNewText.setNum(num, 'f', precision)
 
     #Prevent negative zero :D
@@ -3519,48 +3508,48 @@ def PropertyEditor::updateLineEditNumIfVaries(QLineEdit* lineEdit, num, int useA
     if(fieldNewText == negativeZero)
         fieldNewText = negativeZero.replace("-", "")
 
-    if     (fieldOldText.isEmpty())       lineEdit->setText(fieldNewText)
-    elif(fieldOldText != fieldNewText) lineEdit->setText(fieldVariesText)
+    if     (fieldOldText.isEmpty())       lineEdit.setText(fieldNewText)
+    elif(fieldOldText != fieldNewText) lineEdit.setText(fieldVariesText)
 
 def PropertyEditor::updateFontComboBoxStrIfVaries(QFontComboBox* fontComboBox, const QString& str):
-    fieldOldText = fontComboBox->property("FontFamily").toString()
+    fieldOldText = fontComboBox.property("FontFamily").toString()
     fieldNewText = str
-    #debug_message("old: %d %s, new: %d %s", oldIndex, qPrintable(fontComboBox->currentText()), newIndex, qPrintable(str));
+    #debug_message("old: %d %s, new: %d %s", oldIndex, qPrintable(fontComboBox.currentText()), newIndex, qPrintable(str));
     if(fieldOldText.isEmpty())
     {
-        fontComboBox->setCurrentFont(QFont(fieldNewText))
-        fontComboBox->setProperty("FontFamily", fieldNewText)
+        fontComboBox.setCurrentFont(QFont(fieldNewText))
+        fontComboBox.setProperty("FontFamily", fieldNewText)
     }
     elif(fieldOldText != fieldNewText)
     {
-        if(fontComboBox->findText(fieldVariesText) == -1) #Prevent multiple entries
-            fontComboBox->addItem(fieldVariesText)
-        fontComboBox->setCurrentIndex(fontComboBox->findText(fieldVariesText))
+        if(fontComboBox.findText(fieldVariesText) == -1) #Prevent multiple entries
+            fontComboBox.addItem(fieldVariesText)
+        fontComboBox.setCurrentIndex(fontComboBox.findText(fieldVariesText))
     }
 }
 
 def PropertyEditor::updateComboBoxStrIfVaries(QComboBox* comboBox, const QString& str, const QStringList& strList):
-    fieldOldText = comboBox->currentText()
+    fieldOldText = comboBox.currentText()
     fieldNewText = str
 
     if(fieldOldText.isEmpty())
     {
         foreach(QString s, strList)
         {
-            comboBox->addItem(s, s)
+            comboBox.addItem(s, s)
         }
-        comboBox->setCurrentIndex(comboBox->findText(fieldNewText))
+        comboBox.setCurrentIndex(comboBox.findText(fieldNewText))
     }
     elif(fieldOldText != fieldNewText)
     {
-        if(comboBox->findText(fieldVariesText) == -1) #Prevent multiple entries
-            comboBox->addItem(fieldVariesText)
-        comboBox->setCurrentIndex(comboBox->findText(fieldVariesText))
+        if(comboBox.findText(fieldVariesText) == -1) #Prevent multiple entries
+            comboBox.addItem(fieldVariesText)
+        comboBox.setCurrentIndex(comboBox.findText(fieldVariesText))
     }
 }
 
 def PropertyEditor::updateComboBoxintIfVaries(QComboBox* comboBox, int val, int yesOrNoText):
-    fieldOldText = comboBox->currentText()
+    fieldOldText = comboBox.currentText()
     if(yesOrNoText)
     {
         if(val) fieldNewText = fieldYesText
@@ -3570,80 +3559,77 @@ def PropertyEditor::updateComboBoxintIfVaries(QComboBox* comboBox, int val, int 
     {
         if(val) fieldNewText = fieldOnText
         else    fieldNewText = fieldOffText
-    }
 
     if(fieldOldText.isEmpty()) {
         if (yesOrNoText) {
-            comboBox->addItem(fieldYesText, 1)
-            comboBox->addItem(fieldNoText, 0)
+            comboBox.addItem(fieldYesText, 1)
+            comboBox.addItem(fieldNoText, 0)
         }
         else {
-            comboBox->addItem(fieldOnText, 1)
-            comboBox->addItem(fieldOffText, 0)
+            comboBox.addItem(fieldOnText, 1)
+            comboBox.addItem(fieldOffText, 0)
         }
-        comboBox->setCurrentIndex(comboBox->findText(fieldNewText))
+        comboBox.setCurrentIndex(comboBox.findText(fieldNewText))
     }
     elif(fieldOldText != fieldNewText) {
         # Prevent multiple entries
-        if(comboBox->findText(fieldVariesText) == -1) {
-            comboBox->addItem(fieldVariesText)
+        if(comboBox.findText(fieldVariesText) == -1) {
+            comboBox.addItem(fieldVariesText)
         }
-        comboBox->setCurrentIndex(comboBox->findText(fieldVariesText))
-    }
-}
+        comboBox.setCurrentIndex(comboBox.findText(fieldVariesText))
 
 def PropertyEditor::showGroups(int objType):
     if (objType>=OBJ_TYPE_BASE and objType<OBJ_TYPE_UNKNOWN) {
-        groupBoxGeometry[objType-OBJ_TYPE_BASE]->show()
+        groupBoxGeometry[objType-OBJ_TYPE_BASE].show()
     }
     if (objType == OBJ_TYPE_ARC) {
-        groupBoxMiscArc->show()
+        groupBoxMiscArc.show()
     }
     elif(objType == OBJ_TYPE_IMAGE) {
-        groupBoxMiscImage->show()
+        groupBoxMiscImage.show()
     }
     elif(objType == OBJ_TYPE_PATH) {
-        groupBoxMiscPath->show()
+        groupBoxMiscPath.show()
     }
     elif(objType == OBJ_TYPE_POLYLINE) {
-        groupBoxMiscPolyline->show()
+        groupBoxMiscPolyline.show()
     }
     elif(objType == OBJ_TYPE_TEXTSINGLE) {
-        groupBoxTextTextSingle->show()
-        groupBoxMiscTextSingle->show()
+        groupBoxTextTextSingle.show()
+        groupBoxMiscTextSingle.show()
     }
 }
 
 def PropertyEditor::showOneType(int index):
     hideAllGroups()
-    showGroups(comboBoxSelected->itemData(index).toInt())
+    showGroups(comboBoxSelected.itemData(index).toInt())
 
 def PropertyEditor::hideAllGroups():
     int i
     # NOTE: General group will never be hidden
     for (i=1; i<OBJ_TYPE_UNKNOWN-OBJ_TYPE_BASE; i++) {
-        groupBoxGeometry[i]->hide()
+        groupBoxGeometry[i].hide()
     }
-    groupBoxMiscArc->hide()
-    groupBoxMiscImage->hide()
-    groupBoxMiscPath->hide()
-    groupBoxMiscPolyline->hide()
-    groupBoxTextTextSingle->hide()
-    groupBoxMiscTextSingle->hide()
+    groupBoxMiscArc.hide()
+    groupBoxMiscImage.hide()
+    groupBoxMiscPath.hide()
+    groupBoxMiscPolyline.hide()
+    groupBoxTextTextSingle.hide()
+    groupBoxMiscTextSingle.hide()
 
 def PropertyEditor::clearAllFields():
     int i
     for (i=0; i<COMBOBOX_PROPERTY_EDITORS; i++) {
-        comboBox[i]->clear()
+        comboBox[i].clear()
     }
     for (i=0; i<LINEEDIT_PROPERTY_EDITORS; i++) {
-        lineEdit[i]->clear()
+        lineEdit[i].clear()
     }
 
     # Text Single
-    comboBoxTextSingleFont->removeItem(comboBoxTextSingleFont->findText(fieldVariesText))
+    comboBoxTextSingleFont.removeItem(comboBoxTextSingleFont.findText(fieldVariesText))
     # NOTE: Do not clear comboBoxTextSingleFont
-    comboBoxTextSingleFont->setProperty("FontFamily", "")
+    comboBoxTextSingleFont.setProperty("FontFamily", "")
 
 QGroupBox* PropertyEditor::createGroupBoxGeneral():
     groupBoxGeneral = new QGroupBox(tr("General"), this)
@@ -3659,15 +3645,15 @@ QGroupBox* PropertyEditor::createGroupBoxGeneral():
     comboBoxGeneralLineWeight = createComboBox(0)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonGeneralLayer, comboBoxGeneralLayer)
-    formLayout->addRow(toolButtonGeneralColor, comboBoxGeneralColor)
-    formLayout->addRow(toolButtonGeneralLineType, comboBoxGeneralLineType)
-    formLayout->addRow(toolButtonGeneralLineWeight, comboBoxGeneralLineWeight)
-    groupBoxGeneral->setLayout(formLayout)
+    formLayout.addRow(toolButtonGeneralLayer, comboBoxGeneralLayer)
+    formLayout.addRow(toolButtonGeneralColor, comboBoxGeneralColor)
+    formLayout.addRow(toolButtonGeneralLineType, comboBoxGeneralLineType)
+    formLayout.addRow(toolButtonGeneralLineWeight, comboBoxGeneralLineWeight)
+    groupBoxGeneral.setLayout(formLayout)
 
     return groupBoxGeneral
 
-QGroupBox* PropertyEditor::createGroupBoxMiscArc():
+def PropertyEditor::createGroupBoxMiscArc():
     groupBoxMiscArc = new QGroupBox(tr("Misc"), this)
 
     toolButtonArcClockwise = createToolButton("blank", tr("Clockwise")); #TODO: use proper icon
@@ -3675,12 +3661,12 @@ QGroupBox* PropertyEditor::createGroupBoxMiscArc():
     comboBoxArcClockwise = createComboBox(1)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonArcClockwise, comboBoxArcClockwise)
-    groupBoxMiscArc->setLayout(formLayout)
+    formLayout.addRow(toolButtonArcClockwise, comboBoxArcClockwise)
+    groupBoxMiscArc.setLayout(formLayout)
 
     return groupBoxMiscArc
 
-QGroupBox* PropertyEditor::createGroupBoxGeometry(int objType):
+def PropertyEditor::createGroupBoxGeometry(int objType):
     int i
     QGroupBox *gb = new QGroupBox(tr("Geometry"), this)
 
@@ -3692,28 +3678,27 @@ QGroupBox* PropertyEditor::createGroupBoxGeometry(int objType):
             int index = property_editors[i].id
             toolButton[index] = createToolButton(property_editors[i].icon, tr(property_editors[i].label));
             lineEdit[index] = createLineEdit(property_editors[i].type, property_editors[i].read_only)
-            formLayout->addRow(toolButton[index], lineEdit[index])
+            formLayout.addRow(toolButton[index], lineEdit[index])
             mapSignal(lineEdit[index], property_editors[i].signal, objType)
-        }
-    }
 
-    gb->setLayout(formLayout)
+    gb.setLayout(formLayout)
 
     return gb
 
-QGroupBox* PropertyEditor::createGroupBoxMiscImage():
+def PropertyEditor::createGroupBoxMiscImage():
     groupBoxMiscImage = new QGroupBox(tr("Misc"), this)
 
-    toolButtonImageName = createToolButton("blank", tr("Name")); #TODO: use proper icon
-    toolButtonImagePath = createToolButton("blank", tr("Path")); #TODO: use proper icon
+    # TODO: use proper icon
+    toolButtonImageName = createToolButton("blank", tr("Name"));
+    toolButtonImagePath = createToolButton("blank", tr("Path"));
 
     lineEditImageName = createLineEdit("double", 1)
     lineEditImagePath = createLineEdit("double", 1)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonImageName, lineEditImageName)
-    formLayout->addRow(toolButtonImagePath, lineEditImagePath)
-    groupBoxMiscImage->setLayout(formLayout)
+    formLayout.addRow(toolButtonImageName, lineEditImageName)
+    formLayout.addRow(toolButtonImagePath, lineEditImagePath)
+    groupBoxMiscImage.setLayout(formLayout)
 
     return groupBoxMiscImage
 
@@ -3727,8 +3712,8 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPath():
     #TODO: mapSignal for paths
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonPathClosed, comboBoxPathClosed)
-    groupBoxMiscPath->setLayout(formLayout)
+    formLayout.addRow(toolButtonPathClosed, comboBoxPathClosed)
+    groupBoxMiscPath.setLayout(formLayout)
 
     return groupBoxMiscPath
 
@@ -3742,19 +3727,20 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPolyline():
     #TODO: mapSignal for polylines
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonPolylineClosed, comboBoxPolylineClosed)
-    groupBoxMiscPolyline->setLayout(formLayout)
+    formLayout.addRow(toolButtonPolylineClosed, comboBoxPolylineClosed)
+    groupBoxMiscPolyline.setLayout(formLayout)
 
     return groupBoxMiscPolyline
 
 QGroupBox* PropertyEditor::createGroupBoxTextTextSingle():
     groupBoxTextTextSingle = new QGroupBox(tr("Text"), this)
 
-    toolButtonTextSingleContents = createToolButton("blank", tr("Contents")); #TODO: use proper icon
-    toolButtonTextSingleFont = createToolButton("blank", tr("Font"));     #TODO: use proper icon
-    toolButtonTextSingleJustify = createToolButton("blank", tr("Justify"));  #TODO: use proper icon
-    toolButtonTextSingleHeight = createToolButton("blank", tr("Height"));   #TODO: use proper icon
-    toolButtonTextSingleRotation = createToolButton("blank", tr("Rotation")); #TODO: use proper icon
+    # TODO: use proper icons
+    toolButtonTextSingleContents = createToolButton("blank", tr("Contents"))
+    toolButtonTextSingleFont = createToolButton("blank", tr("Font"))
+    toolButtonTextSingleJustify = createToolButton("blank", tr("Justify"))
+    toolButtonTextSingleHeight = createToolButton("blank", tr("Height"))
+    toolButtonTextSingleRotation = createToolButton("blank", tr("Rotation"))
 
     lineEditTextSingleContents = createLineEdit("string", 0)
     comboBoxTextSingleFont = createFontComboBox(0)
@@ -3769,12 +3755,12 @@ QGroupBox* PropertyEditor::createGroupBoxTextTextSingle():
     mapSignal(lineEditTextSingleRotation, "lineEditTextSingleRotation", OBJ_TYPE_TEXTSINGLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextSingleContents, lineEditTextSingleContents)
-    formLayout->addRow(toolButtonTextSingleFont, comboBoxTextSingleFont)
-    formLayout->addRow(toolButtonTextSingleJustify, comboBoxTextSingleJustify)
-    formLayout->addRow(toolButtonTextSingleHeight, lineEditTextSingleHeight)
-    formLayout->addRow(toolButtonTextSingleRotation, lineEditTextSingleRotation)
-    groupBoxTextTextSingle->setLayout(formLayout)
+    formLayout.addRow(toolButtonTextSingleContents, lineEditTextSingleContents)
+    formLayout.addRow(toolButtonTextSingleFont, comboBoxTextSingleFont)
+    formLayout.addRow(toolButtonTextSingleJustify, comboBoxTextSingleJustify)
+    formLayout.addRow(toolButtonTextSingleHeight, lineEditTextSingleHeight)
+    formLayout.addRow(toolButtonTextSingleRotation, lineEditTextSingleRotation)
+    groupBoxTextTextSingle.setLayout(formLayout)
 
     return groupBoxTextTextSingle
 
@@ -3791,45 +3777,45 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle():
     mapSignal(comboBoxTextSingleUpsideDown, "comboBoxTextSingleUpsideDown", OBJ_TYPE_TEXTSINGLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextSingleBackward, comboBoxTextSingleBackward)
-    formLayout->addRow(toolButtonTextSingleUpsideDown, comboBoxTextSingleUpsideDown)
-    groupBoxMiscTextSingle->setLayout(formLayout)
+    formLayout.addRow(toolButtonTextSingleBackward, comboBoxTextSingleBackward)
+    formLayout.addRow(toolButtonTextSingleUpsideDown, comboBoxTextSingleUpsideDown)
+    groupBoxMiscTextSingle.setLayout(formLayout)
 
     return groupBoxMiscTextSingle
 
 QToolButton* PropertyEditor::createToolButton(const QString& iconName, const QString& txt):
     QToolButton* tb = new QToolButton(this)
-    tb->setIcon(loadIcon(blank_xpm))
-    tb->setIconSize(QSize(iconSize, iconSize))
-    tb->setText(txt)
-    tb->setToolButtonStyle(propertyEditorButtonStyle)
-    tb->setStyleSheet("border:none;")
+    tb.setIcon(loadIcon(blank_xpm))
+    tb.setIconSize(QSize(iconSize, iconSize))
+    tb.setText(txt)
+    tb.setToolButtonStyle(propertyEditorButtonStyle)
+    tb.setStyleSheet("border:none;")
     return tb
 
 QLineEdit* PropertyEditor::createLineEdit(const QString& validatorType, int readOnly):
     QLineEdit* le = new QLineEdit(this)
     if (validatorType == "int") {
-        le->setValidator(new QIntValidator(le))
+        le.setValidator(new QIntValidator(le))
     }
     elif (validatorType == "double") {
-        le->setValidator(new QDoubleValidator(le))
+        le.setValidator(new QDoubleValidator(le))
     }
-    le->setReadOnly(readOnly)
+    le.setReadOnly(readOnly)
     return le
 
 QComboBox* PropertyEditor::createComboBox(int disable):
     QComboBox* cb = new QComboBox(this)
-    cb->setDisabled(disable)
+    cb.setDisabled(disable)
     return cb
 
 QFontComboBox* PropertyEditor::createFontComboBox(int disable):
     QFontComboBox* fcb = new QFontComboBox(this)
-    fcb->setDisabled(disable)
+    fcb.setDisabled(disable)
     return fcb
 
 def PropertyEditor::mapSignal(QObject* fieldObj, const QString& name, QVariant value):
-    fieldObj->setObjectName(name)
-    fieldObj->setProperty(qPrintable(name), value)
+    fieldObj.setObjectName(name)
+    fieldObj.setProperty(qPrintable(name), value)
 
     if (name.startsWith("lineEdit")) {
         connect(fieldObj, SIGNAL(editingFinished()), signalMapper, SLOT(map()))
@@ -3838,7 +3824,7 @@ def PropertyEditor::mapSignal(QObject* fieldObj, const QString& name, QVariant v
         connect(fieldObj, SIGNAL(activated(const QString&)), signalMapper, SLOT(map()))
     }
 
-    signalMapper->setMapping(fieldObj, fieldObj)
+    signalMapper.setMapping(fieldObj, fieldObj)
 
 def PropertyEditor::fieldEdited(QObject* fieldObj):
     ArcObject*  tempArcObj
@@ -3857,50 +3843,43 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
     if(blockSignals) return
 
     debug_message("==========Field was Edited==========")
-    QString objName = fieldObj->objectName()
-    int objType = fieldObj->property(qPrintable(objName)).toInt()
+    QString objName = fieldObj.objectName()
+    int objType = fieldObj.property(qPrintable(objName)).toInt()
 
-    foreach(QGraphicsItem* item, selectedItemList)
-    {
-        if(item->type() != objType) continue
+    foreach(QGraphicsItem* item, selectedItemList):
+        if(item.type() != objType) continue
 
-        switch(objType)
-        {
+        switch(objType):
             case OBJ_TYPE_ARC:
                 if(objName == "lineEditArcCenterX") {
                     tempArcObj = static_cast<ArcObject*>(item)
                     if (tempArcObj) {
-                        QPointF p = tempArcObj->objectCenter()
-                        p.setX(lineEdit[ARC_CENTER_X]->text().toDouble())
-                        tempArcObj->setPos(p)
-                    }
-                }
+                        QPointF p = tempArcObj.objectCenter()
+                        p.setX(lineEdit[ARC_CENTER_X].text().toDouble())
+                        tempArcObj.setPos(p)
+
                 if(objName == "lineEditArcCenterY") {
                     tempArcObj = static_cast<ArcObject*>(item)
                     if (tempArcObj) {
-                        QPointF p = tempArcObj->objectCenter()
-                        p.setY(lineEdit[ARC_CENTER_Y]->text().toDouble())
-                        tempArcObj->setPos(p)
-                    }
-                }
+                        QPointF p = tempArcObj.objectCenter()
+                        p.setY(lineEdit[ARC_CENTER_Y].text().toDouble())
+                        tempArcObj.setPos(p)
+
                 if(objName == "lineEditArcRadius") {
                     tempArcObj = static_cast<ArcObject*>(item)
                     if (tempArcObj) {
-                        tempArcObj->setObjectRadius(lineEdit[ARC_RADIUS]->text().toDouble())
-                    }
-                }
+                        tempArcObj.setObjectRadius(lineEdit[ARC_RADIUS].text().toDouble())
+
                 if(objName == "lineEditArcStartAngle") {
                     tempArcObj = static_cast<ArcObject*>(item)
                     if (tempArcObj) {
-                        tempArcObj->setObjectStartAngle(lineEdit[ARC_START_ANGLE]->text().toDouble())
-                    }
-                }
+                        tempArcObj.setObjectStartAngle(lineEdit[ARC_START_ANGLE].text().toDouble())
+
                 if(objName == "lineEditArcEndAngle") {
                     tempArcObj = static_cast<ArcObject*>(item)
                     if (tempArcObj) {
-                        tempArcObj->setObjectEndAngle(lineEdit[ARC_END_ANGLE]->text().toDouble())
-                    }
-                }
+                        tempArcObj.setObjectEndAngle(lineEdit[ARC_END_ANGLE].text().toDouble())
+
                 break
             case OBJ_TYPE_BLOCK: #TODO: field editing
                 break
@@ -3908,41 +3887,36 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                 if(objName == "lineEditCircleCenterX") {
                     tempCircleObj = static_cast<CircleObject*>(item)
                     if (tempCircleObj) {
-                        QPointF p = tempCircleObj->objectCenter()
-                        p.setX(lineEdit[CIRCLE_CENTER_X]->text().toDouble())
-                        tempCircleObj->setPos(p)
-                    }
-                }
+                        QPointF p = tempCircleObj.objectCenter()
+                        p.setX(lineEdit[CIRCLE_CENTER_X].text().toDouble())
+                        tempCircleObj.setPos(p)
+
                 if(objName == "lineEditCircleCenterY") {
                     tempCircleObj = static_cast<CircleObject*>(item)
                     if (tempCircleObj) {
-                        QPointF p = tempCircleObj->objectCenter()
-                        p.setY(lineEdit[CIRCLE_CENTER_Y]->text().toDouble())
-                        tempCircleObj->setPos(p)
-                    }
-                }
+                        QPointF p = tempCircleObj.objectCenter()
+                        p.setY(lineEdit[CIRCLE_CENTER_Y].text().toDouble())
+                        tempCircleObj.setPos(p)
+
                 if(objName == "lineEditCircleRadius") {
                     tempCircleObj = static_cast<CircleObject*>(item)
                     if (tempCircleObj) {
-                        tempCircleObj->setObjectRadius(lineEdit[CIRCLE_RADIUS]->text().toDouble())
-                    }
-                }
+                        tempCircleObj.setObjectRadius(lineEdit[CIRCLE_RADIUS].text().toDouble())
+
                 if(objName == "lineEditCircleDiameter") {
                     tempCircleObj = static_cast<CircleObject*>(item)
                     if (tempCircleObj) {
-                        tempCircleObj->setObjectDiameter(lineEdit[CIRCLE_DIAMETER]->text().toDouble())
-                    }
-                }
+                        tempCircleObj.setObjectDiameter(lineEdit[CIRCLE_DIAMETER].text().toDouble())
+
                 if(objName == "lineEditCircleArea") {
                     tempCircleObj = static_cast<CircleObject*>(item)
-                    if(tempCircleObj) { tempCircleObj->setObjectArea(lineEdit[CIRCLE_AREA]->text().toDouble()); }
+                    if(tempCircleObj) { tempCircleObj.setObjectArea(lineEdit[CIRCLE_AREA].text().toDouble()); }
                 }
                 if(objName == "lineEditCircleCircumference") {
                     tempCircleObj = static_cast<CircleObject*>(item)
                     if (tempCircleObj) {
-                        tempCircleObj->setObjectCircumference(lineEdit[CIRCLE_CIRCUMFERENCE]->text().toDouble())
-                    }
-                }
+                        tempCircleObj.setObjectCircumference(lineEdit[CIRCLE_CIRCUMFERENCE].text().toDouble())
+
                 break
             case OBJ_TYPE_DIMALIGNED: #TODO: field editing
                 break
@@ -3964,43 +3938,37 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                 if(objName == "lineEditEllipseCenterX") {
                     tempEllipseObj = static_cast<EllipseObject*>(item)
                     if (tempEllipseObj) {
-                        QPointF p = tempCircleObj->objectCenter()
-                        p.setX(lineEdit[ELLIPSE_CENTER_X]->text().toDouble())
-                        tempCircleObj->setPos(p)
-                    }
-                }
+                        QPointF p = tempCircleObj.objectCenter()
+                        p.setX(lineEdit[ELLIPSE_CENTER_X].text().toDouble())
+                        tempCircleObj.setPos(p)
+
                 if(objName == "lineEditEllipseCenterY") {
                     tempEllipseObj = static_cast<EllipseObject*>(item)
                     if (tempEllipseObj) {
-                        QPointF p = tempCircleObj->objectCenter()
-                        p.setY(lineEdit[ELLIPSE_CENTER_Y]->text().toDouble())
-                        tempCircleObj->setPos(p)
-                    }
-                }
+                        QPointF p = tempCircleObj.objectCenter()
+                        p.setY(lineEdit[ELLIPSE_CENTER_Y].text().toDouble())
+                        tempCircleObj.setPos(p)
+
                 if(objName == "lineEditEllipseRadiusMajor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item)
                     if (tempEllipseObj) {
-                        tempEllipseObj->setObjectRadiusMajor(lineEdit[ELLIPSE_RADIUS_MAJOR]->text().toDouble())
-                    }
-                }
+                        tempEllipseObj.setObjectRadiusMajor(lineEdit[ELLIPSE_RADIUS_MAJOR].text().toDouble())
+
                 if(objName == "lineEditEllipseRadiusMinor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item)
                     if (tempEllipseObj) {
-                        tempEllipseObj->setObjectRadiusMinor(lineEdit[ELLIPSE_RADIUS_MINOR]->text().toDouble())
-                    }
-                }
+                        tempEllipseObj.setObjectRadiusMinor(lineEdit[ELLIPSE_RADIUS_MINOR].text().toDouble())
+
                 if(objName == "lineEditEllipseDiameterMajor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item)
                     if (tempEllipseObj) {
-                        tempEllipseObj->setObjectDiameterMajor(lineEdit[ELLIPSE_DIAMETER_MAJOR]->text().toDouble())
-                    }
-                }
+                        tempEllipseObj.setObjectDiameterMajor(lineEdit[ELLIPSE_DIAMETER_MAJOR].text().toDouble())
+
                 if(objName == "lineEditEllipseDiameterMinor") {
                     tempEllipseObj = static_cast<EllipseObject*>(item)
                     if (tempEllipseObj) {
-                        tempEllipseObj->setObjectDiameterMinor(lineEdit[ELLIPSE_DIAMETER_MINOR]->text().toDouble())
-                    }
-                }
+                        tempEllipseObj.setObjectDiameterMinor(lineEdit[ELLIPSE_DIAMETER_MINOR].text().toDouble())
+
                 break
             case OBJ_TYPE_IMAGE: #TODO: field editing
                 break
@@ -4010,25 +3978,25 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                 if(objName == "lineEditLineStartX") {
                     tempLineObj = static_cast<LineObject*>(item)
                     if (tempLineObj) {
-                        tempLineObj->setObjectX1(lineEdit[LINE_START_X]->text().toDouble())
+                        tempLineObj.setObjectX1(lineEdit[LINE_START_X].text().toDouble())
                     }
                 }
                 if(objName == "lineEditLineStartY") {
                     tempLineObj = static_cast<LineObject*>(item)
                     if (tempLineObj) {
-                        tempLineObj->setObjectY1(-lineEdit[LINE_START_Y]->text().toDouble())
+                        tempLineObj.setObjectY1(-lineEdit[LINE_START_Y].text().toDouble())
                     }
                 }
                 if(objName == "lineEditLineEndX") {
                     tempLineObj = static_cast<LineObject*>(item)
                     if (tempLineObj) {
-                        tempLineObj->setObjectX2(lineEdit[LINE_END_X]->text().toDouble())
+                        tempLineObj.setObjectX2(lineEdit[LINE_END_X].text().toDouble())
                     }
                 }
                 if(objName == "lineEditLineEndY") {
                     tempLineObj = static_cast<LineObject*>(item)
                     if (tempLineObj) {
-                        tempLineObj->setObjectY2(-lineEdit[LINE_END_Y]->text().toDouble())
+                        tempLineObj.setObjectY2(-lineEdit[LINE_END_Y].text().toDouble())
                     }
                 }
                 break
@@ -4038,13 +4006,13 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                 if(objName == "lineEditPointX") {
                     tempPointObj = static_cast<PointObject*>(item)
                     if (tempPointObj) {
-                        tempPointObj->setObjectX(lineEdit[POINT_X]->text().toDouble())
+                        tempPointObj.setObjectX(lineEdit[POINT_X].text().toDouble())
                     }
                 }
                 if(objName == "lineEditPointY") {
                     tempPointObj = static_cast<PointObject*>(item)
                     if (tempPointObj) {
-                        tempPointObj->setObjectY(-lineEdit[POINT_Y]->text().toDouble())
+                        tempPointObj.setObjectY(-lineEdit[POINT_Y].text().toDouble())
                     }
                 }
                 break
@@ -4062,67 +4030,64 @@ def PropertyEditor::fieldEdited(QObject* fieldObj):
                 if(objName == "lineEditTextSingleContents") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
                     if (tempTextSingleObj) {
-                        tempTextSingleObj->setObjectText(lineEditTextSingleContents->text())
+                        tempTextSingleObj.setObjectText(lineEditTextSingleContents.text())
                     }
                 }
                 if(objName == "comboBoxTextSingleFont") {
-                    if(comboBoxTextSingleFont->currentText() == fieldVariesText) { break; }
+                    if(comboBoxTextSingleFont.currentText() == fieldVariesText) { break; }
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
-                    if(tempTextSingleObj) { tempTextSingleObj->setObjectTextFont(comboBoxTextSingleFont->currentFont().family()); } }
+                    if(tempTextSingleObj) { tempTextSingleObj.setObjectTextFont(comboBoxTextSingleFont.currentFont().family()); } }
                 if (objName == "comboBoxTextSingleJustify") {
-                    if (comboBoxTextSingleJustify->currentText() == fieldVariesText) {
+                    if (comboBoxTextSingleJustify.currentText() == fieldVariesText) {
                         break
                     }
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
                     if (tempTextSingleObj) {
-                        tempTextSingleObj->setObjectTextJustify(comboBoxTextSingleJustify->itemData(comboBoxTextSingleJustify->currentIndex()).toString())
+                        tempTextSingleObj.setObjectTextJustify(comboBoxTextSingleJustify.itemData(comboBoxTextSingleJustify.currentIndex()).toString())
                     }
                 }
                 if(objName == "lineEditTextSingleHeight") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
                     if (tempTextSingleObj) {
-                        tempTextSingleObj->setObjectTextSize(lineEditTextSingleHeight->text().toDouble())
+                        tempTextSingleObj.setObjectTextSize(lineEditTextSingleHeight.text().toDouble())
                     }
                 }
                 if(objName == "lineEditTextSingleRotation") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
                     if (tempTextSingleObj) {
-                        tempTextSingleObj->setRotation(-lineEditTextSingleRotation->text().toDouble())
+                        tempTextSingleObj.setRotation(-lineEditTextSingleRotation.text().toDouble())
                     }
                 }
                 if(objName == "lineEditTextSingleX") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
-                    if(tempTextSingleObj) { tempTextSingleObj->setObjectX(lineEditTextSingleX->text().toDouble()); } }
+                    if(tempTextSingleObj) { tempTextSingleObj.setObjectX(lineEditTextSingleX.text().toDouble()); } }
                 if(objName == "lineEditTextSingleY") {
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
-                    if(tempTextSingleObj) { tempTextSingleObj->setObjectY(lineEditTextSingleY->text().toDouble()); } }
+                    if(tempTextSingleObj) { tempTextSingleObj.setObjectY(lineEditTextSingleY.text().toDouble()); } }
                 if(objName == "comboBoxTextSingleBackward") {
-                    if(comboBoxTextSingleBackward->currentText() == fieldVariesText) { break; }
+                    if(comboBoxTextSingleBackward.currentText() == fieldVariesText) { break; }
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
-                    if(tempTextSingleObj) { tempTextSingleObj->setObjectTextBackward(comboBoxTextSingleBackward->itemData(comboBoxTextSingleBackward->currentIndex()).toBool()); } }
+                    if(tempTextSingleObj) { tempTextSingleObj.setObjectTextBackward(comboBoxTextSingleBackward.itemData(comboBoxTextSingleBackward.currentIndex()).toBool()); } }
                 if(objName == "comboBoxTextSingleUpsideDown") {
-                    if(comboBoxTextSingleUpsideDown->currentText() == fieldVariesText) { break; }
+                    if(comboBoxTextSingleUpsideDown.currentText() == fieldVariesText) { break; }
                     tempTextSingleObj = static_cast<TextSingleObject*>(item)
-                    if(tempTextSingleObj) { tempTextSingleObj->setObjectTextUpsideDown(comboBoxTextSingleUpsideDown->itemData(comboBoxTextSingleUpsideDown->currentIndex()).toBool()); } }
+                    if(tempTextSingleObj) { tempTextSingleObj.setObjectTextUpsideDown(comboBoxTextSingleUpsideDown.itemData(comboBoxTextSingleUpsideDown.currentIndex()).toBool()); } }
                 break
             default:
                 break
-        }
 
-    }
-
-    #Block this slot from running twice since calling setSelectedItems will trigger it
+    # Block this slot from running twice since calling setSelectedItems will trigger it
     blockSignals = 1
 
     QWidget* widget = QApplication::focusWidget()
     # Update so all fields have fresh data
-     * TODO: Improve this
+    # TODO: Improve this
 
     setSelectedItems(selectedItemList)
     hideAllGroups()
     showGroups(objType)
 
-    if(widget) widget->setFocus(Qt::OtherFocusReason)
+    if(widget) widget.setFocus(Qt::OtherFocusReason)
 
     blockSignals = 0
 
@@ -4138,7 +4103,7 @@ def MainWindow::checkForUpdates():
 def MainWindow::selectAll():
     debug_message("selectAll()")
     View* gview = activeView()
-    if(gview) { gview->selectAll(); }
+    if(gview) { gview.selectAll(); }
 }
 
 QString MainWindow::platformString():
@@ -4171,13 +4136,13 @@ def MainWindow::whatsThisContextHelp():
 
 def MainWindow::print():
     debug_message("print()")
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if mdiWin: mdiWin->print();
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if mdiWin: mdiWin.print();
 
 def MainWindow::tipOfTheDay():
     debug_message("tipOfTheDay()")
 
-    QString appDir = qApp->applicationDirPath()
+    QString appDir = qApp.applicationDirPath()
     wizardTipOfTheDay = new QDialog()
     QToolButton *button1 = new QToolButton(wizardTipOfTheDay)
     QToolButton *button2 = new QToolButton(wizardTipOfTheDay)
@@ -4186,39 +4151,39 @@ def MainWindow::tipOfTheDay():
     ImageWidget* imgBanner = new ImageWidget(appDir + "/images/did-you-know.png", wizardTipOfTheDay)
 
     QCheckBox* checkBoxTipOfTheDay = new QCheckBox(tr("&Show tips on startup"), wizardTipOfTheDay)
-    checkBoxTipOfTheDay->setChecked(settings.general_tip_of_the_day)
+    checkBoxTipOfTheDay.setChecked(settings.general_tip_of_the_day)
     connect(checkBoxTipOfTheDay, SIGNAL(stateChanged(int)), this, SLOT(checkBoxTipOfTheDayStateChanged(int)))
 
     if (strlen(tips[settings.general_current_tip])==0) {
         settings.general_current_tip = 0
     }
     labelTipOfTheDay = new QLabel(tips[settings.general_current_tip], wizardTipOfTheDay)
-    labelTipOfTheDay->setWordWrap(1)
+    labelTipOfTheDay.setWordWrap(1)
 
-    button1->setText("&Previous")
-    button2->setText("&Next")
-    button3->setText("&Close")
+    button1.setText("&Previous")
+    button2.setText("&Next")
+    button3.setText("&Close")
     connect(button1, SIGNAL(triggered()), wizardTipOfTheDay, SLOT(wizardTipOfTheDay.close()))
     connect(button2, SIGNAL(triggered()), wizardTipOfTheDay, SLOT(wizardTipOfTheDay.close()))
     connect(button3, SIGNAL(triggered()), wizardTipOfTheDay, SLOT(wizardTipOfTheDay.close()))
 
     QVBoxLayout* layout = new QVBoxLayout(wizardTipOfTheDay)
-    layout->addWidget(imgBanner)
-    layout->addStrut(1)
-    layout->addWidget(labelTipOfTheDay)
-    layout->addStretch(1)
-    layout->addWidget(checkBoxTipOfTheDay)
-    layout->addStrut(1)
-    layout->addWidget(button1)
-    layout->addStrut(1)
-    layout->addWidget(button2)
-    layout->addStrut(1)
-    layout->addWidget(button3)
+    layout.addWidget(imgBanner)
+    layout.addStrut(1)
+    layout.addWidget(labelTipOfTheDay)
+    layout.addStretch(1)
+    layout.addWidget(checkBoxTipOfTheDay)
+    layout.addStrut(1)
+    layout.addWidget(button1)
+    layout.addStrut(1)
+    layout.addWidget(button2)
+    layout.addStrut(1)
+    layout.addWidget(button3)
 
-    wizardTipOfTheDay->setLayout(layout)
-    wizardTipOfTheDay->setWindowTitle("Tip of the Day")
-    wizardTipOfTheDay->setMinimumSize(550, 400)
-    wizardTipOfTheDay->exec()
+    wizardTipOfTheDay.setLayout(layout)
+    wizardTipOfTheDay.setWindowTitle("Tip of the Day")
+    wizardTipOfTheDay.setMinimumSize(550, 400)
+    wizardTipOfTheDay.exec()
 
 def MainWindow::buttonTipOfTheDayClicked(int button):
     #
@@ -4229,18 +4194,17 @@ def MainWindow::buttonTipOfTheDayClicked(int button):
             settings.general_current_tip--
         else
             settings.general_current_tip = listTipOfTheDay.size()-1
-        labelTipOfTheDay->setText(listTipOfTheDay.value(settings.general_current_tip))
+        labelTipOfTheDay.setText(listTipOfTheDay.value(settings.general_current_tip))
     }
     elif(button == QWizard::CustomButton2)
     {
         settings.general_current_tip++
         if(settings.general_current_tip >= listTipOfTheDay.size())
             settings.general_current_tip = 0
-        labelTipOfTheDay->setText(listTipOfTheDay.value(settings.general_current_tip))
+        labelTipOfTheDay.setText(listTipOfTheDay.value(settings.general_current_tip))
     }
     elif(button == QWizard::CustomButton3)
-    {
-        wizardTipOfTheDay->close()
+        wizardTipOfTheDay.close()
 
 
 
@@ -4249,23 +4213,22 @@ def MainWindow::help():
 
     # display in a custom widget instead
     # Open the HTML Help in the default browser
-    QUrl helpURL("file:///" + qApp->applicationDirPath() + "/help/doc-index.html")
+    QUrl helpURL("file:///" + qApp.applicationDirPath() + "/help/doc-index.html")
     QDesktopServices::openUrl(helpURL)
-
 
     #TODO: This is how to start an external program. Use this elsewhere...
     #QString program = "firefox";
     #QStringList arguments;
     #arguments << "help/commands.html";
     #QProcess *myProcess = new QProcess(this);
-    #myProcess->start(program, arguments);
-}
+    #myProcess.start(program, arguments);
+
 
 def MainWindow::actions():
     " this wrapper connects the signal to the C-style actuator "
     char call[100]
     QObject *obj = sender()
-    caller = obj->objectName()
+    caller = obj.objectName()
     for i in range(len(action_list.keys()):
         if caller == action_list[i].abbreviation:
             call[0] = (char)i
@@ -4305,8 +4268,6 @@ def main_redo():
         # set reverse flag
         strcat(undo_call, " -r")
         actuator(undo_call)
-    }
-}
 
 int MainWindow::isShiftPressed():
     return settings.shiftKeyPressedState
@@ -4319,16 +4280,16 @@ def MainWindow::setShiftReleased():
 
 # Icons
 def MainWindow::iconResize(int iconSize):
-    this->setIconSize(QSize(iconSize, iconSize))
-    layerSelector->     setIconSize(QSize(iconSize*4, iconSize))
-    colorSelector->     setIconSize(QSize(iconSize, iconSize))
-    linetypeSelector->  setIconSize(QSize(iconSize*4, iconSize))
-    lineweightSelector->setIconSize(QSize(iconSize*4, iconSize))
+    this.setIconSize(QSize(iconSize, iconSize))
+    layerSelector.     setIconSize(QSize(iconSize*4, iconSize))
+    colorSelector.     setIconSize(QSize(iconSize, iconSize))
+    linetypeSelector.  setIconSize(QSize(iconSize*4, iconSize))
+    lineweightSelector.setIconSize(QSize(iconSize*4, iconSize))
     #set the minimum combobox width so the text is always readable
-    layerSelector->     setMinimumWidth(iconSize*4)
-    colorSelector->     setMinimumWidth(iconSize*2)
-    linetypeSelector->  setMinimumWidth(iconSize*4)
-    lineweightSelector->setMinimumWidth(iconSize*4)
+    layerSelector.     setMinimumWidth(iconSize*4)
+    colorSelector.     setMinimumWidth(iconSize*2)
+    linetypeSelector.  setMinimumWidth(iconSize*4)
+    lineweightSelector.setMinimumWidth(iconSize*4)
 
     # TODO: low-priority:
      * open app with iconSize set to 128. resize the icons to a smaller size.
@@ -4337,75 +4298,68 @@ def MainWindow::iconResize(int iconSize):
 
 MdiWindow* MainWindow::activeMdiWindow():
     debug_message("activeMdiWindow()")
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
     return mdiWin
 
 View* MainWindow::activeView():
     debug_message("activeView()")
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin)
-    {
-        View* v = mdiWin->getView()
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if mdiWin:
+        View* v = mdiWin.getView()
         return v
-    }
     return 0
 
 QGraphicsScene* MainWindow::activeScene():
     debug_message("activeScene()")
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin)
-    {
-        QGraphicsScene* s = mdiWin->getScene()
-        return s
-    }
+    mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if mdiWin:
+        return mdiWin.getScene()
     return 0
 
 def MainWindow::updateAllViewScrollBars(int val):
-    QList<QMdiSubWindow*> windowList = mdiArea->subWindowList()
-    for(int i = 0; i < windowList.count(); ++i)
-    {
+    QList<QMdiSubWindow*> windowList = mdiArea.subWindowList()
+    for(int i = 0; i < windowList.count(); ++i):
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(windowList.at(i))
-        if(mdiWin) { mdiWin->showViewScrollBars(val); }
-    }
-}
+        if(mdiWin) { mdiWin.showViewScrollBars(val); }
+
 
 def MainWindow::updateAllViewCrossHairColors(unsigned int color):
-    QList<QMdiSubWindow*> windowList = mdiArea->subWindowList()
+    QList<QMdiSubWindow*> windowList = mdiArea.subWindowList()
     for(int i = 0; i < windowList.count(); ++i)
     {
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(windowList.at(i))
-        if(mdiWin) { mdiWin->setViewCrossHairColor(color); }
+        if(mdiWin) { mdiWin.setViewCrossHairColor(color); }
 
 def MainWindow::updateAllViewBackgroundColors(unsigned int color):
-    QList<QMdiSubWindow*> windowList = mdiArea->subWindowList()
+    QList<QMdiSubWindow*> windowList = mdiArea.subWindowList()
     for(int i = 0; i < windowList.count(); ++i)
     {
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(windowList.at(i))
-        if(mdiWin) { mdiWin->setViewBackgroundColor(color); }
+        if(mdiWin) { mdiWin.setViewBackgroundColor(color); }
 
 def MainWindow::updateAllViewSelectBoxColors(unsigned int colorL, unsigned int fillL, unsigned int colorR, unsigned int fillR, int alpha):
-    QList<QMdiSubWindow*> windowList = mdiArea->subWindowList()
+    QList<QMdiSubWindow*> windowList = mdiArea.subWindowList()
     for(int i = 0; i < windowList.count(); ++i)
     {
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(windowList.at(i))
-        if(mdiWin) { mdiWin->setViewSelectBoxColors(colorL, fillL, colorR, fillR, alpha); }
+        if(mdiWin) { mdiWin.setViewSelectBoxColors(colorL, fillL, colorR, fillR, alpha); }
 
 def MainWindow::updateAllViewGridColors(unsigned int color):
-    QList<QMdiSubWindow*> windowList = mdiArea->subWindowList()
+    QList<QMdiSubWindow*> windowList = mdiArea.subWindowList()
     for(int i = 0; i < windowList.count(); ++i)
     {
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(windowList.at(i))
-        if(mdiWin) { mdiWin->setViewGridColor(color); }
+        if(mdiWin) { mdiWin.setViewGridColor(color); }
 
 def MainWindow::updateAllViewRulerColors(unsigned int color):
-    QList<QMdiSubWindow*> windowList = mdiArea->subWindowList()
+    QList<QMdiSubWindow*> windowList = mdiArea.subWindowList()
     for(int i = 0; i < windowList.count(); ++i)
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(windowList.at(i))
-        if(mdiWin) { mdiWin->setViewRulerColor(color); }
+        if(mdiWin) { mdiWin.setViewRulerColor(color); }
 
 def MainWindow::updatePickAddMode(int val):
     settings.selection_mode_pickadd = val
-    dockPropEdit->updatePickAddModeButton(val)
+    dockPropEdit.updatePickAddModeButton(val)
 
 def MainWindow::pickAddModeToggled():
     int val = !settings.selection_mode_pickadd
@@ -4423,15 +4377,15 @@ def MainWindow::colorSelectorIndexChanged(int index):
     {
         bool ok = 0
         #TODO: Handle ByLayer and ByBlock and Other...
-        newColor = comboBox->itemData(index).toUInt(&ok)
+        newColor = comboBox.itemData(index).toUInt(&ok)
         if(!ok)
             QMessageBox::warning(this, tr("Color Selector Conversion Error"), tr("<b>An error has occurred while changing colors.</b>"))
     }
     else
         QMessageBox::warning(this, tr("Color Selector Pointer Error"), tr("<b>An error has occurred while changing colors.</b>"))
 
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin) { mdiWin->currentColorChanged(newColor); }
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if(mdiWin) { mdiWin.currentColorChanged(newColor); }
 }
 
 def MainWindow::linetypeSelectorIndexChanged(int index):
@@ -4442,12 +4396,12 @@ def MainWindow::lineweightSelectorIndexChanged(int index):
 
 def MainWindow::textFontSelectorCurrentFontChanged(const QFont& font):
     debug_message("textFontSelectorCurrentFontChanged()")
-    textFontSelector->setCurrentFont(QFont(font.family()))
+    textFontSelector.setCurrentFont(QFont(font.family()))
     strcpy(settings.text_font, font.family().toLocal8Bit().constData())
 
 def MainWindow::textSizeSelectorIndexChanged(int index):
     debug_message("textSizeSelectorIndexChanged(%d)", index)
-    settings.text_style.size = fabs(textSizeSelector->itemData(index).toReal()); #TODO: check that the toReal() conversion is ok
+    settings.text_style.size = fabs(textSizeSelector.itemData(index).toReal()); #TODO: check that the toReal() conversion is ok
 }
 
 QString MainWindow::textFont():
@@ -4455,118 +4409,118 @@ QString MainWindow::textFont():
 
 def MainWindow::setTextSize(num):
     settings.text_style.size = fabs(num)
-    int index = textSizeSelector->findText("Custom", Qt::MatchContains)
+    int index = textSizeSelector.findText("Custom", Qt::MatchContains)
     if(index != -1)
-        textSizeSelector->removeItem(index)
-    textSizeSelector->addItem("Custom " + QString().setNum(num, 'f', 2) + " pt", num)
-    index = textSizeSelector->findText("Custom", Qt::MatchContains)
+        textSizeSelector.removeItem(index)
+    textSizeSelector.addItem("Custom " + QString().setNum(num, 'f', 2) + " pt", num)
+    index = textSizeSelector.findText("Custom", Qt::MatchContains)
     if(index != -1)
-        textSizeSelector->setCurrentIndex(index)
+        textSizeSelector.setCurrentIndex(index)
 
 QString MainWindow::getCurrentLayer():
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin) { return mdiWin->getCurrentLayer(); }
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if(mdiWin) { return mdiWin.getCurrentLayer(); }
     return "0"
 
 unsigned int MainWindow::getCurrentColor():
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin) { return mdiWin->getCurrentColor(); }
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if(mdiWin) { return mdiWin.getCurrentColor(); }
     return 0; #TODO: return color ByLayer
 
 QString MainWindow::getCurrentLineType():
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin) { return mdiWin->getCurrentLineType(); }
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if(mdiWin) { return mdiWin.getCurrentLineType(); }
     return "ByLayer"
 
 QString MainWindow::getCurrentLineWeight():
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin) { return mdiWin->getCurrentLineWeight(); }
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if(mdiWin) { return mdiWin.getCurrentLineWeight(); }
     return "ByLayer"
 
 def MainWindow::deletePressed():
     debug_message("deletePressed()")
     QApplication::setOverrideCursor(Qt::WaitCursor)
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin) { mdiWin->deletePressed(); }
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if(mdiWin) { mdiWin.deletePressed(); }
     QApplication::restoreOverrideCursor()
 
 def MainWindow::escapePressed():
     debug_message("escapePressed()")
     QApplication::setOverrideCursor(Qt::WaitCursor)
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-    if(mdiWin) { mdiWin->escapePressed(); }
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+    if(mdiWin) { mdiWin.escapePressed(); }
     QApplication::restoreOverrideCursor()
 
     gview = activeView()
     if gview:
-        gview->clearRubberRoom()
-        gview->previewOff()
-        gview->disableMoveRapidFire()
+        gview.clearRubberRoom()
+        gview.previewOff()
+        gview.disableMoveRapidFire()
 
 def toggleGrid():
     debug_message("toggleGrid()")
-    status_bar[STATUS_GRID]->toggle()
+    status_bar[STATUS_GRID].toggle()
 
 def toggleRuler():
     debug_message("toggleRuler()")
-    status_bar[STATUS_RULER]->toggle()
+    status_bar[STATUS_RULER].toggle()
 
 def toggleLwt():
     debug_message("toggleLwt()")
-    status_bar[STATUS_LWT]->toggle()
+    status_bar[STATUS_LWT].toggle()
 
 def MainWindow::enableMoveRapidFire():
     View* gview = activeView()
-    if (gview) gview->enableMoveRapidFire()
+    if (gview) gview.enableMoveRapidFire()
 
 def MainWindow::disableMoveRapidFire():
     View* gview = activeView()
-    if(gview) gview->disableMoveRapidFire()
+    if(gview) gview.disableMoveRapidFire()
 
 def MainWindow::nativeAddTextSingle(const QString& str, x, y, rot, int fill, int rubberMode):
     View* gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if(gview and gscene)
     {
         TextSingleObject* obj = new TextSingleObject(str, x, -y, getCurrentColor())
-        obj->objTextFont = settings.text_font
-        obj->obj_text = settings.text_style
-        obj->setObjectText(obj->objText)
-        obj->setRotation(-rot)
+        obj.objTextFont = settings.text_font
+        obj.obj_text = settings.text_style
+        obj.setObjectText(obj.objText)
+        obj.setRotation(-rot)
         #TODO: single line text fill
-        obj->setObjectRubberMode(rubberMode)
+        obj.setObjectRubberMode(rubberMode)
         if (rubberMode) {
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
 
 def MainWindow::nativeAddLine(x1, y1, x2, y2, rot, int rubberMode):
     View* gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if(gview and gscene)
     {
         LineObject* obj = new LineObject(x1, -y1, x2, -y2, getCurrentColor())
-        obj->setRotation(-rot)
-        obj->setObjectRubberMode(rubberMode)
+        obj.setRotation(-rot)
+        obj.setObjectRubberMode(rubberMode)
         if rubberMode:
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
 
 
 def MainWindow::nativeAddRectangle(x, y, w, h, rot, int fill, int rubberMode):
     View* gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if(gview and gscene)
     {
         RectObject* obj = new RectObject(x, -y, w, -h, getCurrentColor())
-        obj->setRotation(-rot)
-        obj->setObjectRubberMode(rubberMode)
+        obj.setRotation(-rot)
+        obj.setObjectRubberMode(rubberMode)
         #TODO: rect fill
         if (rubberMode) {
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
 
 def MainWindow::nativeAddArc(startX, startY, midX, midY, endX, endY, int rubberMode):
     View* gview = activeView()
@@ -4574,36 +4528,36 @@ def MainWindow::nativeAddArc(startX, startY, midX, midY, endX, endY, int rubberM
     if(gview and scene)
     {
         ArcObject* arcObj = new ArcObject(startX, -startY, midX, -midY, endX, -endY, getCurrentColor())
-        arcObj->setObjectRubberMode(rubberMode)
-        if(rubberMode) gview->addToRubberRoom(arcObj)
-        scene->addItem(arcObj)
-        scene->update()
+        arcObj.setObjectRubberMode(rubberMode)
+        if(rubberMode) gview.addToRubberRoom(arcObj)
+        scene.addItem(arcObj)
+        scene.update()
 
 def MainWindow::nativeAddCircle(centerX, centerY, radius, int fill, int rubberMode):
     View* gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if (gview and gscene) {
         CircleObject* obj = new CircleObject(centerX, -centerY, radius, getCurrentColor())
-        obj->setObjectRubberMode(rubberMode)
+        obj.setObjectRubberMode(rubberMode)
         #TODO: circle fill
         if rubberMode:
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
 
 
 def MainWindow::nativeAddEllipse(centerX, centerY, width, height, rot, int fill, int rubberMode):
     View* gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if (gview and gscene) {
         EllipseObject* obj = new EllipseObject(centerX, -centerY, width, height, getCurrentColor())
-        obj->setRotation(-rot)
-        obj->setObjectRubberMode(rubberMode)
+        obj.setRotation(-rot)
+        obj.setObjectRubberMode(rubberMode)
         #TODO: ellipse fill
         if rubberMode:
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
 
 
 def MainWindow::nativeAddPoint(x, y):
@@ -4615,43 +4569,43 @@ def MainWindow::nativeAddPoint(x, y):
 #NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)
 def MainWindow::nativeAddPolygon(startX, startY, const QPainterPath& p, rubberMode):
     gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if (gview and gscene) {
         PolygonObject* obj = new PolygonObject(startX, startY, p, getCurrentColor())
-        obj->setObjectRubberMode(rubberMode)
+        obj.setObjectRubberMode(rubberMode)
         if(rubberMode)
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
         else:
 
 
 #NOTE: This native is different than the rest in that the Y+ is down (scripters need not worry about this)
 def MainWindow::nativeAddPolyline(startX, startY, const QPainterPath& p, rubberMode):
     gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if(gview and gscene)
         PolylineObject* obj = new PolylineObject(startX, startY, p, getCurrentColor())
-        obj->setObjectRubberMode(rubberMode)
+        obj.setObjectRubberMode(rubberMode)
         if(rubberMode)
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
         else:
 
 
 def MainWindow::nativeAddDimLeader(x1, y1, x2, y2, rot, rubberMode):
     View* gview = activeView()
-    QGraphicsScene* gscene = gview->scene()
+    QGraphicsScene* gscene = gview.scene()
     if(gview and gscene) {
         DimLeaderObject* obj = new DimLeaderObject(x1, -y1, x2, -y2, getCurrentColor())
-        obj->setRotation(-rot)
-        obj->setObjectRubberMode(rubberMode)
+        obj.setRotation(-rot)
+        obj.setObjectRubberMode(rubberMode)
         if(rubberMode)
         {
-            gview->addToRubberRoom(obj)
-            gscene->addItem(obj)
-            gscene->update()
+            gview.addToRubberRoom(obj)
+            gscene.addItem(obj)
+            gscene.update()
 
 MainWindow::nativeCalculateAngle(x1, y1, x2, y2):
     return QLineF(x1, -y1, x2, -y2).angle()
@@ -4662,13 +4616,13 @@ MainWindow::nativeCalculateDistance(x1, y1, x2, y2):
 def MainWindow::fill_menu(menu_id):
     i
     debug_message("MainWindow creating %s", menu_label[menu_id])
-    menuBar()->addMenu(menu[menu_id])
+    menuBar().addMenu(menu[menu_id])
     for (i=0; menus[menu_id][i]>=-1; i++) {
         if (menus[menu_id][i] >= 0) {
-            menu[menu_id]->addAction(actionHash.value(menus[menu_id][i]))
+            menu[menu_id].addAction(actionHash.value(menus[menu_id][i]))
         }
         else {
-            menu[menu_id]->addSeparator()
+            menu[menu_id].addSeparator()
 
 # nativePerpendicularDistance
     This is currently causing a bug and is going to be replaced with a libembroidery function.
@@ -4686,7 +4640,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     char current_path[1000]
     i
 
-    QString appDir = qApp->applicationDirPath()
+    QString appDir = qApp.applicationDirPath()
     readSettings()
 
     for (i=0; i<nFolders; i++) {
@@ -4705,17 +4659,17 @@ MainWindow::MainWindow() : QMainWindow(0):
     QTranslator translatorEmb
     app_dir(current_path, translations_folder)
     translatorEmb.load(QString(current_path) + "/embroidermodder2_" + lang)
-    qApp->installTranslator(&translatorEmb)
+    qApp.installTranslator(&translatorEmb)
 
     #Load translations for the commands
     QTranslator translatorCmd
     translatorCmd.load(QDir::toNativeSeparators(QString(current_path) + lang + "/commands_" + lang))
-    qApp->installTranslator(&translatorCmd)
+    qApp.installTranslator(&translatorCmd)
 
     #Load translations provided by Qt - this covers dialog buttons and other common things.
     QTranslator translatorQt
     translatorQt.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)); #TODO: ensure this always loads, ship a copy of this with the app
-    qApp->installTranslator(&translatorQt)
+    qApp.installTranslator(&translatorQt)
 
     #Init
     mainWin = this
@@ -4746,20 +4700,20 @@ MainWindow::MainWindow() : QMainWindow(0):
     #create the mdiArea
     QFrame* vbox = new QFrame(this)
     QVBoxLayout* layout = new QVBoxLayout(vbox)
-    layout->setContentsMargins(QMargins())
-    vbox->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken)
+    layout.setContentsMargins(QMargins())
+    vbox.setFrameStyle(QFrame::StyledPanel | QFrame::Sunken)
     mdiArea = new MdiArea(this, vbox)
-    mdiArea->useBackgroundLogo(settings.general_mdi_bg_use_logo)
-    mdiArea->useBackgroundTexture(settings.general_mdi_bg_use_texture)
-    mdiArea->useBackgroundColor(settings.general_mdi_bg_use_color)
-    mdiArea->setBackgroundLogo(settings.general_mdi_bg_logo)
-    mdiArea->setBackgroundTexture(settings.general_mdi_bg_texture)
-    mdiArea->setBackgroundColor(QColor(settings.general_mdi_bg_color))
-    mdiArea->setViewMode(QMdiArea::TabbedView)
-    mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded)
-    mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded)
-    mdiArea->setActivationOrder(QMdiArea::ActivationHistoryOrder)
-    layout->addWidget(mdiArea)
+    mdiArea.useBackgroundLogo(settings.general_mdi_bg_use_logo)
+    mdiArea.useBackgroundTexture(settings.general_mdi_bg_use_texture)
+    mdiArea.useBackgroundColor(settings.general_mdi_bg_use_color)
+    mdiArea.setBackgroundLogo(settings.general_mdi_bg_logo)
+    mdiArea.setBackgroundTexture(settings.general_mdi_bg_texture)
+    mdiArea.setBackgroundColor(QColor(settings.general_mdi_bg_color))
+    mdiArea.setViewMode(QMdiArea::TabbedView)
+    mdiArea.setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded)
+    mdiArea.setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded)
+    mdiArea.setActivationOrder(QMdiArea::ActivationHistoryOrder)
+    layout.addWidget(mdiArea)
     setCentralWidget(vbox)
 
     #setDockOptions(QMainWindow::AnimatedDocks | QMainWindow::AllowTabbedDocks | QMainWindow::VerticalTabs);
@@ -4768,7 +4722,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     # TODO: load this from settings
 
     statusbar = new StatusBar(this, this)
-    this->setStatusBar(statusbar)
+    this.setStatusBar(statusbar)
 
     debug_message("Creating All Actions...")
     QString appName = QApplication::applicationName()
@@ -4789,7 +4743,7 @@ MainWindow::MainWindow() : QMainWindow(0):
             connect(ACTION, SIGNAL(triggered()), mdiArea, SLOT(tile()))
         }
         elif(icon == "windowclose") {
-            ACTION->setShortcut(QKeySequence::Close)
+            ACTION.setShortcut(QKeySequence::Close)
             connect(ACTION, SIGNAL(triggered()), this, SLOT(onCloseWindow()))
         }
         elif(icon == "windowcloseall") {
@@ -4804,135 +4758,135 @@ MainWindow::MainWindow() : QMainWindow(0):
         elif(icon == "textbold" or icon == "textitalic"
             or icon == "textunderline" or icon == "textstrikeout"
             or icon == "textoverline") {
-            ACTION->setCheckable(1)
+            ACTION.setCheckable(1)
         }
 
 
         if (strlen(action_list[i].shortcut)>0) {
-            ACTION->setShortcut(QKeySequence(action_list[i].shortcut))
+            ACTION.setShortcut(QKeySequence(action_list[i].shortcut))
         }
-        ACTION->setStatusTip(action_list[i].description)
-        ACTION->setObjectName(action_list[i].abbreviation)
-        ACTION->setWhatsThis(action_list[i].description)
+        ACTION.setStatusTip(action_list[i].description)
+        ACTION.setObjectName(action_list[i].abbreviation)
+        ACTION.setWhatsThis(action_list[i].description)
         connect(ACTION, SIGNAL(triggered()), this, SLOT(actions()))
         actionHash.insert(i, ACTION)
     }
 
-    actionHash.value(ACTION_windowclose)->setEnabled(numOfDocs > 0)
-    actionHash.value(ACTION_designdetails)->setEnabled(numOfDocs > 0)
+    actionHash.value(ACTION_windowclose).setEnabled(numOfDocs > 0)
+    actionHash.value(ACTION_designdetails).setEnabled(numOfDocs > 0)
 
     # ----
 
     debug_message("MainWindow createAllMenus()")
 
     debug_message("MainWindow createFileMenu()")
-    menuBar()->addMenu(menu[FILE_MENU])
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_new))
-    menu[FILE_MENU]->addSeparator()
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_open))
+    menuBar().addMenu(menu[FILE_MENU])
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_new))
+    menu[FILE_MENU].addSeparator()
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_open))
 
-    menu[FILE_MENU]->addMenu(menu[RECENT_MENU])
+    menu[FILE_MENU].addMenu(menu[RECENT_MENU])
     connect(menu[RECENT_MENU], SIGNAL(aboutToShow()), this, SLOT(recentMenuAboutToShow()))
     # Do not allow the Recent Menu to be torn off. It's a pain in the ass to maintain.
-    menu[RECENT_MENU]->setTearOffEnabled(0)
+    menu[RECENT_MENU].setTearOffEnabled(0)
 
-    menu[FILE_MENU]->addSeparator()
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_save))
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_saveas))
-    menu[FILE_MENU]->addSeparator()
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_print))
-    menu[FILE_MENU]->addSeparator()
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_windowclose))
-    menu[FILE_MENU]->addSeparator()
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_designdetails))
-    menu[FILE_MENU]->addSeparator()
+    menu[FILE_MENU].addSeparator()
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_save))
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_saveas))
+    menu[FILE_MENU].addSeparator()
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_print))
+    menu[FILE_MENU].addSeparator()
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_windowclose))
+    menu[FILE_MENU].addSeparator()
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_designdetails))
+    menu[FILE_MENU].addSeparator()
 
-    menu[FILE_MENU]->addAction(actionHash.value(ACTION_exit))
-    menu[FILE_MENU]->setTearOffEnabled(0)
+    menu[FILE_MENU].addAction(actionHash.value(ACTION_exit))
+    menu[FILE_MENU].setTearOffEnabled(0)
 
     # ----
 
     debug_message("MainWindow createmenu[EDIT_MENU]()")
-    menuBar()->addMenu(menu[EDIT_MENU])
-    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_undo))
-    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_redo))
-    menu[EDIT_MENU]->addSeparator()
-    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_cut))
-    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_copy))
-    menu[EDIT_MENU]->addAction(actionHash.value(ACTION_paste))
-    menu[EDIT_MENU]->addSeparator()
-    menu[EDIT_MENU]->setTearOffEnabled(1)
+    menuBar().addMenu(menu[EDIT_MENU])
+    menu[EDIT_MENU].addAction(actionHash.value(ACTION_undo))
+    menu[EDIT_MENU].addAction(actionHash.value(ACTION_redo))
+    menu[EDIT_MENU].addSeparator()
+    menu[EDIT_MENU].addAction(actionHash.value(ACTION_cut))
+    menu[EDIT_MENU].addAction(actionHash.value(ACTION_copy))
+    menu[EDIT_MENU].addAction(actionHash.value(ACTION_paste))
+    menu[EDIT_MENU].addSeparator()
+    menu[EDIT_MENU].setTearOffEnabled(1)
 
     # ----
 
     debug_message("MainWindow createmenu[VIEW_MENU]()")
 
-    menuBar()->addMenu(menu[VIEW_MENU])
-    menu[VIEW_MENU]->addSeparator()
-    menu[VIEW_MENU]->addMenu(menu[ZOOM_MENU])
-    menu[ZOOM_MENU]->setIcon(loadIcon(zoom_xpm))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomrealtime))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomprevious))
-    menu[ZOOM_MENU]->addSeparator()
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomwindow))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomdynamic))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomscale))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomcenter))
-    menu[ZOOM_MENU]->addSeparator()
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomin))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomout))
-    menu[ZOOM_MENU]->addSeparator()
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomselected))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomall))
-    menu[ZOOM_MENU]->addAction(actionHash.value(ACTION_zoomextents))
-    menu[VIEW_MENU]->addMenu(menu[PAN_MENU])
-    menu[PAN_MENU]->setIcon(loadIcon(pan_xpm))
-    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panrealtime))
-    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panpoint))
-    menu[PAN_MENU]->addSeparator()
-    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panleft))
-    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panright))
-    menu[PAN_MENU]->addAction(actionHash.value(ACTION_panup))
-    menu[PAN_MENU]->addAction(actionHash.value(ACTION_pandown))
-    menu[VIEW_MENU]->addSeparator()
-    menu[VIEW_MENU]->addAction(actionHash.value(ACTION_day))
-    menu[VIEW_MENU]->addAction(actionHash.value(ACTION_night))
-    menu[VIEW_MENU]->addSeparator()
+    menuBar().addMenu(menu[VIEW_MENU])
+    menu[VIEW_MENU].addSeparator()
+    menu[VIEW_MENU].addMenu(menu[ZOOM_MENU])
+    menu[ZOOM_MENU].setIcon(loadIcon(zoom_xpm))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomrealtime))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomprevious))
+    menu[ZOOM_MENU].addSeparator()
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomwindow))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomdynamic))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomscale))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomcenter))
+    menu[ZOOM_MENU].addSeparator()
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomin))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomout))
+    menu[ZOOM_MENU].addSeparator()
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomselected))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomall))
+    menu[ZOOM_MENU].addAction(actionHash.value(ACTION_zoomextents))
+    menu[VIEW_MENU].addMenu(menu[PAN_MENU])
+    menu[PAN_MENU].setIcon(loadIcon(pan_xpm))
+    menu[PAN_MENU].addAction(actionHash.value(ACTION_panrealtime))
+    menu[PAN_MENU].addAction(actionHash.value(ACTION_panpoint))
+    menu[PAN_MENU].addSeparator()
+    menu[PAN_MENU].addAction(actionHash.value(ACTION_panleft))
+    menu[PAN_MENU].addAction(actionHash.value(ACTION_panright))
+    menu[PAN_MENU].addAction(actionHash.value(ACTION_panup))
+    menu[PAN_MENU].addAction(actionHash.value(ACTION_pandown))
+    menu[VIEW_MENU].addSeparator()
+    menu[VIEW_MENU].addAction(actionHash.value(ACTION_day))
+    menu[VIEW_MENU].addAction(actionHash.value(ACTION_night))
+    menu[VIEW_MENU].addSeparator()
 
-    menu[VIEW_MENU]->setTearOffEnabled(1)
-    menu[ZOOM_MENU]->setTearOffEnabled(1)
-    menu[PAN_MENU]->setTearOffEnabled(1)
+    menu[VIEW_MENU].setTearOffEnabled(1)
+    menu[ZOOM_MENU].setTearOffEnabled(1)
+    menu[PAN_MENU].setTearOffEnabled(1)
 
     # ----
 
     debug_message("MainWindow createSettingsMenu()")
-    menuBar()->addMenu(menu[SETTINGS_MENU])
-    menu[SETTINGS_MENU]->addAction(actionHash.value(ACTION_settingsdialog))
-    menu[SETTINGS_MENU]->addSeparator()
-    menu[SETTINGS_MENU]->setTearOffEnabled(1)
+    menuBar().addMenu(menu[SETTINGS_MENU])
+    menu[SETTINGS_MENU].addAction(actionHash.value(ACTION_settingsdialog))
+    menu[SETTINGS_MENU].addSeparator()
+    menu[SETTINGS_MENU].setTearOffEnabled(1)
 
     # ----
 
     debug_message("MainWindow createWindowMenu()")
-    menuBar()->addMenu(menu[WINDOW_MENU])
+    menuBar().addMenu(menu[WINDOW_MENU])
     connect(menu[WINDOW_MENU], SIGNAL(aboutToShow()), this, SLOT(windowMenuAboutToShow()))
     #Do not allow the Window Menu to be torn off. It's a pain in the ass to maintain.
-    menu[WINDOW_MENU]->setTearOffEnabled(0)
+    menu[WINDOW_MENU].setTearOffEnabled(0)
 
     # ----
 
     debug_message("MainWindow createHelpMenu()")
-    menuBar()->addMenu(menu[HELP_MENU])
-    menu[HELP_MENU]->addAction(actionHash.value(ACTION_help))
-    menu[HELP_MENU]->addSeparator()
-    menu[HELP_MENU]->addAction(actionHash.value(ACTION_changelog))
-    menu[HELP_MENU]->addSeparator()
-    menu[HELP_MENU]->addAction(actionHash.value(ACTION_tipoftheday))
-    menu[HELP_MENU]->addSeparator()
-    menu[HELP_MENU]->addAction(actionHash.value(ACTION_about))
-    menu[HELP_MENU]->addSeparator()
-    menu[HELP_MENU]->addAction(actionHash.value(ACTION_whatsthis))
-    menu[HELP_MENU]->setTearOffEnabled(1)
+    menuBar().addMenu(menu[HELP_MENU])
+    menu[HELP_MENU].addAction(actionHash.value(ACTION_help))
+    menu[HELP_MENU].addSeparator()
+    menu[HELP_MENU].addAction(actionHash.value(ACTION_changelog))
+    menu[HELP_MENU].addSeparator()
+    menu[HELP_MENU].addAction(actionHash.value(ACTION_tipoftheday))
+    menu[HELP_MENU].addSeparator()
+    menu[HELP_MENU].addAction(actionHash.value(ACTION_about))
+    menu[HELP_MENU].addSeparator()
+    menu[HELP_MENU].addAction(actionHash.value(ACTION_whatsthis))
+    menu[HELP_MENU].setTearOffEnabled(1)
 
     # ----
 
@@ -4944,14 +4898,14 @@ MainWindow::MainWindow() : QMainWindow(0):
         sprintf(message, "MainWindow creating %s\n", toolbar_label[i])
         debug_message(message)
 
-        toolbar[i]->setObjectName(toolbar_label[i])
+        toolbar[i].setObjectName(toolbar_label[i])
 
         for (j=0; toolbars[i][j]!=-2; j++) {
             if (toolbars[i][j] >= 0) {
-                toolbar[i]->addAction(actionHash.value(toolbars[i][j]))
+                toolbar[i].addAction(actionHash.value(toolbars[i][j]))
             }
             else {
-                toolbar[i]->addSeparator()
+                toolbar[i].addSeparator()
             }
         }
 
@@ -4962,26 +4916,26 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     debug_message("MainWindow createLayerToolbar()")
 
-    toolbar[TOOLBAR_LAYER]->setObjectName("toolbarLayer")
-    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_makelayercurrent))
-    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layers))
+    toolbar[TOOLBAR_LAYER].setObjectName("toolbarLayer")
+    toolbar[TOOLBAR_LAYER].addAction(actionHash.value(ACTION_makelayercurrent))
+    toolbar[TOOLBAR_LAYER].addAction(actionHash.value(ACTION_layers))
 
     #NOTE: Qt4.7 wont load icons without an extension...
     #TODO: Create layer pixmaps by concatenating several icons
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "0")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "1")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "2")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "3")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "4")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "5")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "6")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "7")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "8")
-    layerSelector->addItem(loadIcon(linetypebylayer_xpm), "9")
-    toolbar[TOOLBAR_LAYER]->addWidget(layerSelector)
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "0")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "1")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "2")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "3")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "4")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "5")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "6")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "7")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "8")
+    layerSelector.addItem(loadIcon(linetypebylayer_xpm), "9")
+    toolbar[TOOLBAR_LAYER].addWidget(layerSelector)
     connect(layerSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(layerSelectorIndexChanged(int)))
 
-    toolbar[TOOLBAR_LAYER]->addAction(actionHash.value(ACTION_layerprevious))
+    toolbar[TOOLBAR_LAYER].addAction(actionHash.value(ACTION_layerprevious))
 
     connect(toolbar[TOOLBAR_LAYER], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)))
 
@@ -4989,69 +4943,69 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     debug_message("MainWindow createPropertiesToolbar()")
 
-    toolbar[TOOLBAR_PROPERTIES]->setObjectName("toolbarProperties")
+    toolbar[TOOLBAR_PROPERTIES].setObjectName("toolbarProperties")
 
-    colorSelector->setFocusProxy(menu[FILE_MENU])
+    colorSelector.setFocusProxy(menu[FILE_MENU])
     #NOTE: Qt4.7 wont load icons without an extension...
-    colorSelector->addItem(loadIcon(colorbylayer_xpm), "ByLayer")
-    colorSelector->addItem(loadIcon(colorbyblock_xpm), "ByBlock")
-    colorSelector->addItem(loadIcon(colorred_xpm), tr("Red"), qRgb(255, 0, 0))
-    colorSelector->addItem(loadIcon(coloryellow_xpm), tr("Yellow"), qRgb(255,255, 0))
-    colorSelector->addItem(loadIcon(colorgreen_xpm), tr("Green"), qRgb(0, 255, 0))
-    colorSelector->addItem(loadIcon(colorcyan_xpm), tr("Cyan"), qRgb(  0,255,255))
-    colorSelector->addItem(loadIcon(colorblue_xpm), tr("Blue"), qRgb(  0, 0,255))
-    colorSelector->addItem(loadIcon(colormagenta_xpm), tr("Magenta"), qRgb(255, 0,255))
-    colorSelector->addItem(loadIcon(colorwhite_xpm), tr("White"), qRgb(255,255,255))
-    colorSelector->addItem(loadIcon(colorother_xpm), tr("Other..."))
-    toolbar[TOOLBAR_PROPERTIES]->addWidget(colorSelector)
+    colorSelector.addItem(loadIcon(colorbylayer_xpm), "ByLayer")
+    colorSelector.addItem(loadIcon(colorbyblock_xpm), "ByBlock")
+    colorSelector.addItem(loadIcon(colorred_xpm), tr("Red"), qRgb(255, 0, 0))
+    colorSelector.addItem(loadIcon(coloryellow_xpm), tr("Yellow"), qRgb(255,255, 0))
+    colorSelector.addItem(loadIcon(colorgreen_xpm), tr("Green"), qRgb(0, 255, 0))
+    colorSelector.addItem(loadIcon(colorcyan_xpm), tr("Cyan"), qRgb(  0,255,255))
+    colorSelector.addItem(loadIcon(colorblue_xpm), tr("Blue"), qRgb(  0, 0,255))
+    colorSelector.addItem(loadIcon(colormagenta_xpm), tr("Magenta"), qRgb(255, 0,255))
+    colorSelector.addItem(loadIcon(colorwhite_xpm), tr("White"), qRgb(255,255,255))
+    colorSelector.addItem(loadIcon(colorother_xpm), tr("Other..."))
+    toolbar[TOOLBAR_PROPERTIES].addWidget(colorSelector)
     connect(colorSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(colorSelectorIndexChanged(int)))
 
-    toolbar[TOOLBAR_PROPERTIES]->addSeparator()
-    linetypeSelector->setFocusProxy(menu[FILE_MENU])
+    toolbar[TOOLBAR_PROPERTIES].addSeparator()
+    linetypeSelector.setFocusProxy(menu[FILE_MENU])
     #NOTE: Qt4.7 wont load icons without an extension...
-    linetypeSelector->addItem(loadIcon(linetypebylayer_xpm), "ByLayer")
-    linetypeSelector->addItem(loadIcon(linetypebyblock_xpm), "ByBlock")
-    linetypeSelector->addItem(loadIcon(linetypecontinuous_xpm), "Continuous")
-    linetypeSelector->addItem(loadIcon(linetypehidden_xpm), "Hidden")
-    linetypeSelector->addItem(loadIcon(linetypecenter_xpm), "Center")
-    linetypeSelector->addItem(loadIcon(linetypeother_xpm), "Other...")
-    toolbar[TOOLBAR_PROPERTIES]->addWidget(linetypeSelector)
+    linetypeSelector.addItem(loadIcon(linetypebylayer_xpm), "ByLayer")
+    linetypeSelector.addItem(loadIcon(linetypebyblock_xpm), "ByBlock")
+    linetypeSelector.addItem(loadIcon(linetypecontinuous_xpm), "Continuous")
+    linetypeSelector.addItem(loadIcon(linetypehidden_xpm), "Hidden")
+    linetypeSelector.addItem(loadIcon(linetypecenter_xpm), "Center")
+    linetypeSelector.addItem(loadIcon(linetypeother_xpm), "Other...")
+    toolbar[TOOLBAR_PROPERTIES].addWidget(linetypeSelector)
     connect(linetypeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(linetypeSelectorIndexChanged(int)))
 
-    toolbar[TOOLBAR_PROPERTIES]->addSeparator()
-    lineweightSelector->setFocusProxy(menu[FILE_MENU])
+    toolbar[TOOLBAR_PROPERTIES].addSeparator()
+    lineweightSelector.setFocusProxy(menu[FILE_MENU])
     #NOTE: Qt4.7 wont load icons without an extension...
-    lineweightSelector->addItem(loadIcon(lineweightbylayer_xpm), "ByLayer", -2.00)
-    lineweightSelector->addItem(loadIcon(lineweightbyblock_xpm), "ByBlock", -1.00)
-    lineweightSelector->addItem(loadIcon(lineweightdefault_xpm), "Default", 0.00)
+    lineweightSelector.addItem(loadIcon(lineweightbylayer_xpm), "ByLayer", -2.00)
+    lineweightSelector.addItem(loadIcon(lineweightbyblock_xpm), "ByBlock", -1.00)
+    lineweightSelector.addItem(loadIcon(lineweightdefault_xpm), "Default", 0.00)
     # TODO: Thread weight is weird. See http://en.wikipedia.org/wiki/Thread_(yarn)#Weight
-    lineweightSelector->addItem(loadIcon(lineweight01_xpm), "0.00 mm", 0.00)
-    lineweightSelector->addItem(loadIcon(lineweight02_xpm), "0.05 mm", 0.05)
-    lineweightSelector->addItem(loadIcon(lineweight03_xpm), "0.15 mm", 0.15)
-    lineweightSelector->addItem(loadIcon(lineweight04_xpm), "0.20 mm", 0.20)
-    lineweightSelector->addItem(loadIcon(lineweight05_xpm), "0.25 mm", 0.25)
-    lineweightSelector->addItem(loadIcon(lineweight06_xpm), "0.30 mm", 0.30)
-    lineweightSelector->addItem(loadIcon(lineweight07_xpm), "0.35 mm", 0.35)
-    lineweightSelector->addItem(loadIcon(lineweight08_xpm), "0.40 mm", 0.40)
-    lineweightSelector->addItem(loadIcon(lineweight09_xpm), "0.45 mm", 0.45)
-    lineweightSelector->addItem(loadIcon(lineweight10_xpm), "0.50 mm", 0.50)
-    lineweightSelector->addItem(loadIcon(lineweight11_xpm), "0.55 mm", 0.55)
-    lineweightSelector->addItem(loadIcon(lineweight12_xpm), "0.60 mm", 0.60)
-    lineweightSelector->addItem(loadIcon(lineweight13_xpm), "0.65 mm", 0.65)
-    lineweightSelector->addItem(loadIcon(lineweight14_xpm), "0.70 mm", 0.70)
-    lineweightSelector->addItem(loadIcon(lineweight15_xpm), "0.75 mm", 0.75)
-    lineweightSelector->addItem(loadIcon(lineweight16_xpm), "0.80 mm", 0.80)
-    lineweightSelector->addItem(loadIcon(lineweight17_xpm), "0.85 mm", 0.85)
-    lineweightSelector->addItem(loadIcon(lineweight18_xpm), "0.90 mm", 0.90)
-    lineweightSelector->addItem(loadIcon(lineweight19_xpm), "0.95 mm", 0.95)
-    lineweightSelector->addItem(loadIcon(lineweight20_xpm), "1.00 mm", 1.00)
-    lineweightSelector->addItem(loadIcon(lineweight21_xpm), "1.05 mm", 1.05)
-    lineweightSelector->addItem(loadIcon(lineweight22_xpm), "1.10 mm", 1.10)
-    lineweightSelector->addItem(loadIcon(lineweight23_xpm), "1.15 mm", 1.15)
-    lineweightSelector->addItem(loadIcon(lineweight24_xpm), "1.20 mm", 1.20)
-    lineweightSelector->setMinimumContentsLength(8)
+    lineweightSelector.addItem(loadIcon(lineweight01_xpm), "0.00 mm", 0.00)
+    lineweightSelector.addItem(loadIcon(lineweight02_xpm), "0.05 mm", 0.05)
+    lineweightSelector.addItem(loadIcon(lineweight03_xpm), "0.15 mm", 0.15)
+    lineweightSelector.addItem(loadIcon(lineweight04_xpm), "0.20 mm", 0.20)
+    lineweightSelector.addItem(loadIcon(lineweight05_xpm), "0.25 mm", 0.25)
+    lineweightSelector.addItem(loadIcon(lineweight06_xpm), "0.30 mm", 0.30)
+    lineweightSelector.addItem(loadIcon(lineweight07_xpm), "0.35 mm", 0.35)
+    lineweightSelector.addItem(loadIcon(lineweight08_xpm), "0.40 mm", 0.40)
+    lineweightSelector.addItem(loadIcon(lineweight09_xpm), "0.45 mm", 0.45)
+    lineweightSelector.addItem(loadIcon(lineweight10_xpm), "0.50 mm", 0.50)
+    lineweightSelector.addItem(loadIcon(lineweight11_xpm), "0.55 mm", 0.55)
+    lineweightSelector.addItem(loadIcon(lineweight12_xpm), "0.60 mm", 0.60)
+    lineweightSelector.addItem(loadIcon(lineweight13_xpm), "0.65 mm", 0.65)
+    lineweightSelector.addItem(loadIcon(lineweight14_xpm), "0.70 mm", 0.70)
+    lineweightSelector.addItem(loadIcon(lineweight15_xpm), "0.75 mm", 0.75)
+    lineweightSelector.addItem(loadIcon(lineweight16_xpm), "0.80 mm", 0.80)
+    lineweightSelector.addItem(loadIcon(lineweight17_xpm), "0.85 mm", 0.85)
+    lineweightSelector.addItem(loadIcon(lineweight18_xpm), "0.90 mm", 0.90)
+    lineweightSelector.addItem(loadIcon(lineweight19_xpm), "0.95 mm", 0.95)
+    lineweightSelector.addItem(loadIcon(lineweight20_xpm), "1.00 mm", 1.00)
+    lineweightSelector.addItem(loadIcon(lineweight21_xpm), "1.05 mm", 1.05)
+    lineweightSelector.addItem(loadIcon(lineweight22_xpm), "1.10 mm", 1.10)
+    lineweightSelector.addItem(loadIcon(lineweight23_xpm), "1.15 mm", 1.15)
+    lineweightSelector.addItem(loadIcon(lineweight24_xpm), "1.20 mm", 1.20)
+    lineweightSelector.setMinimumContentsLength(8)
     # Prevent dropdown text readability being squish...d.
-    toolbar[TOOLBAR_PROPERTIES]->addWidget(lineweightSelector)
+    toolbar[TOOLBAR_PROPERTIES].addWidget(lineweightSelector)
     connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(lineweightSelectorIndexChanged(int)))
 
     connect(toolbar[TOOLBAR_PROPERTIES], SIGNAL(topLevelChanged(int)), this, SLOT(floatingChangedToolBar(int)))
@@ -5060,41 +5014,41 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     debug_message("MainWindow createTextToolbar()")
 
-    toolbar[TOOLBAR_TEXT]->setObjectName("toolbarText")
+    toolbar[TOOLBAR_TEXT].setObjectName("toolbarText")
 
-    toolbar[TOOLBAR_TEXT]->addWidget(textFontSelector)
-    textFontSelector->setCurrentFont(QFont(settings.text_font))
+    toolbar[TOOLBAR_TEXT].addWidget(textFontSelector)
+    textFontSelector.setCurrentFont(QFont(settings.text_font))
     connect(textFontSelector, SIGNAL(currentFontChanged(const QFont&)), this, SLOT(textFontSelectorCurrentFontChanged(const QFont&)))
 
 # TODO: SEGFAULTING FOR SOME REASON
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textbold))
-    actionHash.value(ACTION_textbold)->setChecked(settings.text_style_bold)
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textitalic))
-    actionHash.value(ACTION_textitalic)->setChecked(settings.text_style_italic)
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textunderline))
-    actionHash.value(ACTION_textunderline)->setChecked(settings.text_style_underline)
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textstrikeout))
-    actionHash.value(ACTION_textstrikeout)->setChecked(settings.text_style_strikeout)
-    toolbar[TOOLBAR_TEXT]->addAction(actionHash.value(ACTION_textoverline))
-    actionHash.value(ACTION_textoverline)->setChecked(settings.text_style_overline)
+    toolbar[TOOLBAR_TEXT].addAction(actionHash.value(ACTION_textbold))
+    actionHash.value(ACTION_textbold).setChecked(settings.text_style_bold)
+    toolbar[TOOLBAR_TEXT].addAction(actionHash.value(ACTION_textitalic))
+    actionHash.value(ACTION_textitalic).setChecked(settings.text_style_italic)
+    toolbar[TOOLBAR_TEXT].addAction(actionHash.value(ACTION_textunderline))
+    actionHash.value(ACTION_textunderline).setChecked(settings.text_style_underline)
+    toolbar[TOOLBAR_TEXT].addAction(actionHash.value(ACTION_textstrikeout))
+    actionHash.value(ACTION_textstrikeout).setChecked(settings.text_style_strikeout)
+    toolbar[TOOLBAR_TEXT].addAction(actionHash.value(ACTION_textoverline))
+    actionHash.value(ACTION_textoverline).setChecked(settings.text_style_overline)
 
-    textSizeSelector->setFocusProxy(menu[FILE_MENU])
-    textSizeSelector->addItem("6 pt", 6)
-    textSizeSelector->addItem("8 pt", 8)
-    textSizeSelector->addItem("9 pt", 9)
-    textSizeSelector->addItem("10 pt", 10)
-    textSizeSelector->addItem("11 pt", 11)
-    textSizeSelector->addItem("12 pt", 12)
-    textSizeSelector->addItem("14 pt", 14)
-    textSizeSelector->addItem("18 pt", 18)
-    textSizeSelector->addItem("24 pt", 24)
-    textSizeSelector->addItem("30 pt", 30)
-    textSizeSelector->addItem("36 pt", 36)
-    textSizeSelector->addItem("48 pt", 48)
-    textSizeSelector->addItem("60 pt", 60)
-    textSizeSelector->addItem("72 pt", 72)
+    textSizeSelector.setFocusProxy(menu[FILE_MENU])
+    textSizeSelector.addItem("6 pt", 6)
+    textSizeSelector.addItem("8 pt", 8)
+    textSizeSelector.addItem("9 pt", 9)
+    textSizeSelector.addItem("10 pt", 10)
+    textSizeSelector.addItem("11 pt", 11)
+    textSizeSelector.addItem("12 pt", 12)
+    textSizeSelector.addItem("14 pt", 14)
+    textSizeSelector.addItem("18 pt", 18)
+    textSizeSelector.addItem("24 pt", 24)
+    textSizeSelector.addItem("30 pt", 30)
+    textSizeSelector.addItem("36 pt", 36)
+    textSizeSelector.addItem("48 pt", 48)
+    textSizeSelector.addItem("60 pt", 60)
+    textSizeSelector.addItem("72 pt", 72)
     setTextSize(settings.text_size)
-    toolbar[TOOLBAR_TEXT]->addWidget(textSizeSelector)
+    toolbar[TOOLBAR_TEXT].addWidget(textSizeSelector)
     connect(textSizeSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(textSizeSelectorIndexChanged(int)))
 
 
@@ -5103,11 +5057,11 @@ MainWindow::MainWindow() : QMainWindow(0):
     # -----
 
     # Horizontal
-    toolbar[TOOLBAR_VIEW]->setOrientation(Qt::Horizontal)
-    toolbar[TOOLBAR_ZOOM]->setOrientation(Qt::Horizontal)
-    toolbar[TOOLBAR_LAYER]->setOrientation(Qt::Horizontal)
-    toolbar[TOOLBAR_PROPERTIES]->setOrientation(Qt::Horizontal)
-    toolbar[TOOLBAR_TEXT]->setOrientation(Qt::Horizontal)
+    toolbar[TOOLBAR_VIEW].setOrientation(Qt::Horizontal)
+    toolbar[TOOLBAR_ZOOM].setOrientation(Qt::Horizontal)
+    toolbar[TOOLBAR_LAYER].setOrientation(Qt::Horizontal)
+    toolbar[TOOLBAR_PROPERTIES].setOrientation(Qt::Horizontal)
+    toolbar[TOOLBAR_TEXT].setOrientation(Qt::Horizontal)
     # Top
     addToolBarBreak(Qt::TopToolBarArea)
     addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_FILE])
@@ -5124,7 +5078,7 @@ MainWindow::MainWindow() : QMainWindow(0):
     addToolBarBreak(Qt::TopToolBarArea)
     addToolBar(Qt::TopToolBarArea, toolbar[TOOLBAR_TEXT])
 
-    #zoomToolBar->setToolButtonStyle(Qt::ToolButtonTextOnly);
+    #zoomToolBar.setToolButtonStyle(Qt::ToolButtonTextOnly);
     # ----
 
     iconResize(settings.general_icon_size)
@@ -5135,7 +5089,7 @@ MainWindow::MainWindow() : QMainWindow(0):
 
     QDate date = QDate::currentDate()
     QString datestr = date.toString("MMMM d, yyyy")
-    statusbar->showMessage(datestr)
+    statusbar.showMessage(datestr)
 
     showNormal()
 
@@ -5153,7 +5107,7 @@ MainWindow::~MainWindow():
 
 def MainWindow::recentMenuAboutToShow():
     debug_message("MainWindow::recentMenuAboutToShow()")
-    menu[RECENT_MENU]->clear()
+    menu[RECENT_MENU].clear()
 
     QFileInfo recentFileInfo
     QString recentValue
@@ -5170,9 +5124,9 @@ def MainWindow::recentMenuAboutToShow():
                 if     (recentValue.toInt() >= 1 and recentValue.toInt() <= 9) rAction = new QAction("&" + recentValue + " " + recentFileInfo.fileName(), this)
                 elif(recentValue.toInt() == 10)                            rAction = new QAction("1&0 "                  + recentFileInfo.fileName(), this)
                 else                                                          rAction = new QAction(      recentValue + " " + recentFileInfo.fileName(), this)
-                rAction->setCheckable(0)
-                rAction->setData(opensave_recent_list_of_files.at(i))
-                menu[RECENT_MENU]->addAction(rAction)
+                rAction.setCheckable(0)
+                rAction.setData(opensave_recent_list_of_files.at(i))
+                menu[RECENT_MENU].addAction(rAction)
                 connect(rAction, SIGNAL(triggered()), this, SLOT(openrecentfile()))
 
     #Ensure the list only has max amount of entries
@@ -5182,26 +5136,26 @@ def MainWindow::recentMenuAboutToShow():
 
 def MainWindow::windowMenuAboutToShow():
     debug_message("MainWindow::windowMenuAboutToShow()")
-    menu[WINDOW_MENU]->clear()
-    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowclose))
-    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowcloseall))
-    menu[WINDOW_MENU]->addSeparator()
-    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowcascade))
-    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowtile))
-    menu[WINDOW_MENU]->addSeparator()
-    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windownext))
-    menu[WINDOW_MENU]->addAction(actionHash.value(ACTION_windowprevious))
+    menu[WINDOW_MENU].clear()
+    menu[WINDOW_MENU].addAction(actionHash.value(ACTION_windowclose))
+    menu[WINDOW_MENU].addAction(actionHash.value(ACTION_windowcloseall))
+    menu[WINDOW_MENU].addSeparator()
+    menu[WINDOW_MENU].addAction(actionHash.value(ACTION_windowcascade))
+    menu[WINDOW_MENU].addAction(actionHash.value(ACTION_windowtile))
+    menu[WINDOW_MENU].addSeparator()
+    menu[WINDOW_MENU].addAction(actionHash.value(ACTION_windownext))
+    menu[WINDOW_MENU].addAction(actionHash.value(ACTION_windowprevious))
 
-    menu[WINDOW_MENU]->addSeparator()
-    QList<QMdiSubWindow*> windows = mdiArea->subWindowList()
+    menu[WINDOW_MENU].addSeparator()
+    QList<QMdiSubWindow*> windows = mdiArea.subWindowList()
     for(i = 0; i < windows.count(); ++i)
     {
-        QAction* aAction = new QAction(windows.at(i)->windowTitle(), this)
-        aAction->setCheckable(1)
-        aAction->setData(i)
-        menu[WINDOW_MENU]->addAction(aAction)
+        QAction* aAction = new QAction(windows.at(i).windowTitle(), this)
+        aAction.setCheckable(1)
+        aAction.setData(i)
+        menu[WINDOW_MENU].addAction(aAction)
         connect(aAction, SIGNAL(toggled(int)), this, SLOT(windowMenuActivated(int)))
-        aAction->setChecked(mdiArea->activeSubWindow() == windows.at(i))
+        aAction.setChecked(mdiArea.activeSubWindow() == windows.at(i))
     }
 }
 
@@ -5210,9 +5164,9 @@ def MainWindow::windowMenuActivated(checked):
     QAction* aSender = qobject_cast<QAction*>(sender())
     if(!aSender)
         return
-    QWidget* w = mdiArea->subWindowList().at(aSender->data().toInt())
+    QWidget* w = mdiArea.subWindowList().at(aSender.data().toInt())
     if(w and checked)
-        w->setFocus()
+        w.setFocus()
 
 def MainWindow::newFile():
     debug_message("MainWindow::newFile()")
@@ -5225,11 +5179,11 @@ def MainWindow::newFile():
     updateMenuToolbarStatusbar()
     windowMenuAboutToShow()
 
-    View* v = mdiWin->getView()
+    View* v = mdiWin.getView()
     if(v)
     {
-        v->recalculateLimits()
-        v->zoomExtents()
+        v.recalculateLimits()
+        v.zoomExtents()
     }
 }
 
@@ -5257,9 +5211,9 @@ def MainWindow::openFile(recent, const QString& recentFile):
     elif(preview)
     {
         PreviewDialog* openDialog = new PreviewDialog(this, tr("Open w/Preview"), openFilesPath, formatFilterOpen)
-        #TODO: set openDialog->selectNameFilter(const QString& filter) from settings.opensave_open_format
+        #TODO: set openDialog.selectNameFilter(const QString& filter) from settings.opensave_open_format
         connect(openDialog, SIGNAL(filesSelected(const QStringList&)), this, SLOT(openFilesSelected(const QStringList&)))
-        openDialog->exec()
+        openDialog.exec()
     }
 
     QApplication::restoreOverrideCursor()
@@ -5277,7 +5231,7 @@ def MainWindow::openFilesSelected(const QStringList& filesToOpen):
             QMdiSubWindow* existing = findMdiWindow(filesToOpen[i])
             if(existing)
             {
-                mdiArea->setActiveSubWindow(existing)
+                mdiArea.setActiveSubWindow(existing)
                 continue
             }
 
@@ -5293,10 +5247,10 @@ def MainWindow::openFilesSelected(const QStringList& filesToOpen):
                 doOnce = 0
             }
 
-            if (mdiWin->loadFile(filesToOpen.at(i))) {
-                statusbar->showMessage(tr("File(s) loaded"), 2000)
-                mdiWin->show()
-                mdiWin->showMaximized()
+            if (mdiWin.loadFile(filesToOpen.at(i))) {
+                statusbar.showMessage(tr("File(s) loaded"), 2000)
+                mdiWin.show()
+                mdiWin.showMaximized()
                 #Prevent duplicate entries in the recent files list
                 if(!opensave_recent_list_of_files.contains(filesToOpen.at(i), Qt::CaseInsensitive)) {
                     opensave_recent_list_of_files.prepend(filesToOpen.at(i))
@@ -5308,14 +5262,14 @@ def MainWindow::openFilesSelected(const QStringList& filesToOpen):
                 }
                 strcpy(settings.opensave_recent_directory, QFileInfo(filesToOpen.at(i)).absolutePath().toLocal8Bit().constData())
 
-                View* v = mdiWin->getView()
+                View* v = mdiWin.getView()
                 if (v) {
-                    v->recalculateLimits()
-                    v->zoomExtents()
+                    v.recalculateLimits()
+                    v.zoomExtents()
                 }
             }
             else {
-                mdiWin->close()
+                mdiWin.close()
 
     windowMenuAboutToShow()
 
@@ -5325,7 +5279,7 @@ def MainWindow::openrecentfile():
     #Check to see if this from the recent files list
     QAction* recentSender = qobject_cast<QAction*>(sender())
     if (recentSender) {
-        openFile(1, recentSender->data().toString())
+        openFile(1, recentSender.data().toString())
     }
 }
 
@@ -5335,7 +5289,7 @@ def MainWindow::savefile():
 def MainWindow::saveasfile():
     debug_message("MainWindow::saveasfile()")
     # need to find the activeSubWindow before it loses focus to the FileDialog
-    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
+    MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
     if(!mdiWin)
         return
 
@@ -5343,28 +5297,28 @@ def MainWindow::saveasfile():
     openFilesPath = settings.opensave_recent_directory
     file = QFileDialog::getSaveFileName(this, tr("Save As"), openFilesPath, formatFilterSave)
 
-    mdiWin->saveFile(file)
+    mdiWin.saveFile(file)
 
 QMdiSubWindow* MainWindow::findMdiWindow(const QString& fileName):
     debug_message("MainWindow::findMdiWindow(%s)", qPrintable(fileName))
     QString canonicalFilePath = QFileInfo(fileName).canonicalFilePath()
 
-    foreach(QMdiSubWindow* subWindow, mdiArea->subWindowList()):
+    foreach(QMdiSubWindow* subWindow, mdiArea.subWindowList()):
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(subWindow)
         if(mdiWin):
-            if(mdiWin->getCurrentFile() == canonicalFilePath):
+            if(mdiWin.getCurrentFile() == canonicalFilePath):
                 return subWindow
 
     return 0
 
 def MainWindow::closeEvent(QCloseEvent* event):
-    mdiArea->closeAllSubWindows()
+    mdiArea.closeAllSubWindows()
     writeSettings()
-    event->accept()
+    event.accept()
 
 def MainWindow::onCloseWindow():
     debug_message("MainWindow::onCloseWindow()")
-    mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
+    mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
     if mdiWin:
         onCloseMdiWin(mdiWin)
 
@@ -5373,31 +5327,31 @@ def MainWindow::onCloseMdiWin(MdiWindow* theMdiWin):
     numOfDocs--
 
     keepMaximized
-    if(theMdiWin) { keepMaximized = theMdiWin->isMaximized(); }
+    if(theMdiWin) { keepMaximized = theMdiWin.isMaximized(); }
 
-    mdiArea->removeSubWindow(theMdiWin)
-    theMdiWin->deleteLater()
+    mdiArea.removeSubWindow(theMdiWin)
+    theMdiWin.deleteLater()
 
     updateMenuToolbarStatusbar()
     windowMenuAboutToShow()
 
     if(keepMaximized)
     {
-        MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea->activeSubWindow())
-        if(mdiWin) { mdiWin->showMaximized(); }
+        MdiWindow* mdiWin = qobject_cast<MdiWindow*>(mdiArea.activeSubWindow())
+        if(mdiWin) { mdiWin.showMaximized(); }
     }
 }
 
 def MainWindow::onWindowActivated(QMdiSubWindow* w):
     debug_message("MainWindow::onWindowActivated()")
     MdiWindow* mdiWin = qobject_cast<MdiWindow*>(w)
-    if(mdiWin) { mdiWin->onWindowActivated(); }
+    if(mdiWin) { mdiWin.onWindowActivated(); }
 }
 
 def MainWindow::resizeEvent(QResizeEvent* e):
     debug_message("MainWindow::resizeEvent()")
     QMainWindow::resizeEvent(e)
-    statusBar()->setSizeGripEnabled(!isMaximized())
+    statusBar().setSizeGripEnabled(!isMaximized())
 
 QAction* MainWindow::getFileSeparator():
     debug_message("MainWindow::getFileSeparator()")
@@ -5407,94 +5361,94 @@ def MainWindow::updateMenuToolbarStatusbar():
     i
     debug_message("MainWindow::updateMenuToolbarStatusbar()")
 
-    actionHash.value(ACTION_print)->setEnabled(numOfDocs > 0)
-    actionHash.value(ACTION_windowclose)->setEnabled(numOfDocs > 0)
-    actionHash.value(ACTION_designdetails)->setEnabled(numOfDocs > 0)
+    actionHash.value(ACTION_print).setEnabled(numOfDocs > 0)
+    actionHash.value(ACTION_windowclose).setEnabled(numOfDocs > 0)
+    actionHash.value(ACTION_designdetails).setEnabled(numOfDocs > 0)
 
     if (numOfDocs) {
         i
         #Toolbars
         for (i=0; i<N_TOOLBARS; i++) {
-            toolbar[i]->show()
+            toolbar[i].show()
         }
 
         foreach(QToolBar* tb, toolbarHash)
         {
-            tb->show()
+            tb.show()
         }
 
         #DockWidgets
         #
-        dockPropEdit->show()
-        dockUndoEdit->show()
+        dockPropEdit.show()
+        dockUndoEdit.show()
 
 
         #Menus
-        menuBar()->clear()
-        menuBar()->addMenu(menu[FILE_MENU])
-        menuBar()->addMenu(menu[EDIT_MENU])
-        menuBar()->addMenu(menu[VIEW_MENU])
+        menuBar().clear()
+        menuBar().addMenu(menu[FILE_MENU])
+        menuBar().addMenu(menu[EDIT_MENU])
+        menuBar().addMenu(menu[VIEW_MENU])
 
         foreach(QMenu* menu_, menuHash)
         {
-            menuBar()->addMenu(menu_)
+            menuBar().addMenu(menu_)
         }
 
-        menuBar()->addMenu(menu[SETTINGS_MENU])
-        menuBar()->addMenu(menu[WINDOW_MENU])
-        menuBar()->addMenu(menu[HELP_MENU])
+        menuBar().addMenu(menu[SETTINGS_MENU])
+        menuBar().addMenu(menu[WINDOW_MENU])
+        menuBar().addMenu(menu[HELP_MENU])
 
-        menu[WINDOW_MENU]->setEnabled(1)
+        menu[WINDOW_MENU].setEnabled(1)
 
         # Statusbar
-        statusbar->clearMessage()
-        statusBarMouseCoord->show()
-        status_bar[STATUS_SNAP]->show()
-        status_bar[STATUS_GRID]->show()
-        status_bar[STATUS_RULER]->show()
-        status_bar[STATUS_ORTHO]->show()
-        status_bar[STATUS_POLAR]->show()
-        status_bar[STATUS_QSNAP]->show()
-        status_bar[STATUS_QTRACK]->show()
-        status_bar[STATUS_LWT]->show()
+        statusbar.clearMessage()
+        statusBarMouseCoord.show()
+        status_bar[STATUS_SNAP].show()
+        status_bar[STATUS_GRID].show()
+        status_bar[STATUS_RULER].show()
+        status_bar[STATUS_ORTHO].show()
+        status_bar[STATUS_POLAR].show()
+        status_bar[STATUS_QSNAP].show()
+        status_bar[STATUS_QTRACK].show()
+        status_bar[STATUS_LWT].show()
     }
     else
     {
         # Toolbars
-        toolbar[TOOLBAR_VIEW]->hide()
-        toolbar[TOOLBAR_ZOOM]->hide()
-        toolbar[TOOLBAR_PAN]->hide()
-        toolbar[TOOLBAR_ICON]->hide()
-        toolbar[TOOLBAR_HELP]->hide()
-        toolbar[TOOLBAR_LAYER]->hide()
-        toolbar[TOOLBAR_TEXT]->hide()
-        toolbar[TOOLBAR_PROPERTIES]->hide()
+        toolbar[TOOLBAR_VIEW].hide()
+        toolbar[TOOLBAR_ZOOM].hide()
+        toolbar[TOOLBAR_PAN].hide()
+        toolbar[TOOLBAR_ICON].hide()
+        toolbar[TOOLBAR_HELP].hide()
+        toolbar[TOOLBAR_LAYER].hide()
+        toolbar[TOOLBAR_TEXT].hide()
+        toolbar[TOOLBAR_PROPERTIES].hide()
         foreach(QToolBar* tb, toolbarHash)
         {
-            tb->hide()
+            tb.hide()
         }
 
         #DockWidgets
         #
-        dockPropEdit->hide()
-        dockUndoEdit->hide()
+        dockPropEdit.hide()
+        dockUndoEdit.hide()
 
 
         #Menus
-        menuBar()->clear()
-        menuBar()->addMenu(menu[FILE_MENU])
-        menuBar()->addMenu(menu[EDIT_MENU])
-        menuBar()->addMenu(menu[SETTINGS_MENU])
-        menuBar()->addMenu(menu[WINDOW_MENU])
-        menuBar()->addMenu(menu[HELP_MENU])
+        menuBar().clear()
+        menuBar().addMenu(menu[FILE_MENU])
+        menuBar().addMenu(menu[EDIT_MENU])
+        menuBar().addMenu(menu[SETTINGS_MENU])
+        menuBar().addMenu(menu[WINDOW_MENU])
+        menuBar().addMenu(menu[HELP_MENU])
 
-        menu[WINDOW_MENU]->setEnabled(0)
+        menu[WINDOW_MENU].setEnabled(0)
 
         #Statusbar
-        statusbar->clearMessage()
-        statusBarMouseCoord->hide()
+        statusbar.clearMessage()
+        statusBarMouseCoord.hide()
         for (i=0; i<N_STATUS; i++:
-            status_bar[i]->hide()
+            status_bar[i].hide()
 
 
 MainWindow::validFileFormat(const QString& fileName):
@@ -5573,12 +5527,12 @@ def MainWindow::loadFormats():
 
 
 def MainWindow::closeToolBar(QAction* action):
-    if (action->objectName() == "toolbarclose") {
+    if (action.objectName() == "toolbarclose") {
         QToolBar* tb = qobject_cast<QToolBar*>(sender())
         if(tb)
         {
-            debug_message("%s closed.", qPrintable(tb->objectName()))
-            tb->hide()
+            debug_message("%s closed.", qPrintable(tb.objectName()))
+            tb.hide()
 
 
 def MainWindow::floatingChangedToolBar(isFloating):
@@ -5593,21 +5547,21 @@ def MainWindow::floatingChangedToolBar(isFloating):
             QStyle::SP_TitleBarCloseButton
             QStyle::SP_DialogCloseButton
 
-            QAction *ACTION = new QAction(tb->style()->standardIcon(QStyle::SP_DialogCloseButton), "Close", this)
-            ACTION->setStatusTip("Close the " + tb->windowTitle() + " Toolbar")
-            ACTION->setObjectName("toolbarclose")
-            tb->addAction(ACTION)
+            QAction *ACTION = new QAction(tb.style().standardIcon(QStyle::SP_DialogCloseButton), "Close", this)
+            ACTION.setStatusTip("Close the " + tb.windowTitle() + " Toolbar")
+            ACTION.setObjectName("toolbarclose")
+            tb.addAction(ACTION)
             connect(tb, SIGNAL(actionTriggered(QAction*)), this, SLOT(closeToolBar(QAction*)))
         }
         else
         {
-            QList<QAction*> actList = tb->actions()
+            QList<QAction*> actList = tb.actions()
             for(i = 0; i < actList.size(); ++i)
             {
                 QAction* ACTION = actList.value(i)
-                if(ACTION->objectName() == "toolbarclose")
+                if(ACTION.objectName() == "toolbarclose")
                 {
-                    tb->removeAction(ACTION)
+                    tb.removeAction(ACTION)
                     disconnect(tb, SIGNAL(actionTriggered(QAction*)), this, SLOT(closeToolBar(QAction*)))
                     delete ACTION
 
@@ -5622,8 +5576,8 @@ EmbDetailsDialog::EmbDetailsDialog(QGraphicsScene* theScene, QWidget* parent) : 
     connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()))
 
     QVBoxLayout* vboxLayoutMain = new QVBoxLayout(this)
-    vboxLayoutMain->addWidget(mainWidget)
-    vboxLayoutMain->addWidget(buttonBox)
+    vboxLayoutMain.addWidget(mainWidget)
+    vboxLayoutMain.addWidget(buttonBox)
     setLayout(vboxLayoutMain)
 
     setWindowTitle(tr("Embroidery Design Details"))
@@ -5637,12 +5591,12 @@ def EmbDetailsDialog::getInfo():
     #TODO: generate a temporary pattern from the scene data.
 
     #TODO: grab this information from the pattern
-    stitchesTotal = 5; #TODO: embStitchList_count(pattern->stitchList, TOTAL);
-    stitchesReal = 4; #TODO: embStitchList_count(pattern->stitchList, NORMAL);
-    stitchesJump = 3; #TODO: embStitchList_count(pattern->stitchList, JUMP);
-    stitchesTrim = 2; #TODO: embStitchList_count(pattern->stitchList, TRIM);
-    colorTotal = 1; #TODO: embThreadList_count(pattern->threadList, TOTAL);
-    colorChanges = 0; #TODO: embThreadList_count(pattern->threadList, CHANGES);
+    stitchesTotal = 5; #TODO: embStitchList_count(pattern.stitchList, TOTAL);
+    stitchesReal = 4; #TODO: embStitchList_count(pattern.stitchList, NORMAL);
+    stitchesJump = 3; #TODO: embStitchList_count(pattern.stitchList, JUMP);
+    stitchesTrim = 2; #TODO: embStitchList_count(pattern.stitchList, TRIM);
+    colorTotal = 1; #TODO: embThreadList_count(pattern.threadList, TOTAL);
+    colorChanges = 0; #TODO: embThreadList_count(pattern.threadList, CHANGES);
 
     boundingRect.setRect(0, 0, 50, 100); #TODO: embPattern_calcBoundingBox(pattern);
 }
@@ -5678,11 +5632,11 @@ QWidget* EmbDetailsDialog::createMainWidget():
 
     QGridLayout* gridLayoutMisc = new QGridLayout(groupBoxMisc)
     for (i=0; i<12; i++) {
-        gridLayoutMisc->addWidget(labels[i], i, 0, Qt::AlignLeft)
-        gridLayoutMisc->addWidget(fields[i], i, 1, Qt::AlignLeft)
+        gridLayoutMisc.addWidget(labels[i], i, 0, Qt::AlignLeft)
+        gridLayoutMisc.addWidget(fields[i], i, 1, Qt::AlignLeft)
     }
-    gridLayoutMisc->setColumnStretch(1,1)
-    groupBoxMisc->setLayout(gridLayoutMisc)
+    gridLayoutMisc.setColumnStretch(1,1)
+    groupBoxMisc.setLayout(gridLayoutMisc)
 
     # TODO: Color Histogram
 
@@ -5693,21 +5647,21 @@ QWidget* EmbDetailsDialog::createMainWidget():
 
     #Widget Layout
     QVBoxLayout *vboxLayoutMain = new QVBoxLayout(widget)
-    vboxLayoutMain->addWidget(groupBoxMisc)
-    #vboxLayoutMain->addWidget(groupBoxDist);
-    vboxLayoutMain->addStretch(1)
-    widget->setLayout(vboxLayoutMain)
+    vboxLayoutMain.addWidget(groupBoxMisc)
+    #vboxLayoutMain.addWidget(groupBoxDist);
+    vboxLayoutMain.addStretch(1)
+    widget.setLayout(vboxLayoutMain)
 
     QScrollArea* scrollArea = new QScrollArea(this)
-    scrollArea->setWidgetResizable(1)
-    scrollArea->setWidget(widget)
+    scrollArea.setWidgetResizable(1)
+    scrollArea.setWidget(widget)
     return scrollArea
 
 bool Application::event(QEvent *event):
-    switch (event->type()) {
+    switch (event.type()) {
     case QEvent::FileOpen:
         if (_mainWin) {
-            _mainWin->openFilesSelected(QStringList(static_cast<QFileOpenEvent *>(event)->file()))
+            _mainWin.openFilesSelected(QStringList(static_cast<QFileOpenEvent *>(event).file()))
             return 1
         }
         # Fall through
@@ -5726,7 +5680,7 @@ ImageWidget::ImageWidget(const QString &filename, QWidget* parent) : QWidget(par
     setMaximumWidth(img.width())
     setMaximumHeight(img.height())
 
-    this->show()
+    this.show()
 
 ImageWidget::load(const QString &fileName):
     img.load(fileName)
@@ -5750,31 +5704,31 @@ LayerManager::LayerManager(MainWindow* mw, QWidget* parent) : QDialog(parent):
     layerModel = new QStandardItemModel(0, 8, this)
 
     layerModelSorted = new QSortFilterProxyModel
-    layerModelSorted->setDynamicSortFilter(1)
-    layerModelSorted->setSourceModel(layerModel)
+    layerModelSorted.setDynamicSortFilter(1)
+    layerModelSorted.setSourceModel(layerModel)
 
     treeView = new QTreeView
-    treeView->setRootIsDecorated(0)
-    treeView->setAlternatingRowColors(1)
-    treeView->setModel(layerModelSorted)
-    treeView->setSortingEnabled(1)
-    treeView->sortByColumn(0, Qt::AscendingOrder)
+    treeView.setRootIsDecorated(0)
+    treeView.setAlternatingRowColors(1)
+    treeView.setModel(layerModelSorted)
+    treeView.setSortingEnabled(1)
+    treeView.sortByColumn(0, Qt::AscendingOrder)
 
     QVBoxLayout *mainLayout = new QVBoxLayout
-    mainLayout->addWidget(treeView)
+    mainLayout.addWidget(treeView)
     setLayout(mainLayout)
 
     setWindowTitle(tr("Layer Manager"))
     setMinimumSize(750, 550)
 
-    layerModel->setHeaderData(0, Qt::Horizontal, tr("Name"))
-    layerModel->setHeaderData(1, Qt::Horizontal, tr("Visible"))
-    layerModel->setHeaderData(2, Qt::Horizontal, tr("Frozen"))
-    layerModel->setHeaderData(3, Qt::Horizontal, tr("Z Value"))
-    layerModel->setHeaderData(4, Qt::Horizontal, tr("Color"))
-    layerModel->setHeaderData(5, Qt::Horizontal, tr("Linetype"))
-    layerModel->setHeaderData(6, Qt::Horizontal, tr("Lineweight"))
-    layerModel->setHeaderData(7, Qt::Horizontal, tr("Print"))
+    layerModel.setHeaderData(0, Qt::Horizontal, tr("Name"))
+    layerModel.setHeaderData(1, Qt::Horizontal, tr("Visible"))
+    layerModel.setHeaderData(2, Qt::Horizontal, tr("Frozen"))
+    layerModel.setHeaderData(3, Qt::Horizontal, tr("Z Value"))
+    layerModel.setHeaderData(4, Qt::Horizontal, tr("Color"))
+    layerModel.setHeaderData(5, Qt::Horizontal, tr("Linetype"))
+    layerModel.setHeaderData(6, Qt::Horizontal, tr("Lineweight"))
+    layerModel.setHeaderData(7, Qt::Horizontal, tr("Print"))
 
     addLayer("0", 1, 0, 0.0, qRgb(0,0,0), "Continuous", "Default", 1)
     addLayer("1", 1, 0, 1.0, qRgb(0,0,0), "Continuous", "Default", 1)
@@ -5787,8 +5741,8 @@ LayerManager::LayerManager(MainWindow* mw, QWidget* parent) : QDialog(parent):
     addLayer("8", 1, 0, 8.0, qRgb(0,0,0), "Continuous", "Default", 1)
     addLayer("9", 1, 0, 9.0, qRgb(0,0,0), "Continuous", "Default", 1)
 
-    for(i = 0; i < layerModel->columnCount(); ++i)
-        treeView->resizeColumnToContents(i)
+    for(i = 0; i < layerModel.columnCount(); ++i)
+        treeView.resizeColumnToContents(i)
 
     QApplication::setOverrideCursor(Qt::ArrowCursor)
 
@@ -5803,20 +5757,20 @@ def LayerManager::addLayer(const QString& name,
                             const QString& lineType,
                             const QString& lineWeight,
                             const print):
-    layerModel->insertRow(0)
-    layerModel->setData(layerModel->index(0, 0), name)
-    layerModel->setData(layerModel->index(0, 1), visible)
-    layerModel->setData(layerModel->index(0, 2), frozen)
-    layerModel->setData(layerModel->index(0, 3), zValue)
+    layerModel.insertRow(0)
+    layerModel.setData(layerModel.index(0, 0), name)
+    layerModel.setData(layerModel.index(0, 1), visible)
+    layerModel.setData(layerModel.index(0, 2), frozen)
+    layerModel.setData(layerModel.index(0, 3), zValue)
 
     QPixmap colorPix(QSize(16,16))
     colorPix.fill(QColor(color))
-    layerModel->itemFromIndex(layerModel->index(0, 4))->setIcon(QIcon(colorPix))
-    layerModel->setData(layerModel->index(0, 4), QColor(color))
+    layerModel.itemFromIndex(layerModel.index(0, 4)).setIcon(QIcon(colorPix))
+    layerModel.setData(layerModel.index(0, 4), QColor(color))
 
-    layerModel->setData(layerModel->index(0, 5), lineType)
-    layerModel->setData(layerModel->index(0, 6), lineWeight)
-    layerModel->setData(layerModel->index(0, 7), print)
+    layerModel.setData(layerModel.index(0, 5), lineType)
+    layerModel.setData(layerModel.index(0, 6), lineWeight)
+    layerModel.setData(layerModel.index(0, 7), print)
 
 old_main(argc, char *argv[]):
 #if defined(Q_OS_MAC)
@@ -5848,12 +5802,12 @@ old_main(argc, char *argv[]):
 
     QObject::connect(&app, SIGNAL(lastWindowClosed()), _mainWin, SLOT(quit()))
 
-    _mainWin->setWindowTitle(app.applicationName() + " " + app.applicationVersion())
-    _mainWin->show()
+    _mainWin.setWindowTitle(app.applicationName() + " " + app.applicationVersion())
+    _mainWin.show()
 
     #NOTE: If openFilesSelected() is called from within the mainWin constructor, slot commands wont work and the window menu will be screwed
     if(!filesToOpen.isEmpty())
-        _mainWin->openFilesSelected(filesToOpen)
+        _mainWin.openFilesSelected(filesToOpen)
 
     return app.exec()
 
@@ -5898,11 +5852,11 @@ def MdiArea::setBackgroundColor(const QColor& color):
     forceRepaint()
 
 def MdiArea::mouseDoubleClickEvent(QMouseEvent* #e):
-    mainWin->openFile()
+    mainWin.openFile()
 
 def MdiArea::paintEvent(QPaintEvent* #e):
     QWidget* vport = viewport()
-    QRect rect = vport->rect()
+    QRect rect = vport.rect()
 
     QPainter painter(vport)
     painter.setRenderHint(QPainter::SmoothPixmapTransform)
@@ -5942,11 +5896,11 @@ def MdiArea::zoomExtentsAllSubWindows():
         MdiWindow* mdiWin = qobject_cast<MdiWindow*>(window)
         if(mdiWin)
         {
-            View* v = mdiWin->getView()
+            View* v = mdiWin.getView()
             if(v)
             {
-                v->recalculateLimits()
-                v->zoomExtents()
+                v.recalculateLimits()
+                v.zoomExtents()
             }
         }
     }
@@ -5970,9 +5924,9 @@ MdiWindow::MdiWindow(const theIndex, MainWindow* mw, QMdiArea* parent, Qt::Windo
 
     QString aName
     curFile = aName.asprintf("Untitled%d.dst", myIndex)
-    this->setWindowTitle(curFile)
+    this.setWindowTitle(curFile)
 
-    this->setWindowIcon(QIcon("icons/app.png"))
+    this.setWindowIcon(QIcon("icons/app.png"))
 
     gscene = new QGraphicsScene(0,0,0,0, this)
     gview = new View(mainWin, gscene, this)
@@ -5985,7 +5939,7 @@ MdiWindow::MdiWindow(const theIndex, MainWindow* mw, QMdiArea* parent, Qt::Windo
      * AS IT WILL CAUSE THE WINDOW MENU TO NOT SWITCH WINDOWS PROPERLY!
      * ALTHOUGH IT SEEMS THAT SETTING INTERNAL WIDGETS FOCUSPROXY IS OK.
 
-#    gview->setFocusProxy(mainWin->prompt);
+#    gview.setFocusProxy(mainWin.prompt);
 
     resize(sizeHint())
 
@@ -6039,9 +5993,9 @@ MdiWindow::saveFile(const QString &fileName):
         debug_message("Unsupported write file type: %s", qPrintable(fileName))
     }
     else {
-        foreach(QGraphicsItem* item, _mainWin->activeScene()->items(Qt::AscendingOrder))
+        foreach(QGraphicsItem* item, _mainWin.activeScene().items(Qt::AscendingOrder))
         {
-            objType = item->data(OBJ_TYPE).toInt()
+            objType = item.data(OBJ_TYPE).toInt()
 
             if (objType == OBJ_TYPE_ARC) {
                 # addArc
@@ -6053,12 +6007,12 @@ MdiWindow::saveFile(const QString &fileName):
                 CircleObject* obj = static_cast<CircleObject*>(item)
                 if (obj) {
                     if (formatType == EMBFORMAT_STITCHONLY) {
-                        QPainterPath path = obj->objectSavePath()
-            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
+                        QPainterPath path = obj.objectSavePath()
+            toPolyline(pattern, obj.objectCenter(), path.simplified(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
         }
         else {
-            QPointF p = obj->objectCenter()
-            r = obj->objectRadius()
+            QPointF p = obj.objectCenter()
+            r = obj.objectRadius()
             embPattern_addCircleObjectAbs(pattern, (double)p.x(), (double)p.y(), (double)r)
         }
     }
@@ -6093,13 +6047,13 @@ MdiWindow::saveFile(const QString &fileName):
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            QPainterPath path = obj->objectSavePath()
-            toPolyline(pattern, obj->objectCenter(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
+            QPainterPath path = obj.objectSavePath()
+            toPolyline(pattern, obj.objectCenter(), path.simplified(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
         }
         else
         {
             #TODO: ellipse rotation
-            embPattern_addEllipseObjectAbs(pattern, (double)obj->objectCenter().x(), (double)obj->objectCenter().y(), (double)obj->objectWidth()/2.0, (double)obj->objectHeight()/2.0)
+            embPattern_addEllipseObjectAbs(pattern, (double)obj.objectCenter().x(), (double)obj.objectCenter().y(), (double)obj.objectWidth()/2.0, (double)obj.objectHeight()/2.0)
         }
     }
             }
@@ -6114,11 +6068,11 @@ MdiWindow::saveFile(const QString &fileName):
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            toPolyline(pattern, obj->objectEndPoint1(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
+            toPolyline(pattern, obj.objectEndPoint1(), obj.objectSavePath(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
         }
         else
         {
-            embPattern_addLineObjectAbs(pattern, (double)obj->objectX1(), (double)obj->objectY1(), (double)obj->objectX2(), (double)obj->objectY2())
+            embPattern_addLineObjectAbs(pattern, (double)obj.objectX1(), (double)obj.objectY1(), (double)obj.objectX2(), (double)obj.objectY2())
         }
     }
       }
@@ -6129,8 +6083,8 @@ MdiWindow::saveFile(const QString &fileName):
     QGraphicsPathItem* polylineItem = (QGraphicsPathItem*)item
     if(polylineItem)
     {
-        QPainterPath path = polylineItem->path()
-        QPointF pos = polylineItem->pos()
+        QPainterPath path = polylineItem.path()
+        QPointF pos = polylineItem.pos()
         startX = pos.x()
         startY = pos.y()
 
@@ -6163,7 +6117,7 @@ MdiWindow::saveFile(const QString &fileName):
             }
         }
         pattern.AddStitchRel(0, 0, STOP)
-        QColor c= polylineItem->pen().color()
+        QColor c= polylineItem.pen().color()
         pattern.AddColor(c.red(), c.green(), c.blue(), "", "")
     }
 
@@ -6174,11 +6128,11 @@ MdiWindow::saveFile(const QString &fileName):
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
+            toPolyline(pattern, obj.objectPos(), obj.objectSavePath(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
         }
         else
         {
-            embPattern_addPointObjectAbs(pattern, (double)obj->objectX(), (double)obj->objectY())
+            embPattern_addPointObjectAbs(pattern, (double)obj.objectX(), (double)obj.objectY())
         }
     }
              }
@@ -6186,13 +6140,13 @@ MdiWindow::saveFile(const QString &fileName):
     PolygonObject* obj = static_cast<PolygonObject*>(item)
     if(obj)
     {
-        toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
+        toPolyline(pattern, obj.objectPos(), obj.objectSavePath(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
     }
             }
             elif(objType == OBJ_TYPE_POLYLINE) {
                 PolylineObject* obj = static_cast<PolylineObject*>(item)
                 if (obj)  {
-                    toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
+                    toPolyline(pattern, obj.objectPos(), obj.objectSavePath(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
                 }
             }
             elif(objType == OBJ_TYPE_RAY) {
@@ -6204,13 +6158,13 @@ MdiWindow::saveFile(const QString &fileName):
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            toPolyline(pattern, obj->objectPos(), obj->objectSavePath(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
+            toPolyline(pattern, obj.objectPos(), obj.objectSavePath(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight
         }
         else
         {
             #TODO: Review this at some point
-            QPointF topLeft = obj->objectTopLeft()
-            embPattern_addRectObjectAbs(pattern, (double)topLeft.x(), (double)topLeft.y(), (double)obj->objectWidth(), (double)obj->objectHeight())
+            QPointF topLeft = obj.objectTopLeft()
+            embPattern_addRectObjectAbs(pattern, (double)topLeft.x(), (double)topLeft.y(), (double)obj.objectWidth(), (double)obj.objectHeight())
         }
     }
             }
@@ -6231,10 +6185,10 @@ MdiWindow::saveFile(const QString &fileName):
     {
         if(formatType == EMBFORMAT_STITCHONLY)
         {
-            QList<QPainterPath> pathList = obj->objectSavePathList()
+            QList<QPainterPath> pathList = obj.objectSavePathList()
             foreach(QPainterPath path, pathList)
             {
-                toPolyline(pattern, obj->objectPos(), path.simplified(), "0", obj->objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
+                toPolyline(pattern, obj.objectPos(), path.simplified(), "0", obj.objectColor(), "CONTINUOUS", "BYLAYER"); #TODO: proper layer/lineType/lineWeight //TODO: Improve precision, replace simplified
             }
         }
         else
@@ -6290,45 +6244,45 @@ MdiWindow::loadFile(const QString &fileName):
     }
     else:
         embPattern_moveStitchListToPolylines(p); #TODO: Test more
-        stitchCount = p->stitchList->count
+        stitchCount = p.stitchList.count
         QPainterPath path
 
         if p.circles:
             for i in range(p.circles.count):
-                EmbCircle c = p->circles->circle[i].circle
-                EmbColor thisColor = p->circles->circle[i].color
+                EmbCircle c = p.circles.circle[i].circle
+                EmbColor thisColor = p.circles.circle[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
                 # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddCircle(c.center.x, c.center.y, c.radius, 0, OBJ_RUBBER_OFF); #TODO: fill
+                mainWin.nativeAddCircle(c.center.x, c.center.y, c.radius, 0, OBJ_RUBBER_OFF); #TODO: fill
 
         if p.ellipses:
-            for (i = 0; i < p->ellipses->count; i++) {
-                EmbEllipse e = p->ellipses->ellipse[i].ellipse
-                EmbColor thisColor = p->ellipses->ellipse[i].color
+            for (i = 0; i < p.ellipses.count; i++) {
+                EmbEllipse e = p.ellipses.ellipse[i].ellipse
+                EmbColor thisColor = p.ellipses.ellipse[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
                 # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddEllipse(e.centerX, e.centerY, e.radiusX, e.radiusY, 0, 0, OBJ_RUBBER_OFF); #TODO: rotation and fill
+                mainWin.nativeAddEllipse(e.centerX, e.centerY, e.radiusX, e.radiusY, 0, 0, OBJ_RUBBER_OFF); #TODO: rotation and fill
 
-        if (p->lines) {
-            for (i = 0; i < p->lines->count; i++) {
-                EmbLine li = p->lines->line[i].line
-                EmbColor thisColor = p->lines->line[i].color
+        if (p.lines) {
+            for (i = 0; i < p.lines.count; i++) {
+                EmbLine li = p.lines.line[i].line
+                EmbColor thisColor = p.lines.line[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
                 # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddLine(li.start.x, li.start.y, li.end.x, li.end.y, 0, OBJ_RUBBER_OFF); #TODO: rotation
+                mainWin.nativeAddLine(li.start.x, li.start.y, li.end.x, li.end.y, 0, OBJ_RUBBER_OFF); #TODO: rotation
 
-        if (p->paths) {
+        if (p.paths) {
             # TODO: This is unfinished. It needs more work
-            for (i=0; i < p->paths->count; i++) {
-                EmbArray* curPointList = p->paths->path[i]->pointList
+            for (i=0; i < p.paths.count; i++) {
+                EmbArray* curPointList = p.paths.path[i].pointList
                 QPainterPath pathPath
-                EmbColor thisColor = p->paths->path[i]->color
-                if (curPointList->count > 0) {
-                    EmbVector pp = curPointList[0].point->point
+                EmbColor thisColor = p.paths.path[i].color
+                if (curPointList.count > 0) {
+                    EmbVector pp = curPointList[0].point.point
                     pathPath.moveTo(pp.x, -pp.y); #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                 }
-                for (j = 1; j < curPointList->count; j++) {
-                    EmbVector pp = curPointList[j].point->point
+                for (j = 1; j < curPointList.count; j++) {
+                    EmbVector pp = curPointList[j].point.point
                     pathPath.lineTo(pp.x, -pp.y); #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                 }
                 QPen loadPen(qRgb(thisColor.r, thisColor.g, thisColor.b))
@@ -6337,30 +6291,30 @@ MdiWindow::loadFile(const QString &fileName):
                 loadPen.setJoinStyle(Qt::RoundJoin)
 
                 PathObject* obj = new PathObject(0,0, pathPath, loadPen.color().rgb())
-                obj->setObjectRubberMode(OBJ_RUBBER_OFF)
-                _mainWin->activeScene()->addItem(obj)
+                obj.setObjectRubberMode(OBJ_RUBBER_OFF)
+                _mainWin.activeScene().addItem(obj)
             }
         }
-        if (p->points) {
-            for (i = 0; i < p->points->count; i++) {
-                EmbVector po = p->points->point[i].point
-                EmbColor thisColor = p->points->point[i].color
+        if (p.points) {
+            for (i = 0; i < p.points.count; i++) {
+                EmbVector po = p.points.point[i].point
+                EmbColor thisColor = p.points.point[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
                 # NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddPoint(po.x, po.y)
+                mainWin.nativeAddPoint(po.x, po.y)
             }
         }
-        if (p->polygons) {
-            for (i = 0; i < p->polygons->count; i++) {
-                EmbArray *curPointList = p->polygons->polygon[i]->pointList
+        if (p.polygons) {
+            for (i = 0; i < p.polygons.count; i++) {
+                EmbArray *curPointList = p.polygons.polygon[i].pointList
                 QPainterPath polygonPath
                 firstPo= 0
                 startX = 0, startY = 0
                 x = 0, y = 0
-                EmbColor thisColor = p->polygons->polygon[i]->color
+                EmbColor thisColor = p.polygons.polygon[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                for (j=0; j<curPointList->count; j++) {
-                    EmbVector pp = curPointList->point[j].point
+                for (j=0; j<curPointList.count; j++) {
+                    EmbVector pp = curPointList.point[j].point
                     x = pp.x
                     y = -pp.y; #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
 
@@ -6374,21 +6328,21 @@ MdiWindow::loadFile(const QString &fileName):
                     }
                 }
                 polygonPath.translate(-startX, -startY)
-                mainWin->nativeAddPolygon(startX, startY, polygonPath, OBJ_RUBBER_OFF)
+                mainWin.nativeAddPolygon(startX, startY, polygonPath, OBJ_RUBBER_OFF)
             }
         }
         # NOTE: Polylines should only contain NORMAL stitches.
-        if (p->polylines) {
-            for (i=0; i<p->polylines->count; i++) {
-                EmbArray* curPointList = p->polylines->polyline[i]->pointList
+        if (p.polylines) {
+            for (i=0; i<p.polylines.count; i++) {
+                EmbArray* curPointList = p.polylines.polyline[i].pointList
                 QPainterPath polylinePath
                 firstPo= 0
                 startX = 0, startY = 0
                 x = 0, y = 0
-                EmbColor thisColor = p->polylines->polyline[i]->color
+                EmbColor thisColor = p.polylines.polyline[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
-                for (j=0; j<curPointList->count; j++) {
-                    EmbVector pp = curPointList->point[j].point
+                for (j=0; j<curPointList.count; j++) {
+                    EmbVector pp = curPointList.point[j].point
                     x = pp.x
                     y = -pp.y; #NOTE: Qt Y+ is down and libembroidery Y+ is up, so inverting the Y is needed.
                     if (firstPoint) {
@@ -6402,20 +6356,20 @@ MdiWindow::loadFile(const QString &fileName):
                 }
 
                 polylinePath.translate(-startX, -startY)
-                mainWin->nativeAddPolyline(startX, startY, polylinePath, OBJ_RUBBER_OFF)
+                mainWin.nativeAddPolyline(startX, startY, polylinePath, OBJ_RUBBER_OFF)
             }
         }
-        if (p->rects) {
-            for (i=0; i<p->rects->count; i++) {
-                EmbRect r = p->rects->rect[i].rect
-                EmbColor thisColor = p->rects->rect[i].color
+        if (p.rects) {
+            for (i=0; i<p.rects.count; i++) {
+                EmbRect r = p.rects.rect[i].rect
+                EmbColor thisColor = p.rects.rect[i].color
                 setCurrentColor(qRgb(thisColor.r, thisColor.g, thisColor.b))
                 #NOTE: With natives, the Y+ is up and libembroidery Y+ is up, so inverting the Y is NOT needed.
-                mainWin->nativeAddRectangle(embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r), 0, 0, OBJ_RUBBER_OFF); #TODO: rotation and fill
+                mainWin.nativeAddRectangle(embRect_x(r), embRect_y(r), embRect_width(r), embRect_height(r), 0, 0, OBJ_RUBBER_OFF); #TODO: rotation and fill
             }
         }
         setCurrentFile(fileName)
-        mainWin->statusbar->showMessage("File loaded.")
+        mainWin.statusbar.showMessage("File loaded.")
         QString stitches
         stitches.setNum(stitchCount)
 
@@ -6439,16 +6393,16 @@ def MdiWindow::print():
         QPainter painter(&printer)
         if (settings.printing_disable_bg) {
             // Save current bg
-            QBrush brush = gview->backgroundBrush()
+            QBrush brush = gview.backgroundBrush()
             // Save ink by not printing the bg at all
-            gview->setBackgroundBrush(Qt::NoBrush)
+            gview.setBackgroundBrush(Qt::NoBrush)
             // Print, fitting the viewport contents into a full page
-            gview->render(&painter)
+            gview.render(&painter)
             // Restore the bg
-            gview->setBackgroundBrush(brush)
+            gview.setBackgroundBrush(brush)
         } else {
             // Print, fitting the viewport contents into a full page
-            gview->render(&painter)
+            gview.render(&painter)
         }
 
 
@@ -6462,19 +6416,19 @@ def MdiWindow::saveBMC():
     # TODO: figure out how to center the image, right now it just plops it to the left side.
     QImage img(150, 150, QImage::Format_ARGB32_Premultiplied)
     img.fill(qRgb(255,255,255))
-    QRectF extents = gscene->itemsBoundingRect()
+    QRectF extents = gscene.itemsBoundingRect()
 
     QPainter painter(&img)
     QRectF targetRect(0,0,150,150)
     if (settings.printing_disable_bg) { #TODO: Make BMC background into it's own setting?
-        QBrush brush = gscene->backgroundBrush()
-        gscene->setBackgroundBrush(Qt::NoBrush)
-        gscene->update()
-        gscene->render(&painter, targetRect, extents, Qt::KeepAspectRatio)
-        gscene->setBackgroundBrush(brush)
+        QBrush brush = gscene.backgroundBrush()
+        gscene.setBackgroundBrush(Qt::NoBrush)
+        gscene.update()
+        gscene.render(&painter, targetRect, extents, Qt::KeepAspectRatio)
+        gscene.setBackgroundBrush(brush)
     } else {
-        gscene->update()
-        gscene->render(&painter, targetRect, extents, Qt::KeepAspectRatio)
+        gscene.update()
+        gscene.render(&painter, targetRect, extents, Qt::KeepAspectRatio)
     }
     img.convertToFormat(QImage::Format_Indexed8, Qt::ThresholdDither|Qt::AvoidDither).save("test.bmc", "BMP")
 
@@ -6495,15 +6449,15 @@ def MdiWindow::closeEvent(QCloseEvent* #e):
 
 def MdiWindow::onWindowActivated():
     debug_message("MdiWindow onWindowActivated()")
-    status_bar[STATUS_SNAP]->setChecked(gscene->property("ENABLE_SNAP").toBool())
-    status_bar[STATUS_GRID]->setChecked(gscene->property("ENABLE_GRID").toBool())
-    status_bar[STATUS_RULER]->setChecked(gscene->property("ENABLE_RULER").toBool())
-    status_bar[STATUS_ORTHO]->setChecked(gscene->property("ENABLE_ORTHO").toBool())
-    status_bar[STATUS_POLAR]->setChecked(gscene->property("ENABLE_POLAR").toBool())
-    status_bar[STATUS_QSNAP]->setChecked(gscene->property("ENABLE_QSNAP").toBool())
-    status_bar[STATUS_QTRACK]->setChecked(gscene->property("ENABLE_QTRACK").toBool())
-    status_bar[STATUS_LWT]->setChecked(gscene->property("ENABLE_LWT").toBool())
-    #mainWin->prompt->setHistory(promptHistory);
+    status_bar[STATUS_SNAP].setChecked(gscene.property("ENABLE_SNAP").toBool())
+    status_bar[STATUS_GRID].setChecked(gscene.property("ENABLE_GRID").toBool())
+    status_bar[STATUS_RULER].setChecked(gscene.property("ENABLE_RULER").toBool())
+    status_bar[STATUS_ORTHO].setChecked(gscene.property("ENABLE_ORTHO").toBool())
+    status_bar[STATUS_POLAR].setChecked(gscene.property("ENABLE_POLAR").toBool())
+    status_bar[STATUS_QSNAP].setChecked(gscene.property("ENABLE_QSNAP").toBool())
+    status_bar[STATUS_QTRACK].setChecked(gscene.property("ENABLE_QTRACK").toBool())
+    status_bar[STATUS_LWT].setChecked(gscene.property("ENABLE_LWT").toBool())
+    #mainWin.prompt.setHistory(promptHistory);
 }
 
 QSize MdiWindow::sizeHint() const:
@@ -6526,28 +6480,28 @@ def MdiWindow::updateColorLinetypeLineweight():
 }
 
 def MdiWindow::deletePressed():
-    gview->deletePressed()
+    gview.deletePressed()
 
 def MdiWindow::escapePressed():
-    gview->escapePressed()
+    gview.escapePressed()
 
 def MdiWindow::showViewScrollBars(val):
-    gview->showScrollBars(val)
+    gview.showScrollBars(val)
 
 def MdiWindow::setViewCrossHairColor(unsigned color):
-    gview->setCrossHairColor(color)
+    gview.setCrossHairColor(color)
 
 def MdiWindow::setViewBackgroundColor(unsigned color):
-    gview->setBackgroundColor(color)
+    gview.setBackgroundColor(color)
 
 def MdiWindow::setViewSelectBoxColors(unsigned colorL, unsigned fillL, unsigned colorR, unsigned fillR, alpha):
-    gview->setSelectBoxColors(colorL, fillL, colorR, fillR, alpha)
+    gview.setSelectBoxColors(colorL, fillL, colorR, fillR, alpha)
 
 def MdiWindow::setViewGridColor(unsigned color):
-    gview->setGridColor(color)
+    gview.setGridColor(color)
 
 def MdiWindow::setViewRulerColor(unsigned color):
-    gview->setRulerColor(color)
+    gview.setRulerColor(color)
 
 PreviewDialog::PreviewDialog(QWidget* parent,
                              const QString& caption,
@@ -6563,7 +6517,7 @@ PreviewDialog::PreviewDialog(QWidget* parent,
     if(qobject_cast<QGridLayout*>(lay))
     {
         QGridLayout* grid = qobject_cast<QGridLayout*>(lay)
-        grid->addWidget(imgWidget, 0, grid->columnCount(), grid->rowCount(), 1)
+        grid.addWidget(imgWidget, 0, grid.columnCount(), grid.rowCount(), 1)
     }
 
     setModal(1)
@@ -6625,11 +6579,11 @@ def SelectBox::forceRepaint():
 StatusBarButton::StatusBarButton(QString buttonText, MainWindow* mw, StatusBar* statbar, QWidget *parent) : QToolButton(parent):
     statusbar = statbar
 
-    this->setObjectName("StatusBarButton" + buttonText)
+    this.setObjectName("StatusBarButton" + buttonText)
 
-    this->setText(buttonText)
-    this->setAutoRaise(1)
-    this->setCheckable(1)
+    this.setText(buttonText)
+    this.setAutoRaise(1)
+    this.setCheckable(1)
 
     if (objectName() == "StatusBarButtonSNAP") {
         connect(this, SIGNAL(toggled(int)), this, SLOT(toggleSnap(int)))
@@ -6688,15 +6642,15 @@ def StatusBarButton::contextMenuEvent(QContextMenuEvent *event):
         menu_.addAction(settingsQTrackAction)
     }
     elif(objectName() == "StatusBarButtonLWT") {
-        View* gview = _mainWin->activeView()
+        View* gview = _mainWin.activeView()
         if gview:
             QAction* enableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender On", &menu_)
-            enableRealAction->setEnabled(!gview->isRealEnabled())
+            enableRealAction.setEnabled(!gview.isRealEnabled())
             connect(enableRealAction, SIGNAL(triggered()), this, SLOT(enableReal()))
             menu_.addAction(enableRealAction)
 
             QAction* disableRealAction = new QAction(QIcon("icons/realrender.png"), "&RealRender Off", &menu_)
-            disableRealAction->setEnabled(gview->isRealEnabled())
+            disableRealAction.setEnabled(gview.isRealEnabled())
             connect(disableRealAction, SIGNAL(triggered()), this, SLOT(disableReal()))
             menu_.addAction(disableRealAction)
         }
@@ -6705,36 +6659,36 @@ def StatusBarButton::contextMenuEvent(QContextMenuEvent *event):
         connect(settingsLwtAction, SIGNAL(triggered()), this, SLOT(settingsLwt()))
         menu_.addAction(settingsLwtAction)
     }
-    menu_.exec(event->globalPos())
+    menu_.exec(event.globalPos())
     QApplication::restoreOverrideCursor()
-    statusbar->clearMessage()
+    statusbar.clearMessage()
 
 StatusBar::StatusBar(MainWindow* mw, QWidget *parent) : QStatusBar(parent):
     i
-    this->setObjectName("StatusBar")
+    this.setObjectName("StatusBar")
 
     for (i=0; i<N_STATUS; i++) {
         status_bar[i] = new StatusBarButton(status_bar_label[i], _mainWin, this, this)
     }
     statusBarMouseCoord = new QLabel(this)
 
-    statusBarMouseCoord->setMinimumWidth(300); # Must fit this text always
-    statusBarMouseCoord->setMaximumWidth(300); # "+1.2345E+99, +1.2345E+99, +1.2345E+99"
+    statusBarMouseCoord.setMinimumWidth(300); # Must fit this text always
+    statusBarMouseCoord.setMaximumWidth(300); # "+1.2345E+99, +1.2345E+99, +1.2345E+99"
 
-    this->addWidget(statusBarMouseCoord)
+    this.addWidget(statusBarMouseCoord)
     for (i=0; i<N_STATUS; i++) {
-        this->addWidget(status_bar[i])
+        this.addWidget(status_bar[i])
 
 def StatusBar::setMouseCoord(x, y):
     # TODO: set format from settings (Architectural, Decimal, Engineering, Fractional, Scientific)
 
     # Decimal
-    statusBarMouseCoord->setText(QString().setNum(x, 'F', 4) + ", "
+    statusBarMouseCoord.setText(QString().setNum(x, 'F', 4) + ", "
         + QString().setNum(y, 'F', 4));
         #TODO: use precision from unit settings
 
     # Scientific
-    # statusBarMouseCoord->setText(QString().setNum(x, 'E', 4)
+    # statusBarMouseCoord.setText(QString().setNum(x, 'E', 4)
          + ", " + QString().setNum(y, 'E', 4));
     # TODO: use precision from unit settings
 
@@ -6745,24 +6699,24 @@ def main_about():
     #TODO: QTabWidget for about dialog
     #QApplication::setOverrideCursor(Qt::ArrowCursor)
     debug_message("about()")
-    QString appDir = qApp->applicationDirPath()
+    QString appDir = qApp.applicationDirPath()
     QString title = "About Embroidermodder 2"
 
     QDialog dialog(_mainWin)
     ImageWidget img(appDir + "/images/logo-small.png")
     QLabel text(QString("Embroidermodder ") + QString(_appVer_) + "\n\n" +
-        _mainWin->tr("http://embroidermodder.org") +
+        _mainWin.tr("http://embroidermodder.org") +
         "\n\n" +
-        _mainWin->tr("Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi") +
+        _mainWin.tr("Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi") +
         "\n\n" +
-         _mainWin->tr("Embroidery formats by Josh Varga.") +
+         _mainWin.tr("Embroidery formats by Josh Varga.") +
          "\n" +
-        _mainWin->tr("User Interface by Jonathan Greig and Robin Swift.") +
+        _mainWin.tr("User Interface by Jonathan Greig and Robin Swift.") +
         "\n\n" +
-         _mainWin->tr("Free under the zlib/libpng license.")
+         _mainWin.tr("Free under the zlib/libpng license.")
          #if defined(BUILD_GIT_HASH)
          + "\n\n" +
-         _mainWin->tr("Build Hash: ") + qPrintable(BUILD_GIT_HASH)
+         _mainWin.tr("Build Hash: ") + qPrintable(BUILD_GIT_HASH)
           #endif
     )
     text.setWordWrap(1)
@@ -6772,7 +6726,7 @@ def main_about():
     button.setText("Oh, Yeah!")
     buttonbox.addButton(&button, QDialogButtonBox::AcceptRole)
     buttonbox.setCenterButtons(1)
-    _mainWin->connect(&buttonbox, SIGNAL(accepted()), &dialog, SLOT(accept()))
+    _mainWin.connect(&buttonbox, SIGNAL(accepted()), &dialog, SLOT(accept()))
 
     QVBoxLayout layout
     layout.setAlignment(Qt::AlignCenter)
@@ -6835,14 +6789,14 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryCircle():
         OBJ_TYPE_CIRCLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonCircleCenterX, lineEditCircleCenterX)
-    formLayout->addRow(toolButtonCircleCenterY, lineEditCircleCenterY)
-    formLayout->addRow(toolButtonCircleRadius, lineEditCircleRadius)
-    formLayout->addRow(toolButtonCircleDiameter, lineEditCircleDiameter)
-    formLayout->addRow(toolButtonCircleArea, lineEditCircleArea)
-    formLayout->addRow(toolButtonCircleCircumference,
+    formLayout.addRow(toolButtonCircleCenterX, lineEditCircleCenterX)
+    formLayout.addRow(toolButtonCircleCenterY, lineEditCircleCenterY)
+    formLayout.addRow(toolButtonCircleRadius, lineEditCircleRadius)
+    formLayout.addRow(toolButtonCircleDiameter, lineEditCircleDiameter)
+    formLayout.addRow(toolButtonCircleArea, lineEditCircleArea)
+    formLayout.addRow(toolButtonCircleCircumference,
         lineEditCircleCircumference)
-    groupBoxGeometryCircle->setLayout(formLayout)
+    groupBoxGeometryCircle.setLayout(formLayout)
 
     return groupBoxGeometryCircle
 
@@ -6860,11 +6814,11 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryImage():
     lineEditImageHeight = createLineEdit("double", 0)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonImageX, lineEditImageX)
-    formLayout->addRow(toolButtonImageY, lineEditImageY)
-    formLayout->addRow(toolButtonImageWidth, lineEditImageWidth)
-    formLayout->addRow(toolButtonImageHeight, lineEditImageHeight)
-    groupBoxGeometryImage->setLayout(formLayout)
+    formLayout.addRow(toolButtonImageX, lineEditImageX)
+    formLayout.addRow(toolButtonImageY, lineEditImageY)
+    formLayout.addRow(toolButtonImageWidth, lineEditImageWidth)
+    formLayout.addRow(toolButtonImageHeight, lineEditImageHeight)
+    groupBoxGeometryImage.setLayout(formLayout)
 
     return groupBoxGeometryImage
 
@@ -6878,9 +6832,9 @@ QGroupBox* PropertyEditor::createGroupBoxMiscImage():
     lineEditImagePath = createLineEdit("double", 1)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonImageName, lineEditImageName)
-    formLayout->addRow(toolButtonImagePath, lineEditImagePath)
-    groupBoxMiscImage->setLayout(formLayout)
+    formLayout.addRow(toolButtonImageName, lineEditImageName)
+    formLayout.addRow(toolButtonImagePath, lineEditImagePath)
+    groupBoxMiscImage.setLayout(formLayout)
 
     return groupBoxMiscImage
 
@@ -6904,15 +6858,15 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryInfiniteLine():
     //TODO: mapSignal for infinite lines
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonInfiniteLineX1, lineEditInfiniteLineX1)
-    formLayout->addRow(toolButtonInfiniteLineY1, lineEditInfiniteLineY1)
-    formLayout->addRow(toolButtonInfiniteLineX2, lineEditInfiniteLineX2)
-    formLayout->addRow(toolButtonInfiniteLineY2, lineEditInfiniteLineY2)
-    formLayout->addRow(toolButtonInfiniteLineVectorX,
+    formLayout.addRow(toolButtonInfiniteLineX1, lineEditInfiniteLineX1)
+    formLayout.addRow(toolButtonInfiniteLineY1, lineEditInfiniteLineY1)
+    formLayout.addRow(toolButtonInfiniteLineX2, lineEditInfiniteLineX2)
+    formLayout.addRow(toolButtonInfiniteLineY2, lineEditInfiniteLineY2)
+    formLayout.addRow(toolButtonInfiniteLineVectorX,
         lineEditInfiniteLineVectorX)
-    formLayout->addRow(toolButtonInfiniteLineVectorY,
+    formLayout.addRow(toolButtonInfiniteLineVectorY,
         lineEditInfiniteLineVectorY)
-    groupBoxGeometryInfiniteLine->setLayout(formLayout)
+    groupBoxGeometryInfiniteLine.setLayout(formLayout)
 
     return groupBoxGeometryInfiniteLine
 
@@ -6943,15 +6897,15 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryLine():
     mapSignal(lineEditLineEndY, "lineEditLineEndY", OBJ_TYPE_LINE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonLineStartX, lineEditLineStartX)
-    formLayout->addRow(toolButtonLineStartY, lineEditLineStartY)
-    formLayout->addRow(toolButtonLineEndX, lineEditLineEndX)
-    formLayout->addRow(toolButtonLineEndY, lineEditLineEndY)
-    formLayout->addRow(toolButtonLineDeltaX, lineEditLineDeltaX)
-    formLayout->addRow(toolButtonLineDeltaY, lineEditLineDeltaY)
-    formLayout->addRow(toolButtonLineAngle, lineEditLineAngle)
-    formLayout->addRow(toolButtonLineLength, lineEditLineLength)
-    groupBoxGeometryLine->setLayout(formLayout)
+    formLayout.addRow(toolButtonLineStartX, lineEditLineStartX)
+    formLayout.addRow(toolButtonLineStartY, lineEditLineStartY)
+    formLayout.addRow(toolButtonLineEndX, lineEditLineEndX)
+    formLayout.addRow(toolButtonLineEndY, lineEditLineEndY)
+    formLayout.addRow(toolButtonLineDeltaX, lineEditLineDeltaX)
+    formLayout.addRow(toolButtonLineDeltaY, lineEditLineDeltaY)
+    formLayout.addRow(toolButtonLineAngle, lineEditLineAngle)
+    formLayout.addRow(toolButtonLineLength, lineEditLineLength)
+    groupBoxGeometryLine.setLayout(formLayout)
 
     return groupBoxGeometryLine
 
@@ -6973,12 +6927,12 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPath():
     //TODO: mapSignal for paths
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonPathVertexNum, comboBoxPathVertexNum)
-    formLayout->addRow(toolButtonPathVertexX, lineEditPathVertexX)
-    formLayout->addRow(toolButtonPathVertexY, lineEditPathVertexY)
-    formLayout->addRow(toolButtonPathArea, lineEditPathArea)
-    formLayout->addRow(toolButtonPathLength, lineEditPathLength)
-    groupBoxGeometryPath->setLayout(formLayout)
+    formLayout.addRow(toolButtonPathVertexNum, comboBoxPathVertexNum)
+    formLayout.addRow(toolButtonPathVertexX, lineEditPathVertexX)
+    formLayout.addRow(toolButtonPathVertexY, lineEditPathVertexY)
+    formLayout.addRow(toolButtonPathArea, lineEditPathArea)
+    formLayout.addRow(toolButtonPathLength, lineEditPathLength)
+    groupBoxGeometryPath.setLayout(formLayout)
 
     return groupBoxGeometryPath
 
@@ -6992,8 +6946,8 @@ QGroupBox* PropertyEditor::createGroupBoxMiscPath():
     //TODO: mapSignal for paths
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonPathClosed, comboBoxPathClosed)
-    groupBoxMiscPath->setLayout(formLayout)
+    formLayout.addRow(toolButtonPathClosed, comboBoxPathClosed)
+    groupBoxMiscPath.setLayout(formLayout)
 
     return groupBoxMiscPath
 
@@ -7030,15 +6984,15 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolygon():
     lineEditPolygonInteriorAngle = createLineEdit("double", 1)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonPolygonRadiusSide,
+    formLayout.addRow(toolButtonPolygonRadiusSide,
         lineEditPolygonRadiusSide)
-    formLayout->addRow(toolButtonPolygonDiameterVertex,
+    formLayout.addRow(toolButtonPolygonDiameterVertex,
         lineEditPolygonDiameterVertex)
-    formLayout->addRow(toolButtonPolygonDiameterSide,
+    formLayout.addRow(toolButtonPolygonDiameterSide,
         lineEditPolygonDiameterSide)
-    formLayout->addRow(toolButtonPolygonInteriorAngle,
+    formLayout.addRow(toolButtonPolygonInteriorAngle,
         lineEditPolygonInteriorAngle)
-    groupBoxGeometryPolygon->setLayout(formLayout)
+    groupBoxGeometryPolygon.setLayout(formLayout)
 
     return groupBoxGeometryPolygon
 
@@ -7065,7 +7019,7 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryPolyline():
     "lineEditPolylineVertexY"
     "lineEditPolylineArea"
     "lineEditPolylineLength"
-    groupBoxGeometryPolyline->setLayout(formLayout)
+    groupBoxGeometryPolyline.setLayout(formLayout)
 
     return groupBoxGeometryPolyline
 
@@ -7094,9 +7048,9 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryTextMulti():
 
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextMultiX, lineEditTextMultiX)
-    formLayout->addRow(toolButtonTextMultiY, lineEditTextMultiY)
-    groupBoxGeometryTextMulti->setLayout(formLayout)
+    formLayout.addRow(toolButtonTextMultiX, lineEditTextMultiX)
+    formLayout.addRow(toolButtonTextMultiY, lineEditTextMultiY)
+    groupBoxGeometryTextMulti.setLayout(formLayout)
 
     return groupBoxGeometryTextMulti
 
@@ -7131,17 +7085,17 @@ QGroupBox* PropertyEditor::createGroupBoxTextTextSingle():
         "lineEditTextSingleRotation", OBJ_TYPE_TEXTSINGLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextSingleContents,
+    formLayout.addRow(toolButtonTextSingleContents,
         lineEditTextSingleContents)
-    formLayout->addRow(toolButtonTextSingleFont,
+    formLayout.addRow(toolButtonTextSingleFont,
         comboBoxTextSingleFont)
-    formLayout->addRow(toolButtonTextSingleJustify,
+    formLayout.addRow(toolButtonTextSingleJustify,
         comboBoxTextSingleJustify)
-    formLayout->addRow(toolButtonTextSingleHeight,
+    formLayout.addRow(toolButtonTextSingleHeight,
         lineEditTextSingleHeight)
-    formLayout->addRow(toolButtonTextSingleRotation,
+    formLayout.addRow(toolButtonTextSingleRotation,
         lineEditTextSingleRotation)
-    groupBoxTextTextSingle->setLayout(formLayout)
+    groupBoxTextTextSingle.setLayout(formLayout)
 
     return groupBoxTextTextSingle
 
@@ -7158,9 +7112,9 @@ QGroupBox* PropertyEditor::createGroupBoxGeometryTextSingle():
     mapSignal(lineEditTextSingleY, "lineEditTextSingleY", OBJ_TYPE_TEXTSINGLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextSingleX, lineEditTextSingleX)
-    formLayout->addRow(toolButtonTextSingleY, lineEditTextSingleY)
-    groupBoxGeometryTextSingle->setLayout(formLayout)
+    formLayout.addRow(toolButtonTextSingleX, lineEditTextSingleX)
+    formLayout.addRow(toolButtonTextSingleY, lineEditTextSingleY)
+    groupBoxGeometryTextSingle.setLayout(formLayout)
 
     return groupBoxGeometryTextSingle
 
@@ -7181,11 +7135,11 @@ QGroupBox* PropertyEditor::createGroupBoxMiscTextSingle():
         "comboBoxTextSingleUpsideDown", OBJ_TYPE_TEXTSINGLE)
 
     QFormLayout* formLayout = new QFormLayout(this)
-    formLayout->addRow(toolButtonTextSingleBackward,
+    formLayout.addRow(toolButtonTextSingleBackward,
         comboBoxTextSingleBackward)
-    formLayout->addRow(toolButtonTextSingleUpsideDown,
+    formLayout.addRow(toolButtonTextSingleUpsideDown,
         comboBoxTextSingleUpsideDown)
-    groupBoxMiscTextSingle->setLayout(formLayout)
+    groupBoxMiscTextSingle.setLayout(formLayout)
 
     return groupBoxMiscTextSingle
 

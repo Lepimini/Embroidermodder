@@ -17,7 +17,7 @@ r"""
 class Layer_Manager():
     def __init__(self, tab):
         return self
-    
+
     def add(self, name, visible=True, frozen=False, zValue=0, color="black",
             lineType="solid", line_weight=0.35):
         return
@@ -30,5 +30,3 @@ class Layer_Manager():
 
     def tree_view(self):
         return
-    
-

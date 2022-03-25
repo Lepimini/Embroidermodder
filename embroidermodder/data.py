@@ -14,23 +14,27 @@ r"""
     Load JSON and PNG files.
 """
 
-import tempfile
+import os
+from pathlib import Path
 import json
-import pkg_resources
+import importlib.resources as res
 import tkinter as tk
-from PIL import Image, ImageDraw
+
+application_folder = str(Path.home()) + os.sep + ".embroidermodder2"
 
 
 def load_image(path):
     r"""
     For safe packaging, and to reduce the risk of program
-    crashing errors the resources are loaded via a temporary
-    file.
+    crashing errors the resources are loaded into the
+    application folder each time the program boots.
     """
-    file_data = pkg_resources.resource_string(__name__, path)
-    file = tempfile.NamedTemporaryFile()
-    file.write(file_data)
-    return tk.PhotoImage(file=file.name)
+    file_data = res.read_binary("embroidermodder", path)
+    a = application_folder + os.sep + path
+    f = open(a, "wb")
+    f.write(file_data)
+    f.close()
+    return tk.PhotoImage(file=a)
 
 
 def draw_icon(code):
@@ -42,7 +46,6 @@ def draw_icon(code):
         "arc 0 0 128 128 -2 2 black 3",
         "arc 20 20 108 108 40 -40 black 3"
     ]
-    """
     out = Image.new("RGB", (128, 128), (255, 255, 255))
     draw = ImageDraw.Draw(out)
     for line in code:
@@ -53,17 +56,33 @@ def draw_icon(code):
             end = int(cmd[6])
             draw.arc(box, start, end, fill=cmd[7], width=int(cmd[8]))
     return out
+    """
+    return "This function is overridden."
 
 
 def load_data(path):
     r"""
-    For safe packaging, and to reduce the risk of program
-    crashing errors the resources are loaded via a temporary
-    file.
+    These are loaded from the Python package first, then
+    any that contradict them in the users system override.
     """
-    file_data = pkg_resources.resource_string(__name__, path)
-    return json.loads(str(file_data, 'utf-8'))
+    file_data = res.read_text("embroidermodder", path)
+    d = json.loads(file_data)
+    if not os.path.isdir(application_folder):
+        os.mkdir(application_folder)
+
+    fname = application_folder + os.sep + path
+
+    if os.path.isfile(fname):
+        with open(fname, "r") as f:
+            user_data = json.loads(f.read())
+            for k in user_data.keys():
+                d[k] = user_data[k]
+    else:
+        with open(fname, "w") as f:
+            f.write(json.dumps(d, indent=4))
+
+    return d
 
 
-layout = load_data("data/layout.json")
-settings = load_data("data/config.json")
+layout = load_data("layout.json")
+settings = load_data("config.json")

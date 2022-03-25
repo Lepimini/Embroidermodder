@@ -1,2 +1,2 @@
-include embroidermodder/data/*.json
-include embroidermodder/icons/*/*.png
+include embroidermodder/*.json
+include embroidermodder/*.png

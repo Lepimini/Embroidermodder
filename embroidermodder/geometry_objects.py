@@ -7,13 +7,14 @@ r"""
 
     Copyright 2013-2022 The Embroidermodder Team
     Embroidermodder 2 is Open Source Software.
-    See LICENCE for licensing terms.
+    See LICENSE for licensing terms.
 
     ------------------------------------------------------------
 
     Classes for geometry objects.
     
-    One class per object.
+    One class per object. There needs to be a class for every
+    object type that is part of the SVG spec that we support.
 """
 
 import math
@@ -25,10 +26,10 @@ class Base_Object():
     def __init__(self):
         return self
     BaseObject(QGraphicsItem* parent = 0)
-    virtual ~BaseObject()
+    ~BaseObject()
 
     enum { Type = OBJ_TYPE_BASE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPen objectPen()   const { return objPen; }
     QColor   objectColor() const { return objPen.color(); }
@@ -41,30 +42,30 @@ class Base_Object():
     QString  objectRubberText(const QString& key) const
 
     QRectF rect() const { return path().boundingRect(); }
-    void setRect(const QRectF& r) { QPainterPath p; p.addRect(r); setPath(p); }
-    void setRect(x, y, w, h) { QPainterPath p; p.addRect(x,y,w,h); setPath(p); }
+    def setRect(const QRectF& r) { QPainterPath p; p.addRect(r); setPath(p); }
+    def setRect(x, y, w, h) { QPainterPath p; p.addRect(x,y,w,h); setPath(p); }
     QLineF line() const { return objLine; }
-    void setLine(const QLineF& li) { QPainterPath p; p.moveTo(li.p1()); p.lineTo(li.p2()); setPath(p); objLine = li; }
-    void setLine(x1, y1, x2, y2) { QPainterPath p; p.moveTo(x1,y1); p.lineTo(x2,y2); setPath(p); objLine.setLine(x1,y1,x2,y2); }
+    def setLine(const QLineF& li) { QPainterPath p; p.moveTo(li.p1()); p.lineTo(li.p2()); setPath(p); objLine = li; }
+    def setLine(x1, y1, x2, y2) { QPainterPath p; p.moveTo(x1,y1); p.lineTo(x2,y2); setPath(p); objLine.setLine(x1,y1,x2,y2); }
 
-    void setObjectColor(const QColor& color)
-    void setObjectColorRGB(unsigned int rgb)
-    void setObjectLineType(Qt::PenStyle lineType)
-    void setObjectLineWeight(lineWeight)
-    void setObjectPath(const QPainterPath& p) { setPath(p); }
-    void setObjectRubberMode(int mode) { objRubberMode = mode; }
-    void setObjectRubberPoint(const QString& key, const QPointF& point) { objRubberPoints.insert(key, point); }
-    void setObjectRubberText(const QString& key, const QString& txt) { objRubberTexts.insert(key, txt); }
+    def setObjectColor(const QColor& color)
+    def setObjectColorRGB(unsigned int rgb)
+    def setObjectLineType(Qt::PenStyle lineType)
+    def setObjectLineWeight(lineWeight)
+    def setObjectPath(const QPainterPath& p) { setPath(p); }
+    def setObjectRubberMode(int mode) { objRubberMode = mode; }
+    def setObjectRubberPoint(const QString& key, const QPointF& point) { objRubberPoints.insert(key, point); }
+    def setObjectRubberText(const QString& key, const QString& txt) { objRubberTexts.insert(key, txt); }
 
-    virtual QRectF boundingRect() const
-    virtual QPainterPath shape() const { return path(); }
+    QRectF boundingRect() const
+    QPainterPath shape() const { return path(); }
 
-    void drawRubberLine(const QLineF& rubLine, QPainter* painter = 0, const char* colorFromScene = 0)
+    def drawRubberLine(const QLineF& rubLine, QPainter* painter = 0, const char* colorFromScene = 0)
 
-    virtual void vulcanize() = 0
-    virtual mouseSnapPoint(const QPointF& mousePoint) = 0
-    virtual QList<QPointF> allGripPoints() = 0
-    virtual void gripEdit(const QPointF& before, const QPointF& after) = 0
+    def vulcanize() = 0
+    mouseSnapPoint(const QPointF& mousePoint) = 0
+    QList<QPointF> allGripPoints() = 0
+    def gripEdit(const QPointF& before, const QPointF& after) = 0
     
     QPen objPen
     QPen lwtPen
@@ -75,7 +76,7 @@ class Base_Object():
     int objID
 protected:
     QPen lineWeightPen() const { return lwtPen; }
-    void realRender(QPainter* painter, const QPainterPath& renderPath)
+    def realRender(QPainter* painter, const QPainterPath& renderPath)
 ]
 
 class ArcObject : public BaseObject:
@@ -85,7 +86,7 @@ public:
     ~ArcObject()
 
     enum { Type = OBJ_TYPE_ARC ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     objectCenter()    const { return scenePos(); }
       objectRadius()    const { return rect().width()/2.0*scale(); }
@@ -100,42 +101,60 @@ public:
       objectIncludedAngle() const
     int    objectClockwise() const
 
-    void setObjectRadius(radius)
-    void setObjectStartAngle(angle)
-    void setObjectEndAngle(angle)
-    void setObjectStartPoint(pointX, pointY)
-    void setObjectMidPoint(const QPointF& point)
-    void setObjectMidPoint(pointX, pointY)
-    void setObjectEndPoint(const QPointF& point)
-    void setObjectEndPoint(pointX, pointY)
+    def setObjectRadius(radius)
+        return
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def setObjectStartAngle(angle)
+        return
+
+    def setObjectEndAngle(angle)
+        return
+
+    def setObjectStartPoint(pointX, pointY)
+        return
+
+    def setObjectMidPoint(const QPointF& point)
+        return
+
+    def setObjectMidPoint(pointX, pointY)
+        return
+
+    def setObjectEndPoint(const QPointF& point)
+        return
+
+    def setObjectEndPoint(pointX, pointY)
+        return
+
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(startX, startY, midX, midY, endX, endY, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath()
+    def init(startX, startY, midX, midY, endX, endY, unsigned int rgb, Qt::PenStyle lineType)
+    def updatePath()
 
-    void calculateArcData(startX, startY, midX, midY, endX, endY)
-    void updateArcRect(radius)
+    def calculateArcData(startX, startY, midX, midY, endX, endY)
+    def updateArcRect(radius)
 
     arcStartPoint
     arcMidPoint
     arcEndPoint
 ]
 
-class CircleObject : public BaseObject:
+class Circle():
+    def __init__(self):
+        return self
+
 public:
     CircleObject(centerX, centerY, radius, unsigned int rgb, QGraphicsItem* parent = 0)
     CircleObject(CircleObject* obj, QGraphicsItem* parent = 0)
     ~CircleObject()
 
     enum { Type = OBJ_TYPE_CIRCLE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectSavePath() const
 
@@ -149,21 +168,21 @@ public:
     objectQuadrant180()   const { return objectCenter() + QPointF(-objectRadius(),0); }
     objectQuadrant270()   const { return objectCenter() + QPointF(0, objectRadius()); }
 
-    void setObjectRadius(radius)
-    void setObjectDiameter(diameter)
-    void setObjectArea(area)
-    void setObjectCircumference(circumference)
+    def setObjectRadius(radius)
+    def setObjectDiameter(diameter)
+    def setObjectArea(area)
+    def setObjectCircumference(circumference)
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(centerX, centerY, radius, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath()
+    def init(centerX, centerY, radius, unsigned int rgb, Qt::PenStyle lineType)
+    def updatePath()
 ]
 
 class DimLeaderObject(Base_Object):
@@ -182,7 +201,7 @@ public:
     lineStyle = ["NoLine", "Flared", "Fletching"]
 
     enum { Type = OBJ_TYPE_DIMLEADER ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     objectEndPoint1() const
     objectEndPoint2() const
@@ -196,22 +215,22 @@ public:
       objectAngle() const
       objectLength()    const { return line().length(); }
 
-    void setObjectEndPoint1(EmbVector v)
-    void setObjectEndPoint2(EmbVector v)
+    def setObjectEndPoint1(EmbVector v)
+    def setObjectEndPoint2(EmbVector v)
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x1, y1, x2, y2, unsigned int rgb, Qt::PenStyle lineType)
+    def init(x1, y1, x2, y2, unsigned int rgb, Qt::PenStyle lineType)
 
     int curved
     int filled
-    void updateLeader()
+    def updateLeader()
     QPainterPath lineStylePath
     QPainterPath arrowStylePath
     arrowStyleAngle
@@ -227,7 +246,7 @@ public:
     ~EllipseObject()
 
     enum { Type = OBJ_TYPE_ELLIPSE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectSavePath() const
 
@@ -243,22 +262,22 @@ public:
     objectQuadrant180()   const
     objectQuadrant270()   const
 
-    void setObjectSize(width, height)
-    void setObjectRadiusMajor(radius)
-    void setObjectRadiusMinor(radius)
-    void setObjectDiameterMajor(diameter)
-    void setObjectDiameterMinor(diameter)
+    def setObjectSize(width, height)
+    def setObjectRadiusMajor(radius)
+    def setObjectRadiusMinor(radius)
+    def setObjectDiameterMajor(diameter)
+    def setObjectDiameterMinor(diameter)
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(centerX, centerY, width, height, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath()
+    def init(centerX, centerY, width, height, unsigned int rgb, Qt::PenStyle lineType)
+    def updatePath()
 ]
 
 class ImageObject : public BaseObject:
@@ -268,7 +287,7 @@ public:
     ~ImageObject()
 
     enum { Type = OBJ_TYPE_IMAGE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     objectTopLeft() const
     objectTopRight()    const
@@ -278,18 +297,18 @@ public:
       objectHeight()  const { return rect().height()*scale(); }
       objectArea()    const { return qAbs(objectWidth()*objectHeight()); }
 
-    void setObjectRect(x, y, w, h)
+    def setObjectRect(x, y, w, h)
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x, y, w, h, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath()
+    def init(x, y, w, h, unsigned int rgb, Qt::PenStyle lineType)
+    def updatePath()
 ]
 
 
@@ -300,7 +319,7 @@ public:
     ~LineObject()
 
     enum { Type = OBJ_TYPE_LINE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectSavePath() const
 
@@ -316,24 +335,24 @@ public:
       objectAngle() const
       objectLength()    const { return line().length()*scale(); }
 
-    void setObjectEndPoint1(const QPointF& endPt1)
-    void setObjectEndPoint1(x1, y1)
-    void setObjectEndPoint2(const QPointF& endPt2)
-    void setObjectEndPoint2(x2, y2)
-    void setObjectX1(x) { setObjectEndPoint1(x, objectEndPoint1().y()); }
-    void setObjectY1(y) { setObjectEndPoint1(objectEndPoint1().x(), y); }
-    void setObjectX2(x) { setObjectEndPoint2(x, objectEndPoint2().y()); }
-    void setObjectY2(y) { setObjectEndPoint2(objectEndPoint2().x(), y); }
+    def setObjectEndPoint1(const QPointF& endPt1)
+    def setObjectEndPoint1(x1, y1)
+    def setObjectEndPoint2(const QPointF& endPt2)
+    def setObjectEndPoint2(x2, y2)
+    def setObjectX1(x) { setObjectEndPoint1(x, objectEndPoint1().y()); }
+    def setObjectY1(y) { setObjectEndPoint1(objectEndPoint1().x(), y); }
+    def setObjectX2(x) { setObjectEndPoint2(x, objectEndPoint2().y()); }
+    def setObjectY2(y) { setObjectEndPoint2(objectEndPoint2().x(), y); }
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x1, y1, x2, y2, unsigned int rgb, Qt::PenStyle lineType)
+    def init(x1, y1, x2, y2, unsigned int rgb, Qt::PenStyle lineType)
 ]
 
 class PathObject : public BaseObject:
@@ -343,7 +362,7 @@ public:
     ~PathObject()
 
     enum { Type = OBJ_TYPE_PATH ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectCopyPath() const
     QPainterPath objectSavePath() const
@@ -352,21 +371,34 @@ public:
       objectX()   const { return scenePos().x(); }
       objectY()   const { return scenePos().y(); }
 
-    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    void setObjectPos(x, y) { setPos(x, y); }
-    void setObjectX(x) { setObjectPos(x, objectY()); }
-    void setObjectY(y) { setObjectPos(objectX(), y); }
+    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+        return
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def setObjectPos(x, y) { setPos(x, y); }
+        return
+
+    def setObjectX(x) { setObjectPos(x, objectY()); }
+        return
+
+    def setObjectY(y) { setObjectPos(objectX(), y); }
+        return
+
+    def updateRubber(QPainter* painter = 0)
+        return
+
+    def vulcanize()
+        return
+
+    mouseSnapPoint(const QPointF& mousePoint)
+        return
+
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath(const QPainterPath& p)
+    def init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
+    def updatePath(const QPainterPath& p)
     QPainterPath normalPath
     /*TODO: make paths similar to polylines. Review and implement any missing functions/members.*/
 ]
@@ -378,7 +410,7 @@ public:
     ~PointObject()
 
     enum { Type = OBJ_TYPE_POINT ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectSavePath() const
 
@@ -386,20 +418,20 @@ public:
       objectX()   const { return scenePos().x(); }
       objectY()   const { return scenePos().y(); }
 
-    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    void setObjectPos(x, y) { setPos(x, y); }
-    void setObjectX(x) { setObjectPos(x, objectY()); }
-    void setObjectY(y) { setObjectPos(objectX(), y); }
+    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    def setObjectPos(x, y) { setPos(x, y); }
+    def setObjectX(x) { setObjectPos(x, objectY()); }
+    def setObjectY(y) { setObjectPos(objectX(), y); }
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x, y, unsigned int rgb, Qt::PenStyle lineType)
+    def init(x, y, unsigned int rgb, Qt::PenStyle lineType)
 ]
 
 
@@ -410,7 +442,7 @@ public:
     ~PolygonObject()
 
     enum { Type = OBJ_TYPE_POLYGON ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectCopyPath() const
     QPainterPath objectSavePath() const
@@ -419,21 +451,21 @@ public:
       objectX()   const { return scenePos().x(); }
       objectY()   const { return scenePos().y(); }
 
-    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    void setObjectPos(x, y) { setPos(x, y); }
-    void setObjectX(x) { setObjectPos(x, objectY()); }
-    void setObjectY(y) { setObjectPos(objectX(), y); }
+    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    def setObjectPos(x, y) { setPos(x, y); }
+    def setObjectX(x) { setObjectPos(x, objectY()); }
+    def setObjectY(y) { setObjectPos(objectX(), y); }
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath(const QPainterPath& p)
+    def init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
+    def updatePath(const QPainterPath& p)
     QPainterPath normalPath
     int findIndex(const QPointF& point)
     int gripIndex
@@ -448,7 +480,7 @@ public:
     ~PolylineObject()
 
     enum { Type = OBJ_TYPE_POLYLINE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectCopyPath() const
     QPainterPath objectSavePath() const
@@ -457,21 +489,40 @@ public:
       objectX()   const { return scenePos().x(); }
       objectY()   const { return scenePos().y(); }
 
-    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    void setObjectPos(x, y) { setPos(x, y); }
-    void setObjectX(x) { setObjectPos(x, objectY()); }
-    void setObjectY(y) { setObjectPos(objectX(), y); }
+    def set_pos_by_point(point):
+        self.x = point.x
+        self.y = point.y
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def set_pos(self, x, y):
+        self.x = x
+        self.y = y
+
+    def updateRubber(QPainter* painter = 0):
+        return
+
+    def vulcanize()
+        return
+
+    mouseSnapPoint(const QPointF& mousePoint)
+        return
+
+    QList<QPointF> allGripPoints()
+        return
+
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+        return
+
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath(const QPainterPath& p)
+        return
+
+    def init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType)
+        return
+
+    def updatePath(const QPainterPath& p)
+        return
+
     QPainterPath normalPath
     int findIndex(const QPointF& point)
     int gripIndex
@@ -488,7 +539,7 @@ public:
     ~RectObject()
 
     enum { Type = OBJ_TYPE_RECTANGLE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QPainterPath objectSavePath() const
 
@@ -502,18 +553,18 @@ public:
       objectHeight()  const { return rect().height()*scale(); }
       objectArea()    const { return qAbs(objectWidth()*objectHeight()); }
 
-    void setObjectRect(x, y, w, h)
+    def setObjectRect(x, y, w, h)
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(x, y, w, h, unsigned int rgb, Qt::PenStyle lineType)
-    void updatePath()
+    def init(x, y, w, h, unsigned int rgb, Qt::PenStyle lineType)
+    def updatePath()
 ]
     """
     def __init__(self):
@@ -528,7 +579,7 @@ public:
     ~TextSingleObject()
 
     enum { Type = OBJ_TYPE_TEXTSINGLE ]
-    virtual int type() const { return Type; }
+    int type() const { return Type; }
 
     QList<QPainterPath> objectSavePathList() const { return subPathList(); }
     QList<QPainterPath> subPathList() const
@@ -539,28 +590,42 @@ public:
 
     QStringList objectTextJustifyList() const
 
-    void setObjectText(const QString& str)
-    void setObjectTextFont(const QString& font)
-    void setObjectTextJustify(const QString& justify)
-    void setObjectTextSize(size)
-    void setObjectTextStyle(int bold, int italic, int under, int strike, int over)
-    void setObjectTextBold(int val)
-    void setObjectTextItalic(int val)
-    void setObjectTextUnderline(int val)
-    void setObjectTextStrikeOut(int val)
-    void setObjectTextOverline(int val)
-    void setObjectTextBackward(int val)
-    void setObjectTextUpsideDown(int val)
-    void setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    void setObjectPos(x, y) { setPos(x, y); }
-    void setObjectX(x) { setObjectPos(x, objectY()); }
-    void setObjectY(y) { setObjectPos(objectX(), y); }
+    def setObjectText(const QString& str)
+    def setObjectTextFont(const QString& font)
+    def setObjectTextJustify(const QString& justify)
+    def setObjectTextSize(size)
+    def setObjectTextStyle(int bold, int italic, int under, int strike, int over)
+    def setObjectTextBold(val):
+        return
 
-    void updateRubber(QPainter* painter = 0)
-    virtual void vulcanize()
-    virtual mouseSnapPoint(const QPointF& mousePoint)
-    virtual QList<QPointF> allGripPoints()
-    virtual void gripEdit(const QPointF& before, const QPointF& after)
+    def setObjectTextItalic(int val):
+        return
+
+    def setObjectTextUnderline(int val):
+        return
+
+    def setObjectTextStrikeOut(int val):
+        return
+
+    def setObjectTextOverline(int val):
+        return
+
+    def setObjectTextBackward(int val):
+        return
+
+    def setObjectTextUpsideDown(int val):
+        return
+
+    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    def setObjectPos(x, y) { setPos(x, y); }
+    def setObjectX(x) { setObjectPos(x, objectY()); }
+    def setObjectY(y) { setObjectPos(objectX(), y); }
+
+    def updateRubber(QPainter* painter = 0)
+    def vulcanize()
+    mouseSnapPoint(const QPointF& mousePoint)
+    QList<QPointF> allGripPoints()
+    def gripEdit(const QPointF& before, const QPointF& after)
 
     QString objText
     QString objTextFont
@@ -568,9 +633,9 @@ public:
     text_properties obj_text
     QPainterPath objTextPath
 protected:
-    void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
+    def paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*)
 private:
-    void init(const QString& str, x, y, unsigned int rgb, Qt::PenStyle lineType)
+    def init(const QString& str, x, y, unsigned int rgb, Qt::PenStyle lineType)
     """
 
     def __init__(self):
@@ -581,7 +646,6 @@ class Arc():
     def __init__(self):
         return self
 
-"""
 ArcObject::ArcObject(startX, startY, midX, midY, endX, endY, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("ArcObject Constructor()")
     init(startX, startY, midX, midY, endX, endY, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
@@ -823,14 +887,11 @@ QList<QPointF> ArcObject::allGripPoints():
 
 def ArcObject::gripEdit(const QPointF& before, const QPointF& after):
     /*TODO: gripEdit() for ArcObject*/
-}
-"""
 
 class Base_Object():
     def __init__(self):
         return self
 
-"""
 BaseObject::BaseObject(QGraphicsItem* parent) : QGraphicsPathItem(parent):
     debug_message("BaseObject Constructor()")
 
@@ -963,13 +1024,11 @@ def BaseObject::realRender(QPainter* painter, const QPainterPath& renderPath):
         grad.setSpread(QGradient::ReflectSpread)
 
         painter->fillPath(realPath, QBrush(grad))
-"""
 
 class Dim_Leader():
     def __init__(self):
         return self
 
-"""
 DimLeaderObject::DimLeaderObject(x1, y1, x2, y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("DimLeaderObject Constructor()")
     init(x1, y1, x2, y2, rgb, Qt::SolidLine); /* TODO: getCurrentLineType */
@@ -1183,7 +1242,7 @@ def DimLeaderObject::vulcanize():
     setObjectRubberMode(OBJ_RUBBER_OFF)
 
 /* Returns the closest snap point to the mouse point. */
-DimLeaderObject::mouseSnapPoint(const QPointF& mousePoint):
+def DimLeaderObject::mouseSnapPoint(const QPointF& mousePoint):
     endPoint1 = objectEndPoint1()
     endPoint2 = objectEndPoint2()
     midPoint = objectMidPoint()
@@ -1385,8 +1444,7 @@ def EllipseObject::updateRubber(QPainter* painter):
         if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    elif(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS)
-    {
+    elif(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS":
         sceneAxis1Point2 = objectRubberPoint("ELLIPSE_AXIS1_POINT2")
         sceneCenterPoint = objectRubberPoint("ELLIPSE_CENTER")
         sceneAxis2Point2 = objectRubberPoint("ELLIPSE_AXIS2_POINT2")
@@ -1624,7 +1682,6 @@ class Line():
     def __init__(self):
         return self
 
-"""
 LineObject::LineObject(x1, y1, x2, y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("LineObject Constructor()")
     init(x1, y1, x2, y2, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
@@ -1778,11 +1835,11 @@ QPainterPath LineObject::objectSavePath() const:
     QPainterPath path
     path.lineTo(objectDeltaX(), objectDeltaY())
     return path
-"""
+
 
 class Path():
 
-"""
+
 PathObject::PathObject(x, y, const QPainterPath p, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("PathObject Constructor()")
     init(x, y, p, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
@@ -1869,13 +1926,13 @@ QPainterPath PathObject::objectSavePath(self):
     trans.rotate(rotation())
     trans.scale(s,s)
     return trans.map(normalPath)
-"""
+
 
 class Point():
     def __init__(self):
         return self
 
-"""
+
 PointObject::PointObject(x, y, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("PointObject Constructor()")
     init(x, y, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
@@ -1950,51 +2007,33 @@ QPainterPath PointObject::objectSavePath() const:
     QPainterPath path
     path.addRect(-0.00000001, -0.00000001, 0.00000002, 0.00000002)
     return path
-"""
+
 
 class Polygon():
-    def __init__(self):
+    def __init__(self, x, y, path=0, rgb="#FFFFFF", line_type="solid",
+                 line_weight=0.35):
+        self.x = x
+        self.y = y
+        self.path = path
+        self.color = rgb
+        self.line_type = line_type
+        self.rotation = 0.0
+        self.scale = 1.0
+        self.type = "polygon"
+        self.selectable = True
+        self.grip_index = -1
+        self.line_weight = line_weight
+        self.pen = Pen()
+        self.updatePath(path)
         return self
 
-"""
-def PolygonObject::PolygonObject(x, y, p, rgb, parent):
-    debug_message("PolygonObject Constructor()")
-    init(x, y, p, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
-
-
-def PolygonObject::PolygonObject(PolygonObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("PolygonObject Constructor()")
-    if obj:
-        init(obj->objectX(), obj->objectY(), obj->objectCopyPath(), obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-        setRotation(obj->rotation())
-        setScale(obj->scale())
-
-
-def PolygonObject::~PolygonObject():
-    debug_message("PolygonObject Destructor()")
-
-
-def PolygonObject::init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_POLYGON])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    gripIndex = -1
-    updatePath(p)
-    setObjectPos(x,y)
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    setObjectLineWeight(0.35); /*TODO: pass in proper lineweight*/
-    setPen(objectPen())
-
-def PolygonObject::updatePath(const QPainterPath& p):
-    normalPath = p
-    QPainterPath closedPath = normalPath
-    closedPath.closeSubpath()
-    QPainterPath reversePath = closedPath.toReversed()
-    reversePath.connectPath(closedPath)
-    setObjectPath(reversePath)
+    def updatePath(const QPainterPath& p):
+        normalPath = p
+        QPainterPath closedPath = normalPath
+        closedPath.closeSubpath()
+        QPainterPath reversePath = closedPath.toReversed()
+        reversePath.connectPath(closedPath)
+        setObjectPath(reversePath)
 
 def PolygonObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
     QGraphicsScene* objScene = scene()
@@ -2186,7 +2225,7 @@ QPainterPath PolygonObject::objectSavePath() const:
     trans.rotate(rotation())
     trans.scale(s,s)
     return trans.map(closedPath)
-"""
+
 
 class Polyline():
     r"""
@@ -2247,7 +2286,7 @@ class Polyline():
         
         
 
-"""
+
     if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
     if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
     painter->setPen(paintPen)
@@ -2581,13 +2620,12 @@ QPainterPath RectObject::objectSavePath() const:
     trans.rotate(rotation())
     trans.scale(s,s)
     return trans.map(path)
-"""
+
 
 class TextSingle():
     def __init__(self):
         return self
 
-"""
 TextSingleObject::TextSingleObject(const QString& str, x, y, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("TextSingleObject Constructor()")
     init(str, x, y, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
@@ -2616,7 +2654,7 @@ def TextSingleObject::init(const QString& str, x, y, unsigned int rgb, Qt::PenSt
 
     objTextJustify = "Left"; /*TODO: set the justification properly*/
 
-    setObjectText(str)
+    setObjectText(cmd)
     setObjectPos(x,y)
     setObjectColor(rgb)
     setObjectLineType(lineType)
@@ -2870,13 +2908,11 @@ QList<QPainterPath> TextSingleObject::subPathList() const:
     }
 
     return pathList
-"""
 
 class Circle():
     def __init__(self):
         return self
 
-"""
 CircleObject::CircleObject(centerX, centerY, radius, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("CircleObject Constructor()")
     init(centerX, centerY, radius, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
@@ -3238,7 +3274,7 @@ def circle_prompt(circle_args args, char *str):
                 setPromptPrefix(translate("Specify point on object for first tangent of circle: "))
             }
             else {
-                var strList = str.split(",")
+                strList = str.split(",")
                 if (isNaN(strList[0]) or isNaN(strList[1])) {
                     alert(translate("Point or option keyword required."))
                     setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
@@ -3261,7 +3297,7 @@ def circle_prompt(circle_args args, char *str):
                 setPromptPrefix(translate("Specify diameter of circle: "))
             }
             else:
-                num = Number(str)
+                num = Number(cmd)
                 if (isNaN(num)) {
                     alert(translate("Requires numeric radius, point on circumference, or \"D\"."))
                     setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
@@ -3279,7 +3315,7 @@ def circle_prompt(circle_args args, char *str):
             error("CIRCLE", translate("This should never happen."))
         }
         if (isNaN(self.x2)) {
-            var num = Number(str)
+            num = Number(cmd)
             if(isNaN(num))
             {
                 alert(translate("Requires numeric distance or second point."))
@@ -3299,7 +3335,7 @@ def circle_prompt(circle_args args, char *str):
     elif(self.mode == self.mode_2P:
         if(isNaN(self.x1))
         {
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first end point of circle's diameter: "))
@@ -3326,7 +3362,7 @@ def circle_prompt(circle_args args, char *str):
 
     elif(self.mode == self.mode_3P):
         if(isNaN(self.x1)):
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first point of circle: "))
@@ -3337,7 +3373,7 @@ def circle_prompt(circle_args args, char *str):
 
         elif(isNaN(self.x2)):
         {
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Invalid point."))
@@ -3690,7 +3726,7 @@ class Ellipse():
             error("ELLIPSE", translate("This should never happen."))
         }
         elif(isNaN(self.x3)) {
-            var angle = calculateAngle(self.cx, self.cy, x, y)
+            angle = calculateAngle(self.cx, self.cy, x, y)
             self.height = cos(angle*embConstantPi/180.0)*self.width
             addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
             appendPromptHistory()
@@ -3699,7 +3735,7 @@ class Ellipse():
 def ellipse_prompt(cmd):
     if self.mode == "MAJORDIAMETER_MINORRADIUS":
         if isNaN(self.x1):
-            if(str == "C" or str == "CENTER":
+            if(str == "C" or cmd == "CENTER":
                 #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_MAJORRADIUS_MINORRADIUS
                 setPromptPrefix(translate("Specify center point: "))
@@ -3721,7 +3757,7 @@ def ellipse_prompt(cmd):
             }
         }
         elif isNaN(self.x2):
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Invalid point."))
@@ -3744,11 +3780,11 @@ def ellipse_prompt(cmd):
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
 
         elif(isNaN(self.x3))
-            if(str == "R" or str == "ROTATION") #TODO: Probably should add additional qsTr calls here.
+            if(str == "R" or cmd == "ROTATION") #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify rotation: "))
             else:
-                var strList = str.split(",")
+                strList = str.split(",")
                 if(isNaN(strList[0]) or isNaN(strList[1]))
                 {
                     alert(translate("Point or option keyword required."))
@@ -3765,7 +3801,7 @@ def ellipse_prompt(cmd):
 
     elif(self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
         if(isNaN(self.x1))
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify center point: "))
@@ -3780,7 +3816,7 @@ def ellipse_prompt(cmd):
                 setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
                 setPromptPrefix(translate("Specify first axis end point: "))
         elif(isNaN(self.x2)):
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Invalid point."))
@@ -3799,11 +3835,11 @@ def ellipse_prompt(cmd):
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
 
         elif(isNaN(self.x3))
-            if(str == "R" or str == "ROTATION") #TODO: Probably should add additional qsTr calls here.
+            if(str == "R" or cmd == "ROTATION") #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify ellipse rotation: "))
             else
-                var strList = str.split(",")
+                strList = str.split(",")
                 if(isNaN(strList[0]) or isNaN(strList[1]))
                     alert(translate("Point or option keyword required."))
                     setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
@@ -3821,11 +3857,11 @@ def ellipse_prompt(cmd):
         elif(isNaN(self.x2)):
             error("ELLIPSE", translate("This should never happen."))
         elif(isNaN(self.x3)):
-            if(isNaN(str))
+            if(isNaN(cmd))
                 alert(translate("Invalid angle. Input a numeric angle or pick a point."))
                 setPromptPrefix(translate("Specify rotation: "))
             else:
-                var angle = Number(str)
+                angle = Number(cmd)
                 self.height = cos(angle*embConstantPi/180.0)*self.width
                 addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
                 return
@@ -3864,11 +3900,11 @@ def __init__(self):
     return
 
 def updateHeart(style, numPts, xScale, yScale):
-    var i
-    var t
-    var xx = MAX_DISTANCE+1.0
-    var yy = MAX_DISTANCE+1.0
-    var two_pi = 2*embConstantPi
+    i
+    t
+    xx = MAX_DISTANCE+1.0
+    yy = MAX_DISTANCE+1.0
+    two_pi = 2*embConstantPi
 
     for(i = 0; i <= numPts; i++)
     {
@@ -3938,7 +3974,7 @@ def click(x, y):
     }
 }
 
-def prompt(str):
+def prompt(cmd):
     if self.firstRun:
         strList = str.split(",")
         if isNaN(strList[0]) or isNaN(strList[1]):
@@ -3955,17 +3991,17 @@ def prompt(str):
             setRubberPoint("LINE_START", self.firstX, self.firstY)
             setPromptPrefix(translate("Specify next point or [Undo]: "))
     else:
-        if str == "U" or str == "UNDO":
+        if cmd == "U" or cmd == "UNDO":
             # TODO: Probably should add additional qsTr calls here.
             todo("LINE", "prompt() for UNDO")
         else:
-            var strList = str.split(",")
+            strList = str.split(",")
             if isNaN(strList[0]) or isNaN(strList[1]):
                 alert(translate("Point or option keyword required."))
                 setPromptPrefix(translate("Specify next point or [Undo]: "))
             else:
-                var x = Number(strList[0])
-                var y = Number(strList[1])
+                x = Number(strList[0])
+                y = Number(strList[1])
                 setRubberPoint("LINE_END", x, y)
                 vulcanize()
                 addRubber("LINE")
@@ -3986,7 +4022,7 @@ def click(x, y):
     setPromptPrefix("X = " + x.toString() + ", Y = " + y.toString())
     appendPromptHistory()
 
-def prompt(str):
+def prompt(cmd):
     strList = str.split(",")
     if isNaN(strList[0]) or isNaN(strList[1]):
         alert(translate("Invalid point."))
@@ -4038,7 +4074,7 @@ def click(x, y):
 
     def prompt(self, str):
         if self.firstRun:
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify base point: "))
@@ -4053,7 +4089,7 @@ def click(x, y):
                 setPromptPrefix(translate("Specify destination point: "))
 
         else:
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify destination point: "))
@@ -4102,18 +4138,18 @@ def click(x, y):
         self.prevX = x
         self.prevY = y
 
-def prompt(str):
-    if(str == "A" or str == "ARC")#TODO: Probably should add additional qsTr calls here.
+def prompt(cmd):
+    if(str == "A" or cmd == "ARC")#TODO: Probably should add additional qsTr calls here.
     {
         todo("PATH", "prompt() for ARC")
     }
-    elif(str == "U" or str == "UNDO") #TODO: Probably should add additional qsTr calls here.
+    elif(str == "U" or cmd == "UNDO") #TODO: Probably should add additional qsTr calls here.
     {
         todo("PATH", "prompt() for UNDO")
     }
     else
     {
-        var strList = str.split(",")
+        strList = str.split(",")
         if(isNaN(strList[0]) or isNaN(strList[1]))
         {
             alert(translate("Point or option keyword required."))
@@ -4121,8 +4157,8 @@ def prompt(str):
         }
         else
         {
-            var x = Number(strList[0])
-            var y = Number(strList[1])
+            x = Number(strList[0])
+            y = Number(strList[1])
             if(self.firstRun)
             {
                 self.firstRun = false
@@ -4171,15 +4207,15 @@ class Point():
 
 def prompt(self, str):
     if self.firstRun:
-        if(str == "M" or str == "MODE") {
+        if(str == "M" or cmd == "MODE") {
             #TODO: Probably should add additional qsTr calls here.
             todo("POINT", "prompt() for PDMODE")
         }
-        elif(str == "S" or str == "SIZE") {
+        elif(str == "S" or cmd == "SIZE") {
             #TODO: Probably should add additional qsTr calls here.
             todo("POINT", "prompt() for PDSIZE")
         }
-        var strList = str.split(",")
+        strList = str.split(",")
         if isNaN(strList[0]) or isNaN(strList[1]):
             alert(translate("Invalid point."))
             setPromptPrefix(translate("Specify first point: "))
@@ -4196,18 +4232,17 @@ def prompt(self, str):
             alert(translate("Invalid point."))
             setPromptPrefix(translate("Specify next point: "))
         else:
-            var x = Number(strList[0])
-            var y = Number(strList[1])
+            x = Number(strList[0])
+            y = Number(strList[1])
             setPromptPrefix(translate("Specify next point: "))
             addPoint(x,y)
-"""
 
 
 class Polygon():
     r"""
     
     """
-    int __init__(self):
+    def __init__(self):
         clearSelection()
         self.center.x = MAX_DISTANCE+1.0
         self.center.y = MAX_DISTANCE+1.0
@@ -4221,36 +4256,34 @@ class Polygon():
         self.pointCY = MAX_DISTANCE+1.0
         self.polyType = "Inscribed"
         self.numSides = 4
-        self.mode = "POLYGON_NUM_SIDES"
-        setPromptPrefix(translate("Enter number of sides") + " {" + self.numSides.toString() + "}: ")
+        self.mode = "NUM_SIDES"
+        setPromptPrefix(translate("Enter number of sides")
+            + " {" + self.numSides.toString() + "}: ")
         return self
 
-    int click(self, x, y):
-        if (self.mode == POLYGON_NUM_SIDES) {
+    def click(self, x, y):
+        if self.mode == "NUM_SIDES":
             #Do nothing, the prompt controls this.
-        }
-        elif (self.mode == POLYGON_CENTER_PT) {
+
+        elif self.mode == "CENTER_PT":
             self.centerX = x
             self.centerY = y
             self.mode = self.mode_POLYTYPE
             appendPromptHistory()
             setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
-        }
-        elif(self.mode == self.mode_POLYTYPE)
-        {
+
+        elif self.mode == "POLYTYPE":
             #Do nothing, the prompt controls this.
-        }
-        elif(self.mode == self.mode_INSCRIBE)
-        {
+
+        elif self.mode == "INSCRIBE":
             self.pointIX = x
             self.pointIY = y
             setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
             vulcanize()
             appendPromptHistory()
             return
-        }
-        elif(self.mode == self.mode_CIRCUMSCRIBE)
-        {
+
+        elif self.mode == "CIRCUMSCRIBE":
             self.pointCX = x
             self.pointCY = y
             setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
@@ -4266,7 +4299,7 @@ class Polygon():
             todo("POLYGON", "Sidelength mode")
             debug_message("mode SIDE LEN")
 
-def prompt(str):
+def prompt(cmd):
     if self.mode == self.mode_NUM_SIDES:
         if(str == "" and self.numSides >= 3 and self.numSides <= 1024)
         {
@@ -4275,7 +4308,7 @@ def prompt(str):
         }
         else
         {
-            var tmp = Number(str)
+            tmp = Number(cmd)
             if(isNaN(tmp) or !isInt(tmp) or tmp < 3 or tmp > 1024)
             {
                 alert(translate("Requires an integer between 3 and 1024."))
@@ -4287,16 +4320,15 @@ def prompt(str):
                 setPromptPrefix(translate("Specify center point or [Sidelength]: "))
                 self.mode = self.mode_CENTER_PT
 
-    elif(self.mode == self.mode_CENTER_PT)
-    {
-        if(str == "S" or str == "SIDELENGTH") #TODO: Probably should add additional qsTr calls here.
+    elif(self.mode == self.mode_CENTER_PT:
+        if(str == "S" or cmd == "SIDELENGTH") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SIDE_LEN
             setPromptPrefix(translate("Specify start point: "))
         }
         else
         {
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Point or option keyword required."))
@@ -4310,7 +4342,7 @@ def prompt(str):
                 setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
 
     elif self.mode == "POLYTYPE":
-        if str == "INSCRIBED"[len(str)]:
+        if cmd == "INSCRIBED"[len(cmd)]:
             # TODO: Probably should add additional translate calls here.
             self.mode = self.mode_INSCRIBE
             self.polyType = "Inscribed"
@@ -4320,7 +4352,7 @@ def prompt(str):
             setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
             setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
         }
-        elif str == "CIRCUMSCRIBED"[len(str)]:
+        elif cmd == "CIRCUMSCRIBED"[len(cmd)]:
             # TODO: Probably should add additional translate calls here.
             self.mode = self.mode_CIRCUMSCRIBE
             self.polyType = "Circumscribed"
@@ -4361,14 +4393,14 @@ def prompt(str):
             setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
 
     elif(self.mode == self.mode_INSCRIBE):
-        if(str == "D" or str == "DISTANCE") #TODO: Probably should add additional qsTr calls here.
+        if(str == "D" or cmd == "DISTANCE") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_DISTANCE
             setPromptPrefix(translate("Specify distance: "))
         }
         else
         {
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Point or option keyword required."))
@@ -4383,12 +4415,12 @@ def prompt(str):
                 return
 
     elif self.mode == "CIRCUMSCRIBE":
-        if str == "D" or str == "DISTANCE":
+        if cmd == "D" or cmd == "DISTANCE":
             # TODO: Probably should add additional qsTr calls here.
             self.mode = self.mode_DISTANCE
             setPromptPrefix(translate("Specify distance: "))
         else:
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Point or option keyword required."))
@@ -4402,21 +4434,21 @@ def prompt(str):
                 return
 
     elif(self.mode == self.mode_DISTANCE):
-        if(isNaN(str)):
+        if(isNaN(cmd)):
             alert(translate("Requires valid numeric distance."))
             setPromptPrefix(translate("Specify distance: "))
         else:
             if(self.polyType == "Inscribed")
             {
                 self.pointIX = self.centerX
-                self.pointIY = self.centerY + Number(str)
+                self.pointIY = self.centerY + Number(cmd)
                 setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
                 vulcanize()
                 return
             }
             elif(self.polyType == "Circumscribed"):
                 self.pointCX = self.centerX
-                self.pointCY = self.centerY + Number(str)
+                self.pointCY = self.centerY + Number(cmd)
                 setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
                 vulcanize()
                 return
@@ -4428,77 +4460,74 @@ def prompt(str):
 
 ---
 
-def __init__(self):
-    clearSelection()
-    self.firstRun = true
-    self.firstX = MAX_DISTANCE+1.0
-    self.firstY = MAX_DISTANCE+1.0
-    self.prevX = MAX_DISTANCE+1.0
-    self.prevY = MAX_DISTANCE+1.0
-    self.num = 0
-    setPromptPrefix(translate("Specify first point: "))
+class Polyline():
+    def __init__(self):
+        clearSelection()
+        self.firstRun = True
+        self.firstX = MAX_DISTANCE+1.0
+        self.firstY = MAX_DISTANCE+1.0
+        self.prevX = MAX_DISTANCE+1.0
+        self.prevY = MAX_DISTANCE+1.0
+        self.num = 0
+        setPromptPrefix(translate("Specify first point: "))
 
-def click(x, y):
-    if(self.firstRun):
-        self.firstRun = false
-        self.firstX = x
-        self.firstY = y
-        self.prevX = x
-        self.prevY = y
-        addRubber("POLYLINE")
-        setRubberMode("POLYLINE")
-        setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
-        appendPromptHistory()
-        setPromptPrefix(translate("Specify next point or [Undo]: "))
-    else:
-        self.num += 1
-        setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
-        setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
-        spareRubber("POLYLINE")
-        appendPromptHistory()
-        self.prevX = x
-        self.prevY = y
-
-def prompt(str):
-    if self.firstRun:
-        strList = str.split(",")
-        if isNaN(strList[0]) or isNaN(strList[1]):
-            alert(translate("Invalid point."))
-            setPromptPrefix(translate("Specify first point: "))
-        else:
+    def click(self, x, y):
+        if(self.firstRun):
             self.firstRun = false
-            self.firstX = Number(strList[0])
-            self.firstY = Number(strList[1])
-            self.prevX = self.firstX
-            self.prevY = self.firstY
+            self.firstX = x
+            self.firstY = y
+            self.prevX = x
+            self.prevY = y
             addRubber("POLYLINE")
             setRubberMode("POLYLINE")
             setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
+            appendPromptHistory()
             setPromptPrefix(translate("Specify next point or [Undo]: "))
+        else:
+            self.num += 1
+            setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
+            setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
+            spareRubber("POLYLINE")
+            appendPromptHistory()
+            self.prevX = x
+            self.prevY = y
 
-    else:
-        if(str == "U" or str == "UNDO"):
-            #TODO: Probably should add additional qsTr calls here.
-            todo("POLYLINE", "prompt() for UNDO")
-        else
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
-                alert(translate("Point or option keyword required."))
+    def prompt(self, str):
+        if self.firstRun:
+            strList = str.split(",")
+            if isNaN(strList[0]) or isNaN(strList[1]):
+                alert(translate("Invalid point."))
+                setPromptPrefix(translate("Specify first point: "))
+            else:
+                self.firstRun = false
+                self.firstX = Number(strList[0])
+                self.firstY = Number(strList[1])
+                self.prevX = self.firstX
+                self.prevY = self.firstY
+                addRubber("POLYLINE")
+                setRubberMode("POLYLINE")
+                setRubberPoint("POLYLINE_POINT_0", self.firstX, self.firstY)
                 setPromptPrefix(translate("Specify next point or [Undo]: "))
-            }
-            else
-            {
-                var x = Number(strList[0])
-                var y = Number(strList[1])
-                self.num++
-                setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)
-                setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
-                spareRubber("POLYLINE")
-                self.prevX = x
-                self.prevY = y
-                setPromptPrefix(translate("Specify next point or [Undo]: "))
+
+        else:
+            if cmd == "U" or cmd == "UNDO":
+                #TODO: Probably should add additional qsTr calls here.
+                todo("POLYLINE", "prompt() for UNDO")
+            else:
+                strList = str.split(",")
+                if isNaN(strList[0]) or isNaN(strList[1]):
+                    alert(translate("Point or option keyword required."))
+                    setPromptPrefix(translate("Specify next point or [Undo]: "))
+                else:
+                    x = Number(strList[0])
+                    y = Number(strList[1])
+                    self.num++
+                    setRubberPoint("POLYLINE_POINT_" + self.num.toString(), x, y)    
+                    setRubberText("POLYLINE_NUM_POINTS", self.num.toString())
+                    spareRubber("POLYLINE")
+                    self.prevX = x
+                    self.prevY = y
+                    setPromptPrefix(translate("Specify next point or [Undo]: "))
 
 ---
 
@@ -4530,8 +4559,8 @@ class DimLeader():
             vulcanize()
             appendPromptHistory()
 
-    def prompt(str):
-        var strList = str.split(",")
+    def prompt(cmd):
+        strList = str.split(",")
         if(isNaN(self.x1))
     {
         if(isNaN(strList[0]) or isNaN(strList[1]))
@@ -4576,9 +4605,8 @@ def __init__(self):
     self.y2 = MAX_DISTANCE+1.0
     setPromptPrefix(translate("Specify first corner point or [Chamfer/Fillet]: "))
 
-def click(x, y):
-    if(self.newRect)
-    {
+def click(self, x, y):
+    if self.newRect:
         self.newRect = false
         self.x1 = x
         self.y1 = y
@@ -4586,44 +4614,33 @@ def click(x, y):
         setRubberMode("RECTANGLE")
         setRubberPoint("RECTANGLE_START", x, y)
         setPromptPrefix(translate("Specify other corner point or [Dimensions]: "))
-    }
-    else
-    {
+    else:
         self.newRect = true
         self.x2 = x
         self.y2 = y
         setRubberPoint("RECTANGLE_END", x, y)
         vulcanize()
         return
-    }
 
-def prompt(str):
-    if(str == "C" or str == "CHAMFER") #TODO: Probably should add additional qsTr calls here.
-    {
+def prompt(self, cmd):
+    if cmd == "C" or cmd == "CHAMFER":
+        # TODO: Probably should add additional qsTr calls here.
         todo("RECTANGLE", "prompt() for CHAMFER")
-    }
-    elif(str == "D" or str == "DIMENSIONS") #TODO: Probably should add additional qsTr calls here.
-    {
+    elif cmd == "D" or cmd == "DIMENSIONS":
+        # TODO: Probably should add additional qsTr calls here.
         todo("RECTANGLE", "prompt() for DIMENSIONS")
-    }
-    elif(str == "F" or str == "FILLET") #TODO: Probably should add additional qsTr calls here.
-    {
+    elif cmd == "F" or cmd == "FILLET":
+        # TODO: Probably should add additional qsTr calls here.
         todo("RECTANGLE", "prompt() for FILLET")
-    }
-    else
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) or isNaN(strList[1]))
-        {
+    else:
+        strList = str.split(",")
+        if isNaN(strList[0]) or isNaN(strList[1]):
             alert(translate("Invalid point."))
             setPromptPrefix(translate("Specify first point: "))
-        }
-        else
-        {
-            var x = Number(strList[0])
-            var y = Number(strList[1])
-            if(self.newRect)
-            {
+        else:
+            x = Number(strList[0])
+            y = Number(strList[1])
+            if self.newRect:
                 self.newRect = false
                 self.x1 = x
                 self.y1 = y
@@ -4631,18 +4648,13 @@ def prompt(str):
                 setRubberMode("RECTANGLE")
                 setRubberPoint("RECTANGLE_START", x, y)
                 setPromptPrefix(translate("Specify other corner point or [Dimensions]: "))
-            }
-            else
-            {
+            else:
                 self.newRect = true
                 self.x2 = x
                 self.y2 = y
                 setRubberPoint("RECTANGLE_END", x, y)
                 vulcanize()
                 return
-            }
-        }
-    }
 
 ----
 
@@ -4659,25 +4671,21 @@ def __init__(self):
     self.mode = self.mode_BACKGROUND
     setPromptPrefix(translate("Enter RED,GREEN,BLUE values for background or [Crosshair/Grid]: "))
 
-def prompt(str):
-    if(self.mode == self.mode_BACKGROUND)
-    {
-        if(str == "C" or str == "CROSSHAIR") #TODO: Probably should add additional qsTr calls here.
-        {
+def prompt(cmd):
+    if self.mode == self.mode_BACKGROUND:
+        if str == "C" or cmd == "CROSSHAIR":
+            # TODO: Probably should add additional qsTr calls here.
             self.mode = self.mode_CROSSHAIR
             setPromptPrefix(translate("Specify crosshair color: "))
-        }
-        elif(str == "G" or str == "GRID") #TODO: Probably should add additional qsTr calls here.
-        {
+        elif str == "G" or cmd == "GRID":
+            #TODO: Probably should add additional qsTr calls here.
             self.mode = self.mode_GRID
             setPromptPrefix(translate("Specify grid color: "))
-        }
-        else
-        {
-            var strList = str.split(",")
-            var r = Number(strList[0])
-            var g = Number(strList[1])
-            var b = Number(strList[2])
+        else:
+            strList = str.split(",")
+            r = Number(strList[0])
+            g = Number(strList[1])
+            b = Number(strList[2])
             if(!validRGB(r,g,b))
             {
                 alert(translate("Invalid color. R,G,B values must be in the range of 0-255."))
@@ -4687,39 +4695,28 @@ def prompt(str):
             {
                 setBackgroundColor(r,g,b)
                 return
-            }
-        }
-    }
-    elif(self.mode == self.mode_CROSSHAIR)
-    {
-        var strList = str.split(",")
-        var r = Number(strList[0])
-        var g = Number(strList[1])
-        var b = Number(strList[2])
-        if(!validRGB(r,g,b))
-        {
+
+    elif self.mode == "CROSSHAIR":
+        strList = str.split(",")
+        r = Number(strList[0])
+        g = Number(strList[1])
+        b = Number(strList[2])
+        if not validRGB(r,g,b):
             alert(translate("Invalid color. R,G,B values must be in the range of 0-255."))
             setPromptPrefix(translate("Specify crosshair color: "))
-        }
-        else
-        {
+        else:
             setCrossHairColor(r,g,b)
             return
-        }
-    }
-    elif(self.mode == self.mode_GRID)
-    {
-        var strList = str.split(",")
-        var r = Number(strList[0])
-        var g = Number(strList[1])
-        var b = Number(strList[2])
-        if(!validRGB(r,g,b))
-        {
+
+    elif self.mode == "GRID":
+        strList = str.split(",")
+        r = Number(strList[0])
+        g = Number(strList[1])
+        b = Number(strList[2])
+        if not validRGB(r,g,b):
             alert(translate("Invalid color. R,G,B values must be in the range of 0-255."))
             setPromptPrefix(translate("Specify grid color: "))
-        }
-        else
-        {
+        else:
             setGridColor(r,g,b)
             return
 
@@ -4735,29 +4732,9 @@ def validRGB(r, g, b):
 
 ---
 
-var global = {}; #Required
-self.firstRun
-self.baseX
-self.baseY
-self.destX
-self.destY
-self.angle
-
-self.baseRX
-self.baseRY
-self.destRX
-self.destRY
-self.angleRef
-self.angleNew
-
-self.mode
-
-#enums
-self.mode_NORMAL    = 0
-self.mode_REFERENCE = 1
-
 def __init__(self):
-    self.mode = self.mode_NORMAL
+    self.mode = "NORMAL"
+    self.modes = ["NORMAL", "REFERENCE"]
     self.firstRun = true
     self.baseX = MAX_DISTANCE+1.0
     self.baseY = MAX_DISTANCE+1.0
@@ -4785,11 +4762,9 @@ def __init__(self):
     }
 
 def click(x, y):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
-            self.firstRun = false
+    if self.mode == "NORMAL":
+        if self.firstRun:
+            self.firstRun = False
             self.baseX = x
             self.baseY = y
             addRubber("LINE")
@@ -4798,9 +4773,7 @@ def click(x, y):
             previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, 0)
             appendPromptHistory()
             setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
-        }
-        else
-        {
+        else:
             self.destX = x
             self.destY = y
             self.angle = calculateAngle(self.baseX, self.baseY, self.destX, self.destY)
@@ -4808,12 +4781,9 @@ def click(x, y):
             rotateSelected(self.baseX, self.baseY, self.angle)
             previewOff()
             return
-        }
-    }
-    elif(self.mode == self.mode_REFERENCE)
-    {
+
+    elif self.mode == "REFERENCE":
         if(isNaN(self.baseRX))
-        {
             self.baseRX = x
             self.baseRY = y
             appendPromptHistory()
@@ -4821,9 +4791,7 @@ def click(x, y):
             setRubberMode("LINE")
             setRubberPoint("LINE_START", self.baseRX, self.baseRY)
             setPromptPrefix(translate("Specify second point: "))
-        }
         elif(isNaN(self.destRX))
-        {
             self.destRX = x
             self.destRY = y
             self.angleRef = calculateAngle(self.baseRX, self.baseRY, self.destRX, self.destRY)
@@ -4838,22 +4806,15 @@ def click(x, y):
             rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
             previewOff()
             return
-        }
-    }
 
-def prompt(str):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
-            var strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+def prompt(cmd):
+    if self.mode == self.mode_NORMAL:
+        if self.firstRun:
+            strList = str.split(",")
+            if(isNaN(strList[0]) or isNaN(strList[1]):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify base point: "))
-            }
-            else
-            {
+            else:
                 self.firstRun = false
                 self.baseX = Number(strList[0])
                 self.baseY = Number(strList[1])
@@ -4862,121 +4823,94 @@ def prompt(str):
                 setRubberPoint("LINE_START", self.baseX, self.baseY)
                 previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, 0)
                 setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
-            }
-        }
-        else
-        {
-            if(str == "R" or str == "REFERENCE") #TODO: Probably should add additional qsTr calls here.
-            {
+
+        else:
+            if(str == "R" or cmd == "REFERENCE"):
+                # TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_REFERENCE
                 setPromptPrefix(translate("Specify the reference angle") + " {0.00}: ")
                 clearRubber()
                 previewOff()
-            }
-            else
-            {
-                if(isNaN(str))
-                {
+            else:
+                if isNaN(cmd):
                     alert(translate("Requires valid numeric angle, second point, or option keyword."))
                     setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
-                }
-                else
-                {
-                    self.angle = Number(str)
+                else:
+                    self.angle = Number(cmd)
                     rotateSelected(self.baseX, self.baseY, self.angle)
                     previewOff()
                     return
 
-    elif(self.mode == self.mode_REFERENCE)
-        if(isNaN(self.baseRX))
-            if(isNaN(str))
-                var strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
+    elif self.mode == "REFERENCE":
+        if isNaN(self.baseRX):
+            if isNaN(cmd):
+                strList = str.split(",")
+                if isNaN(strList[0]) or isNaN(strList[1]):
                     alert(translate("Requires valid numeric angle or two points."))
                     setPromptPrefix(translate("Specify the reference angle") + " {0.00}: ")
-                }
-                else
-                {
+                else:
                     self.baseRX = Number(strList[0])
                     self.baseRY = Number(strList[1])
                     addRubber("LINE")
                     setRubberMode("LINE")
                     setRubberPoint("LINE_START", self.baseRX, self.baseRY)
                     setPromptPrefix(translate("Specify second point: "))
-                }
-            }
-            else
-            {
-                #The base and dest values are only set here to advance the command.
+          
+            else:
+                # The base and dest values are only set here to advance the command.
                 self.baseRX = 0.0
                 self.baseRY = 0.0
                 self.destRX = 0.0
                 self.destRY = 0.0
-                #The reference angle is what we will use later.
-                self.angleRef = Number(str)
+                # The reference angle is what we will use later.
+                self.angleRef = Number(cmd)
                 addRubber("LINE")
                 setRubberMode("LINE")
                 setRubberPoint("LINE_START", self.baseX, self.baseY)
                 previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
                 setPromptPrefix(translate("Specify the new angle: "))
-            }
-        }
-        elif(isNaN(self.destRX))
-        {
-            if(isNaN(str))
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
-                {
+
+        elif(isNaN(self.destRX)):
+            if(isNaN(cmd)):
+                strList = str.split(",")
+                if(isNaN(strList[0]) or isNaN(strList[1])):
                     alert(translate("Requires valid numeric angle or two points."))
                     setPromptPrefix(translate("Specify second point: "))
-                }
-                else
-                {
+                else:
                     self.destRX = Number(strList[0])
                     self.destRY = Number(strList[1])
                     self.angleRef = calculateAngle(self.baseRX, self.baseRY, self.destRX, self.destRY)
                     previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
                     setRubberPoint("LINE_START", self.baseX, self.baseY)
                     setPromptPrefix(translate("Specify the new angle: "))
-                }
-            }
-            else
-            {
+
+            else:
                 #The base and dest values are only set here to advance the command.
                 self.baseRX = 0.0
                 self.baseRY = 0.0
                 self.destRX = 0.0
                 self.destRY = 0.0
                 #The reference angle is what we will use later.
-                self.angleRef = Number(str)
+                self.angleRef = Number(cmd)
                 previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
                 setPromptPrefix(translate("Specify the new angle: "))
-            }
-        }
-        elif(isNaN(self.angleNew))
-        {
-            if(isNaN(str))
-            {
-                var strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
-                {
+
+        elif isNaN(self.angleNew):
+            if isNaN(cmd):
+                strList = str.split(",")
+                if isNaN(strList[0]) or isNaN(strList[1]):
                     alert(translate("Requires valid numeric angle or second point."))
                     setPromptPrefix(translate("Specify the new angle: "))
-                }
-                else
-                {
-                    var x = Number(strList[0])
-                    var y = Number(strList[1])
+                else:
+                    x = Number(strList[0])
+                    y = Number(strList[1])
                     self.angleNew = calculateAngle(self.baseX, self.baseY, x, y)
                     rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
                     previewOff()
                     return
-                }
-            }
+
             else
-            {
-                self.angleNew = Number(str)
+                self.angleNew = Number(cmd)
                 rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
                 previewOff()
                 return
@@ -5000,10 +4934,10 @@ def __init__(self):
 
     #Polyline & Polygon Testing
 
-    var offsetX = 0.0
-    var offsetY = 0.0
+    offsetX = 0.0
+    offsetY = 0.0
 
-    var polylineArray = []
+    polylineArray = []
     polylineArray.push(1.0 + offsetX)
     polylineArray.push(1.0 + offsetY)
     polylineArray.push(1.0 + offsetX)
@@ -5025,7 +4959,7 @@ def __init__(self):
     offsetX = 5.0
     offsetY = 0.0
 
-    var polygonArray = []
+    polygonArray = []
     polygonArray.push(1.0 + offsetX)
     polygonArray.push(1.0 + offsetY)
     polygonArray.push(1.0 + offsetX)
@@ -5170,12 +5104,12 @@ def click(x, y):
                 previewOff()
                 return
 
-def prompt(str):
+def prompt(cmd):
     if(self.mode == self.mode_NORMAL)
     {
         if(self.firstRun)
         {
-            var strList = str.split(",")
+            strList = str.split(",")
             if(isNaN(strList[0]) or isNaN(strList[1]))
             {
                 alert(translate("Invalid point."))
@@ -5195,7 +5129,7 @@ def prompt(str):
         }
         else
         {
-            if(str == "R" or str == "REFERENCE") #TODO: Probably should add additional qsTr calls here.
+            if(str == "R" or cmd == "REFERENCE") #TODO: Probably should add additional qsTr calls here.
             {
                 self.mode = self.mode_REFERENCE
                 setPromptPrefix(translate("Specify reference length") + " {1}: ")
@@ -5204,22 +5138,22 @@ def prompt(str):
             }
             else
             {
-                if(isNaN(str))
+                if(isNaN(cmd))
                 {
                     alert(translate("Requires valid numeric distance, second point, or option keyword."))
                     setPromptPrefix(translate("Specify scale factor or [Reference]: "))
                 }
                 else
                 {
-                    self.factor = Number(str)
+                    self.factor = Number(cmd)
                     scaleSelected(self.baseX, self.baseY, self.factor)
                     previewOff()
                     return
 
     elif(self.mode == self.mode_REFERENCE)
         if(isNaN(self.baseRX))
-            if(isNaN(str))
-                var strList = str.split(",")
+            if(isNaN(cmd))
+                strList = str.split(",")
                 if(isNaN(strList[0]) or isNaN(strList[1]))
                     alert(translate("Requires valid numeric distance or two points."))
                     setPromptPrefix(translate("Specify reference length") + " {1}: ")
@@ -5237,9 +5171,8 @@ def prompt(str):
                 self.destRX = 0.0
                 self.destRY = 0.0
                 #The reference length is what we will use later.
-                self.factorRef = Number(str)
-                if(self.factorRef <= 0.0)
-                {
+                self.factorRef = Number(cmd)
+                if self.factorRef <= 0.0:
                     self.baseRX    = MAX_DISTANCE+1.0
                     self.baseRY    = MAX_DISTANCE+1.0
                     self.destRX    = MAX_DISTANCE+1.0
@@ -5247,18 +5180,16 @@ def prompt(str):
                     self.factorRef = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
                     setPromptPrefix(translate("Specify reference length") + " {1}: ")
-                }
-                else
-                {
+                else:
                     addRubber("LINE")
                     setRubberMode("LINE")
                     setRubberPoint("LINE_START", self.baseX, self.baseY)
                     previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                     setPromptPrefix(translate("Specify new length: "))
 
-        elif(isNaN(self.destRX))
-            if(isNaN(str))
-                var strList = str.split(",")
+        elif isNaN(self.destRX):
+            if isNaN(cmd):
+                strList = str.split(",")
                 if(isNaN(strList[0]) or isNaN(strList[1]))
                     alert(translate("Requires valid numeric distance or two points."))
                     setPromptPrefix(translate("Specify second point: "))
@@ -5287,32 +5218,27 @@ def prompt(str):
                 self.destRX = 0.0
                 self.destRY = 0.0
                 #The reference length is what we will use later.
-                self.factorRef = Number(str)
-                if(self.factorRef <= 0.0)
-                {
+                self.factorRef = Number(cmd)
+                if self.factorRef <= 0.0:
                     self.destRX    = MAX_DISTANCE+1.0
                     self.destRY    = MAX_DISTANCE+1.0
                     self.factorRef = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
                     setPromptPrefix(translate("Specify second point: "))
-                }
-                else
-                {
+                else:
                     setRubberPoint("LINE_START", self.baseX, self.baseY)
                     previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                     setPromptPrefix(translate("Specify new length: "))
-                }
-            }
-        }
+
         elif isNaN(self.factorNew):
-            if isNaN(str):
+            if isNaN(cmd):
                 strList = str.split(",")
                 if isNaN(strList[0]) or isNaN(strList[1]):
                     alert(translate("Requires valid numeric distance or second point."))
                     setPromptPrefix(translate("Specify new length: "))
                 else:
-                    var x = Number(strList[0])
-                    var y = Number(strList[1])
+                    x = Number(strList[0])
+                    y = Number(strList[1])
                     self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
                     if(self.factorNew <= 0.0)
                     {
@@ -5327,9 +5253,8 @@ def prompt(str):
                         return
 
             else:
-                self.factorNew = Number(str)
-                if(self.factorNew <= 0.0)
-                {
+                self.factorNew = Number(cmd)
+                if self.factorNew <= 0.0:
                     self.factorNew = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
                     setPromptPrefix(translate("Specify new length: "))
@@ -5342,14 +5267,9 @@ def prompt(str):
 
 class Text():
 
-#enums
-self.mode_JUSTIFY = 0
-self.mode_SETFONT = 1
-self.mode_SETGEOM = 2
-self.mode_RAPID   = 3
-
 def __init__(self):
     clearSelection()
+    self.modes = ["JUSTIFY", "SETFONT", "SETGEOM", "RAPID"]
     self.text = ""
     self.textX = MAX_DISTANCE+1.0
     self.textY = MAX_DISTANCE+1.0
@@ -5363,10 +5283,8 @@ def __init__(self):
     setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
 
 def click(x, y):
-    if(self.mode == self.mode_SETGEOM)
-    {
-        if(isNaN(self.textX))
-        {
+    if self.mode == "SETGEOM":
+        if isNaN(self.textX):
             self.textX = x
             self.textY = y
             addRubber("LINE")
@@ -5374,9 +5292,7 @@ def click(x, y):
             setRubberPoint("LINE_START", self.textX, self.textY)
             appendPromptHistory()
             setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
-        }
-        elif(isNaN(self.textHeight))
-        {
+        elif isNaN(self.textHeight):
             self.textHeight = calculateDistance(self.textX, self.textY, x, y)
             setTextSize(self.textHeight)
             appendPromptHistory()
@@ -5403,101 +5319,98 @@ def click(x, y):
             #Do nothing, as we are in rapidFire mode now.
 
 
-def prompt(str):
-    if(self.mode == self.mode_JUSTIFY)
-    {
-        if(str == "C" or str == "CENTER") #TODO: Probably should add additional qsTr calls here.
-        {
-            self.mode = self.mode_SETGEOM
+def prompt(cmd):
+    if self.mode == "JUSTIFY":
+        if cmd == "C" or cmd == "CENTER":
+            #TODO: Probably should add additional qsTr calls here.
+            self.mode = "SETGEOM"
             self.textJustify = "Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "R" or str == "RIGHT") #TODO: Probably should add additional qsTr calls here.
-        {
-            self.mode = self.mode_SETGEOM
+        elif cmd == "R" or cmd == "RIGHT":
+            #TODO: Probably should add additional qsTr calls here.
+            self.mode = "SETGEOM"
             self.textJustify = "Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify right-end point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "A" or str == "ALIGN") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "A" or cmd == "ALIGN") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Aligned"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
         }
-        elif(str == "M" or str == "MIDDLE") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "M" or cmd == "MIDDLE") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle point of text or [Justify/Setfont]: "))
         }
-        elif(str == "F" or str == "FIT") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "F" or cmd == "FIT") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Fit"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
         }
-        elif(str == "TL" or str == "TOPLEFT") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "TL" or cmd == "TOPLEFT") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-left point of text or [Justify/Setfont]: "))
         }
-        elif(str == "TC" or str == "TOPCENTER") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "TC" or cmd == "TOPCENTER") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-center point of text or [Justify/Setfont]: "))
         }
-        elif(str == "TR" or str == "TOPRIGHT") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "TR" or cmd == "TOPRIGHT") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-right point of text or [Justify/Setfont]: "))
         }
-        elif(str == "ML" or str == "MIDDLELEFT") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "ML" or cmd == "MIDDLELEFT") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-left point of text or [Justify/Setfont]: "))
         }
-        elif(str == "MC" or str == "MIDDLECENTER") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "MC" or cmd == "MIDDLECENTER") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-center point of text or [Justify/Setfont]: "))
         }
-        elif(str == "MR" or str == "MIDDLERIGHT") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "MR" or cmd == "MIDDLERIGHT") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-right point of text or [Justify/Setfont]: "))
         }
-        elif(str == "BL" or str == "BOTTOMLEFT") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "BL" or cmd == "BOTTOMLEFT") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-left point of text or [Justify/Setfont]: "))
         }
-        elif(str == "BC" or str == "BOTTOMCENTER") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "BC" or cmd == "BOTTOMCENTER") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-center point of text or [Justify/Setfont]: "))
         }
-        elif(str == "BR" or str == "BOTTOMRIGHT") #TODO: Probably should add additional qsTr calls here.
+        elif(str == "BR" or cmd == "BOTTOMRIGHT") #TODO: Probably should add additional qsTr calls here.
         {
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Right"
@@ -5516,23 +5429,21 @@ def prompt(str):
         setTextFont(self.textFont)
         setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
     }
-    elif(self.mode == self.mode_SETGEOM)
-    {
-        if(isNaN(self.textX))
-        {
-            if(str == "J" or str == "JUSTIFY") #TODO: Probably should add additional qsTr calls here.
-            {
+    elif self.mode == "SETGEOM":
+        if isNaN(self.textX):
+            if(str == "J" or cmd == "JUSTIFY":
+                #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_JUSTIFY
                 setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
             }
-            elif(str == "S" or str == "SETFONT") #TODO: Probably should add additional qsTr calls here.
+            elif(str == "S" or cmd == "SETFONT") #TODO: Probably should add additional qsTr calls here.
             {
                 self.mode = self.mode_SETFONT
                 setPromptPrefix(translate("Specify font name: "))
             }
             else
             {
-                var strList = str.split(",")
+                strList = str.split(",")
                 if(isNaN(strList[0]) or isNaN(strList[1]))
                 {
                     alert(translate("Point or option keyword required."))
@@ -5554,14 +5465,14 @@ def prompt(str):
                 self.textHeight = textSize()
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
             }
-            elif(isNaN(str))
+            elif(isNaN(cmd))
             {
                 alert(translate("Requires valid numeric distance or second point."))
                 setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
             }
             else
             {
-                self.textHeight = Number(str)
+                self.textHeight = Number(cmd)
                 setTextSize(self.textHeight)
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
             }
@@ -5583,14 +5494,14 @@ def prompt(str):
                 setRubberText("TEXT_JUSTIFY", self.textJustify)
                 setRubberText("TEXT_RAPID", self.text)
             }
-            elif(isNaN(str))
+            elif(isNaN(cmd))
             {
                 alert(translate("Requires valid numeric angle or second point."))
                 setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
             }
             else
             {
-                self.textRotation = Number(str)
+                self.textRotation = Number(cmd)
                 setTextAngle(self.textRotation)
                 setPromptPrefix(translate("Enter text: "))
                 self.mode = self.mode_RAPID
@@ -5611,7 +5522,7 @@ def prompt(str):
         }
     }
     elif self.mode == "RAPID":
-        if str == "RAPID_ENTER":
+        if cmd == "RAPID_ENTER":
             if self.text == "":
                 return
             else:
@@ -5626,42 +5537,31 @@ def prompt(str):
 
 ---
 
-var global = {}; #Required
-self.numPoints = 2048; #Default //TODO: min:64 max:8192
-self.cx
-self.cy
-self.sx = 0.04; #Default
-self.sy = 0.04; #Default
-self.numPoints
-self.mode
+class Snowflake():
+    def __init__(self):
+        clearSelection()
+        self.numPoints = 2048; #Default //TODO: min:64 max:8192
+        self.sx = 0.04
+        self.sy = 0.04
+        self.modes = ["NUM_POINTS", "XSCALE", "YSCALE"]
+        self.cx = MAX_DISTANCE+1.0
+        self.cy = MAX_DISTANCE+1.0
+        self.mode = "NUM_POINTS"
 
-#enums
-self.mode_NUM_POINTS = 0
-self.mode_XSCALE     = 1
-self.mode_YSCALE     = 2
+        addRubber("POLYGON")
+        setRubberMode("POLYGON")
+        self.update()
+        spareRubber("POLYGON")
+        return self
 
-def __init__(self):
-    clearSelection()
-    self.cx = MAX_DISTANCE+1.0
-    self.cy = MAX_DISTANCE+1.0
-    self.mode = self.mode_NUM_POINTS
+    def update(self):
+        r" Snowflake Curve with t in [0, 2pi]. "
+        xx = MAX_DISTANCE+1.0
+        yy = MAX_DISTANCE+1.0
 
-    addRubber("POLYGON")
-    setRubberMode("POLYGON")
-    updateSnowflake(self.numPoints, self.sx, self.sy)
-    spareRubber("POLYGON")
-    return
+        for i in range(self.numPts + 1):
+            t = ((2.0*math.pi)/self.numPts)*i;
 
-def updateSnowflake(numPts, xScale, yScale):
-    var xx = MAX_DISTANCE+1.0
-    var yy = MAX_DISTANCE+1.0
-    var two_pi = 2*embConstantPi
-
-    for(i = 0; i <= numPts; i++)
-    {
-        t = two_pi/numPts*i;
-
-#Snowflake Curve with t [0,2pi]
 
 xx = 4/7*sin(20/11-318*t)+
 3/13*sin(19/11-317*t)+
@@ -6314,12 +6214,12 @@ class Star():
         clearSelection()
         self.numPoints = 5
         self.modes = ["NUM_POINTS", "CENTER_PT", "RAD_OUTER", "RAD_INNER"]
-        self.cx       = MAX_DISTANCE+1.0
-        self.cy       = MAX_DISTANCE+1.0
-        self.x1       = MAX_DISTANCE+1.0
-        self.y1       = MAX_DISTANCE+1.0
-        self.x2       = MAX_DISTANCE+1.0
-        self.y2       = MAX_DISTANCE+1.0
+        self.cx = MAX_DISTANCE+1.0
+        self.cy = MAX_DISTANCE+1.0
+        self.x1 = MAX_DISTANCE+1.0
+        self.y1 = MAX_DISTANCE+1.0
+        self.x2 = MAX_DISTANCE+1.0
+        self.y2 = MAX_DISTANCE+1.0
         self.mode = self.mode_NUM_POINTS
         setPromptPrefix(translate("Enter number of star points")
             + " {" + self.numPoints.toString() + "}: ")
@@ -6343,7 +6243,6 @@ def click(self, x, y):
         self.mode = self.mode_RAD_INNER
         setPromptPrefix(translate("Specify inner radius of star: "))
         updateStar(self.x1, self.y1)
-    }
     elif self.mode == self.mode_RAD_INNER:
         self.x2 = x
         self.y2 = y
@@ -6359,13 +6258,13 @@ def click(self, x, y):
         elif self.mode == "RAD_OUTER" or self.mode == "RAD_INNER":
             self.updateStar(x, y)
 
-def prompt(str):
-    if self.mode == self.mode_NUM_POINTS:
+def prompt(cmd):
+    if self.mode == "NUM_POINTS":
         if(str == "" and self.numPoints >= 3 and self.numPoints <= 1024:
             setPromptPrefix(translate("Specify center point: "))
             self.mode = self.mode_CENTER_PT
         else:
-            tmp = Number(str)
+            tmp = Number(cmd)
             if isNaN(tmp) or !isInt(tmp) or tmp < 3 or tmp > 1024:
                 alert(translate("Requires an integer between 3 and 1024."))
                 setPromptPrefix(translate("Enter number of star points")
@@ -6373,20 +6272,17 @@ def prompt(str):
             else:
                 self.numPoints = tmp
                 setPromptPrefix(translate("Specify center point: "))
-                self.mode = self.mode_CENTER_PT
+                self.mode = "CENTER_PT"
 
-    elif(self.mode == self.mode_CENTER_PT)
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) or isNaN(strList[1]))
-        {
+    elif self.mode == "CENTER_PT":
+        strList = str.split(",")
+        if isNaN(strList[0]) or isNaN(strList[1]):
             alert(translate("Invalid point."))
             setPromptPrefix(translate("Specify center point: "))
-        }
         else:
             self.cx = Number(strList[0])
             self.cy = Number(strList[1])
-            self.mode = self.mode_RAD_OUTER
+            self.mode = "RAD_OUTER"
             setPromptPrefix(translate("Specify outer radius of star: "))
             addRubber("POLYGON")
             setRubberMode("POLYGON")
@@ -6405,16 +6301,12 @@ def prompt(str):
             setPromptPrefix(translate("Specify inner radius of star: "))
             updateStar(qsnapX(), qsnapY())
 
-    elif(self.mode == self.mode_RAD_INNER)
-    {
-        var strList = str.split(",")
-        if(isNaN(strList[0]) or isNaN(strList[1]))
-        {
+    elif self.mode == self.mode_RAD_INNER:
+        strList = str.split(",")
+        if isNaN(strList[0]) or isNaN(strList[1]):
             alert(translate("Invalid point."))
             setPromptPrefix(translate("Specify inner radius of star: "))
-        }
-        else
-        {
+        else:
             self.x2 = Number(strList[0])
             self.y2 = Number(strList[1])
             disableMoveRapidFire()
@@ -6423,9 +6315,9 @@ def prompt(str):
 
 
 def updateStar(self, x, y):
-    var distOuter
-    var distInner
-    var angOuter
+    distOuter
+    distInner
+    angOuter
 
     if(self.mode == self.mode_RAD_OUTER:
         angOuter = calculateAngle(self.cx, self.cy, x, y)
@@ -6437,7 +6329,7 @@ def updateStar(self, x, y):
         distInner = calculateDistance(self.cx, self.cy, x, y)
 
     #Calculate the Star Points
-    var angInc = 360.0/(self.numPoints*2)
+    angInc = 360.0/(self.numPoints*2)
     for i in range(self.numPoints*2):
         # if odd
         if i%2 == 1:
@@ -6465,10 +6357,10 @@ class SysWindows():
         setPromptPrefix(translate("Enter an option [Cascade/Tile]: "))
 
     def prompt(self, cmd):
-        if str == "C" or str == "CASCADE":
+        if cmd == "C" or cmd == "CASCADE":
             # TODO: Probably should add additional qsTr calls here.
             windowCascade()
-        elif str == "T" or str == "TILE":
+        elif cmd == "T" or cmd == "TILE":
             #TODO: Probably should add additional qsTr calls here.
             windowTile()
         else
