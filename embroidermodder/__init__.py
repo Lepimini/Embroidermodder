@@ -25,9 +25,18 @@ r"""
 """
 
 import libembroidery
-from .data import layout, settings
-from .actions import build_buttongrid, build_menubar
+from .data import *
+from .actions import *
 import tkinter as tk
+
+# For some reason this is causing bugs so I've overridden it.
+settings["translation_table"] = {
+    "?": {
+        "French": "?",
+        "German": "?",
+        "Spanish": "?"
+    }
+}
 
 def translate(message):
     r"""
@@ -38,10 +47,11 @@ def translate(message):
     In order to deal with incomplete translations calling the
     table falls back to returning the string supplied in English.
     """
-    lang = settings["general_language"] 
-    if message in translation_table.keys():
-        if lang in translation_table[message].keys():
-            return translation_table[message][lang]
+    lang = settings["general_language"]
+    translation = settings["translation_table"]
+    if message in translation.keys():
+        if lang in translation[message].keys():
+            return translation[message][lang]
     return message
 
 def main():
@@ -60,6 +70,6 @@ def main():
     root = tk.Tk()
     root.title(layout["title"])
     root.minsize(layout["width"], layout["height"])
-    build_menubar(root, layout["menubar"])
-    build_buttongrid(root, layout["toolbar"])
+    buildMenubar(root, layout["menubar"])
+    buildButtonGrid(root, layout["toolbar"])
     root.mainloop()

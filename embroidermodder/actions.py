@@ -21,7 +21,7 @@ from .data import load_image
 
 debug_mode = True
 
-def debug_message(s):
+def debugMessage(s):
     r"""
     Guards against debug messages coming up during normal operation.
 
@@ -33,119 +33,119 @@ def debug_message(s):
         print(s)
 
 
-def do_nothing():
+def doNothing():
     r""" This function intentionally does nothing. """
-    debug_message("do_nothing()")    
+    debugMessage("doNothing()")    
 
 
-def new_file():
+def newFile():
     " Creates a new file using the standard dialog. "
-    debug_message("New File")
+    debugMessage("New File")
 
 
-def open_file():
+def openFile():
     " Opens a file using the standard dialog. "
-    debug_message("Open File")
+    debugMessage("Open File")
 
 
-def save_file():
+def saveFile():
     " Saves a file using the standard dialog. "
-    debug_message("Save File")
+    debugMessage("Save File")
 
 
-def save_as_file():
+def saveAsFile():
     " Saves an existing file as a new format using the standard dialog. "
-    debug_message("Save file as...")
+    debugMessage("Save file as...")
 
 
-def exit_program():
+def exitProgram():
     r"""
     Instead of closing using exit() this allows us to chain any checks,
     like the confirmation of the close, to the action.
     """
-    debug_message("Closing Embroidermodder 2.0.")
+    debugMessage("Closing Embroidermodder 2.0.")
     exit()
 
 
-def cut_object():
+def cutObject():
     r"""
     Cut acts on objects selected before the action is called.
     
     If no objects are selected an error is returned.
     """
-    debug_message("cut")
+    debugMessage("cut")
 
 
-def copy_object():
+def copyObject():
     r"""
     Copy acts on objects selected before the action is called.
     
     If no objects are selected an error is returned.
     """
-    debug_message("copy")
+    debugMessage("copy")
 
 
-def paste_object():
+def pasteObject():
     r"""
     """
-    debug_message("paste")
+    debugMessage("paste")
 
 
 def icon16():
     r"""
     """
-    debug_message("icon16()")
+    debugMessage("icon16()")
 
 
 def icon24():
     r"""
     """
-    debug_message("icon24()")
+    debugMessage("icon24()")
 
 
 def icon32():
     r"""
     """
-    debug_message("icon32()")
+    debugMessage("icon32()")
 
 
 def icon48():
     r"""
     """
-    debug_message("icon48()")
+    debugMessage("icon48()")
 
 
 def icon64():
     r"""
     """
-    debug_message("icon64()")
+    debugMessage("icon64()")
 
 
 def icon128():
     r"""
     """
-    debug_message("icon128()")
+    debugMessage("icon128()")
 
 
-def main_print():
+def mainPrint():
     r"""
     """
-    debug_message("print()")
+    debugMessage("print()")
 
 
-def main_redo():
+def mainRedo():
     r"""
     """
-    debug_message("copy()")
+    debugMessage("copy()")
     #View* gview = _mainWin->activeView()
     #if (gview) {
     #    gview->copy()
 
 
-def main_undo():
+def mainUndo():
     r"""
     """
-    debug_message("main_paste()")
+    debugMessage("main_paste()")
     #View* gview = _mainWin->activeView()
     #if gview:
     #    gview->paste()
@@ -154,13 +154,13 @@ def main_undo():
 def tipOfTheDay():
     r"""
     """
-    debug_message("main_paste()")
+    debugMessage("main_paste()")
 
 
 def changelog():
     r"""
     """
-    debug_message("changelog()")
+    debugMessage("changelog()")
 
     # display in a custom widget instead
     #
@@ -168,166 +168,190 @@ def changelog():
     # QDesktopServices::openUrl(changelogURL)
 
 
-def show_all_layers():
+def showAllLayers():
     r"""
     """
-    return
+    debugMessage("showAllLayers()")
 
 
 def freezeAllLayers():
     r"""
     """
-    return
+    debugMessage("freezeAllLayers()")
 
 
 def thawAllLayers():
     r"""
     """
-    debug_message("thawAllLayers()")
+    debugMessage("thawAllLayers()")
 
 
 def lockAllLayers():
     r"""
     """
-    debug_message("lockAllLayers()")
+    debugMessage("lockAllLayers()")
 
 
 def windowNext():
     r"""
     """
-    debug_message("windowNext()")
+    debugMessage("windowNext()")
 
 
 def windowPrevious():
-    debug_message(".")
+    r"""
+    """
+    debugMessage("windowPrevious()")
 
 
 def textItalic():
+    r"""
+    """
     settings["text_style_italic"] = not settings["text_style_italic"]
 
 
 def textBold():
+    r"""
+    """
     settings["text_style_bold"] = not settings["text_style_bold"]
 
 
 def textStrikeout():
+    r"""
+    """
     settings.text_style.strikeout = not settings.text_style.strikeout
 
 
 def textUnderline():
+    r"""
+    """
     settings.text_style.underline = not settings.text_style.underline
 
 
 def textOverline():
+    r"""
+    """
     settings.text_style.overline = not settings.text_style.overline
 
 
 def layerManager():
-    debug_message("layerManager()")
-    debug_message("Implement layerManager.")
+    r"""
+    """
+    debugMessage("layerManager()")
+    debugMessage("Implement layerManager.")
     #LayerManager layman( _mainWin,  _mainWin)
     #layman.exec()
 
 
 def layerPrevious():
-    debug_message("layerPrevious()")
-    debug_message("Implement layerPrevious.")
+    r"""
+    """
+    debugMessage("layerPrevious()")
+    debugMessage("Implement layerPrevious.")
 
 
 def zoomRealtime():
-    debug_message("zoomRealtime()")
-    debug_message("Implement zoomRealtime.")
+    r"""
+    """
+    debugMessage("zoomRealtime()")
+    debugMessage("Implement zoomRealtime.")
 
 
 def zoomPrevious():
-    ""
-    debug_message("zoomPrevious()")
-    debug_message("Implement zoomPrevious.")
+    r"""
+    """
+    debugMessage("zoomPrevious()")
+    debugMessage("Implement zoomPrevious.")
 
 
 def zoomWindow():
-    ""
-    debug_message("zoomWindow()")
+    r"""
+    """
+    debugMessage("zoomWindow()")
     #gview = _mainWin->activeView()
     #if gview:
     #    gview->zoomWindow()
 
 
 def zoomDynamic():
-    ""
-    debug_message("zoomDynamic()")
-    debug_message("Implement zoomDynamic.")
+    r"""
+    """
+    debugMessage("zoomDynamic()")
+    debugMessage("Implement zoomDynamic.")
 
 
 def zoomScale():
-    ""
-    debug_message("zoomScale()")
-    debug_message("Implement zoomScale.")
+    r"""
+    """
+    debugMessage("zoomScale()")
+    debugMessage("Implement zoomScale.")
 
 
 def zoomCenter():
-    ""
-    debug_message("zoomCenter()")
-    debug_message("Implement zoomCenter.")
+    r"""
+    """
+    debugMessage("zoomCenter()")
+    debugMessage("Implement zoomCenter.")
 
 
 def zoomIn():
-    ""
-    debug_message("zoomIn()")
+    r"""
+    """
+    debugMessage("zoomIn()")
 
 
 def zoomOut():
     ""
-    debug_message("zoomOut()")
+    debugMessage("zoomOut()")
 
 
 def zoomSelected():
     ""
-    debug_message("zoomSelected()")
+    debugMessage("zoomSelected()")
 
 
 def zoomAll():
     ""
-    debug_message("zoomAll()")
-    debug_message("Implement zoomAll.")
+    debugMessage("zoomAll()")
+    debugMessage("Implement zoomAll.")
 
 
 def zoomExtents():
     ""
-    debug_message("zoomExtents()")
+    debugMessage("zoomExtents()")
 
 
 def panrealtime():
     ""
-    debug_message("panrealtime()")
+    debugMessage("panrealtime()")
 
 
 def panpoint():
     ""
-    debug_message("panpoint()")
+    debugMessage("panpoint()")
 
 
 def panLeft():
     ""
-    debug_message("panLeft()")
+    debugMessage("panLeft()")
 
 
 def panRight():
     ""
-    debug_message("panRight()")
+    debugMessage("panRight()")
 
 
 def panUp():
     ""
-    debug_message("panUp()")
+    debugMessage("panUp()")
 
 
 def panDown():
     ""
-    debug_message("panDown()")
+    debugMessage("panDown()")
 
 
-def day_vision():
+def dayVision():
     r""" TODO: Make day vision color settings.
     gview = _mainWin->activeView()
     if gview:
@@ -335,10 +359,10 @@ def day_vision():
         gview->setCrossHairColor("#000000")
         gview->setGridColor("#000000")
         """
-    debug_message("day_vision()")
+    debugMessage("day_vision()")
 
 
-def night_vision():
+def nightVision():
     r""" TODO: Make night vision color settings.
     gview = _mainWin->activeView()
     if gview:
@@ -346,201 +370,167 @@ def night_vision():
         gview->setCrossHairColor("#FFFFFF")
         gview->setGridColor("#FFFFFF")
         """
-    debug_message("night_vision()")
+    debugMessage("night_vision()")
 
 
 def whatsthisContextHelp():
     r"""
     """
-    debug_message("whatsthisContextHelp()")
+    debugMessage("whatsthisContextHelp()")
 
 
 def makeLayerCurrent():
     r"""
     """
-    debug_message("makeLayerCurrent()")
+    debugMessage("makeLayerCurrent()")
 
 
 def layerSelector():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
-def main_help():
+def mainHelp():
     r"""
     """
-    debug_message("main_help")
+    debugMessage("main_help")
 
 
-def settings_dialog():
+def settingsDialog():
     r"""
     """
-    debug_message("settings_dialog()")
+    debugMessage("settings_dialog()")
 
 
-def design_details():
+def designDetails():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
-def main_cut():
+def mainCut():
     r"""
     """
-    debug_message("cut()")
+    debugMessage("cut()")
     
     #gview = _mainWin->activeView()
     #if gview:
     #    gview->cut()
 
 
-def main_copy():
+def mainCopy():
     r"""
     """
-    debug_message("copy()")
+    debugMessage("copy()")
     #gview = _mainWin->activeView()
     #if gview:
     #    gview->copy()
 
 
-def main_paste():
+def mainPaste():
     r"""
     """
-    debug_message("main_paste()")
+    debugMessage("main_paste()")
     #gview = _mainWin->activeView()
     #if gview:
     #    gview->paste()
 
 
-def main_redo():
+def showAllLayers():
     r"""
     """
-    debug_message("main_redo()")
-    #gview = _mainWin->activeView()
-    #if gview:
-    #    gview->copy()
+    debugMessage("main_exit()")
 
 
-def main_undo():
+def freezeAllLayers():
     r"""
     """
-    debug_message("main_undo()")
-    #gview = _mainWin->activeView()
-    #if gview:
-    #    gview->paste()
-    
-
-def tipOfTheDay():
-    r"""
-    """
-    debug_message("main_exit()")
-
-
-def changelog():
-    r"""
-    """
-    debug_message("changelog()")
-
-    # display in a custom widget instead
-    # QUrl changelogURL("help/changelog.html")
-    # QDesktopServices::openUrl(changelogURL)
-
-
-def show_all_layers():
-    r"""
-    """
-    debug_message("main_exit()")
-
-
-def freeze_all_layers():
-    r"""
-    """
-    debug_message("main_exit()")
+    debugMessage("freezeAllLayers()")
 
 
 def thawAllLayers():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def lockAllLayers():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def unlockAllLayers():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def hideAllLayers():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def lineWeightSelector():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def lineTypeSelector():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def colorSelector():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def windowClose():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def windowTile():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def windowCloseAll():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("windowCloseAll()")
 
 
 def windowCascade():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("windowCascade()")
 
 
 def windowNext():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def windowPrevious():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
 
 def textItalic():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
     settings.text_style.italic = not settings.text_style.italic
 
@@ -548,7 +538,7 @@ def textItalic():
 def textBold():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
     settings.text_style.bold = not settings.text_style.bold
 
@@ -556,7 +546,7 @@ def textBold():
 def textStrikeout():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
     settings.text_style.strikeout = not settings.text_style.strikeout
 
@@ -564,7 +554,7 @@ def textStrikeout():
 def textUnderline():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
     settings.text_style.underline = not settings.text_style.underline
 
@@ -572,7 +562,7 @@ def textUnderline():
 def textOverline():
     r"""
     """
-    debug_message("main_exit()")
+    debugMessage("main_exit()")
 
     settings.text_style.overline = not settings.text_style.overline
 
@@ -580,15 +570,15 @@ def textOverline():
 def makeLayerActive():
     r"""
     """
-    debug_message("makeLayerActive()")
-    debug_message("Implement makeLayerActive.")
+    debugMessage("makeLayerActive()")
+    debugMessage("Implement makeLayerActive.")
 
 
 def layerManager():
     r"""
     """
-    debug_message("layerManager()")
-    debug_message("Implement layerManager.")
+    debugMessage("layerManager()")
+    debugMessage("Implement layerManager.")
     #/*LayerManager layman( _mainWin,  _mainWin)
     #layman.exec()
     #*/
@@ -597,28 +587,28 @@ def layerManager():
 def layerPrevious():
     r"""
     """
-    debug_message("layerPrevious()")
-    debug_message("Implement layerPrevious.")
+    debugMessage("layerPrevious()")
+    debugMessage("Implement layerPrevious.")
 
 
 def zoomRealtime():
     r"""
     """
-    debug_message("zoomRealtime()")
-    debug_message("Implement zoomRealtime.")
+    debugMessage("zoomRealtime()")
+    debugMessage("Implement zoomRealtime.")
 
 
 def zoomPrevious():
     r"""
     """
-    debug_message("zoomPrevious()")
-    debug_message("Implement zoomPrevious.")
+    debugMessage("zoomPrevious()")
+    debugMessage("Implement zoomPrevious.")
 
 
 def zoomWindow():
     r"""
     """
-    debug_message("zoomWindow()")
+    debugMessage("zoomWindow()")
     #/*View* gview = _mainWin->activeView()
     #if (gview) 
     #    gview->zoomWindow()
@@ -627,205 +617,205 @@ def zoomWindow():
 def zoomDynamic():
     r"""
     """
-    debug_message("zoomDynamic()")
-    debug_message("Implement zoomDynamic.")
+    debugMessage("zoomDynamic()")
+    debugMessage("Implement zoomDynamic.")
 
 
 def zoomScale():
     r"""
     """
-    debug_message("zoomScale()")
-    debug_message("Implement zoomScale.")
+    debugMessage("zoomScale()")
+    debugMessage("Implement zoomScale.")
 
 
 def zoomCenter():
     r"""
     """
-    debug_message("zoomCenter()")
-    debug_message("Implement zoomCenter.")
+    debugMessage("zoomCenter()")
+    debugMessage("Implement zoomCenter.")
 
 
 def zoomIn():
     r"""
     """
-    debug_message("zoomIn()")
+    debugMessage("zoomIn()")
 
 
 def zoomOut():
     r"""
     """
-    debug_message("zoomOut()")
+    debugMessage("zoomOut()")
 
 
 def zoomSelected():
     r"""
     """
-    debug_message("zoomSelected()")
+    debugMessage("zoomSelected()")
 
 
 def zoomAll():
     r"""
     """
-    debug_message("zoomAll()")
-    debug_message("Implement zoomAll.")
+    debugMessage("zoomAll()")
+    debugMessage("Implement zoomAll.")
 
 
 def zoomExtents():
     r"""
     """
-    debug_message("zoomExtents()")
+    debugMessage("zoomExtents()")
 
 
 def panrealtime():
     r"""
     """
-    debug_message("panrealtime()")
+    debugMessage("panrealtime()")
 
 
 def panpoint():
     r"""
     """
-    debug_message("panpoint()")
+    debugMessage("panpoint()")
 
 
 def panLeft():
     r"""
     """
-    debug_message("panLeft()")
+    debugMessage("panLeft()")
 
 
 def panRight():
     r"""
     """
-    debug_message("panRight()")
+    debugMessage("panRight()")
 
 
 def panUp():
     r"""
     """
-    debug_message("panUp()")
+    debugMessage("panUp()")
 
 
 def panDown():
     r"""
     """
-    debug_message("panDown()")
+    debugMessage("panDown()")
 
 
 def settingsSnap():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def settingsGrid():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def settingsRuler():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def settingsOrtho():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def settingsPolar():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def settingsQSnap():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def settingsQTrack():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def settingsLwt():
     r"""
     """
-    debug_message("stub")
+    debugMessage("stub")
 
 
 def toggleSnap(on):
     r"""
     """
-    debug_message("StatusBarButton toggleSnap()")
+    debugMessage("StatusBarButton toggleSnap()")
 
 
 def toggleGrid(on):
     r"""
     """
-    debug_message("StatusBarButton toggleGrid()")
+    debugMessage("StatusBarButton toggleGrid()")
 
 
 def toggleRuler(on):
     r"""
     """
-    debug_message("StatusBarButton toggleRuler()")
+    debugMessage("StatusBarButton toggleRuler()")
 
 
 def toggleOrtho(on):
     r"""
     """
-    debug_message("StatusBarButton toggleOrtho()")
+    debugMessage("StatusBarButton toggleOrtho()")
 
 
 def togglePolar(on):
-    debug_message("StatusBarButton togglePolar()")
+    debugMessage("StatusBarButton togglePolar()")
 
 
 def toggleQSnap(on):
-    debug_message("StatusBarButton toggleQSnap()")
+    debugMessage("StatusBarButton toggleQSnap()")
 
 
 def toggleQTrack(on):
-    debug_message("StatusBarButton toggleQTrack()")
+    debugMessage("StatusBarButton toggleQTrack()")
 
 
 def toggleLwt(on):
-    debug_message("StatusBarButton toggleLwt()")
+    debugMessage("StatusBarButton toggleLwt()")
 
 
 def enableLwt():
-    debug_message("StatusBarButton enableLwt()")
+    debugMessage("StatusBarButton enableLwt()")
 
 
 def disableLwt():
-    debug_message("StatusBarButton disableLwt()")
+    debugMessage("StatusBarButton disableLwt()")
 
 
 def enableReal():
-    debug_message("StatusBarButton enableReal()")
+    debugMessage("StatusBarButton enableReal()")
 
 
 def disableReal():
-    debug_message("StatusBarButton disableReal()")
+    debugMessage("StatusBarButton disableReal()")
 
 
-def build_menubar(root, menu_layout):
+def buildMenubar(root, menu_layout):
     r"""
     """
-    debug_message("build_menubar")
+    debugMessage("build_menubar")
     menubar = tk.Menu(root)
     for m in menu_layout["order"]:
-        debug_message(m)
+        debugMessage(m)
         menu_ = tk.Menu(menubar, tearoff=0)
         for item in menu_layout[m]["order"]:
-            debug_message(item)
+            debugMessage(item)
             cmd = menu_layout[m][item]
             menu_.add_command(label=item, command=globals()[cmd])
         menubar.add_cascade(label=m, menu=menu_)
@@ -834,16 +824,16 @@ def build_menubar(root, menu_layout):
 # to stop the garbage collector stealing it
 tkimg = {}
 
-def build_buttongrid(root, button_layout):
+def buildButtonGrid(root, button_layout):
     r"""
     Create the toolbars in the order given by the "order" list.
     """
     global tkimg
-    debug_message("build_buttongrid")
+    debugMessage("build_buttongrid")
     for toolbar in button_layout["order"]:
-        debug_message(toolbar)
+        debugMessage(toolbar)
         for button in button_layout[toolbar]["order"]:
-            debug_message(button)
+            debugMessage(button)
             B = button_layout[toolbar][button]
             cmd = globals()[B["command"]]
             tkimg[button] = load_image(B["icon"])

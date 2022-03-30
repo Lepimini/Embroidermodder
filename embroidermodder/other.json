@@ -1,22 +1,21 @@
 {
     "redo": {
         "icon": "redo-16.png",
-        "function": "main_redo",
+        "function": "mainRedo",
         "tooltip": "&Redo",
         "statustip": "Reverses the effects of the previous undo action."
     },
     "windowclose": {
         "icon": "windowclose-16.png",
-        "function": "window_close",
+        "function": "windowClose",
         "tooltip": "Cl&ose",
         "statustip": "Close the active window."
     },
     "windowcloseall": {
-        windowcloseall_xpm,
-        "windowcloseall",
-        "statustip": "Close &All",
-        "Close all the windows.",
-        windowCloseAll
+        "icon": "windowcloseall-16.png",
+        "function": "windowCloseAll",
+        "tooltip": "Close &All",
+        "statustip": "Close all the windows."
     },
     "": {
         windowcascade_xpm,

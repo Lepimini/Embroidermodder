@@ -133,22 +133,22 @@
         "scale"
     ],
     "actions": [
-        "do_nothing",
-        "new_file",
-        "open_file",
-        "save_file",
-        "save_as_file",
+        "doNothing",
+        "newFile",
+        "openFile",
+        "saveFile",
+        "saveAsFile",
         "print",
-        "designdetails",
+        "designDetails",
         "exit",
         "cut",
         "copy",
         "paste",
         "undo",
         "redo",
-        "windowclose",
-        "windowcloseall",
-        "windowcascade",
+        "windowClose",
+        "windowCloseAll",
+        "windowCascade",
         "windowtile",
         "windownext",
         "windowprevious",
@@ -235,14 +235,14 @@
                 "Help",
                 "Exit"
             ],
-            "New": "new_file",
-            "Open...": "open_file",
-            "Save...": "save_file",
-            "Save As...": "save_as_file",
-            "Print": "main_print",
-            "Design Details": "design_details",
-            "Help": "main_help",
-            "Exit": "exit_program"
+            "New": "newFile",
+            "Open...": "openFile",
+            "Save...": "saveFile",
+            "Save As...": "saveAsFile",
+            "Print": "mainPrint",
+            "Design Details": "designDetails",
+            "Help": "mainHelp",
+            "Exit": "exitProgram"
         },
         "Edit": {
             "order": [
@@ -252,11 +252,11 @@
                 "Copy",
                 "Paste"
             ],
-            "Undo": "main_undo",
-            "Redo": "main_redo",
-            "Cut": "cut_object",
-            "Copy": "copy_object",
-            "Paste": "paste_object"
+            "Undo": "mainUndo",
+            "Redo": "mainRedo",
+            "Cut": "cutObject",
+            "Copy": "copyObject",
+            "Paste": "pasteObject"
         },
         "View": {
             "order": [
@@ -269,8 +269,8 @@
                 "Icon 64",
                 "Icon 128"
             ],
-            "Day": "day_vision",
-            "Night": "night_vision",
+            "Day": "dayVision",
+            "Night": "nightVision",
             "Icon 16": "icon16",
             "Icon 24": "icon24",
             "Icon 32": "icon32",
@@ -282,7 +282,7 @@
             "order": [
                 "Preferences..."
             ],
-            "Preferences...": "settings_dialog"
+            "Preferences...": "settingsDialog"
         },
         "Window": {
             "order": []
@@ -295,11 +295,11 @@
                 "About",
                 "What's This?"
             ],
-            "Help": "do_nothing",
-            "Changelog": "do_nothing",
-            "Tip of the Day": "do_nothing",
-            "About": "do_nothing",
-            "What's This?": "do_nothing"
+            "Help": "doNothing",
+            "Changelog": "doNothing",
+            "Tip of the Day": "doNothing",
+            "About": "doNothing",
+            "What's This?": "doNothing"
         },
         "Recent": {
             "order": []
@@ -316,15 +316,15 @@
                 "Zoom All",
                 "Zoom Extents"
             ],
-            "Zoom Window": "do_nothing",
-            "Zoom Dynamic": "do_nothing",
-            "Zoom Scale": "do_nothing",
-            "Zoom Center": "do_nothing",
-            "Zoom In": "do_nothing",
-            "Zoom Out": "do_nothing",
-            "Zoom Selected": "do_nothing",
-            "Zoom All": "do_nothing",
-            "Zoom Extents": "do_nothing"
+            "Zoom Window": "doNothing",
+            "Zoom Dynamic": "doNothing",
+            "Zoom Scale": "doNothing",
+            "Zoom Center": "doNothing",
+            "Zoom In": "doNothing",
+            "Zoom Out": "doNothing",
+            "Zoom Selected": "doNothing",
+            "Zoom All": "doNothing",
+            "Zoom Extents": "doNothing"
         },
         "Pan": {
             "order": [
@@ -335,12 +335,12 @@
                 "Pan Up",
                 "Pan Down"
             ],
-            "Pan Real Time": "do_nothing",
-            "Pan Point": "do_nothing",
-            "Pan Left": "do_nothing",
-            "Pan Right": "do_nothing",
-            "Pan Up": "do_nothing",
-            "Pan Down": "do_nothing"
+            "Pan Real Time": "doNothing",
+            "Pan Point": "doNothing",
+            "Pan Left": "doNothing",
+            "Pan Right": "doNothing",
+            "Pan Up": "doNothing",
+            "Pan Down": "doNothing"
         }
     },
     "toolbar": {
@@ -368,7 +368,7 @@
             ],
             "New": {
                 "icon": "new-16.png",
-                "command": "new_file",
+                "command": "newFile",
                 "row": 1,
                 "column": 0,
                 "statustip": "&New",
@@ -376,7 +376,7 @@
             },
             "Open": {
                 "icon": "open-16.png",
-                "command": "open_file",
+                "command": "openFile",
                 "row": 1,
                 "column": 1,
                 "statustip": "&Open",
@@ -384,7 +384,7 @@
             },
             "Save": {
                 "icon": "save-16.png",
-                "command": "save_file",
+                "command": "saveFile",
                 "row": 1,
                 "column": 2,
                 "statustip": "&Save",
@@ -392,7 +392,7 @@
             },
             "Save as": {
                 "icon": "saveas-16.png",
-                "command": "save_as_file",
+                "command": "saveAsFile",
                 "row": 1,
                 "column": 3,
                 "statustip": "Save &As",
@@ -400,7 +400,7 @@
             },
             "Print": {
                 "icon": "print-16.png",
-                "command": "main_print",
+                "command": "mainPrint",
                 "row": 1,
                 "column": 4,
                 "statustip": "&Print",
@@ -408,7 +408,7 @@
             },
             "Design Details": {
                 "icon": "histogram-16.png",
-                "command": "design_details",
+                "command": "designDetails",
                 "row": 1,
                 "column": 5,
                 "statustip": "&Details",
@@ -416,7 +416,7 @@
             },
             "Help": {
                 "icon": "help-16.png",
-                "command": "design_details",
+                "command": "mainHelp",
                 "row": 1,
                 "column": 6,
                 "statustip": "&Help",
@@ -433,7 +433,7 @@
             ],
             "Undo": {
                 "icon": "undo-16.png",
-                "command": "main_undo",
+                "command": "mainUndo",
                 "row": 1,
                 "column": 7,
                 "statustip": "&Details",
@@ -441,7 +441,7 @@
             },
             "Redo": {
                 "icon": "redo-16.png",
-                "command": "design_details",
+                "command": "designDetails",
                 "row": 1,
                 "column": 8,
                 "statustip": "&Details",
@@ -449,7 +449,7 @@
             },
             "Cut": {
                 "icon": "cut-16.png",
-                "command": "design_details",
+                "command": "designDetails",
                 "row": 1,
                 "column": 9,
                 "statustip": "&Details",
@@ -457,7 +457,7 @@
             },
             "Copy": {
                 "icon": "copy-16.png",
-                "command": "design_details",
+                "command": "designDetails",
                 "row": 1,
                 "column": 10,
                 "statustip": "&Details",
@@ -465,7 +465,7 @@
             },
             "Paste": {
                 "icon": "paste-16.png",
-                "command": "design_details",
+                "command": "designDetails",
                 "row": 1,
                 "column": 11,
                 "statustip": "&Details",
@@ -479,7 +479,7 @@
             ],
             "Day": {
                 "icon": "day-16.png",
-                "command": "day_vision",
+                "command": "dayVision",
                 "row": 1,
                 "column": 12,
                 "statustip": "&Day",
@@ -487,7 +487,7 @@
             },
             "Night": {
                 "icon": "night-16.png",
-                "command": "night_vision",
+                "command": "nightVision",
                 "row": 1,
                 "column": 13,
                 "statustip": "&Night",
@@ -527,7 +527,7 @@
             },
             "Icon 32": {
                 "icon": "icon32-16.png",
-                "command": "design_details",
+                "command": "icon32",
                 "row": 2,
                 "column": 2,
                 "statustip": "&Details",
@@ -535,7 +535,7 @@
             },
             "Icon 48": {
                 "icon": "icon48-16.png",
-                "command": "design_details",
+                "command": "icon48",
                 "row": 2,
                 "column": 3,
                 "statustip": "&Details",
@@ -543,7 +543,7 @@
             },
             "Icon 64": {
                 "icon": "icon64-16.png",
-                "command": "design_details",
+                "command": "icon64",
                 "row": 2,
                 "column": 4,
                 "statustip": "&Details",
@@ -551,7 +551,7 @@
             },
             "Icon 128": {
                 "icon": "icon128-16.png",
-                "command": "design_details",
+                "command": "icon128",
                 "row": 2,
                 "column": 5,
                 "statustip": "&Details",
@@ -1083,20 +1083,20 @@
         "LWT_24": 24
     },
     "shortcuts": {
-        "Ctrl+N": "new_file",
-        "Ctrl+O": "open_file",
-        "Ctrl+S": "save_file",
-        "Ctrl+Shift+S": "save_as_file",
-        "Ctrl+P": "main_print",
-        "Ctrl+D": "design_details",
-        "Ctrl+Q": "exit_program",
-        "Ctrl+X": "cut_object",
-        "Ctrl+C": "copy_object",
-        "Ctrl+V": "paste_object",
-        "Ctrl+Z": "main_undo",
-        "Ctrl+Shift+Z": "main_redo",
-        "F1": "main_help",
-        "F2": "main_about"
+        "Ctrl+N": "newFile",
+        "Ctrl+O": "openFile",
+        "Ctrl+S": "saveFile",
+        "Ctrl+Shift+S": "saveAsFile",
+        "Ctrl+P": "mainPrint",
+        "Ctrl+D": "designDetails",
+        "Ctrl+Q": "exitProgram",
+        "Ctrl+X": "cutObject",
+        "Ctrl+C": "copyObject",
+        "Ctrl+V": "pasteObject",
+        "Ctrl+Z": "mainUndo",
+        "Ctrl+Shift+Z": "mainRedo",
+        "F1": "mainHelp",
+        "F2": "mainAbout"
     },
     "tips": [
         "we need more tips?",
@@ -1115,9 +1115,6 @@
         "that you can use the 'DAY' and 'NIGHT' commands to quickly switch the view colors to commonly used white or black?",
         "that you can quickly change the background, crosshair and grid colors using the 'RGB' command?"
     ],
-    "translation_table": {
-        "?": "?"
-    },
     "details_label_text": [
         "Total Stitches:",
         "Real Stitches:",

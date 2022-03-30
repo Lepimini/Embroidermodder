@@ -15,6 +15,7 @@ r"""
 """
 
 import os
+import binascii
 from pathlib import Path
 import json
 import importlib.resources as res
@@ -22,6 +23,32 @@ import tkinter as tk
 
 application_folder = str(Path.home()) + os.sep + ".embroidermodder2"
 
+def load_data(path):
+    r"""
+    These are loaded from the Python package first, then
+    any that contradict them in the users system override.
+    """
+    file_data = res.read_text("embroidermodder", path)
+    d = json.loads(file_data)
+    if not os.path.isdir(application_folder):
+        os.mkdir(application_folder)
+
+    fname = application_folder + os.sep + path
+
+    if os.path.isfile(fname):
+        with open(fname, "r") as f:
+            user_data = json.loads(f.read())
+            for k in user_data.keys():
+                d[k] = user_data[k]
+    else:
+        with open(fname, "w") as f:
+            f.write(json.dumps(d, indent=4))
+
+    return d
+
+icons = load_data("icons.json")
+layout = load_data("layout.json")
+settings = load_data("config.json")
 
 def load_image(path):
     r"""
@@ -29,10 +56,9 @@ def load_image(path):
     crashing errors the resources are loaded into the
     application folder each time the program boots.
     """
-    file_data = res.read_binary("embroidermodder", path)
     a = application_folder + os.sep + path
     f = open(a, "wb")
-    f.write(file_data)
+    f.write(binascii.unhexlify(icons[path]))
     f.close()
     return tk.PhotoImage(file=a)
 
@@ -60,29 +86,3 @@ def draw_icon(code):
     return "This function is overridden."
 
 
-def load_data(path):
-    r"""
-    These are loaded from the Python package first, then
-    any that contradict them in the users system override.
-    """
-    file_data = res.read_text("embroidermodder", path)
-    d = json.loads(file_data)
-    if not os.path.isdir(application_folder):
-        os.mkdir(application_folder)
-
-    fname = application_folder + os.sep + path
-
-    if os.path.isfile(fname):
-        with open(fname, "r") as f:
-            user_data = json.loads(f.read())
-            for k in user_data.keys():
-                d[k] = user_data[k]
-    else:
-        with open(fname, "w") as f:
-            f.write(json.dumps(d, indent=4))
-
-    return d
-
-
-layout = load_data("layout.json")
-settings = load_data("config.json")

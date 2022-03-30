@@ -20,45 +20,59 @@ r"""
 import math
 import libembroidery
 
+class Vector():
+    def __init__(self, x, y):
+        self.x = 0.0
+        self.y = 0.0
+        return self
+
+def unit_vector(angle):
+    r"""
+    Unit vector in the direction defined by angle, measured
+    anti-clockwise from the x axis.
+    """
+    x = math.cos(angle)
+    y = math.sin(angle)
+    return Vector(x, y)
+
 class Base_Object():
     r"""
-    """
-    def __init__(self):
-        return self
     BaseObject(QGraphicsItem* parent = 0)
     ~BaseObject()
 
-    enum { Type = OBJ_TYPE_BASE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_BASE ]
+    int type() const  return Type
 
-    QPen objectPen()   const { return objPen; }
-    QColor   objectColor() const { return objPen.color(); }
-    unsigned int objectColorRGB()  const { return objPen.color().rgb(); }
-    Qt::PenStyle objectLineType()  const { return objPen.style(); }
-       objectLineWeight()    const { return lwtPen.widthF(); }
-    QPainterPath objectPath()  const { return path(); }
-    int  objectRubberMode()    const { return objRubberMode; }
+    QPen objectPen()   const  return objPen
+    QColor   objectColor() const  return objPen.color()
+    unsigned int objectColorRGB()  const  return objPen.color().rgb()
+    Qt::PenStyle objectLineType()  const  return objPen.style()
+       objectLineWeight()    const  return lwtPen.widthF()
+    QPainterPath objectPath()  const  return path()
+    int  objectRubberMode()    const  return objRubberMode
      objectRubberPoint(const QString& key) const
     QString  objectRubberText(const QString& key) const
+    """
+    def __init__(self):
+        self.color = "#FFFFFF"
+        self.lineType = "solid"
+        self.lineWeight = 1.0
+        return self
 
-    QRectF rect() const { return path().boundingRect(); }
-    def setRect(const QRectF& r) { QPainterPath p; p.addRect(r); setPath(p); }
-    def setRect(x, y, w, h) { QPainterPath p; p.addRect(x,y,w,h); setPath(p); }
-    QLineF line() const { return objLine; }
-    def setLine(const QLineF& li) { QPainterPath p; p.moveTo(li.p1()); p.lineTo(li.p2()); setPath(p); objLine = li; }
-    def setLine(x1, y1, x2, y2) { QPainterPath p; p.moveTo(x1,y1); p.lineTo(x2,y2); setPath(p); objLine.setLine(x1,y1,x2,y2); }
+    QRectF rect() const  return path().boundingRect()
+    def setRect(const QRectF& r)  QPainterPath p; p.addRect(r); setPath(p)
+    def setRect(x, y, w, h)  QPainterPath p; p.addRect(x,y,w,h); setPath(p)
+    QLineF line() const  return objLine
+    def setLine(const QLineF& li)  QPainterPath p; p.moveTo(li.p1()); p.lineTo(li.p2()); setPath(p); objLine = li
+    def setLine(x1, y1, x2, y2)  QPainterPath p; p.moveTo(x1,y1); p.lineTo(x2,y2); setPath(p); objLine.setLine(x1,y1,x2,y2)
 
-    def setObjectColor(const QColor& color)
-    def setObjectColorRGB(unsigned int rgb)
-    def setObjectLineType(Qt::PenStyle lineType)
-    def setObjectLineWeight(lineWeight)
-    def setObjectPath(const QPainterPath& p) { setPath(p); }
-    def setObjectRubberMode(int mode) { objRubberMode = mode; }
-    def setObjectRubberPoint(const QString& key, const QPointF& point) { objRubberPoints.insert(key, point); }
-    def setObjectRubberText(const QString& key, const QString& txt) { objRubberTexts.insert(key, txt); }
+    def setObjectPath(const QPainterPath& p)  setPath(p)
+    def setObjectRubberMode(int mode)  objRubberMode = mode
+    def setObjectRubberPoint(const QString& key, const QPointF& point)  objRubberPoints.insert(key, point)
+    def setObjectRubberText(const QString& key, const QString& txt)  objRubberTexts.insert(key, txt)
 
     QRectF boundingRect() const
-    QPainterPath shape() const { return path(); }
+    QPainterPath shape() const  return path()
 
     def drawRubberLine(const QLineF& rubLine, QPainter* painter = 0, const char* colorFromScene = 0)
 
@@ -75,21 +89,22 @@ class Base_Object():
     QHash<QString, QString> objRubberTexts
     int objID
 protected:
-    QPen lineWeightPen() const { return lwtPen; }
+    QPen lineWeightPen() const  return lwtPen
     def realRender(QPainter* painter, const QPainterPath& renderPath)
 ]
 
-class ArcObject : public BaseObject:
+class Arc(Base_Object):
+    r"""
 public:
     ArcObject(startX, startY, midX, midY, endX, endY, unsigned int rgb, QGraphicsItem* parent = 0)
     ArcObject(ArcObject* obj, QGraphicsItem* parent = 0)
     ~ArcObject()
 
-    enum { Type = OBJ_TYPE_ARC ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_ARC ]
+    int type() const  return Type
 
-    objectCenter()    const { return scenePos(); }
-      objectRadius()    const { return rect().width()/2.0*scale(); }
+    objectCenter()    const  return scenePos()
+      objectRadius()    const  return rect().width()/2.0*scale()
       objectStartAngle()    const
       objectEndAngle()  const
     objectStartPoint()    const
@@ -100,6 +115,13 @@ public:
       objectChord() const
       objectIncludedAngle() const
     int    objectClockwise() const
+    """
+    def __init__(self):
+        super.__init__(self)
+        self.start = Vector(0.0, 0.0)
+        self.middle = Vector(0.0, 0.0)
+        self.end = Vector(0.0, 0.0)
+        return self
 
     def setObjectRadius(radius)
         return
@@ -125,8 +147,12 @@ public:
     def setObjectEndPoint(pointX, pointY)
         return
 
-    def updateRubber(QPainter* painter = 0)
-    def vulcanize()
+    def updateRubber(QPainter* painter = 0):
+        return
+
+    def vulcanize():
+        return
+
     mouseSnapPoint(const QPointF& mousePoint)
     QList<QPointF> allGripPoints()
     def gripEdit(const QPointF& before, const QPointF& after)
@@ -139,10 +165,6 @@ private:
     def calculateArcData(startX, startY, midX, midY, endX, endY)
     def updateArcRect(radius)
 
-    arcStartPoint
-    arcMidPoint
-    arcEndPoint
-]
 
 class Circle():
     def __init__(self):
@@ -153,20 +175,20 @@ public:
     CircleObject(CircleObject* obj, QGraphicsItem* parent = 0)
     ~CircleObject()
 
-    enum { Type = OBJ_TYPE_CIRCLE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_CIRCLE ]
+    int type() const  return Type
 
     QPainterPath objectSavePath() const
 
-    objectCenter()    const { return scenePos(); }
-      objectRadius()    const { return rect().width()/2.0*scale(); }
-      objectDiameter()  const { return rect().width()*scale(); }
-      objectArea()  const { return embConstantPi*objectRadius()*objectRadius(); }
-      objectCircumference() const { return embConstantPi*objectDiameter(); }
-    objectQuadrant0() const { return objectCenter() + QPointF(objectRadius(), 0); }
-    objectQuadrant90()    const { return objectCenter() + QPointF(0,-objectRadius()); }
-    objectQuadrant180()   const { return objectCenter() + QPointF(-objectRadius(),0); }
-    objectQuadrant270()   const { return objectCenter() + QPointF(0, objectRadius()); }
+    objectCenter()    const  return scenePos()
+      objectRadius()    const  return rect().width()/2.0*scale()
+      objectDiameter()  const  return rect().width()*scale()
+      objectArea()  const  return embConstantPi*objectRadius()*objectRadius()
+      objectCircumference() const  return embConstantPi*objectDiameter()
+    objectQuadrant0() const  return objectCenter() + QPointF(objectRadius(), 0)
+    objectQuadrant90()    const  return objectCenter() + QPointF(0,-objectRadius())
+    objectQuadrant180()   const  return objectCenter() + QPointF(-objectRadius(),0)
+    objectQuadrant270()   const  return objectCenter() + QPointF(0, objectRadius())
 
     def setObjectRadius(radius)
     def setObjectDiameter(diameter)
@@ -200,20 +222,20 @@ public:
     # NOTE: Allow this enum to evaluate false.
     lineStyle = ["NoLine", "Flared", "Fletching"]
 
-    enum { Type = OBJ_TYPE_DIMLEADER ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_DIMLEADER ]
+    int type() const  return Type
 
     objectEndPoint1() const
     objectEndPoint2() const
     objectMidPoint()  const
-      objectX1()    const { return objectEndPoint1().x(); }
-      objectY1()    const { return objectEndPoint1().y(); }
-      objectX2()    const { return objectEndPoint2().x(); }
-      objectY2()    const { return objectEndPoint2().y(); }
-      objectDeltaX()    const { return (objectEndPoint2().x() - objectEndPoint1().x()); }
-      objectDeltaY()    const { return (objectEndPoint2().y() - objectEndPoint1().y()); }
+      objectX1()    const  return objectEndPoint1().x()
+      objectY1()    const  return objectEndPoint1().y()
+      objectX2()    const  return objectEndPoint2().x()
+      objectY2()    const  return objectEndPoint2().y()
+      objectDeltaX()    const  return (objectEndPoint2().x() - objectEndPoint1().x())
+      objectDeltaY()    const  return (objectEndPoint2().y() - objectEndPoint1().y())
       objectAngle() const
-      objectLength()    const { return line().length(); }
+      objectLength()    const  return line().length()
 
     def setObjectEndPoint1(EmbVector v)
     def setObjectEndPoint2(EmbVector v)
@@ -245,18 +267,18 @@ public:
     EllipseObject(EllipseObject* obj, QGraphicsItem* parent = 0)
     ~EllipseObject()
 
-    enum { Type = OBJ_TYPE_ELLIPSE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_ELLIPSE ]
+    int type() const  return Type
 
     QPainterPath objectSavePath() const
 
-    objectCenter() const { return scenePos(); }
-      objectRadiusMajor()   const { return qMax(rect().width(), rect().height())/2.0*scale(); }
-      objectRadiusMinor()   const { return qMin(rect().width(), rect().height())/2.0*scale(); }
-      objectDiameterMajor() const { return qMax(rect().width(), rect().height())*scale(); }
-      objectDiameterMinor() const { return qMin(rect().width(), rect().height())*scale(); }
-      objectWidth() const { return rect().width()*scale(); }
-      objectHeight()    const { return rect().height()*scale(); }
+    objectCenter() const  return scenePos()
+      objectRadiusMajor()   const  return qMax(rect().width(), rect().height())/2.0*scale()
+      objectRadiusMinor()   const  return qMin(rect().width(), rect().height())/2.0*scale()
+      objectDiameterMajor() const  return qMax(rect().width(), rect().height())*scale()
+      objectDiameterMinor() const  return qMin(rect().width(), rect().height())*scale()
+      objectWidth() const  return rect().width()*scale()
+      objectHeight()    const  return rect().height()*scale()
     objectQuadrant0() const
     objectQuadrant90()    const
     objectQuadrant180()   const
@@ -286,16 +308,16 @@ public:
     ImageObject(ImageObject* obj, QGraphicsItem* parent = 0)
     ~ImageObject()
 
-    enum { Type = OBJ_TYPE_IMAGE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_IMAGE ]
+    int type() const  return Type
 
     objectTopLeft() const
     objectTopRight()    const
     objectBottomLeft()  const
     objectBottomRight() const
-      objectWidth()   const { return rect().width()*scale(); }
-      objectHeight()  const { return rect().height()*scale(); }
-      objectArea()    const { return qAbs(objectWidth()*objectHeight()); }
+      objectWidth()   const  return rect().width()*scale()
+      objectHeight()  const  return rect().height()*scale()
+      objectArea()    const  return qAbs(objectWidth()*objectHeight())
 
     def setObjectRect(x, y, w, h)
 
@@ -318,31 +340,31 @@ public:
     LineObject(LineObject* obj, QGraphicsItem* parent = 0)
     ~LineObject()
 
-    enum { Type = OBJ_TYPE_LINE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_LINE ]
+    int type() const  return Type
 
     QPainterPath objectSavePath() const
 
-    objectEndPoint1() const { return scenePos(); }
+    objectEndPoint1() const  return scenePos()
     objectEndPoint2() const
     objectMidPoint()  const
-      objectX1()    const { return objectEndPoint1().x(); }
-      objectY1()    const { return objectEndPoint1().y(); }
-      objectX2()    const { return objectEndPoint2().x(); }
-      objectY2()    const { return objectEndPoint2().y(); }
-      objectDeltaX()    const { return (objectEndPoint2().x() - objectEndPoint1().x()); }
-      objectDeltaY()    const { return (objectEndPoint2().y() - objectEndPoint1().y()); }
+      objectX1()    const  return objectEndPoint1().x()
+      objectY1()    const  return objectEndPoint1().y()
+      objectX2()    const  return objectEndPoint2().x()
+      objectY2()    const  return objectEndPoint2().y()
+      objectDeltaX()    const  return (objectEndPoint2().x() - objectEndPoint1().x())
+      objectDeltaY()    const  return (objectEndPoint2().y() - objectEndPoint1().y())
       objectAngle() const
-      objectLength()    const { return line().length()*scale(); }
+      objectLength()    const  return line().length()*scale()
 
     def setObjectEndPoint1(const QPointF& endPt1)
     def setObjectEndPoint1(x1, y1)
     def setObjectEndPoint2(const QPointF& endPt2)
     def setObjectEndPoint2(x2, y2)
-    def setObjectX1(x) { setObjectEndPoint1(x, objectEndPoint1().y()); }
-    def setObjectY1(y) { setObjectEndPoint1(objectEndPoint1().x(), y); }
-    def setObjectX2(x) { setObjectEndPoint2(x, objectEndPoint2().y()); }
-    def setObjectY2(y) { setObjectEndPoint2(objectEndPoint2().x(), y); }
+    def setObjectX1(x)  setObjectEndPoint1(x, objectEndPoint1().y())
+    def setObjectY1(y)  setObjectEndPoint1(objectEndPoint1().x(), y)
+    def setObjectX2(x)  setObjectEndPoint2(x, objectEndPoint2().y())
+    def setObjectY2(y)  setObjectEndPoint2(objectEndPoint2().x(), y)
 
     def updateRubber(QPainter* painter = 0)
     def vulcanize()
@@ -361,26 +383,26 @@ public:
     PathObject(PathObject* obj, QGraphicsItem* parent = 0)
     ~PathObject()
 
-    enum { Type = OBJ_TYPE_PATH ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_PATH ]
+    int type() const  return Type
 
     QPainterPath objectCopyPath() const
     QPainterPath objectSavePath() const
 
-    objectPos() const { return scenePos(); }
-      objectX()   const { return scenePos().x(); }
-      objectY()   const { return scenePos().y(); }
+    objectPos() const  return scenePos()
+      objectX()   const  return scenePos().x()
+      objectY()   const  return scenePos().y()
 
-    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
+    def setObjectPos(const QPointF& point)  setPos(point.x(), point.y())
         return
 
-    def setObjectPos(x, y) { setPos(x, y); }
+    def setObjectPos(x, y)  setPos(x, y)
         return
 
-    def setObjectX(x) { setObjectPos(x, objectY()); }
+    def setObjectX(x)  setObjectPos(x, objectY())
         return
 
-    def setObjectY(y) { setObjectPos(objectX(), y); }
+    def setObjectY(y)  setObjectPos(objectX(), y)
         return
 
     def updateRubber(QPainter* painter = 0)
@@ -409,19 +431,19 @@ public:
     PointObject(PointObject* obj, QGraphicsItem* parent = 0)
     ~PointObject()
 
-    enum { Type = OBJ_TYPE_POINT ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_POINT ]
+    int type() const  return Type
 
     QPainterPath objectSavePath() const
 
-    objectPos() const { return scenePos(); }
-      objectX()   const { return scenePos().x(); }
-      objectY()   const { return scenePos().y(); }
+    objectPos() const  return scenePos()
+      objectX()   const  return scenePos().x()
+      objectY()   const  return scenePos().y()
 
-    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    def setObjectPos(x, y) { setPos(x, y); }
-    def setObjectX(x) { setObjectPos(x, objectY()); }
-    def setObjectY(y) { setObjectPos(objectX(), y); }
+    def setObjectPos(const QPointF& point)  setPos(point.x(), point.y())
+    def setObjectPos(x, y)  setPos(x, y)
+    def setObjectX(x)  setObjectPos(x, objectY())
+    def setObjectY(y)  setObjectPos(objectX(), y)
 
     def updateRubber(QPainter* painter = 0)
     def vulcanize()
@@ -441,20 +463,25 @@ public:
     PolygonObject(PolygonObject* obj, QGraphicsItem* parent = 0)
     ~PolygonObject()
 
-    enum { Type = OBJ_TYPE_POLYGON ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_POLYGON ]
+    int type() const  return Type
 
     QPainterPath objectCopyPath() const
     QPainterPath objectSavePath() const
 
-    objectPos() const { return scenePos(); }
-      objectX()   const { return scenePos().x(); }
-      objectY()   const { return scenePos().y(); }
+    def objectPos(self):
+        return scenePos()
 
-    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    def setObjectPos(x, y) { setPos(x, y); }
-    def setObjectX(x) { setObjectPos(x, objectY()); }
-    def setObjectY(y) { setObjectPos(objectX(), y); }
+    def objectX(self):
+        return self.scenePos().x
+
+    def objectY(self):
+        return self.scenePos().y
+
+    def setObjectPos(const QPointF& point)  setPos(point.x(), point.y())
+    def setObjectPos(x, y)  setPos(x, y)
+    def setObjectX(x)  setObjectPos(x, objectY())
+    def setObjectY(y)  setObjectPos(objectX(), y)
 
     def updateRubber(QPainter* painter = 0)
     def vulcanize()
@@ -469,7 +496,6 @@ private:
     QPainterPath normalPath
     int findIndex(const QPointF& point)
     int gripIndex
-]
 
 
 class PolylineObject():
@@ -479,15 +505,15 @@ public:
     PolylineObject(PolylineObject* obj, QGraphicsItem* parent = 0)
     ~PolylineObject()
 
-    enum { Type = OBJ_TYPE_POLYLINE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_POLYLINE ]
+    int type() const  return Type
 
     QPainterPath objectCopyPath() const
     QPainterPath objectSavePath() const
 
-    objectPos() const { return scenePos(); }
-      objectX()   const { return scenePos().x(); }
-      objectY()   const { return scenePos().y(); }
+    objectPos() const  return scenePos()
+      objectX()   const  return scenePos().x()
+      objectY()   const  return scenePos().y()
 
     def set_pos_by_point(point):
         self.x = point.x
@@ -538,20 +564,20 @@ public:
     RectObject(RectObject* obj, QGraphicsItem* parent = 0)
     ~RectObject()
 
-    enum { Type = OBJ_TYPE_RECTANGLE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_RECTANGLE ]
+    int type() const  return Type
 
     QPainterPath objectSavePath() const
 
-    objectPos() const { return scenePos(); }
+    objectPos() const  return scenePos()
 
     objectTopLeft() const
     objectTopRight()    const
     objectBottomLeft()  const
     objectBottomRight() const
-      objectWidth()   const { return rect().width()*scale(); }
-      objectHeight()  const { return rect().height()*scale(); }
-      objectArea()    const { return qAbs(objectWidth()*objectHeight()); }
+      objectWidth()   const  return rect().width()*scale()
+      objectHeight()  const  return rect().height()*scale()
+      objectArea()    const  return qAbs(objectWidth()*objectHeight())
 
     def setObjectRect(x, y, w, h)
 
@@ -578,15 +604,15 @@ public:
     TextSingleObject(TextSingleObject* obj, QGraphicsItem* parent = 0)
     ~TextSingleObject()
 
-    enum { Type = OBJ_TYPE_TEXTSINGLE ]
-    int type() const { return Type; }
+    enum  Type = OBJ_TYPE_TEXTSINGLE ]
+    int type() const  return Type
 
-    QList<QPainterPath> objectSavePathList() const { return subPathList(); }
+    QList<QPainterPath> objectSavePathList() const  return subPathList()
     QList<QPainterPath> subPathList() const
 
-    objectPos()    const { return scenePos(); }
-      objectX()  const { return scenePos().x(); }
-      objectY()  const { return scenePos().y(); }
+    objectPos()    const  return scenePos()
+      objectX()  const  return scenePos().x()
+      objectY()  const  return scenePos().y()
 
     QStringList objectTextJustifyList() const
 
@@ -616,10 +642,10 @@ public:
     def setObjectTextUpsideDown(int val):
         return
 
-    def setObjectPos(const QPointF& point) { setPos(point.x(), point.y()); }
-    def setObjectPos(x, y) { setPos(x, y); }
-    def setObjectX(x) { setObjectPos(x, objectY()); }
-    def setObjectY(y) { setObjectPos(objectX(), y); }
+    def setObjectPos(const QPointF& point)  setPos(point.x(), point.y())
+    def setObjectPos(x, y)  setPos(x, y)
+    def setObjectX(x)  setObjectPos(x, objectY())
+    def setObjectY(y)  setObjectPos(objectX(), y)
 
     def updateRubber(QPainter* painter = 0)
     def vulcanize()
@@ -643,1370 +669,1293 @@ private:
 
 
 class Arc():
+    r"""
+    """
     def __init__(self):
         return self
 
-ArcObject::ArcObject(startX, startY, midX, midY, endX, endY, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("ArcObject Constructor()")
-    init(startX, startY, midX, midY, endX, endY, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
-}
-
-ArcObject::ArcObject(ArcObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("ArcObject Constructor()")
-    if(obj)
-    {
-        init(obj->objectStartPoint().x(), obj->objectStartPoint().y(), obj->objectMidPoint().x(), obj->objectMidPoint().y(), obj->objectEndPoint().x(), obj->objectEndPoint().y(), obj->objectColorRGB(), Qt::SolidLine)
-        /* TODO: getCurrentLineType */
-        setRotation(obj->rotation())
-    }
-}
-
-ArcObject::~ArcObject():
-    debug_message("ArcObject Destructor()")
-
-def ArcObject::init(startX, startY, midX, midY, endX, endY, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_ARC])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    calculateArcData(startX, startY, midX, midY, endX, endY)
-
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    setObjectLineWeight(0.35); /*TODO: pass in proper lineweight*/
-    setPen(objPen)
-
-def ArcObject::calculateArcData(startX, startY, midX, midY, endX, endY):
-    EmbArc arc = embArcObject_make(startX, startY,
-                 midX, midY,
-                 endX, endY).arc
-    EmbVector center
-    getArcCenter(arc, &center)
-    arcStartPoint = QPointF(startX - center.x, startY - center.y)
-    arcMidPoint = QPointF(midX   - center.x, midY   - center.y)
-    arcEndPoint = QPointF(endX   - center.x, endY   - center.y)
-
-    setPos(center.x, center.y)
-
-    radius = QLineF(center.x, center.y, midX, midY).length()
-    updateArcRect(radius)
-    updatePath()
-    setRotation(0)
-    setScale(1)
-
-def ArcObject::updateArcRect(radius):
-    QRectF arcRect
-    arcRect.setWidth(radius*2.0)
-    arcRect.setHeight(radius*2.0)
-    arcRect.moveCenter(QPointF(0,0))
-    setRect(arcRect)
-
-def ArcObject::setObjectRadius(radius):
-    if (radius <= 0) {
-        radius = 0.0000001
+    ArcObject(startX, startY, midX, midY, endX, endY, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("ArcObject Constructor()")
+        init(startX, startY, midX, midY, endX, endY, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
     }
 
-    center = scenePos()
-    QLineF startLine = QLineF(center, objectStartPoint())
-    QLineF midLine = QLineF(center, objectMidPoint())
-    QLineF endLine = QLineF(center, objectEndPoint())
-    startLine.setLength(radius)
-    midLine.setLength(radius)
-    endLine.setLength(radius)
-    arcStartPoint = startLine.p2()
-    arcMidPoint = midLine.p2()
-    arcEndPoint = endLine.p2()
+    ArcObject(ArcObject* obj, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("ArcObject Constructor()")
+        if obj)
 
-    calculateArcData(arcStartPoint.x(), arcStartPoint.y(), arcMidPoint.x(), arcMidPoint.y(), arcEndPoint.x(), arcEndPoint.y())
+            init(obj.objectStartPoint().x(), obj.objectStartPoint().y(), obj.objectMidPoint().x(), obj.objectMidPoint().y(), obj.objectEndPoint().x(), obj.objectEndPoint().y(), obj.objectColorRGB(), Qt::SolidLine)
+            /* TODO: getCurrentLineType */
+            setRotation(obj.rotation())
 
-def ArcObject::setObjectStartAngle(angle):
-    /*TODO: ArcObject setObjectStartAngle*/
-}
+    def init(startX, startY, midX, midY, endX, endY, unsigned int rgb, Qt::PenStyle lineType):
+        setData(OBJ_TYPE, type())
+        setData(OBJ_NAME, obj_names[OBJ_TYPE_ARC])
 
-def ArcObject::setObjectEndAngle(angle):
-    /*TODO: ArcObject setObjectEndAngle*/
-}
+        setFlag(QGraphicsItem::ItemIsSelectable, 1)
 
-def ArcObject::setObjectStartPoint(pointX, pointY):
-    calculateArcData(pointX, pointY, arcMidPoint.x(), arcMidPoint.y(), arcEndPoint.x(), arcEndPoint.y())
+        calculateArcData(startX, startY, midX, midY, endX, endY)
 
-def ArcObject::setObjectMidPoint(const QPointF& point):
-    setObjectMidPoint(point.x(), point.y())
+        setObjectColor(rgb)
+        setObjectLineType(lineType)
+        setObjectLineWeight(0.35); /*TODO: pass in proper lineweight*/
+        setPen(objPen)
 
-def ArcObject::setObjectMidPoint(pointX, pointY):
-    calculateArcData(arcStartPoint.x(), arcStartPoint.y(), pointX, pointY, arcEndPoint.x(), arcEndPoint.y())
+    def calculateArcData(startX, startY, midX, midY, endX, endY):
+        EmbArc arc = embArcObject_make(startX, startY,
+                    midX, midY,
+                    endX, endY).arc
+        EmbVector center
+        getArcCenter(arc, &center)
+        arcStartPoint = QPointF(startX - center.x, startY - center.y)
+        arcMidPoint = QPointF(midX   - center.x, midY   - center.y)
+        arcEndPoint = QPointF(endX   - center.x, endY   - center.y)
 
-def ArcObject::setObjectEndPoint(const QPointF& point):
-    setObjectEndPoint(point.x(), point.y())
+        setPos(center.x, center.y)
 
-def ArcObject::setObjectEndPoint(pointX, pointY):
-    calculateArcData(arcStartPoint.x(), arcStartPoint.y(), arcMidPoint.x(), arcMidPoint.y(), pointX, pointY)
+        radius = QLineF(center.x, center.y, midX, midY).length()
+        updateArcRect(radius)
+        updatePath()
+        setRotation(0)
+        setScale(1)
 
-ArcObject::objectStartAngle() const:
-    angle = QLineF(scenePos(), objectStartPoint()).angle()
-    return fmod(angle, 360.0)
+    def updateArcRect(radius):
+        QRectF arcRect
+        arcRect.setWidth(radius*2.0)
+        arcRect.setHeight(radius*2.0)
+        arcRect.moveCenter(QPointF(0,0))
+        setRect(arcRect)
 
-ArcObject::objectEndAngle() const:
-    angle = QLineF(scenePos(), objectEndPoint()).angle()
-    return fmod(angle, 360.0)
+    def setObjectRadius(radius):
+        if radius <= 0:
+            radius = 0.0000001
 
-ArcObject::objectStartPoint() const:
-    EmbVector v = to_emb_vector(arcStartPoint)
-    EmbVector rot = scale_and_rotate(v, scale(), radians(rotation()))
+        center = scenePos()
+        QLineF startLine = QLineF(center, objectStartPoint())
+        QLineF midLine = QLineF(center, objectMidPoint())
+        QLineF endLine = QLineF(center, objectEndPoint())
+        startLine.setLength(radius)
+        midLine.setLength(radius)
+        endLine.setLength(radius)
+        arcStartPoint = startLine.p2()
+        arcMidPoint = midLine.p2()
+        arcEndPoint = endLine.p2()
 
-    return scenePos() + to_qpointf(rot)
+        calculateArcData(arcStartPoint.x(), arcStartPoint.y(), arcMidPoint.x(), arcMidPoint.y(), arcEndPoint.x(), arcEndPoint.y())
 
-ArcObject::objectMidPoint() const:
-    EmbVector v = to_emb_vector(arcMidPoint)
-    EmbVector rot = scale_and_rotate(v, scale(), radians(rotation()))
+    def setObjectStartAngle(angle):
+        "TODO: ArcObject setObjectStartAngle"
 
-    return scenePos() + to_qpointf(rot)
+    def setObjectEndAngle(angle):
+        "TODO: ArcObject setObjectEndAngle"
 
-ArcObject::objectEndPoint() const:
-    EmbVector v = to_emb_vector(arcEndPoint)
-    EmbVector rot = scale_and_rotate(v, scale(), radians(rotation()))
+    def setObjectStartPoint(pointX, pointY):
+        calculateArcData(pointX, pointY, arcMidPoint.x(), arcMidPoint.y(), arcEndPoint.x(), arcEndPoint.y())
 
-    return scenePos() + to_qpointf(rot)
+    def setObjectMidPoint(const QPointF& point):
+        setObjectMidPoint(point.x(), point.y())
 
-ArcObject::objectArea() const:
-    /*Area of a circular segment*/
-    r = objectRadius()
-    theta = radians(objectIncludedAngle())
-    return ((r*r)/2)*(theta - sin(theta))
+    def setObjectMidPoint(pointX, pointY):
+        calculateArcData(arcStartPoint.x(), arcStartPoint.y(), pointX, pointY, arcEndPoint.x(), arcEndPoint.y())
 
-ArcObject::objectArcLength() const:
-    return radians(objectIncludedAngle())*objectRadius()
+    def setObjectEndPoint(const QPointF& point):
+        setObjectEndPoint(point.x(), point.y())
 
-ArcObject::objectChord() const:
-    return QLineF(objectStartPoint().x(), objectStartPoint().y(), objectEndPoint().x(), objectEndPoint().y()).length()
+    def setObjectEndPoint(pointX, pointY):
+        calculateArcData(arcStartPoint.x(), arcStartPoint.y(), arcMidPoint.x(), arcMidPoint.y(), pointX, pointY)
 
-ArcObject::objectIncludedAngle() const:
-    chord = objectChord()
-    rad = objectRadius()
-    if(chord <= 0 || rad <= 0) return 0
-    /* Prevents division by zero and non-existent circles */
+    objectStartAngle()
+        angle = QLineF(scenePos(), objectStartPoint()).angle()
+        return fmod(angle, 360.0)
 
-    /* NOTE:
-     * Due to floating point rounding errors, we need to clamp the
-     * quotient so it is in the range [-1, 1].
-     * If the quotient is out of that range, then the result of asin()
-     * will be NaN.
-     */
-    quotient = chord/(2.0*rad)
-    if(quotient > 1.0) quotient = 1.0
-    if(quotient < 0.0) quotient = 0.0
-    /* NOTE: 0 rather than -1 since we are enforcing a positive chord
-     * and radius.
-     */
-    return degrees(2.0*asin(quotient))
-    /* Properties of a Circle - Get the Included Angle - Reference: ASD9 */
-}
+    objectEndAngle()
+        angle = QLineF(scenePos(), objectEndPoint()).angle()
+        return fmod(angle, 360.0)
 
-def ArcObject::objectClockwise() const:
-    EmbVector start = to_emb_vector(objectStartPoint())
-    EmbVector mid = to_emb_vector(objectMidPoint())
-    EmbVector end = to_emb_vector(objectEndPoint())
-    EmbArc arc = embArcObject_make(start.x, -start.y, mid.x, -mid.y, end.x, -end.y).arc
-    /* NOTE: Y values are inverted here on purpose */
-    return isArcClockwise(arc)
+    objectStartPoint()
+        EmbVector v = to_emb_vector(arcStartPoint)
+        EmbVector rot = scale_and_rotate(v, scale(), radians(rotation()))
 
-def ArcObject::updatePath():
-    startAngle = (objectStartAngle() + rotation())
-    spanAngle = objectIncludedAngle()
+        return scenePos() + to_qpointf(rot)
 
-    if(objectClockwise())
-        spanAngle = -spanAngle
+    objectMidPoint()
+        EmbVector v = to_emb_vector(arcMidPoint)
+        EmbVector rot = scale_and_rotate(v, scale(), radians(rotation()))
 
-    QPainterPath path
-    path.arcMoveTo(rect(), startAngle)
-    path.arcTo(rect(), startAngle, spanAngle)
-    /*NOTE: Reverse the path so that the inside area isn't considered part of the arc*/
-    path.arcTo(rect(), startAngle+spanAngle, -spanAngle)
-    setObjectPath(path)
+        return scenePos() + to_qpointf(rot)
 
-def ArcObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
-    QGraphicsScene* objScene = scene()
-    if(!objScene) return
+    objectEndPoint()
+        EmbVector v = to_emb_vector(arcEndPoint)
+        EmbVector rot = scale_and_rotate(v, scale(), radians(rotation()))
 
-    QPen paintPen = pen()
-    painter->setPen(paintPen)
-    updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
+        return scenePos() + to_qpointf(rot)
 
-    startAngle = (objectStartAngle() + rotation())*16
-    spanAngle = objectIncludedAngle()*16
+    def objectArea():
+        /*Area of a circular segment*/
+        r = objectRadius()
+        theta = radians(objectIncludedAngle())
+        return ((r*r)/2)*(theta - sin(theta))
 
-    if(objectClockwise())
-        spanAngle = -spanAngle
+    def objectArcLength():
+        return radians(objectIncludedAngle())*objectRadius()
 
-    rad = objectRadius()
-    QRectF paintRect(-rad, -rad, rad*2.0, rad*2.0)
-    painter->drawArc(paintRect, startAngle, spanAngle)
+    def objectChord():
+        return QLineF(objectStartPoint().x(), objectStartPoint().y(), objectEndPoint().x(), objectEndPoint().y()).length()
 
-def ArcObject::updateRubber(QPainter* painter):
-    /*TODO: Arc Rubber Modes*/
+    def objectIncludedAngle():
+        chord = objectChord()
+        rad = objectRadius()
+        if chord <= 0 || rad <= 0) return 0
+        /* Prevents division by zero and non-existent circles */
 
-    /*TODO: updateRubber() gripping for ArcObject*/
+        /* NOTE:
+        * Due to floating point rounding errors, we need to clamp the
+        * quotient so it is in the range [-1, 1].
+        * If the quotient is out of that range, then the result of asin()
+        * will be NaN.
+        */
+        quotient = chord/(2.0*rad)
+        if quotient > 1.0) quotient = 1.0
+        if quotient < 0.0) quotient = 0.0
+        /* NOTE: 0 rather than -1 since we are enforcing a positive chord
+        * and radius.
+        */
+        return degrees(2.0*asin(quotient))
+        /* Properties of a Circle - Get the Included Angle - Reference: ASD9 */
+    }
 
-}
+    def objectClockwise():
+        EmbVector start = to_emb_vector(objectStartPoint())
+        EmbVector mid = to_emb_vector(objectMidPoint())
+        EmbVector end = to_emb_vector(objectEndPoint())
+        EmbArc arc = embArcObject_make(start.x, -start.y, mid.x, -mid.y, end.x, -end.y).arc
+        /* NOTE: Y values are inverted here on purpose */
+        return isArcClockwise(arc)
 
-def ArcObject::vulcanize():
-    debug_message("ArcObject vulcanize()")
-    updateRubber()
+    def updatePath():
+        startAngle = (objectStartAngle() + rotation())
+        spanAngle = objectIncludedAngle()
 
-    setObjectRubberMode(OBJ_RUBBER_OFF)
+        if objectClockwise())
+            spanAngle = -spanAngle
 
-/* Returns the closest snap point to the mouse point*/
-ArcObject::mouseSnapPoint(const QPointF& mousePoint):
-    center = objectCenter()
-    start = objectStartPoint()
-    mid = objectMidPoint()
-    end = objectEndPoint()
+        QPainterPath path
+        path.arcMoveTo(rect(), startAngle)
+        path.arcTo(rect(), startAngle, spanAngle)
+        /*NOTE: Reverse the path so that the inside area isn't considered part of the arc*/
+        path.arcTo(rect(), startAngle+spanAngle, -spanAngle)
+        setObjectPath(path)
 
-    cntrDist = QLineF(mousePoint, center).length()
-    startDist = QLineF(mousePoint, start).length()
-    midDist = QLineF(mousePoint, mid).length()
-    endDist = QLineF(mousePoint, end).length()
+    def paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
+        QGraphicsScene* objScene = scene()
+        if !objScene) return
 
-    minDist = qMin(qMin(cntrDist, startDist), qMin(midDist, endDist))
+        QPen paintPen = pen()
+        painter.setPen(paintPen)
+        updateRubber(painter)
+        if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+        if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+        painter.setPen(paintPen)
 
-    if     (minDist == cntrDist)  return center
-    elif(minDist == startDist) return start
-    elif(minDist == midDist)   return mid
-    elif(minDist == endDist)   return end
+        startAngle = (objectStartAngle() + rotation())*16
+        spanAngle = objectIncludedAngle()*16
 
-    return scenePos()
+        if objectClockwise())
+            spanAngle = -spanAngle
 
-QList<QPointF> ArcObject::allGripPoints():
-    QList<QPointF> gripPoints
-    gripPoints << objectCenter() << objectStartPoint() << objectMidPoint() << objectEndPoint()
-    return gripPoints
+        rad = objectRadius()
+        QRectF paintRect(-rad, -rad, rad*2.0, rad*2.0)
+        painter.drawArc(paintRect, startAngle, spanAngle)
 
-def ArcObject::gripEdit(const QPointF& before, const QPointF& after):
-    /*TODO: gripEdit() for ArcObject*/
+    def updateRubber(QPainter* painter):
+        /*TODO: Arc Rubber Modes*/
+
+        /*TODO: updateRubber() gripping for ArcObject*/
+
+    }
+
+    def vulcanize():
+        debug_message("ArcObject vulcanize()")
+        updateRubber()
+
+        setObjectRubberMode(OBJ_RUBBER_OFF)
+
+    def mouseSnapPoint(const QPointF& mousePoint):
+        " Returns the closest snap point to the mouse point. "
+        center = objectCenter()
+        start = objectStartPoint()
+        mid = objectMidPoint()
+        end = objectEndPoint()
+
+        cntrDist = QLineF(mousePoint, center).length()
+        startDist = QLineF(mousePoint, start).length()
+        midDist = QLineF(mousePoint, mid).length()
+        endDist = QLineF(mousePoint, end).length()
+
+        minDist = qMin(qMin(cntrDist, startDist), qMin(midDist, endDist))
+
+        if     (minDist == cntrDist)  return center
+        elif minDist == startDist) return start
+        elif minDist == midDist)   return mid
+        elif minDist == endDist)   return end
+
+        return scenePos()
+
+    QList<QPointF> allGripPoints():
+        QList<QPointF> gripPoints
+        gripPoints << objectCenter() << objectStartPoint() << objectMidPoint() << objectEndPoint()
+        return gripPoints
+
+    def gripEdit(const QPointF& before, const QPointF& after):
+        /*TODO: gripEdit() for ArcObject*/
 
 class Base_Object():
     def __init__(self):
         return self
 
-BaseObject::BaseObject(QGraphicsItem* parent) : QGraphicsPathItem(parent):
-    debug_message("BaseObject Constructor()")
-
-    objPen.setCapStyle(Qt::RoundCap)
-    objPen.setJoinStyle(Qt::RoundJoin)
-    lwtPen.setCapStyle(Qt::RoundCap)
-    lwtPen.setJoinStyle(Qt::RoundJoin)
-
-    objID = QDateTime::currentMSecsSinceEpoch()
-
-BaseObject::~BaseObject():
-    debug_message("BaseObject Destructor()")
-
-def BaseObject::setObjectColor(const QColor& color):
-    objPen.setColor(color)
-    lwtPen.setColor(color)
-
-def BaseObject::setObjectColorRGB(unsigned int rgb):
-    objPen.setColor(QColor(rgb))
-    lwtPen.setColor(QColor(rgb))
-
-def BaseObject::setObjectLineType(Qt::PenStyle lineType):
-    objPen.setStyle(lineType)
-    lwtPen.setStyle(lineType)
-
-def BaseObject::setObjectLineWeight(lineWeight):
-    objPen.setWidthF(0); /*NOTE: The objPen will always be cosmetic*/
-
-    if(lineWeight < 0)
-    {
-        if(lineWeight == OBJ_LWT_BYLAYER)
-        {
-            lwtPen.setWidthF(0.35); /*TODO: getLayerLineWeight*/
-        }
-        elif(lineWeight == OBJ_LWT_BYBLOCK)
-        {
-            lwtPen.setWidthF(0.35); /*TODO: getBlockLineWeight*/
-        }
-        else
-        {
-            QMessageBox::warning(0, QObject::tr("Error - Negative Lineweight"),
-                                    QObject::tr("Lineweight: %1")
-                                    .arg(QString().setNum(lineWeight)))
-            debug_message("Lineweight cannot be negative! Inverting sign.")
-            lwtPen.setWidthF(-lineWeight)
-        }
-    }
-    else
-    {
-        lwtPen.setWidthF(lineWeight)
-    }
-}
-
-BaseObject::objectRubberPoint(const QString& key) const:
-    if(objRubberPoints.contains(key))
-        return objRubberPoints.value(key)
-
-    QGraphicsScene* gscene = scene()
-    if(gscene)
-        return scene()->property("SCENE_QSNAP_POINT").toPointF()
-    return QPointF()
-
-QString BaseObject::objectRubberText(const QString& key) const:
-    if(objRubberTexts.contains(key))
-        return objRubberTexts.value(key)
-    return QString()
-
-QRectF BaseObject::boundingRect() const:
-    /*If gripped, force this object to be drawn even if it is offscreen*/
-    if(objectRubberMode() == OBJ_RUBBER_GRIP)
-        return scene()->sceneRect()
-    return path().boundingRect()
-
-def BaseObject::drawRubberLine(const QLineF& rubLine, QPainter* painter, const char* colorFromScene):
-    if(painter)
-    {
-        QGraphicsScene* objScene = scene()
-        if(!objScene) return
-        QPen colorPen = objPen
-        colorPen.setColor(QColor(objScene->property(colorFromScene).toUInt()))
-        painter->setPen(colorPen)
-        painter->drawLine(rubLine)
-        painter->setPen(objPen)
-    }
-}
-
-def BaseObject::realRender(QPainter* painter, const QPainterPath& renderPath):
-    QColor color1 = objectColor();       /*lighter color*/
-    QColor color2 = color1.darker(150); /*darker color*/
-
-    /*If we have a dark color, lighten it*/
-    int darkness = color1.lightness()
-    int threshold = 32
-    /*TODO: This number may need adjusted or maybe just add it to settings.*/
-    if (darkness < threshold) {
-        color2 = color1
-        if (!darkness) {
-            color1 = QColor(threshold, threshold, threshold)
-        } /*lighter() does not affect pure black*/
-        else {
-            color1 = color2.lighter(100 + threshold)
-        }
-    }
-
-    int count = renderPath.elementCount()
-    for(int i = 0; i < count-1; ++i)
-    {
-        QPainterPath::Element elem = renderPath.elementAt(i)
-        QPainterPath::Element next = renderPath.elementAt(i+1)
-
-        if(next.isMoveTo()) continue
-
-        QPainterPath elemPath
-        elemPath.moveTo(elem.x, elem.y)
-        elemPath.lineTo(next.x, next.y)
-
-        QPen renderPen(QColor(0,0,0,0))
-        renderPen.setWidthF(0)
-        painter->setPen(renderPen)
-        QPainterPathStroker stroker
-        stroker.setWidth(0.35)
-        stroker.setCapStyle(Qt::RoundCap)
-        stroker.setJoinStyle(Qt::RoundJoin)
-        QPainterPath realPath = stroker.createStroke(elemPath)
-        painter->drawPath(realPath)
-
-        QLinearGradient grad(elemPath.pointAtPercent(0.5), elemPath.pointAtPercent(0.0))
-        grad.setColorAt(0, color1)
-        grad.setColorAt(1, color2)
-        grad.setSpread(QGradient::ReflectSpread)
-
-        painter->fillPath(realPath, QBrush(grad))
-
-class Dim_Leader():
-    def __init__(self):
-        return self
-
-DimLeaderObject::DimLeaderObject(x1, y1, x2, y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("DimLeaderObject Constructor()")
-    init(x1, y1, x2, y2, rgb, Qt::SolidLine); /* TODO: getCurrentLineType */
-}
-
-DimLeaderObject::DimLeaderObject(DimLeaderObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("DimLeaderObject Constructor()")
-    if (obj) {
-        EmbVector v1, v2
-        v1 = to_emb_vector(obj->objectEndPoint1())
-        v2 = to_emb_vector(obj->objectEndPoint2())
-        init(v1.x, v1.y, v2.x, v2.y, obj->objectColorRGB(), Qt::SolidLine)
-        /* TODO: getCurrentLineType */
-    }
-}
-
-DimLeaderObject::~DimLeaderObject():
-    debug_message("DimLeaderObject Destructor()")
-
-def DimLeaderObject::init(x1, y1, x2, y2, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_DIMLEADER])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    curved = 0
-    filled = 1
-    setObjectEndPoint1(to_emb_vector(QPointF(x1, y1)))
-    setObjectEndPoint2(to_emb_vector(QPointF(x2, y2)))
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    setObjectLineWeight(0.35); /*TODO: pass in proper lineweight*/
-    setPen(objectPen())
-
-def DimLeaderObject::setObjectEndPoint1(EmbVector p1):
-    EmbVector diff
-    endPt2 = objectEndPoint2()
-    x2 = endPt2.x()
-    y2 = endPt2.y()
-    diff.x = x2 - p1.x
-    diff.y = y2 - p1.y
-    setRotation(0)
-    setLine(0, 0, diff.x, diff.y)
-    setPos(p1.x, p1.y)
-    updateLeader()
-
-def DimLeaderObject::setObjectEndPoint2(EmbVector p2):
-    EmbVector endPt1 = to_emb_vector(scenePos())
-    setRotation(0)
-    setLine(0, 0, p2.x - endPt1.x, p2.y - endPt1.y)
-    setPos(endPt1.x, endPt1.y)
-    updateLeader()
-
-DimLeaderObject::objectEndPoint1() const:
-    return scenePos()
-
-DimLeaderObject::objectEndPoint2() const:
-    EmbVector v
-    v.x = line().x2()
-    v.y = line().y2()
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-DimLeaderObject::objectMidPoint() const:
-    EmbVector v
-    v = to_emb_vector(line().pointAt(0.5))
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-DimLeaderObject::objectAngle() const:
-    angle = line().angle() - rotation()
-    return fmod(angle, 360.0)
-
-def DimLeaderObject::updateLeader():
-    int arrowStyle = Closed; /*TODO: Make this customizable*/
-    arrowStyleAngle = 15.0; /*TODO: Make this customizable*/
-    arrowStyleLength = 1.0; /*TODO: Make this customizable*/
-    lineStyleAngle = 45.0; /*TODO: Make this customizable*/
-    lineStyleLength = 1.0; /*TODO: Make this customizable*/
-
-    QLineF lyne = line()
-    angle = lyne.angle()
-    ap0 = lyne.p1()
-    lp0 = lyne.p2()
-
-    /*Arrow*/
-    QLineF lynePerp(lyne.pointAt(arrowStyleLength/lyne.length()) ,lp0)
-    lynePerp.setAngle(angle + 90)
-    QLineF lyne1(ap0, lp0)
-    QLineF lyne2(ap0, lp0)
-    lyne1.setAngle(angle + arrowStyleAngle)
-    lyne2.setAngle(angle - arrowStyleAngle)
-    ap1
-    ap2
-    /* HACK: these need fixing
-    lynePerp.intersects(lyne1, &ap1)
-    lynePerp.intersects(lyne2, &ap2)
-    */
-    /* So they don't cause memory access problems */
-    ap1 = lyne1.p1()
-    ap2 = lyne2.p1()
-
-    /* Math Diagram
-     *                 .(ap1)                     .(lp1)
-     *                /|                         /|
-     *               / |                        / |
-     *              /  |                       /  |
-     *             /   |                      /   |
-     *            /    |                     /    |
-     *           /     |                    /     |
-     *          /      |                   /      |
-     *         /       |                  /       |
-     *        /+(aSA)  |                 /+(lSA)  |
-     * (ap0)./__(aSL)__|__________(lp0)./__(lSL)__|
-     *       \ -(aSA)  |                \ -(lSA)  |
-     *        \        |                 \        |
-     *         \       |                  \       |
-     *          \      |                   \      |
-     *           \     |                    \     |
-     *            \    |                     \    |
-     *             \   |                      \   |
-     *              \  |                       \  |
-     *               \ |                        \ |
-     *                \|                         \|
-     *                 .(ap2)                     .(lp2)
-     */
-
-    if(arrowStyle == Open)
-    {
-        arrowStylePath = QPainterPath()
-        arrowStylePath.moveTo(ap1)
-        arrowStylePath.lineTo(ap0)
-        arrowStylePath.lineTo(ap2)
-        arrowStylePath.lineTo(ap0)
-        arrowStylePath.lineTo(ap1)
-    }
-    elif(arrowStyle == Closed)
-    {
-        arrowStylePath = QPainterPath()
-        arrowStylePath.moveTo(ap1)
-        arrowStylePath.lineTo(ap0)
-        arrowStylePath.lineTo(ap2)
-        arrowStylePath.lineTo(ap1)
-    }
-    elif(arrowStyle == Dot)
-    {
-        arrowStylePath = QPainterPath()
-        arrowStylePath.addEllipse(ap0, arrowStyleLength, arrowStyleLength)
-    }
-    elif(arrowStyle == Box)
-    {
-        arrowStylePath = QPainterPath()
-        side = QLineF(ap1, ap2).length()
-        QRectF ar0(0, 0, side, side)
-        ar0.moveCenter(ap0)
-        arrowStylePath.addRect(ar0)
-    }
-    elif(arrowStyle == Tick)
-    {
-    }
-
-    lineStylePath = QPainterPath()
-    lineStylePath.moveTo(ap0)
-    lineStylePath.lineTo(lp0)
-
-def DimLeaderObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
-    QGraphicsScene* objScene = scene()
-    if(!objScene) return
-
-    QPen paintPen = pen()
-    painter->setPen(paintPen)
-    updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
-
-    painter->drawPath(lineStylePath)
-    painter->drawPath(arrowStylePath)
-
-    if(filled)
-        painter->fillPath(arrowStylePath, objectColor())
-
-def DimLeaderObject::updateRubber(QPainter* painter):
-    int rubberMode = objectRubberMode()
-    if(rubberMode == OBJ_RUBBER_DIMLEADER_LINE)
-    {
-        sceneStartPoint = objectRubberPoint("DIMLEADER_LINE_START")
-        sceneQSnapPoint = objectRubberPoint("DIMLEADER_LINE_END")
-
-        setObjectEndPoint1(to_emb_vector(sceneStartPoint))
-        setObjectEndPoint2(to_emb_vector(sceneQSnapPoint))
-    }
-    elif(rubberMode == OBJ_RUBBER_GRIP)
-    {
-        if(painter)
-        {
-            gripPoint = objectRubberPoint("GRIP_POINT")
-            if     (gripPoint == objectEndPoint1()) painter->drawLine(line().p2(), mapFromScene(objectRubberPoint(QString())))
-            elif(gripPoint == objectEndPoint2()) painter->drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
-            elif(gripPoint == objectMidPoint())  painter->drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
-        }
-    }
-}
-
-def DimLeaderObject::vulcanize():
-    debug_message("DimLeaderObject vulcanize()")
-    updateRubber()
-
-    setObjectRubberMode(OBJ_RUBBER_OFF)
-
-/* Returns the closest snap point to the mouse point. */
-def DimLeaderObject::mouseSnapPoint(const QPointF& mousePoint):
-    endPoint1 = objectEndPoint1()
-    endPoint2 = objectEndPoint2()
-    midPoint = objectMidPoint()
-
-    end1Dist = QLineF(mousePoint, endPoint1).length()
-    end2Dist = QLineF(mousePoint, endPoint2).length()
-    midDist = QLineF(mousePoint, midPoint).length()
-
-    minDist = qMin(end1Dist, end2Dist)
-
-    if(curved)
-        minDist = qMin(minDist, midDist)
-
-    if     (minDist == end1Dist) return endPoint1
-    elif(minDist == end2Dist) return endPoint2
-    elif(minDist == midDist)  return midPoint
-
-    return scenePos()
-
-QList<QPointF> DimLeaderObject::allGripPoints():
-    QList<QPointF> gripPoints
-    gripPoints << objectEndPoint1() << objectEndPoint2()
-    if(curved)
-        gripPoints << objectMidPoint()
-    return gripPoints
-
-def DimLeaderObject::gripEdit(const QPointF& before, const QPointF& after):
-    if     (before == objectEndPoint1()) { setObjectEndPoint1(to_emb_vector(after)); }
-    elif(before == objectEndPoint2()) { setObjectEndPoint2(to_emb_vector(after)); }
-    elif(before == objectMidPoint())  { delta = after-before; moveBy(delta.x(), delta.y()); }
-}
-"""
-
-class Ellipse():
-    def __init__(self):
-        return self
-
-"""
-EllipseObject::EllipseObject(centerX, centerY, width, height, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("EllipseObject Constructor()")
-    init(centerX, centerY, width, height, rgb, Qt::SolidLine)
-    /* TODO: getCurrentLineType */
-}
-
-EllipseObject::EllipseObject(EllipseObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("EllipseObject Constructor()")
-    if(obj)
-    {
-        init(obj->objectCenter().x(), obj->objectCenter().y(), obj->objectWidth(), obj->objectHeight(), obj->objectColorRGB(), Qt::SolidLine)
-        /* TODO: getCurrentLineType */
-        setRotation(obj->rotation())
-    }
-}
-
-EllipseObject::~EllipseObject():
-    debug_message("EllipseObject Destructor()")
-
-def EllipseObject::init(centerX, centerY, width, height, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_ELLIPSE])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    setObjectSize(width, height)
-    setPos(centerX, centerY)
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    setObjectLineWeight(0.35); /* TODO: pass in proper lineweight */
-    setPen(objectPen())
-    updatePath()
-
-def EllipseObject::setObjectSize(width, height):
-    QRectF elRect = rect()
-    elRect.setWidth(width)
-    elRect.setHeight(height)
-    elRect.moveCenter(QPointF(0,0))
-    setRect(elRect)
-
-def EllipseObject::setObjectRadiusMajor(radius):
-    setObjectDiameterMajor(radius*2.0)
-
-def EllipseObject::setObjectRadiusMinor(radius):
-    setObjectDiameterMinor(radius*2.0)
-
-def EllipseObject::setObjectDiameterMajor(diameter):
-    QRectF elRect = rect()
-    if (elRect.width() > elRect.height()) {
-        elRect.setWidth(diameter)
-    }
-    else
-        elRect.setHeight(diameter)
-    elRect.moveCenter(QPointF(0,0))
-    setRect(elRect)
-
-def EllipseObject::setObjectDiameterMinor(diameter):
-    QRectF elRect = rect()
-    if (elRect.width() < elRect.height()) {
-        elRect.setWidth(diameter)
-    }
-    else
-        elRect.setHeight(diameter)
-    elRect.moveCenter(QPointF(0,0))
-    setRect(elRect)
-
-EllipseObject::objectQuadrant0() const:
-    EmbVector v
-    v.x = objectWidth()/2.0
-    v.y = 0.0
-    v = rotate_vector(v, radians(rotation()))
-    return objectCenter() + to_qpointf(v)
-
-EllipseObject::objectQuadrant90() const:
-    EmbVector v
-    v.x = objectHeight()/2.0
-    v.y = 0.0
-    v = rotate_vector(v, radians(rotation()+90.0))
-    return objectCenter() + to_qpointf(v)
-
-EllipseObject::objectQuadrant180() const:
-    EmbVector v
-    v.x = objectWidth()/2.0
-    v.y = 0.0
-    v = rotate_vector(v, radians(rotation()+180.0))
-    return objectCenter() + to_qpointf(v)
-
-EllipseObject::objectQuadrant270() const:
-    EmbVector v
-    v.x = objectHeight()/2.0
-    v.y = 0.0
-    v = rotate_vector(v, radians(rotation()+270.0))
-    return objectCenter() + to_qpointf(v)
-
-def EllipseObject::updatePath():
-    QPainterPath path
-    QRectF r = rect()
-    path.arcMoveTo(r, 0)
-    path.arcTo(r, 0, 360)
-    /* NOTE: Reverse the path so that the inside area isn't considered part of the ellipse. */
-    path.arcTo(r, 0, -360)
-    setObjectPath(path)
-
-def EllipseObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
-    QGraphicsScene* objScene = scene()
-    if(!objScene) return
-
-    QPen paintPen = pen()
-    painter->setPen(paintPen)
-    updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
-
-    painter->drawEllipse(rect())
-
-def EllipseObject::updateRubber(QPainter* painter):
-    int rubberMode = objectRubberMode()
-    if(rubberMode == OBJ_RUBBER_ELLIPSE_LINE)
-    {
-        sceneLinePoint1 = objectRubberPoint("ELLIPSE_LINE_POINT1")
-        sceneLinePoint2 = objectRubberPoint("ELLIPSE_LINE_POINT2")
-        itemLinePoint1 = mapFromScene(sceneLinePoint1)
-        itemLinePoint2 = mapFromScene(sceneLinePoint2)
-        QLineF itemLine(itemLinePoint1, itemLinePoint2)
-        if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
-        updatePath()
-    }
-    elif(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORDIAMETER_MINORRADIUS)
-    {
-        sceneAxis1Point1 = objectRubberPoint("ELLIPSE_AXIS1_POINT1")
-        sceneAxis1Point2 = objectRubberPoint("ELLIPSE_AXIS1_POINT2")
-        sceneCenterPoint = objectRubberPoint("ELLIPSE_CENTER")
-        sceneAxis2Point2 = objectRubberPoint("ELLIPSE_AXIS2_POINT2")
-        ellipseWidth = objectRubberPoint("ELLIPSE_WIDTH").x()
-        ellipseRot = objectRubberPoint("ELLIPSE_ROT").x()
-
-        /* TODO: incorporate perpendicularDistance() into libembroidery. */
-        px = sceneAxis2Point2.x()
-        py = sceneAxis2Point2.y()
-        x1 = sceneAxis1Point1.x()
-        y1 = sceneAxis1Point1.y()
-        QLineF line(sceneAxis1Point1, sceneAxis1Point2)
-        QLineF norm = line.normalVector()
-        dx = px-x1
-        dy = py-y1
-        norm.translate(dx, dy)
-        /* HACK: this isn't in all versions of Qt 5 in the same place?
-         * norm.intersects(line, &iPoint)
-         */
-        iPoint = line.p1()
-        ellipseHeight = QLineF(px, py, iPoint.x(), iPoint.y()).length()*2.0
-
-        setPos(sceneCenterPoint)
-        setObjectSize(ellipseWidth, ellipseHeight)
-        setRotation(-ellipseRot)
-
-        itemCenterPoint = mapFromScene(sceneCenterPoint)
-        itemAxis2Point2 = mapFromScene(sceneAxis2Point2)
-        QLineF itemLine(itemCenterPoint, itemAxis2Point2)
-        if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
-        updatePath()
-    }
-    elif(rubberMode == OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS":
-        sceneAxis1Point2 = objectRubberPoint("ELLIPSE_AXIS1_POINT2")
-        sceneCenterPoint = objectRubberPoint("ELLIPSE_CENTER")
-        sceneAxis2Point2 = objectRubberPoint("ELLIPSE_AXIS2_POINT2")
-        ellipseWidth = objectRubberPoint("ELLIPSE_WIDTH").x()
-        ellipseRot = objectRubberPoint("ELLIPSE_ROT").x()
-
-        /* TODO: incorporate perpendicularDistance() into libembroidery. */
-        px = sceneAxis2Point2.x()
-        py = sceneAxis2Point2.y()
-        x1 = sceneCenterPoint.x()
-        y1 = sceneCenterPoint.y()
-        QLineF line(sceneCenterPoint, sceneAxis1Point2)
-        QLineF norm = line.normalVector()
-        dx = px-x1
-        dy = py-y1
-        norm.translate(dx, dy)
-        iPoint
-        /* HACK */
-        /* norm.intersects(line, &iPoint); */
-        iPoint = line.p1()
-        ellipseHeight = QLineF(px, py, iPoint.x(), iPoint.y()).length()*2.0
-
-        setPos(sceneCenterPoint)
-        setObjectSize(ellipseWidth, ellipseHeight)
-        setRotation(-ellipseRot)
-
-        itemCenterPoint = mapFromScene(sceneCenterPoint)
-        itemAxis2Point2 = mapFromScene(sceneAxis2Point2)
-        QLineF itemLine(itemCenterPoint, itemAxis2Point2)
-        if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
-        updatePath()
-    }
-    elif(rubberMode == OBJ_RUBBER_GRIP)
-    {
-        /* TODO: updateRubber() gripping for EllipseObject. */
-
-def EllipseObject::vulcanize():
-    debug_message("EllipseObject vulcanize()")
-    updateRubber()
-
-    setObjectRubberMode(OBJ_RUBBER_OFF)
-
-/* Returns the closest snap point to the mouse point. */
-EllipseObject::mouseSnapPoint(const QPointF& mousePoint):
-    center = objectCenter()
-    quad0 = objectQuadrant0()
-    quad90 = objectQuadrant90()
-    quad180 = objectQuadrant180()
-    quad270 = objectQuadrant270()
-
-    cntrDist = QLineF(mousePoint, center).length()
-    q0Dist = QLineF(mousePoint, quad0).length()
-    q90Dist = QLineF(mousePoint, quad90).length()
-    q180Dist = QLineF(mousePoint, quad180).length()
-    q270Dist = QLineF(mousePoint, quad270).length()
-
-    minDist = qMin(qMin(qMin(q0Dist, q90Dist), qMin(q180Dist, q270Dist)), cntrDist)
-
-    if     (minDist == cntrDist) return center
-    elif(minDist == q0Dist)   return quad0
-    elif(minDist == q90Dist)  return quad90
-    elif(minDist == q180Dist) return quad180
-    elif(minDist == q270Dist) return quad270
-
-    return scenePos()
-
-QList<QPointF> EllipseObject::allGripPoints():
-    QList<QPointF> gripPoints
-    gripPoints << objectCenter() << objectQuadrant0() << objectQuadrant90() << objectQuadrant180() << objectQuadrant270()
-    return gripPoints
-
-def EllipseObject::gripEdit(const QPointF& before, const QPointF& after):
-    /*TODO: gripEdit() for EllipseObject*/
-}
-
-QPainterPath EllipseObject::objectSavePath() const:
-    QPainterPath path
-    QRectF r = rect()
-    path.arcMoveTo(r, 0)
-    path.arcTo(r, 0, 360)
-
-    s = scale()
-    QTransform trans
-    trans.rotate(rotation())
-    trans.scale(s,s)
-    return trans.map(path)
-"""
-
-class Image():
-    def __init__(self):
-        return self
-
-"""
-ImageObject::ImageObject(x, y, w, h, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("ImageObject Constructor()")
-    init(x, y, w, h, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
-}
-
-ImageObject::ImageObject(ImageObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("ImageObject Constructor()")
-    if(obj)
-    {
-        ptl = obj->objectTopLeft()
-        init(ptl.x(), ptl.y(), obj->objectWidth(), obj->objectHeight(), obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-        setRotation(obj->rotation())
-
-ImageObject::~ImageObject():
-    debug_message("ImageObject Destructor()")
-
-def ImageObject::init(x, y, w, h, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_IMAGE])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    setObjectRect(x, y, w, h)
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    setObjectLineWeight(0.35); /* TODO: pass in proper lineweight */
-    setPen(objectPen())
-
-def ImageObject::setObjectRect(x, y, w, h):
-    setPos(x, y)
-    setRect(0, 0, w, h)
-    updatePath()
-
-ImageObject::objectTopLeft() const:
-    EmbVector v = to_emb_vector(rect().topLeft())
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-ImageObject::objectTopRight() const:
-    EmbVector v = to_emb_vector(rect().topRight())
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-ImageObject::objectBottomLeft() const:
-    EmbVector v = to_emb_vector(rect().bottomLeft())
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-ImageObject::objectBottomRight() const:
-    EmbVector v = to_emb_vector(rect().bottomRight())
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-def ImageObject::updatePath():
-    QPainterPath path
-    QRectF r = rect()
-    path.moveTo(r.bottomLeft())
-    path.lineTo(r.bottomRight())
-    path.lineTo(r.topRight())
-    path.lineTo(r.topLeft())
-    path.lineTo(r.bottomLeft())
-    /*NOTE: Reverse the path so that the inside area isn't considered part of the rectangle*/
-    path.lineTo(r.topLeft())
-    path.lineTo(r.topRight())
-    path.lineTo(r.bottomRight())
-    path.moveTo(r.bottomLeft())
-    setObjectPath(path)
-
-def ImageObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
-    QGraphicsScene* objScene = scene()
-    if(!objScene) return
-
-    QPen paintPen = pen()
-    painter->setPen(paintPen)
-    updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
-
-    painter->drawRect(rect())
-
-def ImageObject::updateRubber(QPainter* painter):
-    int rubberMode = objectRubberMode()
-    if(rubberMode == OBJ_RUBBER_IMAGE)
-    {
-        sceneStartPoint = objectRubberPoint("IMAGE_START")
-        sceneEndPoint = objectRubberPoint("IMAGE_END")
-        x = sceneStartPoint.x()
-        y = sceneStartPoint.y()
-        w = sceneEndPoint.x() - sceneStartPoint.x()
-        h = sceneEndPoint.y() - sceneStartPoint.y()
-        setObjectRect(x,y,w,h)
-        updatePath()
-    }
-    elif(rubberMode == OBJ_RUBBER_GRIP)
-    {
-        /*TODO: updateRubber() gripping for ImageObject*/
-    }
-}
-
-def ImageObject::vulcanize():
-    debug_message("ImageObject vulcanize()")
-    updateRubber()
-
-    setObjectRubberMode(OBJ_RUBBER_OFF)
-
-/* Returns the closest snap point to the mouse point*/
-ImageObject::mouseSnapPoint(const QPointF& mousePoint):
-    ptl = objectTopLeft();     /* Top Left Corner QSnap */
-    ptr = objectTopRight();    /* Top Right Corner QSnap */
-    pbl = objectBottomLeft();  /*Bottom Left Corner QSnap*/
-    pbr = objectBottomRight(); /*Bottom Right Corner QSnap*/
-
-    ptlDist = QLineF(mousePoint, ptl).length()
-    ptrDist = QLineF(mousePoint, ptr).length()
-    pblDist = QLineF(mousePoint, pbl).length()
-    pbrDist = QLineF(mousePoint, pbr).length()
-
-    minDist = qMin(qMin(ptlDist, ptrDist), qMin(pblDist, pbrDist))
-
-    if     (minDist == ptlDist) return ptl
-    elif(minDist == ptrDist) return ptr
-    elif(minDist == pblDist) return pbl
-    elif(minDist == pbrDist) return pbr
-
-    return scenePos()
-
-QList<QPointF> ImageObject::allGripPoints():
-    QList<QPointF> gripPoints
-    gripPoints << objectTopLeft() << objectTopRight() << objectBottomLeft() << objectBottomRight()
-    return gripPoints
-
-def ImageObject::gripEdit(const QPointF& before, const QPointF& after):
-    /*TODO: gripEdit() for ImageObject*/
-"""
-
-class Line():
-    def __init__(self):
-        return self
-
-LineObject::LineObject(x1, y1, x2, y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("LineObject Constructor()")
-    init(x1, y1, x2, y2, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
-}
-
-LineObject::LineObject(LineObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("LineObject Constructor()")
-    if(obj)
-    {
-        init(obj->objectX1(), obj->objectY1(), obj->objectX2(), obj->objectY2(), obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-    }
-}
-
-LineObject::~LineObject():
-    debug_message("LineObject Destructor()")
-
-def LineObject::init(x1, y1, x2, y2, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_LINE])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    setObjectEndPoint1(x1, y1)
-    setObjectEndPoint2(x2, y2)
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    /* TODO: pass in proper lineweight */
-    setObjectLineWeight(0.35)
-    setPen(objectPen())
-
-def LineObject::setObjectEndPoint1(const QPointF& endPt1):
-    setObjectEndPoint1(endPt1.x(), endPt1.y())
-
-def LineObject::setObjectEndPoint1(x1, y1):
-    EmbVector delta, endPt2
-    endPt2 = to_emb_vector(objectEndPoint2())
-    delta.x = endPt2.x - x1
-    delta.y = endPt2.y - y1
-    setRotation(0)
-    setScale(1)
-    setLine(0, 0, delta.x, delta.y)
-    setPos(x1, y1)
-
-def LineObject::setObjectEndPoint2(const QPointF& endPt2):
-    setObjectEndPoint2(endPt2.x(), endPt2.y())
-
-def LineObject::setObjectEndPoint2(x2, y2):
-    EmbVector delta, endPt1
-    endPt1 = to_emb_vector(scenePos())
-    delta.x = x2 - endPt1.x
-    delta.y = y2 - endPt1.y
-    setRotation(0)
-    setScale(1)
-    setLine(0, 0, delta.x, delta.y)
-    setPos(endPt1.x, endPt1.y)
-
-LineObject::objectEndPoint2() const:
-    EmbVector v
-    v.x = line().x2()
-    v.y = line().y2()
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-LineObject::objectMidPoint() const:
-    EmbVector v
-    v = to_emb_vector(line().pointAt(0.5))
-    v = scale_and_rotate(v, scale(), radians(rotation()))
-
-    return scenePos() + to_qpointf(v)
-
-LineObject::objectAngle() const:
-    angle = line().angle() - rotation()
-    return fmod(angle, 360.0)
-
-def LineObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
-    QGraphicsScene* objScene = scene()
-    if(!objScene) return
-
-    QPen paintPen = pen()
-    painter->setPen(paintPen)
-    updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
-
-    if(objectRubberMode() != OBJ_RUBBER_LINE) painter->drawLine(line())
-
-    if(objScene->property("ENABLE_LWT").toBool() && objScene->property("ENABLE_REAL").toBool()) { realRender(painter, path()); }
-}
-
-def LineObject::updateRubber(QPainter* painter):
-    int rubberMode = objectRubberMode()
-    if(rubberMode == OBJ_RUBBER_LINE)
-    {
-        sceneStartPoint = objectRubberPoint("LINE_START")
-        sceneQSnapPoint = objectRubberPoint("LINE_END")
-
-        setObjectEndPoint1(sceneStartPoint)
-        setObjectEndPoint2(sceneQSnapPoint)
-
-        drawRubberLine(line(), painter, "VIEW_COLOR_CROSSHAIR")
-    }
-    elif(rubberMode == OBJ_RUBBER_GRIP:
-        if(painter:
-            gripPoint = objectRubberPoint("GRIP_POINT")
-            if     (gripPoint == objectEndPoint1()) painter->drawLine(line().p2(), mapFromScene(objectRubberPoint(QString())))
-            elif(gripPoint == objectEndPoint2()) painter->drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
-            elif(gripPoint == objectMidPoint())  painter->drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
-
-            QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
-            drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
-
-
-def LineObject::vulcanize():
-    debug_message("LineObject vulcanize()")
-    updateRubber()
-
-    setObjectRubberMode(OBJ_RUBBER_OFF)
-
-/* Returns the closest snap point to the mouse point*/
-LineObject::mouseSnapPoint(const QPointF& mousePoint):
-    endPoint1 = objectEndPoint1()
-    endPoint2 = objectEndPoint2()
-    midPoint = objectMidPoint()
-
-    end1Dist = QLineF(mousePoint, endPoint1).length()
-    end2Dist = QLineF(mousePoint, endPoint2).length()
-    midDist = QLineF(mousePoint, midPoint).length()
-
-    minDist = qMin(qMin(end1Dist, end2Dist), midDist)
-
-    if     (minDist == end1Dist) return endPoint1
-    elif(minDist == end2Dist) return endPoint2
-    elif(minDist == midDist)  return midPoint
-
-    return scenePos()
-
-QList<QPointF> LineObject::allGripPoints():
-    QList<QPointF> gripPoints
-    gripPoints << objectEndPoint1() << objectEndPoint2() << objectMidPoint()
-    return gripPoints
-
-def LineObject::gripEdit(const QPointF& before, const QPointF& after):
-    if     (before == objectEndPoint1()) { setObjectEndPoint1(after.x(), after.y()); }
-    elif(before == objectEndPoint2()) { setObjectEndPoint2(after.x(), after.y()); }
-    elif(before == objectMidPoint())  { delta = after-before; moveBy(delta.x(), delta.y()); }
-}
-
-QPainterPath LineObject::objectSavePath() const:
-    QPainterPath path
-    path.lineTo(objectDeltaX(), objectDeltaY())
-    return path
-
-
-class Path():
-
-
-PathObject::PathObject(x, y, const QPainterPath p, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("PathObject Constructor()")
-    init(x, y, p, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
-}
-
-PathObject::PathObject(PathObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("PathObject Constructor()")
-    if obj:
-        init(obj->objectX(), obj->objectY(), obj->objectCopyPath(), obj->objPen.color().rgb(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-        setRotation(obj->rotation())
-        setScale(obj->scale())
-
-PathObject::~PathObject():
-    debug_message("PathObject Destructor()")
-
-def PathObject::init(x, y, const QPainterPath& p, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_PATH])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    updatePath(p)
-    setObjectPos(x,y)
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    /* TODO: pass in proper lineweight */
-    setObjectLineWeight(0.35)
-    setPen(objectPen())
-
-def PathObject::updatePath(self, p):
-    normalPath = p
-    QPainterPath reversePath = normalPath.toReversed()
-    reversePath.connectPath(normalPath)
-    setObjectPath(reversePath)
-
-def PathObject::paint(self, painter, option, widget):
-    QGraphicsScene* objScene = scene()
-    if(!objScene) return
-
-    QPen paintPen = pen()
-    painter->setPen(paintPen)
-    updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
-
-    painter->drawPath(objectPath())
-
-def PathObject::updateRubber(self, painter):
-    /*TODO: Path Rubber Modes*/
-
-    /*TODO: updateRubber() gripping for PathObject*/
-
-}
-
-def PathObject::vulcanize(self):
-    debug_message("PathObject vulcanize()")
-    updateRubber()
-
-    setObjectRubberMode(OBJ_RUBBER_OFF)
-
-    if(!normalPath.elementCount())
-        QMessageBox::critical(0, QObject::tr("Empty Path Error"), QObject::tr("The path added contains no points. The command that created this object has flawed logic."))
-
-/* Returns the closest snap point to the mouse point*/
-PathObject::mouseSnapPoint(const QPointF& mousePoint):
-    return scenePos()
-
-QList<QPointF> PathObject::allGripPoints():
-    QList<QPointF> gripPoints
-    gripPoints << scenePos(); /*TODO: loop thru all path Elements and return their points*/
-    return gripPoints
-
-def PathObject::gripEdit(const QPointF& before, const QPointF& after):
-    /*TODO: gripEdit() for PathObject*/
-}
-
-QPainterPath PathObject::objectCopyPath(self):
-    return normalPath
-
-QPainterPath PathObject::objectSavePath(self):
-    s = scale()
-    QTransform trans
-    trans.rotate(rotation())
-    trans.scale(s,s)
-    return trans.map(normalPath)
-
-
-class Point():
-    def __init__(self):
-        return self
-
-
-PointObject::PointObject(x, y, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("PointObject Constructor()")
-    init(x, y, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
-}
-
-PointObject::PointObject(PointObject* obj, QGraphicsItem* parent) : BaseObject(parent):
-    debug_message("PointObject Constructor()")
-    if(obj)
-    {
-        init(obj->objectX(), obj->objectY(), obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-        setRotation(obj->rotation())
-
-
-PointObject::~PointObject():
-    debug_message("PointObject Destructor()")
-
-def PointObject::init(x, y, unsigned int rgb, Qt::PenStyle lineType):
-    setData(OBJ_TYPE, type())
-    setData(OBJ_NAME, obj_names[OBJ_TYPE_POINT])
-
-    setFlag(QGraphicsItem::ItemIsSelectable, 1)
-
-    setRect(-0.00000001, -0.00000001, 0.00000002, 0.00000002)
-    setObjectPos(x,y)
-    setObjectColor(rgb)
-    setObjectLineType(lineType)
-    setObjectLineWeight(0.35); /*TODO: pass in proper lineweight*/
-    setPen(objectPen())
-
-def PointObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
-    QGraphicsScene* objScene = scene()
-    if(!objScene) return
-
-    QPen paintPen = pen()
-    painter->setPen(paintPen)
-    updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
-
-    painter->drawPoint(0,0)
-
-def PointObject::updateRubber(QPainter* painter):
-    int rubberMode = objectRubberMode()
-    if rubberMode == "GRIP":
+    BaseObject(QGraphicsItem* parent) : QGraphicsPathItem(parent):
+        debug_message("BaseObject Constructor()")
+
+        objPen.setCapStyle(Qt::RoundCap)
+        objPen.setJoinStyle(Qt::RoundJoin)
+        lwtPen.setCapStyle(Qt::RoundCap)
+        lwtPen.setJoinStyle(Qt::RoundJoin)
+
+        objID = QDateTime::currentMSecsSinceEpoch()
+
+    def setObjectColor(const QColor& color):
+        objPen.setColor(color)
+        lwtPen.setColor(color)
+
+    def setObjectColorRGB(unsigned int rgb):
+        objPen.setColor(QColor(rgb))
+        lwtPen.setColor(QColor(rgb))
+
+    def setObjectLineType(Qt::PenStyle lineType):
+        objPen.setStyle(lineType)
+        lwtPen.setStyle(lineType)
+
+    def setObjectLineWeight(lineWeight):
+        "NOTE: The objPen will always be cosmetic. "
+        objPen.setWidthF(0)
+
+        if lineWeight < 0:
+            if lineWeight == OBJ_LWT_BYLAYER:
+                lwtPen.setWidthF(0.35); /*TODO: getLayerLineWeight*/
+
+            elif lineWeight == OBJ_LWT_BYBLOCK:
+                lwtPen.setWidthF(0.35); /*TODO: getBlockLineWeight*/
+
+            else:
+                QMessageBox::warning(0, QObject::tr("Error - Negative Lineweight"),
+                                        QObject::tr("Lineweight: %1")
+                                        .arg(QString().setNum(lineWeight)))
+                debug_message("Lineweight cannot be negative! Inverting sign.")
+                lwtPen.setWidthF(-lineWeight)
+
+        else:
+            lwtPen.setWidthF(lineWeight)
+
+    def objectRubberPoint(const QString& key):
+        if objRubberPoints.contains(key))
+            return objRubberPoints.value(key)
+
+        QGraphicsScene* gscene = scene()
+        if gscene)
+            return scene().property("SCENE_QSNAP_POINT").toPointF()
+        return QPointF()
+
+    def objectRubberText(key):
+        if objRubberTexts.contains(key))
+            return objRubberTexts.value(key)
+        return QString()
+
+    def boundingRect():
+        /*If gripped, force this object to be drawn even if it is offscreen*/
+        if objectRubberMode() == OBJ_RUBBER_GRIP)
+            return scene().sceneRect()
+        return path().boundingRect()
+
+    def drawRubberLine(const QLineF& rubLine, QPainter* painter, const char* colorFromScene):
         if painter:
-            gripPoint = objectRubberPoint("GRIP_POINT")
-            if gripPoint == scenePos():
+            QGraphicsScene* objScene = scene()
+            if !objScene) return
+            QPen colorPen = objPen
+            colorPen.setColor(QColor(objScene.property(colorFromScene).toUInt()))
+            painter.setPen(colorPen)
+            painter.drawLine(rubLine)
+            painter.setPen(objPen)
+
+    def realRender(QPainter* painter, const QPainterPath& renderPath):
+        "lighter color"
+        color1 = objectColor();       
+        color2 = color1.darker(150); /*darker color*/
+
+        # If we have a dark color, lighten it.
+        darkness = color1.lightness()
+        threshold = 32
+        "TODO: This number may need adjusted or maybe just add it to settings."
+        if (darkness < threshold) 
+            color2 = color1
+            if not darkness:
+                color1 = QColor(threshold, threshold, threshold)
+    /*lighter() does not affect pure black*/
+            else:
+                color1 = color2.lighter(100 + threshold)
+
+        int count = renderPath.elementCount()
+        for(int i = 0; i < count-1; ++i)
+
+            QPainterPath::Element elem = renderPath.elementAt(i)
+            QPainterPath::Element next = renderPath.elementAt(i+1)
+
+            if next.isMoveTo()) continue
+
+            QPainterPath elemPath
+            elemPath.moveTo(elem.x, elem.y)
+            elemPath.lineTo(next.x, next.y)
+
+            QPen renderPen(QColor(0,0,0,0))
+            renderPen.setWidthF(0)
+            painter.setPen(renderPen)
+            QPainterPathStroker stroker
+            stroker.setWidth(0.35)
+            stroker.setCapStyle(Qt::RoundCap)
+            stroker.setJoinStyle(Qt::RoundJoin)
+            QPainterPath realPath = stroker.createStroke(elemPath)
+            painter.drawPath(realPath)
+
+            QLinearGradient grad(elemPath.pointAtPercent(0.5), elemPath.pointAtPercent(0.0))
+            grad.setColorAt(0, color1)
+            grad.setColorAt(1, color2)
+            grad.setSpread(QGradient::ReflectSpread)
+
+            painter.fillPath(realPath, QBrush(grad))
+
+class Dim_Leader(Base_Object):
+    def __init__(self, x1, y1, x2, y2, rgb="Black", lineType="solid"):
+        self.super().__init__()
+        self.point1 = Vector(x1, y1)
+        self.point2 = Vector(x2, y2)
+        setData(OBJ_TYPE, type())
+        setData(OBJ_NAME, obj_names[OBJ_TYPE_DIMLEADER])
+
+        setFlag(QGraphicsItem::ItemIsSelectable, 1)
+
+        curved = 0
+        filled = 1
+        setObjectEndPoint1(to_emb_vector(QPointF(x1, y1)))
+        setObjectEndPoint2(to_emb_vector(QPointF(x2, y2)))
+        setObjectColor(rgb)
+        setObjectLineType(lineType)
+        setObjectLineWeight(0.35); /*TODO: pass in proper lineweight*/
+        setPen(objectPen())
+        return self
+
+    def DimLeaderObject(x1, y1, x2, y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("DimLeaderObject Constructor()")
+        init(x1, y1, x2, y2, rgb, Qt::SolidLine)
+        " TODO: getCurrentLineType "
+
+    def DimLeaderObject(DimLeaderObject* obj, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("DimLeaderObject Constructor()")
+        if obj:
+            v1 = to_emb_vector(obj.objectEndPoint1())
+            v2 = to_emb_vector(obj.objectEndPoint2())
+            init(v1.x, v1.y, v2.x, v2.y, obj.objectColorRGB(), Qt::SolidLine)
+            " TODO: getCurrentLineType "
+
+    def setObjectEndPoint1(p1):
+        endPt2 = objectEndPoint2()
+        x2 = endPt2.x()
+        y2 = endPt2.y()
+        diff.x = x2 - p1.x
+        diff.y = y2 - p1.y
+        setRotation(0)
+        setLine(0, 0, diff.x, diff.y)
+        setPos(p1.x, p1.y)
+        updateLeader()
+
+    def setObjectEndPoint2(p2):
+        endPt1 = to_emb_vector(scenePos())
+        setRotation(0)
+        setLine(0, 0, p2.x - endPt1.x, p2.y - endPt1.y)
+        setPos(endPt1.x, endPt1.y)
+        updateLeader()
+
+    def objectEndPoint1():
+        return scenePos()
+
+    def objectEndPoint2():
+        v.x = line().x2()
+        v.y = line().y2()
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    def objectMidPoint():
+        v = to_emb_vector(line().pointAt(0.5))
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    def objectAngle():
+        angle = line().angle() - rotation()
+        return fmod(angle, 360.0)
+
+    def updateLeader():
+        int arrowStyle = Closed; /*TODO: Make this customizable*/
+        arrowStyleAngle = 15.0; /*TODO: Make this customizable*/
+        arrowStyleLength = 1.0; /*TODO: Make this customizable*/
+        lineStyleAngle = 45.0; /*TODO: Make this customizable*/
+        lineStyleLength = 1.0; /*TODO: Make this customizable*/
+
+        lyne = line()
+        angle = lyne.angle()
+        ap0 = lyne.p1()
+        lp0 = lyne.p2()
+
+        # Arrow
+        QLineF lynePerp(lyne.pointAt(arrowStyleLength/lyne.length()) ,lp0)
+        lynePerp.setAngle(angle + 90)
+        QLineF lyne1(ap0, lp0)
+        QLineF lyne2(ap0, lp0)
+        lyne1.setAngle(angle + arrowStyleAngle)
+        lyne2.setAngle(angle - arrowStyleAngle)
+        ap1
+        ap2
+        # HACK: these need fixing
+        # lynePerp.intersects(lyne1, &ap1)
+        # lynePerp.intersects(lyne2, &ap2)
+
+        # So they don't cause memory access problems.
+        ap1 = lyne1.p1()
+        ap2 = lyne2.p1()
+
+        """
+        Math Diagram
+        *                 .(ap1)                     .(lp1)
+        *                /|                         /|
+        *               / |                        / |
+        *              /  |                       /  |
+        *             /   |                      /   |
+        *            /    |                     /    |
+        *           /     |                    /     |
+        *          /      |                   /      |
+        *         /       |                  /       |
+        *        /+(aSA)  |                 /+(lSA)  |
+        * (ap0)./__(aSL)__|__________(lp0)./__(lSL)__|
+        *       \ -(aSA)  |                \ -(lSA)  |
+        *        \        |                 \        |
+        *         \       |                  \       |
+        *          \      |                   \      |
+        *           \     |                    \     |
+        *            \    |                     \    |
+        *             \   |                      \   |
+        *              \  |                       \  |
+        *               \ |                        \ |
+        *                \|                         \|
+        *                 .(ap2)                     .(lp2)
+        """
+
+        if arrowStyle == Open)
+    
+            arrowStylePath = QPainterPath()
+            arrowStylePath.moveTo(ap1)
+            arrowStylePath.lineTo(ap0)
+            arrowStylePath.lineTo(ap2)
+            arrowStylePath.lineTo(ap0)
+            arrowStylePath.lineTo(ap1)
+
+        elif arrowStyle == Closed)
+    
+            arrowStylePath = QPainterPath()
+            arrowStylePath.moveTo(ap1)
+            arrowStylePath.lineTo(ap0)
+            arrowStylePath.lineTo(ap2)
+            arrowStylePath.lineTo(ap1)
+
+        elif arrowStyle == "Dot":
+            arrowStylePath = QPainterPath()
+            arrowStylePath.addEllipse(ap0, arrowStyleLength, arrowStyleLength)
+
+        elif arrowStyle == "Box":
+            arrowStylePath = QPainterPath()
+            side = QLineF(ap1, ap2).length()
+            QRectF ar0(0, 0, side, side)
+            ar0.moveCenter(ap0)
+            arrowStylePath.addRect(ar0)
+
+        elif arrowStyle == "Tick":
+    
+
+
+            lineStylePath = QPainterPath()
+            lineStylePath.moveTo(ap0)
+            lineStylePath.lineTo(lp0)
+
+        def paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
+            QGraphicsScene* objScene = scene()
+            if !objScene) return
+
+            QPen paintPen = pen()
+            painter.setPen(paintPen)
+            updateRubber(painter)
+            if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+            if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+            painter.setPen(paintPen)
+
+            painter.drawPath(lineStylePath)
+            painter.drawPath(arrowStylePath)
+
+            if filled)
+                painter.fillPath(arrowStylePath, objectColor())
+
+        def updateRubber(QPainter* painter):
+            int rubberMode = objectRubberMode()
+            if rubberMode == OBJ_RUBBER_DIMLEADER_LINE)
+        
+                sceneStartPoint = objectRubberPoint("DIMLEADER_LINE_START")
+                sceneQSnapPoint = objectRubberPoint("DIMLEADER_LINE_END")
+
+                setObjectEndPoint1(to_emb_vector(sceneStartPoint))
+                setObjectEndPoint2(to_emb_vector(sceneQSnapPoint))
+
+            elif rubberMode == OBJ_RUBBER_GRIP)
+        
+                if painter)
+            
+                    gripPoint = objectRubberPoint("GRIP_POINT")
+                    if     (gripPoint == objectEndPoint1()) painter.drawLine(line().p2(), mapFromScene(objectRubberPoint(QString())))
+                    elif gripPoint == objectEndPoint2()) painter.drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
+                    elif gripPoint == objectMidPoint())  painter.drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
+
+        def vulcanize():
+            debug_message("DimLeaderObject vulcanize()")
+            updateRubber()
+
+            setObjectRubberMode(OBJ_RUBBER_OFF)
+
+        def mouseSnapPoint(const QPointF& mousePoint):
+            " Returns the closest snap point to the mouse point. "
+            endPoint1 = objectEndPoint1()
+            endPoint2 = objectEndPoint2()
+            midPoint = objectMidPoint()
+
+            end1Dist = QLineF(mousePoint, endPoint1).length()
+            end2Dist = QLineF(mousePoint, endPoint2).length()
+            midDist = QLineF(mousePoint, midPoint).length()
+
+            minDist = min(end1Dist, end2Dist)
+
+            if curved:
+                minDist = min(minDist, midDist)
+
+            if     (minDist == end1Dist) return endPoint1
+            elif minDist == end2Dist) return endPoint2
+            elif minDist == midDist)  return midPoint
+
+            return scenePos()
+
+        QList<QPointF> allGripPoints():
+            QList<QPointF> gripPoints
+            gripPoints << objectEndPoint1() << objectEndPoint2()
+            if curved)
+                gripPoints << objectMidPoint()
+            return gripPoints
+
+        def gripEdit(const QPointF& before, const QPointF& after):
+            if before == objectEndPoint1():
+                setObjectEndPoint1(to_emb_vector(after))
+            elif before == objectEndPoint2())
+                setObjectEndPoint2(to_emb_vector(after))
+            elif before == objectMidPoint())     delta = after-before; moveBy(delta.x(), delta.y())
+
+class Ellipse(Base_Object):
+    def __init__(self, centerX, centerY, width, height, unsigned int rgb, Qt::PenStyle lineType):
+        setData(OBJ_TYPE, type())
+        setData(OBJ_NAME, obj_names[OBJ_TYPE_ELLIPSE])
+
+        setFlag(QGraphicsItem::ItemIsSelectable, 1)
+
+        setObjectSize(width, height)
+        setPos(centerX, centerY)
+        setObjectColor(rgb)
+        setObjectLineType(lineType)
+        setObjectLineWeight(0.35); /* TODO: pass in proper lineweight */
+        setPen(objectPen())
+        updatePath()
+        return self
+
+    def EllipseObject(centerX, centerY, width, height, rgb, parent):
+        "TODO: getCurrentLineType"
+        debug_message("EllipseObject Constructor()")
+        init(centerX, centerY, width, height, rgb, Qt::SolidLine)
+
+    def EllipseObject(obj, parent):
+        " TODO: getCurrentLineType "
+        debug_message("EllipseObject Constructor()")
+        if obj:
+            init(obj.objectCenter().x(), obj.objectCenter().y(), obj.objectWidth(), obj.objectHeight(), obj.objectColorRGB(), Qt::SolidLine)
+            setRotation(obj.rotation())
+
+    def def setObjectSize(width, height):
+        QRectF elRect = rect()
+        elRect.setWidth(width)
+        elRect.setHeight(height)
+        elRect.moveCenter(QPointF(0,0))
+        setRect(elRect)
+
+    def def setObjectRadiusMajor(radius):
+        setObjectDiameterMajor(radius*2.0)
+
+    def def setObjectRadiusMinor(radius):
+        setObjectDiameterMinor(radius*2.0)
+
+    def def setObjectDiameterMajor(diameter):
+        QRectF elRect = rect()
+        if (elRect.width() > elRect.height()) 
+            elRect.setWidth(diameter)
+
+        else
+            elRect.setHeight(diameter)
+        elRect.moveCenter(QPointF(0,0))
+        setRect(elRect)
+
+    def def setObjectDiameterMinor(diameter):
+        QRectF elRect = rect()
+        if elRect.width() < elRect.height():
+            elRect.setWidth(diameter)
+        else:
+            elRect.setHeight(diameter)
+        elRect.moveCenter(QPointF(0,0))
+        setRect(elRect)
+
+    def objectQuadrant0():
+        v.x = objectWidth()/2.0
+        v.y = 0.0
+        v = rotate_vector(v, radians(rotation()))
+        return objectCenter() + to_qpointf(v)
+
+    def objectQuadrant90():
+        v.x = objectHeight()/2.0
+        v.y = 0.0
+        v = rotate_vector(v, radians(rotation()+90.0))
+        return objectCenter() + to_qpointf(v)
+
+    def objectQuadrant180():
+        v.x = objectWidth()/2.0
+        v.y = 0.0
+        v = rotate_vector(v, radians(rotation()+180.0))
+        return objectCenter() + to_qpointf(v)
+
+    def objectQuadrant270():
+        v.x = objectHeight()/2.0
+        v.y = 0.0
+        v = rotate_vector(v, radians(rotation()+270.0))
+        return objectCenter() + to_qpointf(v)
+
+    def def updatePath():
+        QPainterPath path
+        QRectF r = rect()
+        path.arcMoveTo(r, 0)
+        path.arcTo(r, 0, 360)
+        /* NOTE: Reverse the path so that the inside area isn't considered part of the ellipse. */
+        path.arcTo(r, 0, -360)
+        setObjectPath(path)
+
+    def def paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
+        QGraphicsScene* objScene = scene()
+        if !objScene) return
+
+        QPen paintPen = pen()
+        painter.setPen(paintPen)
+        updateRubber(painter)
+        if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+        if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+        painter.setPen(paintPen)
+
+        painter.drawEllipse(rect())
+
+    def updateRubber(QPainter* painter):
+        int rubberMode = objectRubberMode()
+        if rubberMode == OBJ_RUBBER_ELLIPSE_LINE)
+    
+            sceneLinePoint1 = objectRubberPoint("ELLIPSE_LINE_POINT1")
+            sceneLinePoint2 = objectRubberPoint("ELLIPSE_LINE_POINT2")
+            itemLinePoint1 = mapFromScene(sceneLinePoint1)
+            itemLinePoint2 = mapFromScene(sceneLinePoint2)
+            QLineF itemLine(itemLinePoint1, itemLinePoint2)
+            if painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+            updatePath()
+
+        elif rubberMode == OBJ_RUBBER_ELLIPSE_MAJORDIAMETER_MINORRADIUS)
+    
+            sceneAxis1Point1 = objectRubberPoint("ELLIPSE_AXIS1_POINT1")
+            sceneAxis1Point2 = objectRubberPoint("ELLIPSE_AXIS1_POINT2")
+            sceneCenterPoint = objectRubberPoint("ELLIPSE_CENTER")
+            sceneAxis2Point2 = objectRubberPoint("ELLIPSE_AXIS2_POINT2")
+            ellipseWidth = objectRubberPoint("ELLIPSE_WIDTH").x()
+            ellipseRot = objectRubberPoint("ELLIPSE_ROT").x()
+
+            /* TODO: incorporate perpendicularDistance() into libembroidery. */
+            px = sceneAxis2Point2.x()
+            py = sceneAxis2Point2.y()
+            x1 = sceneAxis1Point1.x()
+            y1 = sceneAxis1Point1.y()
+            QLineF line(sceneAxis1Point1, sceneAxis1Point2)
+            QLineF norm = line.normalVector()
+            dx = px-x1
+            dy = py-y1
+            norm.translate(dx, dy)
+            /* HACK: this isn't in all versions of Qt 5 in the same place?
+            * norm.intersects(line, &iPoint)
+            */
+            iPoint = line.p1()
+            ellipseHeight = QLineF(px, py, iPoint.x(), iPoint.y()).length()*2.0
+
+            setPos(sceneCenterPoint)
+            setObjectSize(ellipseWidth, ellipseHeight)
+            setRotation(-ellipseRot)
+
+            itemCenterPoint = mapFromScene(sceneCenterPoint)
+            itemAxis2Point2 = mapFromScene(sceneAxis2Point2)
+            QLineF itemLine(itemCenterPoint, itemAxis2Point2)
+            if painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+            updatePath()
+
+        elif rubberMode == OBJ_RUBBER_ELLIPSE_MAJORRADIUS_MINORRADIUS":
+            sceneAxis1Point2 = objectRubberPoint("ELLIPSE_AXIS1_POINT2")
+            sceneCenterPoint = objectRubberPoint("ELLIPSE_CENTER")
+            sceneAxis2Point2 = objectRubberPoint("ELLIPSE_AXIS2_POINT2")
+            ellipseWidth = objectRubberPoint("ELLIPSE_WIDTH").x()
+            ellipseRot = objectRubberPoint("ELLIPSE_ROT").x()
+
+            /* TODO: incorporate perpendicularDistance() into libembroidery. */
+            px = sceneAxis2Point2.x()
+            py = sceneAxis2Point2.y()
+            x1 = sceneCenterPoint.x()
+            y1 = sceneCenterPoint.y()
+            QLineF line(sceneCenterPoint, sceneAxis1Point2)
+            QLineF norm = line.normalVector()
+            dx = px-x1
+            dy = py-y1
+            norm.translate(dx, dy)
+            iPoint
+            /* HACK */
+            /* norm.intersects(line, &iPoint); */
+            iPoint = line.p1()
+            ellipseHeight = QLineF(px, py, iPoint.x(), iPoint.y()).length()*2.0
+
+            setPos(sceneCenterPoint)
+            setObjectSize(ellipseWidth, ellipseHeight)
+            setRotation(-ellipseRot)
+
+            itemCenterPoint = mapFromScene(sceneCenterPoint)
+            itemAxis2Point2 = mapFromScene(sceneAxis2Point2)
+            QLineF itemLine(itemCenterPoint, itemAxis2Point2)
+            if painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+            updatePath()
+
+        elif rubberMode == OBJ_RUBBER_GRIP)
+    
+            /* TODO: updateRubber() gripping for EllipseObject. */
+
+    def vulcanize():
+        debug_message("EllipseObject vulcanize()")
+        updateRubber()
+
+        setObjectRubberMode(OBJ_RUBBER_OFF)
+
+    def mouseSnapPoint(const QPointF& mousePoint):
+        " Returns the closest snap point to the mouse point. "
+        center = objectCenter()
+        quad0 = objectQuadrant0()
+        quad90 = objectQuadrant90()
+        quad180 = objectQuadrant180()
+        quad270 = objectQuadrant270()
+
+        cntrDist = QLineF(mousePoint, center).length()
+        q0Dist = QLineF(mousePoint, quad0).length()
+        q90Dist = QLineF(mousePoint, quad90).length()
+        q180Dist = QLineF(mousePoint, quad180).length()
+        q270Dist = QLineF(mousePoint, quad270).length()
+
+        minDist = qMin(qMin(qMin(q0Dist, q90Dist), qMin(q180Dist, q270Dist)), cntrDist)
+
+        if     (minDist == cntrDist) return center
+        elif minDist == q0Dist)   return quad0
+        elif minDist == q90Dist)  return quad90
+        elif minDist == q180Dist) return quad180
+        elif minDist == q270Dist) return quad270
+
+        return scenePos()
+
+    def allGripPoints():
+        QList<QPointF> gripPoints
+        gripPoints << objectCenter() << objectQuadrant0() << objectQuadrant90() << objectQuadrant180() << objectQuadrant270()
+        return gripPoints
+
+    def gripEdit(const QPointF& before, const QPointF& after):
+        "/*TODO: gripEdit() for EllipseObject*/"
+
+    def objectSavePath():
+        r = Rect()
+        path.arcMoveTo(r, 0)
+        path.arcTo(r, 0, 360)
+
+        s = scale()
+        QTransform trans
+        trans.rotate(rotation())
+        trans.scale(s,s)
+        return trans.map(path)
+
+class Image(Base_Object):
+    def __init__(self):
+        return self
+
+    def ImageObject(x, y, w, h, unsigned int rgb, QGraphicsItem* parent):
+        debug_message("ImageObject Constructor()")
+        init(x, y, w, h, rgb, Qt::SolidLine)
+        "/*TODO: getCurrentLineType*/"
+
+    def ImageObject(ImageObject* obj, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("ImageObject Constructor()")
+        if obj:
+            ptl = obj.objectTopLeft()
+            init(ptl.x(), ptl.y(), obj.objectWidth(), obj.objectHeight(), obj.objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
+            setRotation(obj.rotation())
+
+    def init(x, y, w, h, unsigned int rgb, Qt::PenStyle lineType):
+        setData(OBJ_TYPE, type())
+        setData(OBJ_NAME, obj_names[OBJ_TYPE_IMAGE])
+
+        setFlag(QGraphicsItem::ItemIsSelectable, 1)
+
+        setObjectRect(x, y, w, h)
+        setObjectColor(rgb)
+        setObjectLineType(lineType)
+        setObjectLineWeight(0.35); /* TODO: pass in proper lineweight */
+        setPen(objectPen())
+
+    def setObjectRect(x, y, w, h):
+        setPos(x, y)
+        setRect(0, 0, w, h)
+        updatePath()
+
+    def objectTopLeft()
+        EmbVector v = to_emb_vector(rect().topLeft())
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    def objectTopRight()
+        EmbVector v = to_emb_vector(rect().topRight())
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    def objectBottomLeft()
+        EmbVector v = to_emb_vector(rect().bottomLeft())
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    def objectBottomRight()
+        EmbVector v = to_emb_vector(rect().bottomRight())
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    def updatePath():
+        " NOTE: Reverse the path so that the inside area isn't considered part of the rectangle. "
+        r = rect()
+        path.moveTo(r.bottomLeft())
+        path.lineTo(r.bottomRight())
+        path.lineTo(r.topRight())
+        path.lineTo(r.topLeft())
+        path.lineTo(r.bottomLeft())
+        path.lineTo(r.topLeft())
+        path.lineTo(r.topRight())
+        path.lineTo(r.bottomRight())
+        path.moveTo(r.bottomLeft())
+        setObjectPath(path)
+
+    def paint(painter, option, QWidget* /*widget*/):
+        QGraphicsScene* objScene = scene()
+        if !objScene) return
+
+        QPen paintPen = pen()
+        painter.setPen(paintPen)
+        updateRubber(painter)
+        if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+        if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+        painter.setPen(paintPen)
+
+        painter.drawRect(rect())
+
+    def updateRubber(painter):
+        int rubberMode = objectRubberMode()
+        if rubberMode == OBJ_RUBBER_IMAGE)
+    
+            sceneStartPoint = objectRubberPoint("IMAGE_START")
+            sceneEndPoint = objectRubberPoint("IMAGE_END")
+            x = sceneStartPoint.x()
+            y = sceneStartPoint.y()
+            w = sceneEndPoint.x() - sceneStartPoint.x()
+            h = sceneEndPoint.y() - sceneStartPoint.y()
+            setObjectRect(x,y,w,h)
+            updatePath()
+
+        elif rubberMode == OBJ_RUBBER_GRIP:
+            " TODO: updateRubber() gripping for ImageObject. "
+
+    def vulcanize():
+        debug_message("ImageObject vulcanize()")
+        updateRubber()
+
+        setObjectRubberMode(OBJ_RUBBER_OFF)
+
+    def mouseSnapPoint(const QPointF& mousePoint):
+        " Returns the closest snap point to the mouse point. "
+        ptl = objectTopLeft();     /* Top Left Corner QSnap */
+        ptr = objectTopRight();    /* Top Right Corner QSnap */
+        pbl = objectBottomLeft();  /*Bottom Left Corner QSnap*/
+        pbr = objectBottomRight(); /*Bottom Right Corner QSnap*/
+
+        ptlDist = QLineF(mousePoint, ptl).length()
+        ptrDist = QLineF(mousePoint, ptr).length()
+        pblDist = QLineF(mousePoint, pbl).length()
+        pbrDist = QLineF(mousePoint, pbr).length()
+
+        minDist = min(min(ptlDist, ptrDist), min(pblDist, pbrDist))
+
+        if minDist == ptlDist:
+            return ptl
+        elif minDist == ptrDist:
+            return ptr
+        elif minDist == pblDist:
+            return pbl
+        elif minDist == pbrDist:
+            return pbr
+
+        return scenePos()
+
+    QList<QPointF> def allGripPoints():
+        QList<QPointF> gripPoints
+        gripPoints << objectTopLeft() << objectTopRight() << objectBottomLeft() << objectBottomRight()
+        return gripPoints
+
+    def gripEdit(before, after):
+        " TODO: gripEdit() for ImageObject "
+        return
+
+class Line(Base_Object):
+    def __init__(self):
+        return self
+
+    def LineObject(x1, y1, x2, y2, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("LineObject Constructor()")
+        init(x1, y1, x2, y2, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
+
+    def LineObject(LineObject* obj, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("LineObject Constructor()")
+        if obj:
+            init(obj.objectX1(), obj.objectY1(), obj.objectX2(), obj.objectY2(), obj.objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
+
+    def init(x1, y1, x2, y2, unsigned int rgb, Qt::PenStyle lineType):
+        setData(OBJ_TYPE, type())
+        setData(OBJ_NAME, obj_names[OBJ_TYPE_LINE])
+
+        setFlag(QGraphicsItem::ItemIsSelectable, 1)
+
+        setObjectEndPoint1(x1, y1)
+        setObjectEndPoint2(x2, y2)
+        setObjectColor(rgb)
+        setObjectLineType(lineType)
+        /* TODO: pass in proper lineweight */
+        setObjectLineWeight(0.35)
+        setPen(objectPen())
+
+    def setObjectEndPoint1(const QPointF& endPt1):
+        setObjectEndPoint1(endPt1.x(), endPt1.y())
+
+    def setObjectEndPoint1(x1, y1):
+        EmbVector delta, endPt2
+        endPt2 = to_emb_vector(objectEndPoint2())
+        delta.x = endPt2.x - x1
+        delta.y = endPt2.y - y1
+        setRotation(0)
+        setScale(1)
+        setLine(0, 0, delta.x, delta.y)
+        setPos(x1, y1)
+
+    def setObjectEndPoint2(const QPointF& endPt2):
+        setObjectEndPoint2(endPt2.x(), endPt2.y())
+
+    def setObjectEndPoint2(x2, y2):
+        EmbVector delta, endPt1
+        endPt1 = to_emb_vector(scenePos())
+        delta.x = x2 - endPt1.x
+        delta.y = y2 - endPt1.y
+        setRotation(0)
+        setScale(1)
+        setLine(0, 0, delta.x, delta.y)
+        setPos(endPt1.x, endPt1.y)
+
+    objectEndPoint2()
+        EmbVector v
+        v.x = line().x2()
+        v.y = line().y2()
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    objectMidPoint()
+        EmbVector v
+        v = to_emb_vector(line().pointAt(0.5))
+        v = scale_and_rotate(v, scale(), radians(rotation()))
+
+        return scenePos() + to_qpointf(v)
+
+    objectAngle()
+        angle = line().angle() - rotation()
+        return fmod(angle, 360.0)
+
+    def paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
+        QGraphicsScene* objScene = scene()
+        if !objScene) return
+
+        QPen paintPen = pen()
+        painter.setPen(paintPen)
+        updateRubber(painter)
+        if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+        if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+        painter.setPen(paintPen)
+
+        if objectRubberMode() != OBJ_RUBBER_LINE) painter.drawLine(line())
+
+        if objScene.property("ENABLE_LWT").toBool() and objScene.property("ENABLE_REAL").toBool())  realRender(painter, path())
+
+    def updateRubber(painter):
+        int rubberMode = objectRubberMode()
+        if rubberMode == OBJ_RUBBER_LINE:
+            sceneStartPoint = objectRubberPoint("LINE_START")
+            sceneQSnapPoint = objectRubberPoint("LINE_END")
+
+            setObjectEndPoint1(sceneStartPoint)
+            setObjectEndPoint2(sceneQSnapPoint)
+
+            drawRubberLine(line(), painter, "VIEW_COLOR_CROSSHAIR")
+
+        elif rubberMode == OBJ_RUBBER_GRIP:
+            if painter:
+                gripPoint = objectRubberPoint("GRIP_POINT")
+                if     (gripPoint == objectEndPoint1()) painter.drawLine(line().p2(), mapFromScene(objectRubberPoint(QString())))
+                elif gripPoint == objectEndPoint2()) painter.drawLine(line().p1(), mapFromScene(objectRubberPoint(QString())))
+                elif gripPoint == objectMidPoint())  painter.drawLine(line().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
+
                 QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
                 drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
 
-def PointObject::vulcanize():
-    debug_message("PointObject vulcanize()")
-    updateRubber()
+    def vulcanize():
+        debug_message("LineObject vulcanize()")
+        updateRubber()
 
-    setObjectRubberMode(OBJ_RUBBER_OFF)
+        setObjectRubberMode(OBJ_RUBBER_OFF)
 
-/* Returns the closest snap point to the mouse point*/
-PointObject::mouseSnapPoint(const QPointF& mousePoint):
-    return scenePos()
+    def mouseSnapPoint(mousePoint):
+        " Returns the closest snap point to the mouse point. "
+        endPoint1 = objectEndPoint1()
+        endPoint2 = objectEndPoint2()
+        midPoint = objectMidPoint()
 
-QList<QPointF> PointObject::allGripPoints():
-    QList<QPointF> gripPoints
-    gripPoints << scenePos()
-    return gripPoints
+        end1Dist = QLineF(mousePoint, endPoint1).length()
+        end2Dist = QLineF(mousePoint, endPoint2).length()
+        midDist = QLineF(mousePoint, midPoint).length()
 
-def PointObject::gripEdit(const QPointF& before, const QPointF& after):
-    if(before == scenePos()) { delta = after-before; moveBy(delta.x(), delta.y()); }
-}
+        minDist = qMin(qMin(end1Dist, end2Dist), midDist)
 
-QPainterPath PointObject::objectSavePath() const:
-    QPainterPath path
-    path.addRect(-0.00000001, -0.00000001, 0.00000002, 0.00000002)
-    return path
+        if     (minDist == end1Dist) return endPoint1
+        elif minDist == end2Dist) return endPoint2
+        elif minDist == midDist)  return midPoint
+
+        return scenePos()
+
+    def allGripPoints():
+        QList<QPointF> gripPoints
+        gripPoints << objectEndPoint1() << objectEndPoint2() << objectMidPoint()
+        return gripPoints
+
+    def gripEdit(const QPointF& before, const QPointF& after):
+        if     (before == objectEndPoint1())  setObjectEndPoint1(after.x(), after.y())
+        elif before == objectEndPoint2())  setObjectEndPoint2(after.x(), after.y())
+        elif before == objectMidPoint())   delta = after-before; moveBy(delta.x(), delta.y())
+
+    def objectSavePath():
+        QPainterPath path
+        path.lineTo(objectDeltaX(), objectDeltaY())
+        return path
+
+class Path(Base_Object):
+    def __init__(self, x, y, p, rgb, lineType):
+        "TODO: pass in proper lineweight."
+        self.super().__init__()
+        self.OBJ_TYPE = "OBJ_TYPE_PATH"
+        setData(OBJ_NAME, obj_names[OBJ_TYPE_PATH])
+
+        setFlag(QGraphicsItem::ItemIsSelectable, 1)
+
+        updatePath(p)
+        setObjectPos(x,y)
+        setObjectColor(rgb)
+        setObjectLineType(lineType)
+        setObjectLineWeight(0.35)
+        setPen(objectPen())
+        return self
+
+    def PathObject(x, y, const QPainterPath p, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
+        " TODO: getCurrentLineType "
+        debug_message("PathObject Constructor()")
+        init(x, y, p, rgb, Qt::SolidLine)
+
+    def PathObject(PathObject* obj, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("PathObject Constructor()")
+        if obj:
+            init(obj.objectX(), obj.objectY(), obj.objectCopyPath(), obj.objPen.color().rgb(), Qt::SolidLine); /*TODO: getCurrentLineType*/
+            setRotation(obj.rotation())
+            setScale(obj.scale())
+
+    def PathObject::updatePath(self, p):
+        normalPath = p
+        QPainterPath reversePath = normalPath.toReversed()
+        reversePath.connectPath(normalPath)
+        setObjectPath(reversePath)
+
+    def PathObject::paint(self, painter, option, widget):
+        QGraphicsScene* objScene = scene()
+        if !objScene) return
+
+        QPen paintPen = pen()
+        painter.setPen(paintPen)
+        updateRubber(painter)
+        if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+        if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+        painter.setPen(paintPen)
+
+        painter.drawPath(objectPath())
+
+    def PathObject::updateRubber(self, painter):
+        """
+        TODO: Path Rubber Modes.
+
+        TODO: updateRubber() gripping for PathObject.
+        """
+
+    def PathObject::vulcanize(self):
+        debug_message("PathObject vulcanize()")
+        updateRubber()
+
+        setObjectRubberMode(OBJ_RUBBER_OFF)
+
+        if !normalPath.elementCount())
+            QMessageBox::critical(0, QObject::tr("Empty Path Error"), QObject::tr("The path added contains no points. The command that created this object has flawed logic."))
+
+    PathObject::mouseSnapPoint(const QPointF& mousePoint):
+        " Returns the closest snap point to the mouse point. "
+        return scenePos()
+
+    def allGripPoints():
+        " TODO: loop thru all path Elements and return their points. "
+        QList<QPointF> gripPoints
+        gripPoints << scenePos()
+        return gripPoints
+
+    def gripEdit(before, after):
+        " TODO: gripEdit() for PathObject."
+        return
+
+    def objectCopyPath(self):
+        return normalPath
+
+    def objectSavePath(self):
+        s = scale()
+        QTransform trans
+        trans.rotate(rotation())
+        trans.scale(s,s)
+        return trans.map(normalPath)
+
+class Point(Base_Object):
+    def __init__(self, x, y, unsigned int rgb, Qt::PenStyle lineType):
+        " TODO: pass in proper lineweight. "
+        setData(OBJ_TYPE, type())
+        setData(OBJ_NAME, obj_names[OBJ_TYPE_POINT])
+
+        setFlag(QGraphicsItem::ItemIsSelectable, 1)
+
+        setRect(-0.00000001, -0.00000001, 0.00000002, 0.00000002)
+        setObjectPos(x,y)
+        setObjectColor(rgb)
+        setObjectLineType(lineType)
+        setObjectLineWeight(0.35); 
+        setPen(objectPen())
+        return self
+
+    def PointObject(x, y, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("PointObject Constructor()")
+        init(x, y, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
+
+    def PointObject(PointObject* obj, QGraphicsItem* parent) : BaseObject(parent):
+        debug_message("PointObject Constructor()")
+        if obj:
+            init(obj.objectX(), obj.objectY(), obj.objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
+            setRotation(obj.rotation())
+
+    def paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
+        QGraphicsScene* objScene = scene()
+        if !objScene) return
+
+        QPen paintPen = pen()
+        painter.setPen(paintPen)
+        updateRubber(painter)
+        if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+        if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+        painter.setPen(paintPen)
+
+        painter.drawPoint(0,0)
+
+    def PointObject::updateRubber(painter):
+        rubberMode = objectRubberMode()
+        if rubberMode == "GRIP":
+            if painter:
+                gripPoint = objectRubberPoint("GRIP_POINT")
+                if gripPoint == scenePos():
+                    QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
+                    drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
+
+    def vulcanize():
+        debug_message("PointObject vulcanize()")
+        updateRubber()
+
+        setObjectRubberMode(OBJ_RUBBER_OFF)
+
+    def mouseSnapPoint(const QPointF& mousePoint):
+        " Returns the closest snap point to the mouse point. "
+        return scenePos()
+
+    def allGripPoints():
+        QList<QPointF> gripPoints
+        gripPoints << scenePos()
+        return gripPoints
+
+    def gripEdit(const QPointF& before, const QPointF& after):
+        if before == scenePos():
+            delta = after-before
+            moveBy(delta.x(), delta.y())
+
+    def objectSavePath():
+        QPainterPath path
+        path.addRect(-0.00000001, -0.00000001, 0.00000002, 0.00000002)
+        return path
 
 
 class Polygon():
@@ -2037,48 +1986,48 @@ class Polygon():
 
 def PolygonObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
     QGraphicsScene* objScene = scene()
-    if(!objScene) return
+    if !objScene) return
 
     QPen paintPen = pen()
-    painter->setPen(paintPen)
+    painter.setPen(paintPen)
     updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
+    if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+    if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+    painter.setPen(paintPen)
 
     if normalPath.elementCount():
-        painter->drawPath(normalPath)
+        painter.drawPath(normalPath)
         QPainterPath::Element zero = normalPath.elementAt(0)
         QPainterPath::Element last = normalPath.elementAt(normalPath.elementCount()-1)
-        painter->drawLine(QPointF(zero.x, zero.y), QPointF(last.x, last.y))
+        painter.drawLine(QPointF(zero.x, zero.y), QPointF(last.x, last.y))
 
 def PolygonObject::updateRubber(QPainter* painter):
     int rubberMode = objectRubberMode()
-    if (rubberMode == OBJ_RUBBER_POLYGON) {
+    if (rubberMode == OBJ_RUBBER_POLYGON) 
         setObjectPos(objectRubberPoint("POLYGON_POINT_0"))
 
         bool ok = 0
         QString numStr = objectRubberText("POLYGON_NUM_POINTS")
-        if(numStr.isNull()) return
+        if numStr.isNull()) return
         int num = numStr.toInt(&ok)
-        if(!ok) return
+        if !ok) return
 
         QString appendStr
         QPainterPath rubberPath
         rubberPath.moveTo(mapFromScene(objectRubberPoint("POLYGON_POINT_0")))
         for(int i = 1; i <= num; i++)
-        {
+    
             appendStr = "POLYGON_POINT_" + QString().setNum(i)
             appendPoint = mapFromScene(objectRubberPoint(appendStr))
             rubberPath.lineTo(appendPoint)
-        }
+
         /*rubberPath.lineTo(0,0);*/
         updatePath(rubberPath)
 
         /*Ensure the path isn't updated until the number of points is changed again*/
         setObjectRubberText("POLYGON_NUM_POINTS", QString())
     }
-    elif(rubberMode == OBJ_RUBBER_POLYGON_INSCRIBE) {
+    elif rubberMode == OBJ_RUBBER_POLYGON_INSCRIBE) 
         setObjectPos(objectRubberPoint("POLYGON_CENTER"))
 
         unsigned short numSides = objectRubberPoint("POLYGON_NUM_SIDES").x()
@@ -2088,19 +2037,19 @@ def PolygonObject::updateRubber(QPainter* painter):
         inscribeAngle = inscribeLine.angle()
         inscribeInc = 360.0/numSides
 
-        if(painter) drawRubberLine(inscribeLine, painter, "VIEW_COLOR_CROSSHAIR")
+        if painter) drawRubberLine(inscribeLine, painter, "VIEW_COLOR_CROSSHAIR")
 
         QPainterPath inscribePath
         /*First Point*/
         inscribePath.moveTo(inscribePoint)
         /*Remaining Points*/
-        for (int i = 1; i < numSides; i++) {
+        for (int i = 1; i < numSides; i++) 
             inscribeLine.setAngle(inscribeAngle + inscribeInc*i)
             inscribePath.lineTo(inscribeLine.p2())
-        }
+
         updatePath(inscribePath)
     }
-    elif (rubberMode == OBJ_RUBBER_POLYGON_CIRCUMSCRIBE) {
+    elif (rubberMode == OBJ_RUBBER_POLYGON_CIRCUMSCRIBE) 
         setObjectPos(objectRubberPoint("POLYGON_CENTER"))
 
         unsigned short numSides = objectRubberPoint("POLYGON_NUM_SIDES").x()
@@ -2110,7 +2059,7 @@ def PolygonObject::updateRubber(QPainter* painter):
         circumscribeAngle = circumscribeLine.angle()
         circumscribeInc = 360.0/numSides
 
-        if(painter) drawRubberLine(circumscribeLine, painter, "VIEW_COLOR_CROSSHAIR")
+        if painter) drawRubberLine(circumscribeLine, painter, "VIEW_COLOR_CROSSHAIR")
 
         QPainterPath circumscribePath
         /*First Point*/
@@ -2138,21 +2087,21 @@ def PolygonObject::updateRubber(QPainter* painter):
         if painter:
             int elemCount = normalPath.elementCount()
             gripPoint = objectRubberPoint("GRIP_POINT")
-            if(gripIndex == -1) gripIndex = findIndex(gripPoint)
-            if(gripIndex == -1) return
+            if gripIndex == -1) gripIndex = findIndex(gripPoint)
+            if gripIndex == -1) return
 
             int m = 0
             int n = 0
 
-            if(!gripIndex)                    { m = elemCount-1; n = 1; }
-            elif(gripIndex == elemCount-1) { m = elemCount-2; n = 0; }
-            else                              { m = gripIndex-1; n = gripIndex+1; }
+            if !gripIndex)                 m = elemCount-1; n = 1
+            elif gripIndex == elemCount-1)  m = elemCount-2; n = 0
+            else                           m = gripIndex-1; n = gripIndex+1
             QPainterPath::Element em = normalPath.elementAt(m)
             QPainterPath::Element en = normalPath.elementAt(n)
             emPoint = QPointF(em.x, em.y)
             enPoint = QPointF(en.x, en.y)
-            painter->drawLine(emPoint, mapFromScene(objectRubberPoint(QString())))
-            painter->drawLine(enPoint, mapFromScene(objectRubberPoint(QString())))
+            painter.drawLine(emPoint, mapFromScene(objectRubberPoint(QString())))
+            painter.drawLine(enPoint, mapFromScene(objectRubberPoint(QString())))
 
             QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
             drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
@@ -2164,7 +2113,7 @@ def PolygonObject::vulcanize():
 
     setObjectRubberMode(OBJ_RUBBER_OFF)
 
-    if(!normalPath.elementCount())
+    if !normalPath.elementCount())
         QMessageBox::critical(0, QObject::tr("Empty Polygon Error"), QObject::tr("The polygon added contains no points. The command that created this object has flawed logic."))
 
 /* Returns the closest snap point to the mouse point*/
@@ -2187,7 +2136,7 @@ QList<QPointF> PolygonObject::allGripPoints():
     QList<QPointF> gripPoints
     QPainterPath::Element element
     for(int i = 0; i < normalPath.elementCount(); ++i)
-    {
+
         element = normalPath.elementAt(i)
         gripPoints << mapToScene(element.x, element.y)
     }
@@ -2199,25 +2148,25 @@ def PolygonObject::findIndex(const QPointF& point):
     /*NOTE: Points here are in item coordinates*/
     itemPoint = mapFromScene(point)
     for(i = 0; i < elemCount; i++)
-    {
+
         QPainterPath::Element e = normalPath.elementAt(i)
         elemPoint = QPointF(e.x, e.y)
-        if(itemPoint == elemPoint) return i
+        if itemPoint == elemPoint) return i
     }
     return -1
 
 def PolygonObject::gripEdit(const QPointF& before, const QPointF& after):
     gripIndex = findIndex(before)
-    if(gripIndex == -1) return
+    if gripIndex == -1) return
     a = mapFromScene(after)
     normalPath.setElementPositionAt(gripIndex, a.x(), a.y())
     updatePath(normalPath)
     gripIndex = -1
 
-QPainterPath PolygonObject::objectCopyPath() const:
+QPainterPath PolygonObject::objectCopyPath()
     return normalPath
 
-QPainterPath PolygonObject::objectSavePath() const:
+QPainterPath PolygonObject::objectSavePath()
     QPainterPath closedPath = normalPath
     closedPath.closeSubpath()
     s = scale()
@@ -2283,157 +2232,148 @@ class Polyline():
         paintPen = pen()
         painter.pen = paintPen
         painter.updateRubber()
+
+        if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+        if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+        painter.setPen(paintPen)
+
+        painter.drawPath(normalPath)
+
+        if objScene.property("ENABLE_LWT").toBool() and objScene.property("ENABLE_REAL").toBool())  realRender(painter, normalPath)
+
+
+    def PolyupdateRubber(QPainter* painter):
+        int rubberMode = objectRubberMode()
+        if rubberMode == OBJ_RUBBER_POLYLINE)
+
+            setObjectPos(objectRubberPoint("POLYLINE_POINT_0"))
+
+            QLineF rubberLine(normalPath.currentPosition(), mapFromScene(objectRubberPoint(QString())))
+            if painter) drawRubberLine(rubberLine, painter, "VIEW_COLOR_CROSSHAIR")
+
+            bool ok = 0
+            QString numStr = objectRubberText("POLYLINE_NUM_POINTS")
+            if numStr.isNull()) return
+            int num = numStr.toInt(&ok)
+            if !ok) return
+
+            QString appendStr
+            QPainterPath rubberPath
+            for(int i = 1; i <= num; i++)
         
+                appendStr = "POLYLINE_POINT_" + QString().setNum(i)
+                appendPoint = mapFromScene(objectRubberPoint(appendStr))
+                rubberPath.lineTo(appendPoint)
+
+            updatePath(rubberPath)
+
+            /*Ensure the path isn't updated until the number of points is changed again*/
+            setObjectRubberText("POLYLINE_NUM_POINTS", QString())
+
+        elif rubberMode == OBJ_RUBBER_GRIP)
+
+            if painter:
+                elemCount = normalPath.elementCount()
+                gripPoint = objectRubberPoint("GRIP_POINT")
+                if gripIndex == -1) gripIndex = findIndex(gripPoint)
+                if gripIndex == -1) return
+
+                if not gripIndex:
+                    # First
+                    QPainterPath::Element ef = normalPath.elementAt(1)
+                    efPoint = QPointF(ef.x, ef.y)
+                    painter.drawLine(efPoint, mapFromScene(objectRubberPoint(QString())))
+        
+                elif gripIndex == elemCount-1:
+                    # Last
+                    QPainterPath::Element el = normalPath.elementAt(gripIndex-1)
+                    elPoint = QPointF(el.x, el.y)
+                    painter.drawLine(elPoint, mapFromScene(objectRubberPoint(QString())))
+        
+                else:
+                    # Middle
+                    QPainterPath::Element em = normalPath.elementAt(gripIndex-1)
+                    QPainterPath::Element en = normalPath.elementAt(gripIndex+1)
+                    emPoint = QPointF(em.x, em.y)
+                    enPoint = QPointF(en.x, en.y)
+                    painter.drawLine(emPoint, mapFromScene(objectRubberPoint(QString())))
+                    painter.drawLine(enPoint, mapFromScene(objectRubberPoint(QString())))
         
 
+                QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
+                drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
 
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
+    def vulcanize():
+        debug_message("PolylineObject vulcanize()")
+        updateRubber()
 
-    painter->drawPath(normalPath)
+        setObjectRubberMode(OBJ_RUBBER_OFF)
 
-    if(objScene->property("ENABLE_LWT").toBool() && objScene->property("ENABLE_REAL").toBool()) { realRender(painter, normalPath); }
+        if not normalPath.elementCount():
+            QMessageBox::critical(0, QObject::tr("Empty Polyline Error"), QObject::tr("The polyline added contains no points. The command that created this object has flawed logic."))
 
+    /* Returns the closest snap point to the mouse point*/
+    PolymouseSnapPoint(const QPointF& mousePoint):
+        QPainterPath::Element element = normalPath.elementAt(0)
+        closestPoint = mapToScene(QPointF(element.x, element.y))
+        closestDist = QLineF(mousePoint, closestPoint).length()
+        int elemCount = normalPath.elementCount()
+        for(int i = 0; i < elemCount; ++i)
 
-def PolylineObject::updateRubber(QPainter* painter):
-    int rubberMode = objectRubberMode()
-    if(rubberMode == OBJ_RUBBER_POLYLINE)
-    {
-        setObjectPos(objectRubberPoint("POLYLINE_POINT_0"))
+            element = normalPath.elementAt(i)
+            elemPoint = mapToScene(element.x, element.y)
+            elemDist = QLineF(mousePoint, elemPoint).length()
+            if elemDist < closestDist)
+        
+                closestPoint = elemPoint
+                closestDist = elemDist
 
-        QLineF rubberLine(normalPath.currentPosition(), mapFromScene(objectRubberPoint(QString())))
-        if(painter) drawRubberLine(rubberLine, painter, "VIEW_COLOR_CROSSHAIR")
-
-        bool ok = 0
-        QString numStr = objectRubberText("POLYLINE_NUM_POINTS")
-        if(numStr.isNull()) return
-        int num = numStr.toInt(&ok)
-        if(!ok) return
-
-        QString appendStr
-        QPainterPath rubberPath
-        for(int i = 1; i <= num; i++)
-        {
-            appendStr = "POLYLINE_POINT_" + QString().setNum(i)
-            appendPoint = mapFromScene(objectRubberPoint(appendStr))
-            rubberPath.lineTo(appendPoint)
         }
-        updatePath(rubberPath)
+        return closestPoint
 
-        /*Ensure the path isn't updated until the number of points is changed again*/
-        setObjectRubberText("POLYLINE_NUM_POINTS", QString())
-    }
-    elif(rubberMode == OBJ_RUBBER_GRIP)
-    {
-        if(painter)
-        {
-            int elemCount = normalPath.elementCount()
-            gripPoint = objectRubberPoint("GRIP_POINT")
-            if(gripIndex == -1) gripIndex = findIndex(gripPoint)
-            if(gripIndex == -1) return
+    QList<QPointF> PolyallGripPoints():
+        QList<QPointF> gripPoints
+        QPainterPath::Element element
+        for(int i = 0; i < normalPath.elementCount(); ++i)
 
-            if(!gripIndex) /*First*/
-            {
-                QPainterPath::Element ef = normalPath.elementAt(1)
-                efPoint = QPointF(ef.x, ef.y)
-                painter->drawLine(efPoint, mapFromScene(objectRubberPoint(QString())))
-            }
-            elif(gripIndex == elemCount-1) /*Last*/
-            {
-                QPainterPath::Element el = normalPath.elementAt(gripIndex-1)
-                elPoint = QPointF(el.x, el.y)
-                painter->drawLine(elPoint, mapFromScene(objectRubberPoint(QString())))
-            }
-            else /*Middle*/
-            {
-                QPainterPath::Element em = normalPath.elementAt(gripIndex-1)
-                QPainterPath::Element en = normalPath.elementAt(gripIndex+1)
-                emPoint = QPointF(em.x, em.y)
-                enPoint = QPointF(en.x, en.y)
-                painter->drawLine(emPoint, mapFromScene(objectRubberPoint(QString())))
-                painter->drawLine(enPoint, mapFromScene(objectRubberPoint(QString())))
-            }
-
-            QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
-            drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
+            element = normalPath.elementAt(i)
+            gripPoints << mapToScene(element.x, element.y)
         }
-    }
-}
+        return gripPoints
 
-def PolylineObject::vulcanize():
-    debug_message("PolylineObject vulcanize()")
-    updateRubber()
-
-    setObjectRubberMode(OBJ_RUBBER_OFF)
-
-    if(!normalPath.elementCount())
-        QMessageBox::critical(0, QObject::tr("Empty Polyline Error"), QObject::tr("The polyline added contains no points. The command that created this object has flawed logic."))
-
-/* Returns the closest snap point to the mouse point*/
-PolylineObject::mouseSnapPoint(const QPointF& mousePoint):
-    QPainterPath::Element element = normalPath.elementAt(0)
-    closestPoint = mapToScene(QPointF(element.x, element.y))
-    closestDist = QLineF(mousePoint, closestPoint).length()
-    int elemCount = normalPath.elementCount()
-    for(int i = 0; i < elemCount; ++i)
-    {
-        element = normalPath.elementAt(i)
-        elemPoint = mapToScene(element.x, element.y)
-        elemDist = QLineF(mousePoint, elemPoint).length()
-        if(elemDist < closestDist)
-        {
-            closestPoint = elemPoint
-            closestDist = elemDist
+    def PolyfindIndex(const QPointF& point):
+        int elemCount = normalPath.elementCount()
+        /*NOTE: Points here are in item coordinates*/
+        itemPoint = mapFromScene(point)
+        for (int i = 0; i < elemCount; i++) 
+            QPainterPath::Element e = normalPath.elementAt(i)
+            elemPoint = QPointF(e.x, e.y)
+            if itemPoint == elemPoint) return i
         }
-    }
-    return closestPoint
+        return -1
 
-QList<QPointF> PolylineObject::allGripPoints():
-    QList<QPointF> gripPoints
-    QPainterPath::Element element
-    for(int i = 0; i < normalPath.elementCount(); ++i)
-    {
-        element = normalPath.elementAt(i)
-        gripPoints << mapToScene(element.x, element.y)
-    }
-    return gripPoints
+    def PolygripEdit(const QPointF& before, const QPointF& after):
+        gripIndex = findIndex(before)
+        if gripIndex == -1) return
+        a = mapFromScene(after)
+        normalPath.setElementPositionAt(gripIndex, a.x(), a.y())
+        updatePath(normalPath)
+        gripIndex = -1
 
-def PolylineObject::findIndex(const QPointF& point):
-    int elemCount = normalPath.elementCount()
-    /*NOTE: Points here are in item coordinates*/
-    itemPoint = mapFromScene(point)
-    for (int i = 0; i < elemCount; i++) {
-        QPainterPath::Element e = normalPath.elementAt(i)
-        elemPoint = QPointF(e.x, e.y)
-        if(itemPoint == elemPoint) return i
-    }
-    return -1
+    QPainterPath PolyobjectCopyPath()
+        return normalPath
 
-def PolylineObject::gripEdit(const QPointF& before, const QPointF& after):
-    gripIndex = findIndex(before)
-    if(gripIndex == -1) return
-    a = mapFromScene(after)
-    normalPath.setElementPositionAt(gripIndex, a.x(), a.y())
-    updatePath(normalPath)
-    gripIndex = -1
-
-QPainterPath PolylineObject::objectCopyPath() const:
-    return normalPath
-
-QPainterPath PolylineObject::objectSavePath() const:
-    s = scale()
-    QTransform trans
-    trans.rotate(rotation())
-    trans.scale(s,s)
-    return trans.map(normalPath)
-"""
+    QPainterPath PolyobjectSavePath()
+        s = scale()
+        QTransform trans
+        trans.rotate(rotation())
+        trans.scale(s,s)
+        return trans.map(normalPath)
 
 class Rect():
     def __init__(self):
         return self
 
-"""
 RectObject::RectObject(x, y, w, h, unsigned int rgb, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("RectObject Constructor()")
     init(x, y, w, h, rgb, Qt::SolidLine); /*TODO: getCurrentLineType*/
@@ -2441,11 +2381,11 @@ RectObject::RectObject(x, y, w, h, unsigned int rgb, QGraphicsItem* parent) : Ba
 
 RectObject::RectObject(RectObject* obj, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("RectObject Constructor()")
-    if(obj)
-    {
-        ptl = obj->objectTopLeft()
-        init(ptl.x(), ptl.y(), obj->objectWidth(), obj->objectHeight(), obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-        setRotation(obj->rotation())
+    if obj)
+
+        ptl = obj.objectTopLeft()
+        init(ptl.x(), ptl.y(), obj.objectWidth(), obj.objectHeight(), obj.objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
+        setRotation(obj.rotation())
     }
 }
 
@@ -2469,28 +2409,28 @@ def RectObject::setObjectRect(x, y, w, h):
     setRect(0, 0, w, h)
     updatePath()
 
-RectObject::objectTopLeft() const:
+RectObject::objectTopLeft()
     EmbVector v
     v = to_emb_vector(rect().topLeft())
     v = scale_and_rotate(v, scale(), radians(rotation()))
 
     return scenePos() + to_qpointf(v)
 
-RectObject::objectTopRight() const:
+RectObject::objectTopRight()
     EmbVector v
     v = to_emb_vector(rect().topRight())
     v = scale_and_rotate(v, scale(), radians(rotation()))
 
     return scenePos() + to_qpointf(v)
 
-RectObject::objectBottomLeft() const:
+RectObject::objectBottomLeft()
     EmbVector v
     v = to_emb_vector(rect().bottomLeft())
     v = scale_and_rotate(v, scale(), radians(rotation()))
 
     return scenePos() + to_qpointf(v)
 
-RectObject::objectBottomRight() const:
+RectObject::objectBottomRight()
     EmbVector v
     v = to_emb_vector(rect().bottomRight())
     v = scale_and_rotate(v, scale(), radians(rotation()))
@@ -2514,21 +2454,22 @@ def RectObject::updatePath():
 
 def RectObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
     QGraphicsScene* objScene = scene()
-    if(!objScene) return
+    if not objScene:
+        return
 
     QPen paintPen = pen()
-    painter->setPen(paintPen)
+    painter.setPen(paintPen)
     updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
+    if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+    if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+    painter.setPen(paintPen)
 
-    painter->drawRect(rect())
+    painter.drawRect(rect())
 
-def RectObject::updateRubber(QPainter* painter):
-    int rubberMode = objectRubberMode()
-    if(rubberMode == OBJ_RUBBER_RECTANGLE)
-    {
+def RectObject::updateRubber(painter):
+    rubberMode = objectRubberMode()
+    if rubberMode == OBJ_RUBBER_RECTANGLE:
+
         sceneStartPoint = objectRubberPoint("RECTANGLE_START")
         sceneEndPoint = objectRubberPoint("RECTANGLE_END")
         x = sceneStartPoint.x()
@@ -2537,34 +2478,32 @@ def RectObject::updateRubber(QPainter* painter):
         h = sceneEndPoint.y() - sceneStartPoint.y()
         setObjectRect(x,y,w,h)
         updatePath()
-    }
-    elif(rubberMode == OBJ_RUBBER_GRIP)
-    {
-        if(painter)
-        {
+
+    elif rubberMode == OBJ_RUBBER_GRIP:
+        if painter:
             /* TODO: Make this work with rotation & scaling. */
-            /*
-            gripPoint = objectRubberPoint("GRIP_POINT")
-            after = objectRubberPoint(QString())
-            delta = after-gripPoint
-            if     (gripPoint == objectTopLeft())     { painter->drawPolygon(mapFromScene(QRectF(after.x(), after.y(), objectWidth()-delta.x(), objectHeight()-delta.y()))); }
-            elif(gripPoint == objectTopRight())    { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y()))); }
-            elif(gripPoint == objectBottomLeft())  { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y()))); }
-            elif(gripPoint == objectBottomRight()) { painter->drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y()))); }
-
-            QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
-            drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
-            */
 
             gripPoint = objectRubberPoint("GRIP_POINT")
             after = objectRubberPoint(QString())
             delta = after-gripPoint
+            if gripPoint == objectTopLeft():
+                painter.drawPolygon(mapFromScene(QRectF(after.x(), after.y(), objectWidth()-delta.x(), objectHeight()-delta.y())))
+            elif gripPoint == objectTopRight():
+                painter.drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y())))
+            elif gripPoint == objectBottomLeft():
+                painter.drawPolygon(mapFromScene(QRectF(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y())))
+            elif gripPoint == objectBottomRight():
+                painter.drawPolygon(mapFromScene(QRectF(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y())))
 
             QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
             drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
-        }
-    }
-}
+
+            gripPoint = objectRubberPoint("GRIP_POINT")
+            after = objectRubberPoint(QString())
+            delta = after-gripPoint
+
+            QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
+            drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
 
 def RectObject::vulcanize():
     debug_message("RectObject vulcanize()")
@@ -2572,8 +2511,8 @@ def RectObject::vulcanize():
 
     setObjectRubberMode(OBJ_RUBBER_OFF)
 
-/* Returns the closest snap point to the mouse point*/
-RectObject::mouseSnapPoint(const QPointF& mousePoint):
+def RectObject::mouseSnapPoint(const QPointF& mousePoint):
+    " Returns the closest snap point to the mouse point"
     ptl = objectTopLeft();     /*Top Left Corner QSnap*/
     ptr = objectTopRight();    /*Top Right Corner QSnap*/
     pbl = objectBottomLeft();  /*Bottom Left Corner QSnap*/
@@ -2587,9 +2526,9 @@ RectObject::mouseSnapPoint(const QPointF& mousePoint):
     minDist = qMin(qMin(ptlDist, ptrDist), qMin(pblDist, pbrDist))
 
     if     (minDist == ptlDist) return ptl
-    elif(minDist == ptrDist) return ptr
-    elif(minDist == pblDist) return pbl
-    elif(minDist == pbrDist) return pbr
+    elif minDist == ptrDist) return ptr
+    elif minDist == pblDist) return pbl
+    elif minDist == pbrDist) return pbr
 
     return scenePos()
 
@@ -2600,13 +2539,13 @@ QList<QPointF> RectObject::allGripPoints():
 
 def RectObject::gripEdit(const QPointF& before, const QPointF& after):
     delta = after-before
-    if     (before == objectTopLeft())     { setObjectRect(after.x(), after.y(), objectWidth()-delta.x(), objectHeight()-delta.y()); }
-    elif(before == objectTopRight())    { setObjectRect(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y()); }
-    elif(before == objectBottomLeft())  { setObjectRect(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y()); }
-    elif(before == objectBottomRight()) { setObjectRect(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y()); }
+    if     (before == objectTopLeft())  setObjectRect(after.x(), after.y(), objectWidth()-delta.x(), objectHeight()-delta.y())
+    elif before == objectTopRight()) setObjectRect(objectTopLeft().x(), objectTopLeft().y()+delta.y(), objectWidth()+delta.x(), objectHeight()-delta.y())
+    elif before == objectBottomLeft())   setObjectRect(objectTopLeft().x()+delta.x(), objectTopLeft().y(), objectWidth()-delta.x(), objectHeight()+delta.y())
+    elif before == objectBottomRight())  setObjectRect(objectTopLeft().x(), objectTopLeft().y(), objectWidth()+delta.x(), objectHeight()+delta.y())
 }
 
-QPainterPath RectObject::objectSavePath() const:
+QPainterPath RectObject::objectSavePath()
     QPainterPath path
     QRectF r = rect()
     path.moveTo(r.bottomLeft())
@@ -2633,15 +2572,13 @@ TextSingleObject::TextSingleObject(const QString& str, x, y, unsigned int rgb, Q
 
 TextSingleObject::TextSingleObject(TextSingleObject* obj, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("TextSingleObject Constructor()")
-    if (obj) {
-        objTextFont = obj->objTextFont
-        obj_text = obj->obj_text
-        setRotation(obj->rotation())
-        setObjectText(obj->objText)
-        init(obj->objText, obj->objectX(), obj->objectY(), obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-        setScale(obj->scale())
-    }
-}
+    if obj:
+        objTextFont = obj.objTextFont
+        obj_text = obj.obj_text
+        setRotation(obj.rotation())
+        setObjectText(obj.objText)
+        init(obj.objText, obj.objectX(), obj.objectY(), obj.objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
+        setScale(obj.scale())
 
 TextSingleObject::~TextSingleObject():
     debug_message("TextSingleObject Destructor()")
@@ -2661,7 +2598,7 @@ def TextSingleObject::init(const QString& str, x, y, unsigned int rgb, Qt::PenSt
     setObjectLineWeight(0.35); /*TODO: pass in proper lineweight*/
     setPen(objectPen())
 
-QStringList TextSingleObject::objectTextJustifyList() const:
+QStringList TextSingleObject::objectTextJustifyList()
     QStringList justifyList
     justifyList << "Left" << "Center" << "Right" /* TODO: << "Aligned" */ << "Middle" /* TODO: << "Fit" */ 
     justifyList << "Top Left" << "Top Center" << "Top Right"
@@ -2684,29 +2621,31 @@ def TextSingleObject::setObjectText(const QString& str):
 
     /*Translate the path based on the justification*/
     QRectF jRect = textPath.boundingRect()
-    if     (objTextJustify == "Left")          { textPath.translate(-jRect.left(), 0); }
-    elif(objTextJustify == "Center")        { textPath.translate(-jRect.center().x(), 0); }
-    elif(objTextJustify == "Right")         { textPath.translate(-jRect.right(), 0); }
-    elif(objTextJustify == "Aligned")       { } /*TODO: TextSingleObject Aligned Justification*/
-    elif(objTextJustify == "Middle")        { textPath.translate(-jRect.center()); }
-    elif(objTextJustify == "Fit")           { } /*TODO: TextSingleObject Fit Justification*/
-    elif(objTextJustify == "Top Left")      { textPath.translate(-jRect.topLeft()); }
-    elif(objTextJustify == "Top Center")    { textPath.translate(-jRect.center().x(), -jRect.top()); }
-    elif(objTextJustify == "Top Right")     { textPath.translate(-jRect.topRight()); }
-    elif(objTextJustify == "Middle Left")   { textPath.translate(-jRect.left(), -jRect.top()/2.0); }
-    elif(objTextJustify == "Middle Center") { textPath.translate(-jRect.center().x(), -jRect.top()/2.0); }
-    elif(objTextJustify == "Middle Right")  { textPath.translate(-jRect.right(), -jRect.top()/2.0); }
-    elif(objTextJustify == "Bottom Left")   { textPath.translate(-jRect.bottomLeft()); }
-    elif(objTextJustify == "Bottom Center") { textPath.translate(-jRect.center().x(), -jRect.bottom()); }
-    elif(objTextJustify == "Bottom Right")  { textPath.translate(-jRect.bottomRight()); }
+    if objTextJustify == "Left":
+        textPath.translate(-jRect.left(), 0)
+    elif objTextJustify == "Center":
+        textPath.translate(-jRect.center().x(), 0)
+    elif objTextJustify == "Right")      textPath.translate(-jRect.right(), 0)
+    elif objTextJustify == "Aligned")    } /*TODO: TextSingleObject Aligned Justification*/
+    elif objTextJustify == "Middle")     textPath.translate(-jRect.center())
+    elif objTextJustify == "Fit") /*TODO: TextSingleObject Fit Justification*/
+    elif objTextJustify == "Top Left")   textPath.translate(-jRect.topLeft())
+    elif objTextJustify == "Top Center") textPath.translate(-jRect.center().x(), -jRect.top())
+    elif objTextJustify == "Top Right")  textPath.translate(-jRect.topRight())
+    elif objTextJustify == "Middle Left")    textPath.translate(-jRect.left(), -jRect.top()/2.0)
+    elif objTextJustify == "Middle Center")  textPath.translate(-jRect.center().x(), -jRect.top()/2.0)
+    elif objTextJustify == "Middle Right")   textPath.translate(-jRect.right(), -jRect.top()/2.0)
+    elif objTextJustify == "Bottom Left")    textPath.translate(-jRect.bottomLeft())
+    elif objTextJustify == "Bottom Center")  textPath.translate(-jRect.center().x(), -jRect.bottom())
+    elif objTextJustify == "Bottom Right")   textPath.translate(-jRect.bottomRight())
 
     /*Backward or Upside Down*/
-    if(obj_text.backward || obj_text.upsidedown)
-    {
+    if obj_text.backward || obj_text.upsidedown)
+
         horiz = 1.0
         vert = 1.0
-        if(obj_text.backward) horiz = -1.0
-        if(obj_text.upsidedown) vert = -1.0
+        if obj_text.backward) horiz = -1.0
+        if obj_text.upsidedown) vert = -1.0
 
         QPainterPath flippedPath
 
@@ -2715,18 +2654,18 @@ def TextSingleObject::setObjectText(const QString& str):
         QPainterPath::Element P3
         QPainterPath::Element P4
         for(int i = 0; i < textPath.elementCount(); ++i)
-        {
+    
             element = textPath.elementAt(i)
-            if(element.isMoveTo())
-            {
+            if element.isMoveTo())
+        
                 flippedPath.moveTo(horiz * element.x, vert * element.y)
-            }
-            elif(element.isLineTo())
-            {
+    
+            elif element.isLineTo())
+        
                 flippedPath.lineTo(horiz * element.x, vert * element.y)
-            }
-            elif(element.isCurveTo())
-            {
+    
+            elif element.isCurveTo())
+        
                                               /* start point P1 is not needed*/
                 P2 = textPath.elementAt(i);   /* control point*/
                 P3 = textPath.elementAt(i+1); /* control point*/
@@ -2735,8 +2674,8 @@ def TextSingleObject::setObjectText(const QString& str):
                 flippedPath.cubicTo(horiz * P2.x, vert * P2.y,
                                     horiz * P3.x, vert * P3.y,
                                     horiz * P4.x, vert * P4.y)
-            }
-        }
+    
+
         objTextPath = flippedPath
     }
     else
@@ -2754,24 +2693,24 @@ def TextSingleObject::setObjectTextFont(const QString& font):
 
 def TextSingleObject::setObjectTextJustify(const QString& justify):
     /*Verify the string is a valid option*/
-    if (justify == "Left") {
+    if justify == "Left":
         objTextJustify = justify
-    }
-    elif(justify == "Center")        { objTextJustify = justify; }
-    elif(justify == "Right")         { objTextJustify = justify; }
-    elif(justify == "Aligned")       { objTextJustify = justify; }
-    elif(justify == "Middle")        { objTextJustify = justify; }
-    elif(justify == "Fit")           { objTextJustify = justify; }
-    elif(justify == "Top Left")      { objTextJustify = justify; }
-    elif(justify == "Top Center")    { objTextJustify = justify; }
-    elif(justify == "Top Right")     { objTextJustify = justify; }
-    elif(justify == "Middle Left")   { objTextJustify = justify; }
-    elif(justify == "Middle Center") { objTextJustify = justify; }
-    elif(justify == "Middle Right")  { objTextJustify = justify; }
-    elif(justify == "Bottom Left")   { objTextJustify = justify; }
-    elif(justify == "Bottom Center") { objTextJustify = justify; }
-    elif(justify == "Bottom Right")  { objTextJustify = justify; }
-    else                                { objTextJustify = "Left";  } /*Default*/
+    elif justify == "Center":
+        objTextJustify = justify
+    elif justify == "Right")      objTextJustify = justify
+    elif justify == "Aligned")    objTextJustify = justify
+    elif justify == "Middle")     objTextJustify = justify
+    elif justify == "Fit")        objTextJustify = justify
+    elif justify == "Top Left")   objTextJustify = justify
+    elif justify == "Top Center") objTextJustify = justify
+    elif justify == "Top Right")  objTextJustify = justify
+    elif justify == "Middle Left")    objTextJustify = justify
+    elif justify == "Middle Center")  objTextJustify = justify
+    elif justify == "Middle Right")   objTextJustify = justify
+    elif justify == "Bottom Left")    objTextJustify = justify
+    elif justify == "Bottom Center")  objTextJustify = justify
+    elif justify == "Bottom Right")   objTextJustify = justify
+    else                             objTextJustify = "Left";  } /*Default*/
     setObjectText(objText)
 
 def TextSingleObject::setObjectTextSize(size):
@@ -2808,20 +2747,20 @@ def TextSingleObject::setObjectTextUpsideDown(int val):
 
 def TextSingleObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
     QGraphicsScene* objScene = scene()
-    if(!objScene) return
+    if !objScene) return
 
     QPen paintPen = pen()
-    painter->setPen(paintPen)
+    painter.setPen(paintPen)
     updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
+    if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+    if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+    painter.setPen(paintPen)
 
-    painter->drawPath(objTextPath)
+    painter.drawPath(objTextPath)
 
 def TextSingleObject::updateRubber(QPainter* painter):
     int rubberMode = objectRubberMode()
-    if (rubberMode == OBJ_RUBBER_TEXTSINGLE) {
+    if (rubberMode == OBJ_RUBBER_TEXTSINGLE) 
         setObjectTextFont(objectRubberText("TEXT_FONT"))
         setObjectTextJustify(objectRubberText("TEXT_JUSTIFY"))
         setObjectPos(objectRubberPoint("TEXT_POINT"))
@@ -2830,16 +2769,16 @@ def TextSingleObject::updateRubber(QPainter* painter):
         setRotation(hr.y())
         setObjectText(objectRubberText("TEXT_RAPID"))
     }
-    elif(rubberMode == OBJ_RUBBER_GRIP) {
-        if (painter) {
+    elif rubberMode == OBJ_RUBBER_GRIP) 
+        if (painter) 
             gripPoint = objectRubberPoint("GRIP_POINT")
-            if (gripPoint == scenePos()) {
-                painter->drawPath(objectPath().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
-            }
+            if (gripPoint == scenePos()) 
+                painter.drawPath(objectPath().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
+    
 
             QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
             drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
-        }
+
     }
 }
 
@@ -2849,20 +2788,21 @@ def TextSingleObject::vulcanize():
 
     setObjectRubberMode(OBJ_RUBBER_OFF)
 
-/* Returns the closest snap point to the mouse point*/
-TextSingleObject::mouseSnapPoint(const QPointF& mousePoint):
+def TextSingleObject::mouseSnapPoint(const QPointF& mousePoint):
+    " Returns the closest snap point to the mouse point. "
     return scenePos()
 
-QList<QPointF> TextSingleObject::allGripPoints():
+def TextSingleObject::allGripPoints():
     QList<QPointF> gripPoints
     gripPoints << scenePos()
     return gripPoints
 
-def TextSingleObject::gripEdit(const QPointF& before, const QPointF& after):
-    if(before == scenePos()) { delta = after-before; moveBy(delta.x(), delta.y()); }
-}
+def TextSingleObject::gripEdit(before, after):
+    if before == scenePos():
+        delta = after-before
+        moveBy(delta.x(), delta.y())
 
-QList<QPainterPath> TextSingleObject::subPathList() const:
+def TextSingleObject::subPathList():
     s = scale()
     QTransform trans
     trans.rotate(rotation())
@@ -2877,35 +2817,30 @@ QList<QPainterPath> TextSingleObject::subPathList() const:
     int numMoves = 0
 
     for(int i = 0; i < path.elementCount(); i++)
-    {
+
         element = path.elementAt(i)
-        if(element.isMoveTo())
-        {
+        if element.isMoveTo())
+    
             pathMoves << i
             numMoves++
-        }
-    }
 
     pathMoves << path.elementCount()
 
-    for (int p = 0; p < pathMoves.size()-1 && p < numMoves; p++) {
-        QPainterPath subPath
-        for (int i = pathMoves.value(p); i < pathMoves.value(p+1); i++) {
+    for (int p = 0; p < pathMoves.size()-1 and p < numMoves; p++):
+        for (int i = pathMoves.value(p); i < pathMoves.value(p+1); i++):
             element = path.elementAt(i)
-            if (element.isMoveTo()) {
+            if (element.isMoveTo()) :
                 subPath.moveTo(element.x, element.y)
-            }
-            elif (element.isLineTo()) {
+    
+            elif element.isLineTo()) :
                 subPath.lineTo(element.x, element.y)
-            }
-            elif (element.isCurveTo()) {
+    
+            elif element.isCurveTo():
                 subPath.cubicTo(path.elementAt(i  ).x, path.elementAt(i  ).y, /*control point 1*/
                                 path.elementAt(i+1).x, path.elementAt(i+1).y, /*control point 2*/
                                 path.elementAt(i+2).x, path.elementAt(i+2).y); /*end point*/
-            }
-        }
+
         pathList.append(trans.map(subPath))
-    }
 
     return pathList
 
@@ -2920,12 +2855,12 @@ CircleObject::CircleObject(centerX, centerY, radius, unsigned int rgb, QGraphics
 
 CircleObject::CircleObject(CircleObject* obj, QGraphicsItem* parent) : BaseObject(parent):
     debug_message("CircleObject Constructor()")
-    if(obj)
-    {
-        p = obj->objectCenter()
-        r = obj->objectRadius()
-        init(p.x(), p.y(), r, obj->objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
-        setRotation(obj->rotation())
+    if obj)
+
+        p = obj.objectCenter()
+        r = obj.objectRadius()
+        init(p.x(), p.y(), r, obj.objectColorRGB(), Qt::SolidLine); /*TODO: getCurrentLineType*/
+        setRotation(obj.rotation())
     }
 }
 
@@ -2979,21 +2914,21 @@ def CircleObject::updatePath():
 
 def CircleObject::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* /*widget*/):
     QGraphicsScene* objScene = scene()
-    if(!objScene) return
+    if !objScene) return
 
     QPen paintPen = pen()
-    painter->setPen(paintPen)
+    painter.setPen(paintPen)
     updateRubber(painter)
-    if(option->state & QStyle::State_Selected)  { paintPen.setStyle(Qt::DashLine); }
-    if(objScene->property("ENABLE_LWT").toBool()) { paintPen = lineWeightPen(); }
-    painter->setPen(paintPen)
+    if option.state & QStyle::State_Selected)   paintPen.setStyle(Qt::DashLine)
+    if objScene.property("ENABLE_LWT").toBool())  paintPen = lineWeightPen()
+    painter.setPen(paintPen)
 
-    painter->drawEllipse(rect())
+    painter.drawEllipse(rect())
 
 def CircleObject::updateRubber(QPainter* painter):
     int rubberMode = objectRubberMode()
-    if(rubberMode == OBJ_RUBBER_CIRCLE_1P_RAD)
-    {
+    if rubberMode == OBJ_RUBBER_CIRCLE_1P_RAD)
+
         sceneCenterPoint = objectRubberPoint("CIRCLE_CENTER")
         sceneQSnapPoint = objectRubberPoint("CIRCLE_RADIUS")
         itemCenterPoint = mapFromScene(sceneCenterPoint)
@@ -3003,11 +2938,11 @@ def CircleObject::updateRubber(QPainter* painter):
         QLineF sceneLine(sceneCenterPoint, sceneQSnapPoint)
         radius = sceneLine.length()
         setObjectRadius(radius)
-        if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+        if painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    elif(rubberMode == OBJ_RUBBER_CIRCLE_1P_DIA)
-    {
+    elif rubberMode == OBJ_RUBBER_CIRCLE_1P_DIA)
+
         sceneCenterPoint = objectRubberPoint("CIRCLE_CENTER")
         sceneQSnapPoint = objectRubberPoint("CIRCLE_DIAMETER")
         itemCenterPoint = mapFromScene(sceneCenterPoint)
@@ -3017,11 +2952,11 @@ def CircleObject::updateRubber(QPainter* painter):
         QLineF sceneLine(sceneCenterPoint, sceneQSnapPoint)
         diameter = sceneLine.length()
         setObjectDiameter(diameter)
-        if(painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
+        if painter) drawRubberLine(itemLine, painter, "VIEW_COLOR_CROSSHAIR")
         updatePath()
     }
-    elif(rubberMode == OBJ_RUBBER_CIRCLE_2P)
-    {
+    elif rubberMode == OBJ_RUBBER_CIRCLE_2P)
+
         sceneTan1Point = objectRubberPoint("CIRCLE_TAN1")
         sceneQSnapPoint = objectRubberPoint("CIRCLE_TAN2")
         QLineF sceneLine(sceneTan1Point, sceneQSnapPoint)
@@ -3030,8 +2965,8 @@ def CircleObject::updateRubber(QPainter* painter):
         setObjectDiameter(diameter)
         updatePath()
     }
-    elif(rubberMode == OBJ_RUBBER_CIRCLE_3P)
-    {
+    elif rubberMode == OBJ_RUBBER_CIRCLE_3P)
+
         sceneTan1Point = objectRubberPoint("CIRCLE_TAN1")
         sceneTan2Point = objectRubberPoint("CIRCLE_TAN2")
         sceneTan3Point = objectRubberPoint("CIRCLE_TAN3")
@@ -3048,24 +2983,24 @@ def CircleObject::updateRubber(QPainter* painter):
         setObjectRadius(radius)
         updatePath()
     }
-    elif(rubberMode == OBJ_RUBBER_GRIP)
-    {
-        if(painter)
-        {
+    elif rubberMode == OBJ_RUBBER_GRIP)
+
+        if painter)
+    
             gripPoint = objectRubberPoint("GRIP_POINT")
-            if(gripPoint == objectCenter())
-            {
-                painter->drawEllipse(rect().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
-            }
+            if gripPoint == objectCenter())
+        
+                painter.drawEllipse(rect().translated(mapFromScene(objectRubberPoint(QString()))-mapFromScene(gripPoint)))
+    
             else
-            {
+        
                 gripRadius = QLineF(objectCenter(), objectRubberPoint(QString())).length()
-                painter->drawEllipse(QPointF(), gripRadius, gripRadius)
-            }
+                painter.drawEllipse(QPointF(), gripRadius, gripRadius)
+    
 
             QLineF rubLine(mapFromScene(gripPoint), mapFromScene(objectRubberPoint(QString())))
             drawRubberLine(rubLine, painter, "VIEW_COLOR_CROSSHAIR")
-        }
+
     }
 }
 
@@ -3092,10 +3027,10 @@ CircleObject::mouseSnapPoint(const QPointF& mousePoint):
     minDist = qMin(qMin(qMin(q0Dist, q90Dist), qMin(q180Dist, q270Dist)), cntrDist)
 
     if     (minDist == cntrDist) return center
-    elif(minDist == q0Dist)   return quad0
-    elif(minDist == q90Dist)  return quad90
-    elif(minDist == q180Dist) return quad180
-    elif(minDist == q270Dist) return quad270
+    elif minDist == q0Dist)   return quad0
+    elif minDist == q90Dist)  return quad90
+    elif minDist == q180Dist) return quad180
+    elif minDist == q270Dist) return quad270
 
     return scenePos()
 
@@ -3105,11 +3040,11 @@ QList<QPointF> CircleObject::allGripPoints():
     return gripPoints
 
 def CircleObject::gripEdit(const QPointF& before, const QPointF& after):
-    if(before == objectCenter()) { delta = after-before; moveBy(delta.x(), delta.y()); }
-    else                         { setObjectRadius(QLineF(objectCenter(), after).length()); }
+    if before == objectCenter())  delta = after-before; moveBy(delta.x(), delta.y())
+    else                      setObjectRadius(QLineF(objectCenter(), after).length())
 }
 
-QPainterPath CircleObject::objectSavePath() const:
+QPainterPath CircleObject::objectSavePath()
     QPainterPath path
     QRectF r = rect()
     path.arcMoveTo(r, 0)
@@ -3144,10 +3079,10 @@ class Circle():
                 pos_y = -y/(0.5*window_height) + 1.0
                 mouse_x = x
                 mouse_y = y
-                for (i=0; i<2; i++) {
-                    widget *leaf = root->leaves[i]
-                    if ((leaf->left < pos_x) and (pos_x < leaf->right))
-                    if ((leaf->top < pos_y) and (pos_y < leaf->bottom)) {
+                for (i=0; i<2; i++) 
+                    widget *leaf = root.leaves[i]
+                    if ((leaf.left < pos_x) and (pos_x < leaf.right))
+                    if ((leaf.top < pos_y) and (pos_y < leaf.bottom)) 
                         action_id = i
                         break
 
@@ -3183,8 +3118,8 @@ def click(self, x, y):
             appendPromptHistory()
             return
 
-    elif(self.mode == self.mode_2P) {
-        if(isNaN(self.x1)) {
+    elif self.mode == self.mode_2P) 
+        if isNaN(self.x1)) 
             self.x1 = x
             self.y1 = y
             addRubber("CIRCLE")
@@ -3192,8 +3127,8 @@ def click(self, x, y):
             setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
             appendPromptHistory()
             setPromptPrefix(translate("Specify second end point of circle's diameter: "))
-        }
-        elif(isNaN(self.x2)) {
+
+        elif isNaN(self.x2)) 
             self.x2 = x
             self.y2 = y
             setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
@@ -3218,68 +3153,68 @@ def click(self, x, y):
             setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
             appendPromptHistory()
             setPromptPrefix(translate("Specify third point on circle: "))
-        }
-        elif(isNaN(self.x3)) {
+
+        elif isNaN(self.x3)) 
             self.x3 = x
             self.y3 = y
             setRubberPoint("CIRCLE_TAN3", self.x3, self.y3)
             vulcanize()
             appendPromptHistory()
             return
-        }
-        else {
+
+        else 
             error("CIRCLE", translate("This should never happen."))
 
     elif self.mode == self.mode_TTR:
-        if (isNaN(self.x1)) {
+        if (isNaN(self.x1)) 
             self.x1 = x
             self.y1 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify point on object for second tangent of circle: "))
-        }
-        elif (isNaN(self.x2)) {
+
+        elif (isNaN(self.x2)) 
             self.x2 = x
             self.y2 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify radius of circle: "))
-        }
-        elif (isNaN(self.x3)) {
+
+        elif (isNaN(self.x3)) 
             self.x3 = x
             self.y3 = y
             appendPromptHistory()
             setPromptPrefix(translate("Specify second point: "))
-        }
-        else {
+
+        else 
             todo("CIRCLE", "click() for TTR")
-        }
+
     }
     return 0
 
 def circle_prompt(circle_args args, char *str):
-    if (self.mode == self.mode_1P_RAD) {
-        if (isNaN(self.x1)) {
+    if (self.mode == self.mode_1P_RAD) 
+        if (isNaN(self.x1)) 
             # TODO: Probably should add additional qsTr calls here.
-            if (!strcmp(str, "2P")) {
+            if (!strcmp(str, "2P")) 
                 self.mode = self.mode_2P
                 setPromptPrefix(translate("Specify first end point of circle's diameter: "))
-            }
+    
             # TODO: Probably should add additional qsTr calls here.
-            elif (!strcmp(str, "3P")) {
+            elif (!strcmp(str, "3P")) 
                 self.mode = self.mode_3P
                 setPromptPrefix(translate("Specify first point of circle: "))
-            }
+    
             # TODO: Probably should add additional qsTr calls here.
-            elif (!strcmp(str, "T") or !strcmp(str, "TTR")) {
+            elif (!strcmp(str, "T") or !strcmp(str, "TTR")) 
                 self.mode = self.mode_TTR
                 setPromptPrefix(translate("Specify point on object for first tangent of circle: "))
-            }
-            else {
+    
+            else 
                 strList = str.split(",")
-                if (isNaN(strList[0]) or isNaN(strList[1])) {
+                if (isNaN(strList[0]) or isNaN(strList[1])) 
                     alert(translate("Point or option keyword required."))
                     setPromptPrefix(translate("Specify center point for circle or [3P/2P/Ttr (tan tan radius)]: "))
-                }
-                else {
+        
+                else 
                     self.x1 = Number(strList[0])
                     self.y1 = Number(strList[1])
                     self.cx = self.x1
@@ -3291,18 +3226,18 @@ def circle_prompt(circle_args args, char *str):
 
         else:
             # TODO: Probably should add additional qsTr calls here.
-            if (!strcmp(str, "D") or !strcmp(str, "DIAMETER")) {
+            if (!strcmp(str, "D") or !strcmp(str, "DIAMETER")) 
                 self.mode = circle_mode_1P_DIA
                 setRubberMode("CIRCLE_1P_DIA")
                 setPromptPrefix(translate("Specify diameter of circle: "))
-            }
+    
             else:
                 num = Number(cmd)
-                if (isNaN(num)) {
+                if (isNaN(num)) 
                     alert(translate("Requires numeric radius, point on circumference, or \"D\"."))
                     setPromptPrefix(translate("Specify radius of circle or [Diameter]: "))
-                }
-                else {
+        
+                else 
                     self.rad = num
                     self.x2 = self.x1 + self.rad
                     self.y2 = self.y1
@@ -3311,18 +3246,18 @@ def circle_prompt(circle_args args, char *str):
                     return
 
     elif (self.mode == circle_mode_1P_DIA:
-        if (isNaN(self.x1)) {
+        if (isNaN(self.x1)) 
             error("CIRCLE", translate("This should never happen."))
-        }
-        if (isNaN(self.x2)) {
+
+        if (isNaN(self.x2)) 
             num = Number(cmd)
-            if(isNaN(num))
-            {
+            if isNaN(num))
+        
                 alert(translate("Requires numeric distance or second point."))
                 setPromptPrefix(translate("Specify diameter of circle: "))
-            }
+    
             else
-            {
+        
                 self.dia = num
                 self.x2 = self.x1 + self.dia
                 self.y2 = self.y1
@@ -3332,11 +3267,11 @@ def circle_prompt(circle_args args, char *str):
         else:
             error("CIRCLE", translate("This should never happen."))
 
-    elif(self.mode == self.mode_2P:
-        if(isNaN(self.x1))
-        {
+    elif self.mode == self.mode_2P:
+        if isNaN(self.x1))
+    
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1])):
+            if isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first end point of circle's diameter: "))
             else:
@@ -3346,7 +3281,7 @@ def circle_prompt(circle_args args, char *str):
                 setRubberMode("CIRCLE_2P")
                 setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
                 setPromptPrefix(translate("Specify second end point of circle's diameter: "))
-        elif(isNaN(self.x2)):
+        elif isNaN(self.x2)):
             strList = str.split(",")
             if isNaN(strList[0]) or isNaN(strList[1]):
                 alert(translate("Invalid point."))
@@ -3360,10 +3295,10 @@ def circle_prompt(circle_args args, char *str):
         else:
             error("CIRCLE", translate("This should never happen."))
 
-    elif(self.mode == self.mode_3P):
-        if(isNaN(self.x1)):
+    elif self.mode == self.mode_3P):
+        if isNaN(self.x1)):
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1])):
+            if isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first point of circle: "))
             else:
@@ -3371,16 +3306,16 @@ def circle_prompt(circle_args args, char *str):
                 self.y1 = Number(strList[1])
                 setPromptPrefix(translate("Specify second point of circle: "))
 
-        elif(isNaN(self.x2)):
-        {
+        elif isNaN(self.x2)):
+    
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+            if isNaN(strList[0]) or isNaN(strList[1]))
+        
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify second point of circle: "))
-            }
+    
             else
-            {
+        
                 self.x2 = Number(strList[0])
                 self.y2 = Number(strList[1])
                 addRubber("CIRCLE")
@@ -3388,8 +3323,8 @@ def circle_prompt(circle_args args, char *str):
                 setRubberPoint("CIRCLE_TAN1", self.x1, self.y1)
                 setRubberPoint("CIRCLE_TAN2", self.x2, self.y2)
                 setPromptPrefix(translate("Specify third point of circle: "))
-            }
-        }
+    
+
         elif isNaN(self.x3):
             strList = cmd.split(",")
             if isNaN(strList[0]) or isNaN(strList[1]):
@@ -3404,7 +3339,7 @@ def circle_prompt(circle_args args, char *str):
         else:
             error("CIRCLE", translate("This should never happen."))
 
-    elif(self.mode == self.mode_TTR) {
+    elif self.mode == self.mode_TTR) 
         todo("CIRCLE", "prompt() for TTR")
 
     return 0
@@ -3645,8 +3580,8 @@ class Ellipse():
         return args
 
     def click(self, point):
-    if (self.mode == ELLIPSE_MAJORDIAMETER_MINORRADIUS) {
-        if (isNaN(self.x1)) {
+    if (self.mode == ELLIPSE_MAJORDIAMETER_MINORRADIUS) 
+        if (isNaN(self.x1)) 
             self.point1 = point
             addRubber("ELLIPSE")
             setRubberMode("ELLIPSE_LINE")
@@ -3677,12 +3612,12 @@ class Ellipse():
             vulcanize()
             appendPromptHistory()
             return
-        }
+
         else:
             error("ELLIPSE", translate("This should never happen."))
 
     elif self.mode == "MAJORRADIUS_MINORRADIUS":
-        if (isNaN(self.x1)) {
+        if (isNaN(self.x1)) 
             self.x1 = x
             self.y1 = y
             self.cx = self.x1
@@ -3693,8 +3628,8 @@ class Ellipse():
             setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
             appendPromptHistory()
             setPromptPrefix(translate("Specify first axis end point: "))
-        }
-        elif(isNaN(self.x2)) {
+
+        elif isNaN(self.x2)) 
             self.x2 = x
             self.y2 = y
             self.width = calculateDistance(self.cx, self.cy, self.x2, self.y2)*2.0
@@ -3705,8 +3640,8 @@ class Ellipse():
             setRubberPoint("ELLIPSE_ROT", self.rot, 0)
             appendPromptHistory()
             setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-        }
-        elif(isNaN(self.x3)) {
+
+        elif isNaN(self.x3)) 
             self.x3 = x
             self.y3 = y
             self.height = perpendicularDistance(self.x3, self.y3, self.cx, self.cy, self.x2, self.y2)*2.0
@@ -3714,18 +3649,18 @@ class Ellipse():
             vulcanize()
             appendPromptHistory()
             return
-        }
+
         else:
             error("ELLIPSE", translate("This should never happen."))
 
-    elif(self.mode == self.mode_ELLIPSE_ROTATION) {
-        if (isNaN(self.x1)) {
+    elif self.mode == self.mode_ELLIPSE_ROTATION) 
+        if (isNaN(self.x1)) 
             error("ELLIPSE", translate("This should never happen."))
-        }
-        elif (isNaN(self.x2)) {
+
+        elif (isNaN(self.x2)) 
             error("ELLIPSE", translate("This should never happen."))
-        }
-        elif(isNaN(self.x3)) {
+
+        elif isNaN(self.x3)) 
             angle = calculateAngle(self.cx, self.cy, x, y)
             self.height = cos(angle*embConstantPi/180.0)*self.width
             addEllipse(self.cx, self.cy, self.width, self.height, self.rot, false)
@@ -3735,7 +3670,7 @@ class Ellipse():
 def ellipse_prompt(cmd):
     if self.mode == "MAJORDIAMETER_MINORRADIUS":
         if isNaN(self.x1):
-            if(str == "C" or cmd == "CENTER":
+            if str == "C" or cmd == "CENTER":
                 #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_MAJORRADIUS_MINORRADIUS
                 setPromptPrefix(translate("Specify center point: "))
@@ -3744,27 +3679,27 @@ def ellipse_prompt(cmd):
                 if isNaN(strList[0]) or isNaN(strList[1]):
                     alert(translate("Point or option keyword required."))
                     setPromptPrefix(translate("Specify first axis start point or [Center]: "))
-                }
+        
                 else
-                {
+            
                     self.x1 = Number(strList[0])
                     self.y1 = Number(strList[1])
                     addRubber("ELLIPSE")
                     setRubberMode("ELLIPSE_LINE")
                     setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
                     setPromptPrefix(translate("Specify first axis end point: "))
-                }
-            }
-        }
+        
+    
+
         elif isNaN(self.x2):
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+            if isNaN(strList[0]) or isNaN(strList[1]))
+        
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first axis end point: "))
-            }
+    
             else
-            {
+        
                 self.x2 = Number(strList[0])
                 self.y2 = Number(strList[1])
                 self.cx = (self.x1 + self.x2)/2.0
@@ -3779,19 +3714,19 @@ def ellipse_prompt(cmd):
                 setRubberPoint("ELLIPSE_ROT", self.rot, 0)
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
 
-        elif(isNaN(self.x3))
-            if(str == "R" or cmd == "ROTATION") #TODO: Probably should add additional qsTr calls here.
+        elif isNaN(self.x3))
+            if str == "R" or cmd == "ROTATION") #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify rotation: "))
             else:
                 strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
-                {
+                if isNaN(strList[0]) or isNaN(strList[1]))
+            
                     alert(translate("Point or option keyword required."))
                     setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
-                }
+        
                 else
-                {
+            
                     self.x3 = Number(strList[0])
                     self.y3 = Number(strList[1])
                     self.height = perpendicularDistance(self.x3, self.y3, self.x1, self.y1, self.x2, self.y2)*2.0
@@ -3799,10 +3734,10 @@ def ellipse_prompt(cmd):
                     vulcanize()
                     return
 
-    elif(self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
-        if(isNaN(self.x1))
+    elif self.mode == self.mode_MAJORRADIUS_MINORRADIUS)
+        if isNaN(self.x1))
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1])):
+            if isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify center point: "))
             else:
@@ -3815,15 +3750,15 @@ def ellipse_prompt(cmd):
                 setRubberPoint("ELLIPSE_LINE_POINT1", self.x1, self.y1)
                 setRubberPoint("ELLIPSE_CENTER", self.cx, self.cy)
                 setPromptPrefix(translate("Specify first axis end point: "))
-        elif(isNaN(self.x2)):
+        elif isNaN(self.x2)):
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+            if isNaN(strList[0]) or isNaN(strList[1]))
+        
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify first axis end point: "))
-            }
+    
             else
-            {
+        
                 self.x2 = Number(strList[0])
                 self.y2 = Number(strList[1])
                 self.width = calculateDistance(self.x1, self.y1, self.x2, self.y2)*2.0
@@ -3834,13 +3769,13 @@ def ellipse_prompt(cmd):
                 setRubberPoint("ELLIPSE_ROT", self.rot, 0)
                 setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
 
-        elif(isNaN(self.x3))
-            if(str == "R" or cmd == "ROTATION") #TODO: Probably should add additional qsTr calls here.
+        elif isNaN(self.x3))
+            if str == "R" or cmd == "ROTATION") #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_ELLIPSE_ROTATION
                 setPromptPrefix(translate("Specify ellipse rotation: "))
             else
                 strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
+                if isNaN(strList[0]) or isNaN(strList[1]))
                     alert(translate("Point or option keyword required."))
                     setPromptPrefix(translate("Specify second axis end point or [Rotation]: "))
                 else
@@ -3851,13 +3786,13 @@ def ellipse_prompt(cmd):
                     vulcanize()
                     return
 
-    elif(self.mode == self.mode_ELLIPSE_ROTATION):
-        if(isNaN(self.x1)):
+    elif self.mode == self.mode_ELLIPSE_ROTATION):
+        if isNaN(self.x1)):
             error("ELLIPSE", translate("This should never happen."))
-        elif(isNaN(self.x2)):
+        elif isNaN(self.x2)):
             error("ELLIPSE", translate("This should never happen."))
-        elif(isNaN(self.x3)):
-            if(isNaN(cmd))
+        elif isNaN(self.x3)):
+            if isNaN(cmd))
                 alert(translate("Invalid angle. Input a numeric angle or pick a point."))
                 setPromptPrefix(translate("Specify rotation: "))
             else:
@@ -3869,7 +3804,7 @@ def ellipse_prompt(cmd):
 ---
 
 class Heart():
-var global = {}; #Required
+var global = }; #Required
 self.numPoints = 512; #Default //TODO: min:64 max:8192
 self.cx
 self.cy
@@ -3907,19 +3842,19 @@ def updateHeart(style, numPts, xScale, yScale):
     two_pi = 2*embConstantPi
 
     for(i = 0; i <= numPts; i++)
-    {
+
         t = two_pi/numPts*i;
 
-        if(style == "HEART4")
-        {
+        if style == "HEART4")
+    
             xx = cos(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2)
             yy = sin(t)*((sin(t)*sqrt(abs(cos(t))))/(sin(t)+7/5) - 2*sin(t) + 2)
-        }
-        elif(style == "HEART5")
-        {
+
+        elif style == "HEART5")
+    
             xx = 16*pow(sin(t), 3)
             yy = 13*cos(t) - 5*cos(2*t) - 2*cos(3*t) - cos(4*t)
-        }
+
 
         setRubberPoint("POLYGON_POINT_" + i.toString(), xx*xScale, yy*yScale)
     }
@@ -3931,7 +3866,7 @@ def updateHeart(style, numPts, xScale, yScale):
 
 #Command: Line
 
-var global = {}; #Required
+var global = }; #Required
 self.firstRun
 self.firstX
 self.firstY
@@ -3948,8 +3883,8 @@ def __init__(self):
     setPromptPrefix(translate("Specify first point: "))
 
 def click(x, y):
-    if(self.firstRun)
-    {
+    if self.firstRun)
+
         self.firstRun = false
         self.firstX = x
         self.firstY = y
@@ -3962,7 +3897,7 @@ def click(x, y):
         setPromptPrefix(translate("Specify next point or [Undo]: "))
     }
     else
-    {
+
         setRubberPoint("LINE_END", x, y)
         vulcanize()
         addRubber("LINE")
@@ -4075,7 +4010,7 @@ def click(x, y):
     def prompt(self, str):
         if self.firstRun:
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1])):
+            if isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify base point: "))
             else:
@@ -4090,7 +4025,7 @@ def click(x, y):
 
         else:
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1])):
+            if isNaN(strList[0]) or isNaN(strList[1])):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify destination point: "))
             else:
@@ -4106,7 +4041,7 @@ def click(x, y):
 
 #TODO: The path command is currently broken
 
-var global = {}; #Required
+var global = }; #Required
 self.firstRun
 self.firstX
 self.firstY
@@ -4139,28 +4074,28 @@ def click(x, y):
         self.prevY = y
 
 def prompt(cmd):
-    if(str == "A" or cmd == "ARC")#TODO: Probably should add additional qsTr calls here.
-    {
+    if str == "A" or cmd == "ARC")#TODO: Probably should add additional qsTr calls here.
+
         todo("PATH", "prompt() for ARC")
     }
-    elif(str == "U" or cmd == "UNDO") #TODO: Probably should add additional qsTr calls here.
-    {
+    elif str == "U" or cmd == "UNDO") #TODO: Probably should add additional qsTr calls here.
+
         todo("PATH", "prompt() for UNDO")
     }
     else
-    {
+
         strList = str.split(",")
-        if(isNaN(strList[0]) or isNaN(strList[1]))
-        {
+        if isNaN(strList[0]) or isNaN(strList[1]))
+    
             alert(translate("Point or option keyword required."))
             setPromptPrefix(translate("Specify next point or [Arc/Undo]: "))
-        }
+
         else
-        {
+    
             x = Number(strList[0])
             y = Number(strList[1])
-            if(self.firstRun)
-            {
+            if self.firstRun)
+        
                 self.firstRun = false
                 self.firstX = x
                 self.firstY = y
@@ -4207,14 +4142,14 @@ class Point():
 
 def prompt(self, str):
     if self.firstRun:
-        if(str == "M" or cmd == "MODE") {
+        if str == "M" or cmd == "MODE") 
             #TODO: Probably should add additional qsTr calls here.
             todo("POINT", "prompt() for PDMODE")
-        }
-        elif(str == "S" or cmd == "SIZE") {
+
+        elif str == "S" or cmd == "SIZE") 
             #TODO: Probably should add additional qsTr calls here.
             todo("POINT", "prompt() for PDSIZE")
-        }
+
         strList = str.split(",")
         if isNaN(strList[0]) or isNaN(strList[1]):
             alert(translate("Invalid point."))
@@ -4258,7 +4193,7 @@ class Polygon():
         self.numSides = 4
         self.mode = "NUM_SIDES"
         setPromptPrefix(translate("Enter number of sides")
-            + " {" + self.numSides.toString() + "}: ")
+            + " " + self.numSides.toString() + "}: ")
         return self
 
     def click(self, x, y):
@@ -4270,7 +4205,7 @@ class Polygon():
             self.centerY = y
             self.mode = self.mode_POLYTYPE
             appendPromptHistory()
-            setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
+            setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " " + self.polyType + "}: ")
 
         elif self.mode == "POLYTYPE":
             #Do nothing, the prompt controls this.
@@ -4301,45 +4236,45 @@ class Polygon():
 
 def prompt(cmd):
     if self.mode == self.mode_NUM_SIDES:
-        if(str == "" and self.numSides >= 3 and self.numSides <= 1024)
-        {
+        if str == "" and self.numSides >= 3 and self.numSides <= 1024)
+    
             setPromptPrefix(translate("Specify center point or [Sidelength]: "))
             self.mode = self.mode_CENTER_PT
-        }
+
         else
-        {
+    
             tmp = Number(cmd)
-            if(isNaN(tmp) or !isInt(tmp) or tmp < 3 or tmp > 1024)
-            {
+            if isNaN(tmp) or !isInt(tmp) or tmp < 3 or tmp > 1024)
+        
                 alert(translate("Requires an integer between 3 and 1024."))
-                setPromptPrefix(translate("Enter number of sides") + " {" + self.numSides.toString() + "}: ")
-            }
+                setPromptPrefix(translate("Enter number of sides") + " " + self.numSides.toString() + "}: ")
+    
             else
-            {
+        
                 self.numSides = tmp
                 setPromptPrefix(translate("Specify center point or [Sidelength]: "))
                 self.mode = self.mode_CENTER_PT
 
-    elif(self.mode == self.mode_CENTER_PT:
-        if(str == "S" or cmd == "SIDELENGTH") #TODO: Probably should add additional qsTr calls here.
-        {
+    elif self.mode == self.mode_CENTER_PT:
+        if str == "S" or cmd == "SIDELENGTH") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SIDE_LEN
             setPromptPrefix(translate("Specify start point: "))
-        }
+
         else
-        {
+    
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+            if isNaN(strList[0]) or isNaN(strList[1]))
+        
                 alert(translate("Point or option keyword required."))
                 setPromptPrefix(translate("Specify center point or [Sidelength]: "))
-            }
+    
             else
-            {
+        
                 self.centerX = Number(strList[0])
                 self.centerY = Number(strList[1])
                 self.mode = self.mode_POLYTYPE
-                setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
+                setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " " + self.polyType + "}: ")
 
     elif self.mode == "POLYTYPE":
         if cmd == "INSCRIBED"[len(cmd)]:
@@ -4351,7 +4286,7 @@ def prompt(cmd):
             setRubberMode("POLYGON_INSCRIBE")
             setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
             setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-        }
+
         elif cmd == "CIRCUMSCRIBED"[len(cmd)]:
             # TODO: Probably should add additional translate calls here.
             self.mode = self.mode_CIRCUMSCRIBE
@@ -4361,53 +4296,53 @@ def prompt(cmd):
             setRubberMode("POLYGON_CIRCUMSCRIBE")
             setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
             setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-        }
-        elif(str == "")
-        {
-            if(self.polyType == "Inscribed")
-            {
+
+        elif str == "")
+    
+            if self.polyType == "Inscribed")
+        
                 self.mode = self.mode_INSCRIBE
                 setPromptPrefix(translate("Specify polygon corner point or [Distance]: "))
                 addRubber("POLYGON")
                 setRubberMode("POLYGON_INSCRIBE")
                 setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
                 setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-            }
-            elif(self.polyType == "Circumscribed")
-            {
+    
+            elif self.polyType == "Circumscribed")
+        
                 self.mode = self.mode_CIRCUMSCRIBE
                 setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
                 addRubber("POLYGON")
                 setRubberMode("POLYGON_CIRCUMSCRIBE")
                 setRubberPoint("POLYGON_CENTER", self.centerX, self.centerY)
                 setRubberPoint("POLYGON_NUM_SIDES", self.numSides, 0)
-            }
+    
             else
-            {
+        
                 error("POLYGON", translate("Polygon type is not Inscribed or Circumscribed."))
-            }
-        }
-        else
-        {
-            alert(translate("Invalid option keyword."))
-            setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " {" + self.polyType + "}: ")
+    
 
-    elif(self.mode == self.mode_INSCRIBE):
-        if(str == "D" or cmd == "DISTANCE") #TODO: Probably should add additional qsTr calls here.
-        {
+        else
+    
+            alert(translate("Invalid option keyword."))
+            setPromptPrefix(translate("Specify polygon type [Inscribed in circle/Circumscribed around circle]") + " " + self.polyType + "}: ")
+
+    elif self.mode == self.mode_INSCRIBE):
+        if str == "D" or cmd == "DISTANCE") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_DISTANCE
             setPromptPrefix(translate("Specify distance: "))
-        }
+
         else
-        {
+    
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+            if isNaN(strList[0]) or isNaN(strList[1]))
+        
                 alert(translate("Point or option keyword required."))
                 setPromptPrefix(translate("Specify polygon corner point or [Distance]: "))
-            }
+    
             else
-            {
+        
                 self.pointIX = Number(strList[0])
                 self.pointIY = Number(strList[1])
                 setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
@@ -4421,11 +4356,11 @@ def prompt(cmd):
             setPromptPrefix(translate("Specify distance: "))
         else:
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+            if isNaN(strList[0]) or isNaN(strList[1]))
+        
                 alert(translate("Point or option keyword required."))
                 setPromptPrefix(translate("Specify polygon side point or [Distance]: "))
-            }
+    
             else:
                 self.pointCX = Number(strList[0])
                 self.pointCY = Number(strList[1])
@@ -4433,20 +4368,20 @@ def prompt(cmd):
                 vulcanize()
                 return
 
-    elif(self.mode == self.mode_DISTANCE):
-        if(isNaN(cmd)):
+    elif self.mode == self.mode_DISTANCE):
+        if isNaN(cmd)):
             alert(translate("Requires valid numeric distance."))
             setPromptPrefix(translate("Specify distance: "))
         else:
-            if(self.polyType == "Inscribed")
-            {
+            if self.polyType == "Inscribed")
+        
                 self.pointIX = self.centerX
                 self.pointIY = self.centerY + Number(cmd)
                 setRubberPoint("POLYGON_INSCRIBE_POINT", self.pointIX, self.pointIY)
                 vulcanize()
                 return
-            }
-            elif(self.polyType == "Circumscribed"):
+    
+            elif self.polyType == "Circumscribed"):
                 self.pointCX = self.centerX
                 self.pointCY = self.centerY + Number(cmd)
                 setRubberPoint("POLYGON_CIRCUMSCRIBE_POINT", self.pointCX, self.pointCY)
@@ -4455,7 +4390,7 @@ def prompt(cmd):
             else:
                 error("POLYGON", translate("Polygon type is not Inscribed or Circumscribed."))
 
-    elif(self.mode == self.mode_SIDE_LEN):
+    elif self.mode == self.mode_SIDE_LEN):
         todo("POLYGON", "Sidelength mode")
 
 ---
@@ -4472,7 +4407,7 @@ class Polyline():
         setPromptPrefix(translate("Specify first point: "))
 
     def click(self, x, y):
-        if(self.firstRun):
+        if self.firstRun):
             self.firstRun = false
             self.firstX = x
             self.firstY = y
@@ -4561,13 +4496,13 @@ class DimLeader():
 
     def prompt(cmd):
         strList = str.split(",")
-        if(isNaN(self.x1))
-    {
-        if(isNaN(strList[0]) or isNaN(strList[1]))
-        {
+        if isNaN(self.x1))
+
+        if isNaN(strList[0]) or isNaN(strList[1]))
+    
             alert(translate("Requires two points."))
             setPromptPrefix(translate("Specify first point: "))
-        }
+
         else:
             self.x1 = Number(strList[0])
             self.y1 = Number(strList[1])
@@ -4589,7 +4524,7 @@ class DimLeader():
 
 ---
 
-var global = {}; #Required
+var global = }; #Required
 self.newRect
 self.x1
 self.y1
@@ -4658,7 +4593,7 @@ def prompt(self, cmd):
 
 ----
 
-var global = {}; #Required
+var global = }; #Required
 self.mode
 
 #enums
@@ -4686,13 +4621,13 @@ def prompt(cmd):
             r = Number(strList[0])
             g = Number(strList[1])
             b = Number(strList[2])
-            if(!validRGB(r,g,b))
-            {
+            if !validRGB(r,g,b))
+        
                 alert(translate("Invalid color. R,G,B values must be in the range of 0-255."))
                 setPromptPrefix(translate("Specify background color: "))
-            }
+    
             else
-            {
+        
                 setBackgroundColor(r,g,b)
                 return
 
@@ -4749,15 +4684,15 @@ def __init__(self):
     self.angleRef = MAX_DISTANCE+1.0
     self.angleNew = MAX_DISTANCE+1.0
 
-    if(numSelected() <= 0)
-    {
+    if numSelected() <= 0)
+
         #TODO: Prompt to select objects if nothing is preselected
         alert(translate("Preselect objects before invoking the rotate command."))
         return
         messageBox("information", translate("Rotate Preselect"), translate("Preselect objects before invoking the rotate command."))
     }
     else
-    {
+
         setPromptPrefix(translate("Specify base point: "))
     }
 
@@ -4783,7 +4718,7 @@ def click(x, y):
             return
 
     elif self.mode == "REFERENCE":
-        if(isNaN(self.baseRX))
+        if isNaN(self.baseRX))
             self.baseRX = x
             self.baseRY = y
             appendPromptHistory()
@@ -4791,7 +4726,7 @@ def click(x, y):
             setRubberMode("LINE")
             setRubberPoint("LINE_START", self.baseRX, self.baseRY)
             setPromptPrefix(translate("Specify second point: "))
-        elif(isNaN(self.destRX))
+        elif isNaN(self.destRX))
             self.destRX = x
             self.destRY = y
             self.angleRef = calculateAngle(self.baseRX, self.baseRY, self.destRX, self.destRY)
@@ -4799,9 +4734,9 @@ def click(x, y):
             previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
             appendPromptHistory()
             setPromptPrefix(translate("Specify the new angle: "))
-        }
-        elif(isNaN(self.angleNew))
-        {
+
+        elif isNaN(self.angleNew))
+    
             self.angleNew = calculateAngle(self.baseX, self.baseY, x, y)
             rotateSelected(self.baseX, self.baseY, self.angleNew - self.angleRef)
             previewOff()
@@ -4811,7 +4746,7 @@ def prompt(cmd):
     if self.mode == self.mode_NORMAL:
         if self.firstRun:
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]):
+            if isNaN(strList[0]) or isNaN(strList[1]):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify base point: "))
             else:
@@ -4825,10 +4760,10 @@ def prompt(cmd):
                 setPromptPrefix(translate("Specify rotation angle or [Reference]: "))
 
         else:
-            if(str == "R" or cmd == "REFERENCE"):
+            if str == "R" or cmd == "REFERENCE"):
                 # TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_REFERENCE
-                setPromptPrefix(translate("Specify the reference angle") + " {0.00}: ")
+                setPromptPrefix(translate("Specify the reference angle") + " 0.00}: ")
                 clearRubber()
                 previewOff()
             else:
@@ -4847,7 +4782,7 @@ def prompt(cmd):
                 strList = str.split(",")
                 if isNaN(strList[0]) or isNaN(strList[1]):
                     alert(translate("Requires valid numeric angle or two points."))
-                    setPromptPrefix(translate("Specify the reference angle") + " {0.00}: ")
+                    setPromptPrefix(translate("Specify the reference angle") + " 0.00}: ")
                 else:
                     self.baseRX = Number(strList[0])
                     self.baseRY = Number(strList[1])
@@ -4870,10 +4805,10 @@ def prompt(cmd):
                 previewOn("SELECTED", "ROTATE", self.baseX, self.baseY, self.angleRef)
                 setPromptPrefix(translate("Specify the new angle: "))
 
-        elif(isNaN(self.destRX)):
-            if(isNaN(cmd)):
+        elif isNaN(self.destRX)):
+            if isNaN(cmd)):
                 strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1])):
+                if isNaN(strList[0]) or isNaN(strList[1])):
                     alert(translate("Requires valid numeric angle or two points."))
                     setPromptPrefix(translate("Specify second point: "))
                 else:
@@ -4918,7 +4853,7 @@ def prompt(cmd):
 
 ---
 
-var global = {}; #Required
+var global = }; #Required
 self.test1
 self.test2
 
@@ -4983,7 +4918,7 @@ def __init__(self):
 
 ---
 
-var global = {}; #Required
+var global = }; #Required
 self.firstRun
 self.baseX
 self.baseY
@@ -5020,23 +4955,23 @@ def __init__():
     self.factorRef = MAX_DISTANCE+1.0
     self.factorNew = MAX_DISTANCE+1.0
 
-    if(numSelected() <= 0)
-    {
+    if numSelected() <= 0)
+
         #TODO: Prompt to select objects if nothing is preselected
         alert(translate("Preselect objects before invoking the scale command."))
         return
         messageBox("information", translate("Scale Preselect"), translate("Preselect objects before invoking the scale command."))
     }
     else
-    {
+
         setPromptPrefix(translate("Specify base point: "))
     }
 
 def click(x, y):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
+    if self.mode == self.mode_NORMAL)
+
+        if self.firstRun)
+    
             self.firstRun = false
             self.baseX = x
             self.baseY = y
@@ -5046,9 +4981,9 @@ def click(x, y):
             previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
             appendPromptHistory()
             setPromptPrefix(translate("Specify scale factor or [Reference]: "))
-        }
+
         else
-        {
+    
             self.destX = x
             self.destY = y
             self.factor = calculateDistance(self.baseX, self.baseY, self.destX, self.destY)
@@ -5056,12 +4991,12 @@ def click(x, y):
             scaleSelected(self.baseX, self.baseY, self.factor)
             previewOff()
             return
-        }
+
     }
-    elif(self.mode == self.mode_REFERENCE)
-    {
-        if(isNaN(self.baseRX))
-        {
+    elif self.mode == self.mode_REFERENCE)
+
+        if isNaN(self.baseRX))
+    
             self.baseRX = x
             self.baseRY = y
             appendPromptHistory()
@@ -5069,32 +5004,32 @@ def click(x, y):
             setRubberMode("LINE")
             setRubberPoint("LINE_START", self.baseRX, self.baseRY)
             setPromptPrefix(translate("Specify second point: "))
-        }
-        elif(isNaN(self.destRX))
-        {
+
+        elif isNaN(self.destRX))
+    
             self.destRX = x
             self.destRY = y
             self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
-            if(self.factorRef <= 0.0)
-            {
+            if self.factorRef <= 0.0)
+        
                 self.destRX    = MAX_DISTANCE+1.0
                 self.destRY    = MAX_DISTANCE+1.0
                 self.factorRef = MAX_DISTANCE+1.0
                 alert(translate("Value must be positive and nonzero."))
                 setPromptPrefix(translate("Specify second point: "))
-            }
+    
             else
-            {
+        
                 appendPromptHistory()
                 setRubberPoint("LINE_START", self.baseX, self.baseY)
                 previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                 setPromptPrefix(translate("Specify new length: "))
 
-        elif(isNaN(self.factorNew))
+        elif isNaN(self.factorNew))
 
             self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
-            if(self.factorNew <= 0.0)
-            {
+            if self.factorNew <= 0.0)
+        
                 self.factorNew = MAX_DISTANCE+1.0
                 alert(translate("Value must be positive and nonzero."))
                 setPromptPrefix(translate("Specify new length: "))
@@ -5105,18 +5040,15 @@ def click(x, y):
                 return
 
 def prompt(cmd):
-    if(self.mode == self.mode_NORMAL)
-    {
-        if(self.firstRun)
-        {
+    if self.mode == self.mode_NORMAL:
+        if self.firstRun:
             strList = str.split(",")
-            if(isNaN(strList[0]) or isNaN(strList[1]))
-            {
+            if isNaN(strList[0]) or isNaN(strList[1]):
                 alert(translate("Invalid point."))
                 setPromptPrefix(translate("Specify base point: "))
-            }
+    
             else
-            {
+        
                 self.firstRun = false
                 self.baseX = Number(strList[0])
                 self.baseY = Number(strList[1])
@@ -5125,38 +5057,38 @@ def prompt(cmd):
                 setRubberPoint("LINE_START", self.baseX, self.baseY)
                 previewOn("SELECTED", "SCALE", self.baseX, self.baseY, 1)
                 setPromptPrefix(translate("Specify scale factor or [Reference]: "))
-            }
-        }
+    
+
         else
-        {
-            if(str == "R" or cmd == "REFERENCE") #TODO: Probably should add additional qsTr calls here.
-            {
+    
+            if str == "R" or cmd == "REFERENCE") #TODO: Probably should add additional qsTr calls here.
+        
                 self.mode = self.mode_REFERENCE
-                setPromptPrefix(translate("Specify reference length") + " {1}: ")
+                setPromptPrefix(translate("Specify reference length") + " 1}: ")
                 clearRubber()
                 previewOff()
-            }
+    
             else
-            {
-                if(isNaN(cmd))
-                {
+        
+                if isNaN(cmd))
+            
                     alert(translate("Requires valid numeric distance, second point, or option keyword."))
                     setPromptPrefix(translate("Specify scale factor or [Reference]: "))
-                }
+        
                 else
-                {
+            
                     self.factor = Number(cmd)
                     scaleSelected(self.baseX, self.baseY, self.factor)
                     previewOff()
                     return
 
-    elif(self.mode == self.mode_REFERENCE)
-        if(isNaN(self.baseRX))
-            if(isNaN(cmd))
+    elif self.mode == self.mode_REFERENCE)
+        if isNaN(self.baseRX))
+            if isNaN(cmd))
                 strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
+                if isNaN(strList[0]) or isNaN(strList[1]))
                     alert(translate("Requires valid numeric distance or two points."))
-                    setPromptPrefix(translate("Specify reference length") + " {1}: ")
+                    setPromptPrefix(translate("Specify reference length") + " 1}: ")
                 else:
                     self.baseRX = Number(strList[0])
                     self.baseRY = Number(strList[1])
@@ -5179,7 +5111,7 @@ def prompt(cmd):
                     self.destRY    = MAX_DISTANCE+1.0
                     self.factorRef = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
-                    setPromptPrefix(translate("Specify reference length") + " {1}: ")
+                    setPromptPrefix(translate("Specify reference length") + " 1}: ")
                 else:
                     addRubber("LINE")
                     setRubberMode("LINE")
@@ -5190,23 +5122,23 @@ def prompt(cmd):
         elif isNaN(self.destRX):
             if isNaN(cmd):
                 strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
+                if isNaN(strList[0]) or isNaN(strList[1]))
                     alert(translate("Requires valid numeric distance or two points."))
                     setPromptPrefix(translate("Specify second point: "))
                 else:
                     self.destRX = Number(strList[0])
                     self.destRY = Number(strList[1])
                     self.factorRef = calculateDistance(self.baseRX, self.baseRY, self.destRX, self.destRY)
-                    if(self.factorRef <= 0.0)
-                    {
+                    if self.factorRef <= 0.0)
+                
                         self.destRX    = MAX_DISTANCE+1.0
                         self.destRY    = MAX_DISTANCE+1.0
                         self.factorRef = MAX_DISTANCE+1.0
                         alert(translate("Value must be positive and nonzero."))
                         setPromptPrefix(translate("Specify second point: "))
-                    }
+            
                     else
-                    {
+                
                         setRubberPoint("LINE_START", self.baseX, self.baseY)
                         previewOn("SELECTED", "SCALE", self.baseX, self.baseY, self.factorRef)
                         setPromptPrefix(translate("Specify new length: "))
@@ -5240,14 +5172,14 @@ def prompt(cmd):
                     x = Number(strList[0])
                     y = Number(strList[1])
                     self.factorNew = calculateDistance(self.baseX, self.baseY, x, y)
-                    if(self.factorNew <= 0.0)
-                    {
+                    if self.factorNew <= 0.0)
+                
                         self.factorNew = MAX_DISTANCE+1.0
                         alert(translate("Value must be positive and nonzero."))
                         setPromptPrefix(translate("Specify new length: "))
-                    }
+            
                     else
-                    {
+                
                         scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
                         previewOff()
                         return
@@ -5258,29 +5190,32 @@ def prompt(cmd):
                     self.factorNew = MAX_DISTANCE+1.0
                     alert(translate("Value must be positive and nonzero."))
                     setPromptPrefix(translate("Specify new length: "))
-                }
+        
                 else:
                     scaleSelected(self.baseX, self.baseY, self.factorNew/self.factorRef)
                     previewOff()
                     return
 
 
-class Text():
-
-def __init__(self):
-    clearSelection()
-    self.modes = ["JUSTIFY", "SETFONT", "SETGEOM", "RAPID"]
-    self.text = ""
-    self.textX = MAX_DISTANCE+1.0
-    self.textY = MAX_DISTANCE+1.0
-    self.textJustify = "Left"
-    self.textFont = textFont()
-    self.textHeight = MAX_DISTANCE+1.0
-    self.textRotation = MAX_DISTANCE+1.0
-    self.mode = self.mode_SETGEOM
-    setPromptPrefix(translate("Current font: ") + "{" + self.textFont + "} " + translate("Text height: ") + "{" +  textSize() + "}")
-    appendPromptHistory()
-    setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
+class Text(Base_Object):
+    r"""
+    .
+    """
+    def __init__(self):
+        clearSelection()
+        self.modes = ["JUSTIFY", "SETFONT", "SETGEOM", "RAPID"]
+        self.text = ""
+        self.textX = MAX_DISTANCE+1.0
+        self.textY = MAX_DISTANCE+1.0
+        self.textJustify = "Left"
+        self.textFont = textFont()
+        self.textHeight = MAX_DISTANCE+1.0
+        self.textRotation = MAX_DISTANCE+1.0
+        self.mode = self.mode_SETGEOM
+        setPromptPrefix(translate("Current font: ") + "" + self.textFont + "} " + translate("Text height: ") + "" +  textSize() + "}")
+        appendPromptHistory()
+        setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
+        return self
 
 def click(x, y):
     if self.mode == "SETGEOM":
@@ -5291,15 +5226,15 @@ def click(x, y):
             setRubberMode("LINE")
             setRubberPoint("LINE_START", self.textX, self.textY)
             appendPromptHistory()
-            setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
+            setPromptPrefix(translate("Specify text height") + " " + textSize() + "}: ")
         elif isNaN(self.textHeight):
             self.textHeight = calculateDistance(self.textX, self.textY, x, y)
             setTextSize(self.textHeight)
             appendPromptHistory()
-            setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-        }
-        elif(isNaN(self.textRotation))
-        {
+            setPromptPrefix(translate("Specify text angle") + " " + textAngle() + "}: ")
+
+        elif isNaN(self.textRotation))
+    
             self.textRotation = calculateAngle(self.textX, self.textY, x, y)
             setTextAngle(self.textRotation)
             appendPromptHistory()
@@ -5314,7 +5249,7 @@ def click(x, y):
             setRubberText("TEXT_FONT", self.textFont)
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setRubberText("TEXT_RAPID", self.text)
-        }
+
         else:
             #Do nothing, as we are in rapidFire mode now.
 
@@ -5333,154 +5268,153 @@ def prompt(cmd):
             self.textJustify = "Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify right-end point of text or [Justify/Setfont]: "))
-        elif(str == "A" or cmd == "ALIGN") #TODO: Probably should add additional qsTr calls here.
-        {
+        elif str == "A" or cmd == "ALIGN") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Aligned"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "M" or cmd == "MIDDLE") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "M" or cmd == "MIDDLE") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "F" or cmd == "FIT") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "F" or cmd == "FIT") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Fit"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "TL" or cmd == "TOPLEFT") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "TL" or cmd == "TOPLEFT") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-left point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "TC" or cmd == "TOPCENTER") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "TC" or cmd == "TOPCENTER") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "TR" or cmd == "TOPRIGHT") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "TR" or cmd == "TOPRIGHT") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Top Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify top-right point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "ML" or cmd == "MIDDLELEFT") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "ML" or cmd == "MIDDLELEFT") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-left point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "MC" or cmd == "MIDDLECENTER") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "MC" or cmd == "MIDDLECENTER") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "MR" or cmd == "MIDDLERIGHT") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "MR" or cmd == "MIDDLERIGHT") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Middle Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify middle-right point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "BL" or cmd == "BOTTOMLEFT") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "BL" or cmd == "BOTTOMLEFT") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Left"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-left point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "BC" or cmd == "BOTTOMCENTER") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "BC" or cmd == "BOTTOMCENTER") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Center"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-center point of text or [Justify/Setfont]: "))
-        }
-        elif(str == "BR" or cmd == "BOTTOMRIGHT") #TODO: Probably should add additional qsTr calls here.
-        {
+
+        elif str == "BR" or cmd == "BOTTOMRIGHT") #TODO: Probably should add additional qsTr calls here.
+    
             self.mode = self.mode_SETGEOM
             self.textJustify = "Bottom Right"
             setRubberText("TEXT_JUSTIFY", self.textJustify)
             setPromptPrefix(translate("Specify bottom-right point of text or [Justify/Setfont]: "))
-        }
+
         else:
             alert(translate("Invalid option keyword."))
             setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
 
-    elif(self.mode == self.mode_SETFONT)
-    {
+    elif self.mode == self.mode_SETFONT:
         self.mode = self.mode_SETGEOM
         self.textFont = str
         setRubberText("TEXT_FONT", self.textFont)
         setTextFont(self.textFont)
         setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-    }
+
     elif self.mode == "SETGEOM":
         if isNaN(self.textX):
-            if(str == "J" or cmd == "JUSTIFY":
+            if str == "J" or cmd == "JUSTIFY":
                 #TODO: Probably should add additional qsTr calls here.
                 self.mode = self.mode_JUSTIFY
                 setPromptPrefix(translate("Text Justification Options [Center/Right/Align/Middle/Fit/TL/TC/TR/ML/MC/MR/BL/BC/BR]: "))
-            }
-            elif(str == "S" or cmd == "SETFONT") #TODO: Probably should add additional qsTr calls here.
-            {
+    
+            elif str == "S" or cmd == "SETFONT") #TODO: Probably should add additional qsTr calls here.
+        
                 self.mode = self.mode_SETFONT
                 setPromptPrefix(translate("Specify font name: "))
-            }
+    
             else
-            {
+        
                 strList = str.split(",")
-                if(isNaN(strList[0]) or isNaN(strList[1]))
-                {
+                if isNaN(strList[0]) or isNaN(strList[1]))
+            
                     alert(translate("Point or option keyword required."))
                     setPromptPrefix(translate("Specify start point of text or [Justify/Setfont]: "))
-                }
+        
                 else
-                {
+            
                     self.textX = Number(strList[0])
                     self.textY = Number(strList[1])
                     addRubber("LINE")
                     setRubberMode("LINE")
                     setRubberPoint("LINE_START", self.textX, self.textY)
-                    setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
+                    setPromptPrefix(translate("Specify text height") + " " + textSize() + "}: ")
 
-        elif(isNaN(self.textHeight))
-        {
-            if(str == "")
-            {
+        elif isNaN(self.textHeight))
+    
+            if str == "")
+        
                 self.textHeight = textSize()
-                setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-            }
-            elif(isNaN(cmd))
-            {
+                setPromptPrefix(translate("Specify text angle") + " " + textAngle() + "}: ")
+    
+            elif isNaN(cmd))
+        
                 alert(translate("Requires valid numeric distance or second point."))
-                setPromptPrefix(translate("Specify text height") + " {" + textSize() + "}: ")
-            }
+                setPromptPrefix(translate("Specify text height") + " " + textSize() + "}: ")
+    
             else
-            {
+        
                 self.textHeight = Number(cmd)
                 setTextSize(self.textHeight)
-                setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-            }
-        }
-        elif(isNaN(self.textRotation))
-        {
-            if(str == "")
-            {
+                setPromptPrefix(translate("Specify text angle") + " " + textAngle() + "}: ")
+    
+
+        elif isNaN(self.textRotation))
+    
+            if str == "")
+        
                 self.textRotation = textAngle()
                 setPromptPrefix(translate("Enter text: "))
                 self.mode = self.mode_RAPID
@@ -5493,14 +5427,14 @@ def prompt(cmd):
                 setRubberText("TEXT_FONT", self.textFont)
                 setRubberText("TEXT_JUSTIFY", self.textJustify)
                 setRubberText("TEXT_RAPID", self.text)
-            }
-            elif(isNaN(cmd))
-            {
+    
+            elif isNaN(cmd))
+        
                 alert(translate("Requires valid numeric angle or second point."))
-                setPromptPrefix(translate("Specify text angle") + " {" + textAngle() + "}: ")
-            }
+                setPromptPrefix(translate("Specify text angle") + " " + textAngle() + "}: ")
+    
             else
-            {
+        
                 self.textRotation = Number(cmd)
                 setTextAngle(self.textRotation)
                 setPromptPrefix(translate("Enter text: "))
@@ -5514,12 +5448,12 @@ def prompt(cmd):
                 setRubberText("TEXT_FONT", self.textFont)
                 setRubberText("TEXT_JUSTIFY", self.textJustify)
                 setRubberText("TEXT_RAPID", self.text)
-            }
-        }
+    
+
         else
-        {
+    
             #Do nothing, as we are in rapidFire mode now.
-        }
+
     }
     elif self.mode == "RAPID":
         if cmd == "RAPID_ENTER":
@@ -5534,8 +5468,6 @@ def prompt(cmd):
         else:
             self.text = str
             setRubberText("TEXT_RAPID", self.text)
-
----
 
 class Snowflake():
     def __init__(self):
@@ -6222,7 +6154,7 @@ class Star():
         self.y2 = MAX_DISTANCE+1.0
         self.mode = self.mode_NUM_POINTS
         setPromptPrefix(translate("Enter number of star points")
-            + " {" + self.numPoints.toString() + "}: ")
+            + " " + self.numPoints.toString() + "}: ")
         return self
 
 def click(self, x, y):
@@ -6260,7 +6192,7 @@ def click(self, x, y):
 
 def prompt(cmd):
     if self.mode == "NUM_POINTS":
-        if(str == "" and self.numPoints >= 3 and self.numPoints <= 1024:
+        if str == "" and self.numPoints >= 3 and self.numPoints <= 1024:
             setPromptPrefix(translate("Specify center point: "))
             self.mode = self.mode_CENTER_PT
         else:
@@ -6268,7 +6200,7 @@ def prompt(cmd):
             if isNaN(tmp) or !isInt(tmp) or tmp < 3 or tmp > 1024:
                 alert(translate("Requires an integer between 3 and 1024."))
                 setPromptPrefix(translate("Enter number of star points")
-                    + " {" + self.numPoints.toString() + "}: ")
+                    + " " + self.numPoints.toString() + "}: ")
             else:
                 self.numPoints = tmp
                 setPromptPrefix(translate("Specify center point: "))
@@ -6319,11 +6251,11 @@ def updateStar(self, x, y):
     distInner
     angOuter
 
-    if(self.mode == self.mode_RAD_OUTER:
+    if self.mode == self.mode_RAD_OUTER:
         angOuter = calculateAngle(self.cx, self.cy, x, y)
         distOuter = calculateDistance(self.cx, self.cy, x, y)
         distInner = distOuter/2.0
-    elif(self.mode == self.mode_RAD_INNER:
+    elif self.mode == self.mode_RAD_INNER:
         angOuter = calculateAngle(self.cx, self.cy, self.x1, self.y1)
         distOuter = calculateDistance(self.cx, self.cy, self.x1, self.y1)
         distInner = calculateDistance(self.cx, self.cy, x, y)
@@ -6368,16 +6300,17 @@ class SysWindows():
             setPromptPrefix(translate("Enter an option [Cascade/Tile]: "))
 
 
-class Treble_Clef():
+class Treble_Clef(Base_Object):
     r"""
     """
     def __init__(self):
+        " Default //TODO: min:64 max:8192 ."
         clearSelection()
         self.cx = MAX_DISTANCE+1.0
         self.cy = MAX_DISTANCE+1.0
-        self.numPoints = 1024; #Default //TODO: min:64 max:8192
-        self.sx = 0.04; #Default
-        self.sy = 0.04; #Default
+        self.numPoints = 1024
+        self.sx = 0.04
+        self.sy = 0.04
         self.mode = TREBLE_CLEF_MODE_NUM_POINTS
 
         addRubber("POLYGON")

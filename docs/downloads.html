@@ -12,7 +12,7 @@
 <style>
 body
 {
-    background-color: #000000;
+    background-color: #FFFFFF;
     background-image: url("images/texture-spirals.png");
     min-width: 700px;
     margin: 0;
@@ -58,67 +58,124 @@ td
     background-color:#DDDDDD;
 }
 
-#menu
-{
-    float: top;
-    position: relative;
-    background-color: #000000;
-    left: 0;
-    top: 0;
-    padding-bottom: 1em;
-    padding-left: 3em;
-    color: #0C6AB0;
-    font-family: serif;
-    font-style: italic;
+@media all and (min-width: 1000px) {
+    #menu {
+        float: top;
+        position: relative;
+        background-color: #000000;
+        left: 0;
+        top: 0;
+        padding-bottom: 1em;
+        padding-left: 8em;
+        color: #0C6AB0;
+        font-family: serif;
+        font-style: italic;
+    }
+    
+    #menu a {
+        color: #0C6AB0;
+    }
+
+    #menuUp {
+        position: relative;
+        float: left;
+        top: 0;
+        bottom: 35px;
+        padding-right: 40px;
+        padding-right: 1.5em;
+    }
+
+    #menuUp:hover {
+        color:#2C8AD0;
+    }
+
+    #container {
+        position: relative;
+        background-color: #000000;
+        top: 4em;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .contentPanel {
+        background-color: #FFFFFF;
+        color: #001537;
+        position: relative;
+        padding-left: 8em;
+        padding-right: 16em;
+        padding-bottom: 3em;
+        position: relative;
+        left: 0;
+        right: 0;
+        top: 1.5em;
+        bottom: 0;
+        min-height: 20em;
+        font-size: 16px;
+        line-height: 1.8;
+    }
 }
 
-#menu a
-{
-    color: #0C6AB0;
-}
+@media all and (max-width: 1000px) {
+    #menu {
+        float: top;
+        position: relative;
+        background-color: #000000;
+        left: 0;
+        top: 0;
+        padding-bottom: 1em;
+        padding-left: 3em;
+        color: #0C6AB0;
+        font-family: serif;
+        font-style: italic;
+    }
+    
+    #menu a {
+        color: #0C6AB0;
+    }
 
-#menuUp
-{
-    position: relative;
-    float: left;
-    top: 0;
-    bottom: 35px;
-    padding-right: 40px;
-    padding-right: 1.5em;
-}
+    #menuUp {
+        position: relative;
+        float: left;
+        top: 0;
+        bottom: 35px;
+        padding-right: 40px;
+        padding-right: 1.5em;
+    }
 
-#menuUp:hover
-{
-    color:#2C8AD0;
-}
+    #menuUp:hover {
+        color:#2C8AD0;
+    }
 
-#container
-{
-    position: relative;
-    background-color: #000000;
-    top: 4em;
-    bottom: 0;
-    left: 4em;
-    right: 3em;
-    width: 80%;
-    font-size: 18px;
-}
+    #container {
+        position: relative;
+        background-color: #000000;
+        top: 4em;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        font-size: 16px;
+    }
 
-.contentPanel
-{
-    background-color: #001537;
-    color: #FFFFFF;
-    position: relative;
-    padding-left: 3em;
-    padding-right: 3em;
-    padding-bottom: 3em;
-    position: relative;
-    left: 0;
-    right: 0;
-    top: 1.5em;
-    bottom: 0;
-    min-height: 20em;
-    font-size: 16px;
+    .contentPanel {
+        background-color: #FFFFFF;
+        color: #001537;
+        position: relative;
+        padding-left: 3em;
+        padding-right: 3em;
+        padding-bottom: 3em;
+        position: relative;
+        left: 0;
+        right: 0;
+        top: 1.5em;
+        bottom: 0;
+        min-height: 20em;
+        font-size: 14px;
+        line-height: 1.8;
+    }
 }
 
 .video
