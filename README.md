@@ -178,19 +178,13 @@ Note that most of these features will be released with version 2.1, which is pla
 ### Current work
 
 1. Converting C++ to Python throughout.
-    1. All comments to docstrings or `#`-style.
-    2. Replace variables with structs or libembroidery type.
-       (QColor to EmbColor, QPointF to EmbVector)
-    3. Reduce the reliance on Qt functions while allowing boot of the
-       program.
-    4. Find TK equaivalents to existing Qt code
 2. OpenGL Rendering
     1. "Real" rendering to see what the embroidery looks like.
     2. Icons and toolbars.
     3. Menu bar
 3. Libembroidery interfacing:
     1. Get all classes to use the proper libembroidery types within them.
-       So `EllipseObject` has `EmbEllipse` as public data within it.
+       So `Ellipse` has `EmbEllipse` as public data within it.
     2. Move calculations of rotation and scaling into `EmbVector` calls.
 1. Get undo history widget back (BUG).
 2. Switch website to a CMake build.

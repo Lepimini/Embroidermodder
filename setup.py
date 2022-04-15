@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+r"""
+    Embroidermodder 2.
+
+    ------------------------------------------------------------
+
+    Copyright 2013-2022 The Embroidermodder Team
+    Embroidermodder 2 is Open Source Software.
+    See LICENSE for licensing terms.
+
+    ------------------------------------------------------------
+"""
+
 import setuptools
 
 setuptools.setup(
@@ -13,7 +25,9 @@ setuptools.setup(
     entry_points={
         'console_scripts': ['embroidermodder=embroidermodder:main']
     },
-    packages=setuptools.find_packages(include=['embroidermodder']),
+    packages=setuptools.find_packages(
+        include=['embroidermodder', 'embroidermodder.geometry']
+    ),
     install_requires=[
         'libembroidery>=1.0a0'
     ],

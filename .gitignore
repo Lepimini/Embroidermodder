@@ -2,16 +2,12 @@
 dist
 build
 
-#########################
-# Executables           #
-#########################
+# Executables
 *.exe
 *.out
 *.app
 
-#########################
-# OS generated files    #
-#########################
+# OS generated files
 ## Macintosh
 .DS_Store
 .DS_Store?
@@ -22,11 +18,16 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 
-#########################
-# Python                #
-#########################
+# Python
 ## Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+
+# Linting files
+.flake8
+.isort.cfg
+.markdownlint.yaml
+.shellcheckrc
+.trunk/

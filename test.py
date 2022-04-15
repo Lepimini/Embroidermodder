@@ -1,69 +1,80 @@
 #!/usr/bin/env python3
 
+"""
+Testing for Embroidermodder 2, to sit outside
+of installed folder since we don't expect non-developers to use it.
+"""
+
 import unittest
-from embroidermodder import *
+import embroidermodder as emb
 
 class TestExample(unittest.TestCase):
+    """
+    Mostly tests for actions not causing
+    crashes that shut the program.
 
+    Testing actual correct application of the action would be harder.
+    """
     def test_translate(self):
-        translated = translate("?")
+        " Check that the translate call can return an entry from the table. "
+        translated = emb.translate("?")
         self.assertEqual(translated, "?")
 
-    def test_doNothing(self):
+    def test_do_nothing(self):
         " Crash test do nothing function. "
-        doNothing()
+        emb.do_nothing()
 
-    def test_newFile(self):
+    def test_new_file(self):
         " Crash test new file call. "
-        newFile()
+        emb.new_file()
 
-    def test_openFile(self):
+    def test_open_file(self):
         " Crash test open file call. "
-        openFile()
+        emb.open_file()
 
-    def test_saveFile(self):
+    def test_save_file(self):
         " Crash test save file call. "
-        saveFile()
+        emb.saveFile()
 
-    def test_saveAsFile(self):
+    def test_save_as_file(self):
         " Crash test save as file call. "
-        saveAsFile()
+        emb.saveAsFile()
 
-    def test_cutObject(self):
+    def test_cut_object(self):
         " Crash test cut object call. "
-        cutObject()
+        emb.cutObject()
 
-    def test_copyObject(self):
+    def test_copy_object(self):
         " Crash test copy object call. "
-        copyObject()
+        emb.copyObject()
 
-    def test_pasteObject(self):
+    def test_paste_object(self):
         " Crash test paste object call. "
-        pasteObject()
+        emb.pasteObject()
 
     def test_icon16(self):
         " Crash test set icon size to 16 call. "
-        icon16()
+        emb.icon16()
 
     def test_icon24(self):
         " Crash test set icon size to 24 call. "
-        icon24()
+        emb.icon24()
 
     def test_icon32(self):
         " Crash test set icon size to 32 call. "
-        icon32()
+        emb.icon32()
 
     def test_icon48(self):
         " Crash test set icon size to 48 call. "
-        icon48()
+        emb.icon48()
 
     def test_icon64(self):
         " Crash test set icon size to 64 call. "
-        icon64()
+        emb.icon64()
 
     def test_icon128(self):
         " Crash test set icon size to 128 call. "
-        icon128()
+        emb.icon128()
 
 
 if __name__ == '__main__':
