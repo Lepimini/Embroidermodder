@@ -34,9 +34,28 @@ What Robin is currently doing.
 Getting the code to pass PyLint, that involves getting all source files
 under 1000 lines, renaming all variables to be in `snake_case`.
 
-### Geometry
+Geometry
 
-This is now a submodule with one file per class.
+The geometry is stored, processed and altered via libembroidery. See the Python specific part of the documentation for libembroidery for this. What the code in Embroidermodder does is make the GUI widgets to change and view this information graphically.
+
+For example if we create a circle with radius 10mm and center at (20mm, 30mm) then fill it with stitches the commands would be
+
+from libembroidery import Pattern, Circle, Vector, satin
+circle = Circle(Vector(20, 30), 10)
+pattern = Pattern()
+pattern.add_circle(circle, fill=satin)
+pattern.to_stitches()
+
+but the user would do this through a series of GUI actions:
+
+1. Create new file
+    Click add circle
+    Use the Settings dialog to alter the radius and center
+    Use the fill tool on circle
+    Select satin from the drop down menu
+
+So EM2 does the job of bridging that gap.
+Settings Dialog
 
 ### Settings Dialog
 
