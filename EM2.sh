@@ -1,78 +1,71 @@
 #!/bin/bash
 
-case "$1" in
-    "dev_install")
-        python3 -m build
-        python3 -m pip install -U dist/*.whl --force-reinstall
-        ;;
+function linting () {
+    python3 -m pip install pylint
+    pylint src/ > rating.txt
+    pylint src/ -f json > triage.json
+    python3 src/triage.py
+    python3 src/make_button.py
+}
 
-    "test")
-        cd src
-        python3 tests.py
-        emb_dev_install
-        # We don't know if the user has added the command to their
-        # PATH variable, so give the address from HOME.
-        timeout 10 ~/.local/bin/embroidermodder
-        ;;
+function build_embroider () {
+    git submodule init
+    git submodule update
+    mkdir build
+    cd build
+    cmake ../src/libembroidery
+    cmake --build .
+    cd ..
+}
 
-    "lint")
-        python3 -m pip install pylint
-        pylint src/ > rating.txt
-        pylint src/ -f json > triage.json
-        python3 src/triage.py
-        python3 src/make_button.py
-        ;;
+function install_dev_libembroidery () {
+    git submodule init
+    git submodule update
+    cd src/libembroidery
+    python3 -m build
+    python3 -m pip install -U dist/*.whl --force-reinstall
+    cd ../..
+}
 
-    "qa")
-        python3 -m pip install pylint
-        pylint src/ > rating.txt
-        pylint src/ -f json > triage.json
-        python3 src/triage.py
-        python3 src/make_button.py
-        cd src
-        python3 tests.py
-        emb_dev_install
-        # We don't know if the user has added the command to their
-        # PATH variable, so give the address from HOME.
-        timeout 10 ~/.local/bin/embroidermodder
-        ;;
+function install_dev_embroidermodder () {
+    python3 -m build
+    python3 -m pip install -U dist/*.whl --force-reinstall
+}
 
-    "install")
-        python3 -m pip install embroidermodder
-        ;;
+function normal_install () {
+    python3 -m pip install libembroidery embroidermodder
+}
 
-    "dev_run")
-        git submodule init
-        git submodule update
-        mkdir build
-        cd build
-        cmake ../src/libembroidery
-        cmake --build .
-        cd ..
+function run_embroidermodder () {
+    normal_install
+    python3 -m embroidermodder
+}
 
-        cd src/libembroidery
-        python3 -m build
-        python3 -m pip install -U dist/*.whl --force-reinstall
-        cd ../..
-        python3 -m build
-        python3 -m pip install -U dist/*.whl --force-reinstall
+function dev_run () {
+    build_embroider
+    install_dev_libembroidery
+    install_dev_embroidermodder
 
-        alias embroider="../build/embroider"
-        cd src
-        python3 -m embroidermodder
-        ;;
+    alias embroider="../build/embroider"
+    cd src
+    python3 -m embroidermodder
+}
 
-    "run")
-        python3 -m pip install libembroidery embroidermodder
-        python3 -m embroidermodder
-        ;;
+function testing () {
+    build_embroider
+    install_dev_libembroidery
+    install_dev_embroidermodder
+    cd src
+    python3 tests.py
+    timeout 10 python3 -m embroidermodder
+}
 
-    "clean")
-        rm -fr dist src/embroidermodder.egg-info rating.txt triage.json
-        ;;
+function clean_embroidermodder () {
+    rm -fr dist src/embroidermodder.egg-info rating.txt triage.json
+}
 
-    *)
-        cat <<EOF
+function help_embroidermodder () {
+    cat <<EOF
 Please enter a command for EM2 from this list:
     install
     qa
@@ -83,5 +76,43 @@ Please enter a command for EM2 from this list:
     dev_run
     clean
 EOF
+}
+
+case "$1" in
+    "di" | "dev_install")
+        install_dev_embroidermodder
+        ;;
+
+    "t" | "test")
+        testing
+        ;;
+
+    "l" | "lint")
+        linting
+        ;;
+
+    "q" | "qa")
+        linting
+        testing
+        ;;
+
+    "i" | "install")
+        normal_install
+        ;;
+
+    "d" | "dev_run")
+        dev_run
+        ;;
+
+    "r" | "run")
+        run_embroidermodder
+        ;;
+
+    "c" | "clean")
+        clean_embroidermodder
+        ;;
+
+    *)
+        help_embroidermodder
         ;;
 esac
