@@ -148,7 +148,7 @@ document then please contact us on the issues tab of our GitHub page.
 
 To test the changes you've just made, use
 
-    $ make dev-run
+    $ ./EM2 dev-run
 
 which will install the local version of the software over your current version
 (which may damage it, so use a docker or similar if you need to) then run it.
