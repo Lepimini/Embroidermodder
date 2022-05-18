@@ -42,15 +42,28 @@ case "$1" in
         ;;
 
     "dev_run")
+        git submodule init
+        git submodule update
+        mkdir build
+        cd build
+        cmake ../src/libembroidery
+        cmake --build .
+        cd ..
+
+        cd src/libembroidery
         python3 -m build
         python3 -m pip install -U dist/*.whl --force-reinstall
-        python3 -m pip install libembroidery
+        cd ../..
+        python3 -m build
+        python3 -m pip install -U dist/*.whl --force-reinstall
+
+        alias embroider="./build/embroider"
         cd src
         python3 -m embroidermodder
         ;;
 
     "run")
-        python3 -m pip install libembroidery
+        python3 -m pip install libembroidery embroidermodder
         python3 -m embroidermodder
         ;;
 
