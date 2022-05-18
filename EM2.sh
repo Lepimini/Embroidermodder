@@ -57,7 +57,7 @@ case "$1" in
         python3 -m build
         python3 -m pip install -U dist/*.whl --force-reinstall
 
-        alias embroider="./build/embroider"
+        alias embroider="../build/embroider"
         cd src
         python3 -m embroidermodder
         ;;

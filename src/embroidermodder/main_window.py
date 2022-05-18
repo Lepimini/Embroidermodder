@@ -22,11 +22,12 @@ import tkinter as tk
 import time
 
 from embroidermodder.color import Color
-from embroidermodder.geometry import Vector, Line
+from libembroidery import Vector, Line
 from embroidermodder.details_dialog import DetailsDialog
 from embroidermodder.settings_dialog import SettingsDialog
 from embroidermodder.utility import (settings, translate, debug_message,
-    load_image, write_settings, about)
+                                     load_image, write_settings, about)
+
 
 def tip_of_the_day():
     r"""
@@ -151,21 +152,23 @@ class MainWindow():
 
         # This is a View() instance
         self.canvas = tk.Canvas(self.root, bg="#FFFFFF",
-            width=500, height=400)
+                                width=500, height=400)
         self.canvas.grid(row=4, column=0, columnspan=20, rowspan=2, sticky="W")
 
         # Use PropertyEditor
         # need to make a tk.Entry test
         self.property_editor = tk.Label(self.root, text="Property Editor",
-            bg="#FFFFFF")
+                                        bg="#FFFFFF")
         self.property_editor.grid(row=4, column=21, columnspan=5, sticky="NE")
 
         self.undo_history_editor = tk.Label(self.root, text="Undo History",
-            bg="#FFFFFF")
-        self.undo_history_editor.grid(row=5, column=21, columnspan=5, sticky="NE")
+                                            bg="#FFFFFF")
+        self.undo_history_editor.grid(row=5, column=21, columnspan=5, 
+                                      sticky="NE")
 
         self.message_bar = tk.Label(self.root,
-            text=time.strftime("%d %B %Y"), bg="#BBBBBB")
+                                    text=time.strftime("%d %B %Y"),
+                                    bg="#BBBBBB")
         #self.message_bar.set_text("test")
         self.message_bar.grid(row=6, column=0, columnspan=20, sticky="SW")
         #self.message_bar_tip = Tooltip(
