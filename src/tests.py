@@ -19,6 +19,7 @@ import unittest
 import embroidermodder
 from embroidermodder import utility
 
+
 class TestEmbroidermodder(unittest.TestCase):
     """
     Mostly tests for actions not causing
@@ -61,6 +62,7 @@ class TestEmbroidermodder(unittest.TestCase):
         window.root.after(5, window.icon128())
         window.root.after(6, window.exit_program())
         window.root.mainloop()
+
 
 if __name__ == "__main__":
     unittest.main()

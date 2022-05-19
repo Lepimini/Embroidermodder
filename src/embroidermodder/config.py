@@ -73,6 +73,8 @@ def write_settings():
 
 
 settings = load_data("config.json")
+icons = load_data("icons.json")
+designs = load_data("designs.json")
 
 
 settings["welcome_message"] = r"""

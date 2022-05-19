@@ -16,6 +16,7 @@ r"""
 
 import os
 
+
 def make_button(show=False):
     " Create the PyLint rating button. "
     print("Creating the PyLint rating button.")
@@ -40,6 +41,7 @@ def make_button(show=False):
     os.system("convert icons/rating.svg icons/rating.png")
     if show:
         os.system("display icons/rating.png")
+
 
 if __name__ == "__main__":
     make_button()
