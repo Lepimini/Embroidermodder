@@ -15,48 +15,10 @@ r"""
 """
 
 import os
-import json
-import importlib.resources as res
-from pathlib import Path
 import binascii
 import tkinter as tk
 from embroidermodder.config import settings
 
-# This is different for each user, so we're leaving it out of
-# the settings dict.
-APPLICATION_FOLDER = str(Path.home()) + os.sep + ".embroidermodder2"
-
-
-def load_data(path):
-    r"""
-    These are loaded from the Python package first, then
-    any that contradict them in the users system override.
-    """
-    file_data = res.read_text("embroidermodder", path)
-    json_data = json.loads(file_data)
-    if not os.path.isdir(APPLICATION_FOLDER):
-        os.mkdir(APPLICATION_FOLDER)
-
-    fname = APPLICATION_FOLDER + os.sep + path
-
-    if os.path.isfile(fname):
-        with open(fname, "r", encoding="utf-8") as settings_file:
-            user_data = json.loads(settings_file.read())
-            for k in user_data.keys():
-                json_data[k] = user_data[k]
-
-    return json_data
-
-
-def write_settings():
-    " Write the current settings to the standard file as JSON. "
-    settings_fname = APPLICATION_FOLDER + os.sep + "settings.json"
-    json_str = json.dumps(settings, indent=4)
-    if os.path.isfile(settings_fname):
-        with open(settings_fname, "w", encoding="utf-8") as settings_file:
-            settings_file.write(json_str)
-    else:
-        print("Failed to open settings file to write state.")
 
 
 def clamp(lower, value, upper):
