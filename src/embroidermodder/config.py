@@ -30,7 +30,7 @@ r"""
     Also this means that we can run without installing.
 """
 
-from embroidermodder.config.icons import icons
+from embroidermodder.icons import icons
 
 settings = {
     "welcome_message": r"""

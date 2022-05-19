@@ -16,7 +16,7 @@ r"""
 
 import math
 
-from embroidermodder.config.config import settings
+from embroidermodder.config import settings
 from embroidermodder.utility import (
     alert, translate, set_prompt_prefix
 )
