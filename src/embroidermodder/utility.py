@@ -17,8 +17,7 @@ r"""
 import os
 import binascii
 import tkinter as tk
-from embroidermodder.config import settings
-
+from embroidermodder.config import settings, APPLICATION_FOLDER
 
 
 def clamp(lower, value, upper):
@@ -160,23 +159,26 @@ def about():
     dialog = tk.Tk()
     dialog.title("About Embroidermodder 2")
     dialog.minsize(400, 400)
-    #tk.dialog(_mainWin)
-    #img = tk.ImageWidget(application_folder + "/images/logo-small.png")
-    text_block = ("Embroidermodder " + settings["version"] + "\n\n" +
+    # tk.dialog(_mainWin)
+    # img = tk.ImageWidget(application_folder + "/images/logo-small.png")
+    text_block = (
+        "Embroidermodder " + settings["version"] + "\n\n" +
         translate("http://embroidermodder.org") +
         "\n\n" +
-        translate("Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi") +
-        "\n\n" +
+        translate(
+            "Available Platforms: GNU/Linux, Windows, Mac OSX, Raspberry Pi"
+        ) + "\n\n" +
         translate("Embroidery formats by Josh Varga.") +
         "\n" +
         translate("User Interface by Jonathan Greig and Robin Swift.") +
         "\n\n" +
         translate("Free under the zlib/libpng license.")
         + "\n\n" +
-        translate("Build Hash: ") + settings["BUILD_GIT_HASH"])
+        translate("Build Hash: ") + settings["BUILD_GIT_HASH"]
+    )
     text = tk.Label(dialog, text=text_block)
     text.grid(row=1, column=1)
-    #text.setWordWrap(1)
+    # text.setWordWrap(1)
 
     button = tk.Button(
         dialog,
@@ -188,5 +190,5 @@ def about():
 
 
 def report_platform():
-    "Should we need to add this to an error report."
+    r"Should we need to add this to an error report."
     print(os.uname())

@@ -35,8 +35,6 @@ import json
 import importlib.resources as res
 from pathlib import Path
 
-from embroidermodder.icons import icons
-
 # This is different for each user, so we're leaving it out of
 # the settings dict.
 APPLICATION_FOLDER = str(Path.home()) + os.sep + ".embroidermodder2"
@@ -299,5 +297,3 @@ settings["to_add_to_property_editor"] = """
     ComboBox comboBoxTextSingleBackward
     ComboBox comboBoxTextSingleUpsideDown
     """
-
-settings["icons"] = icons

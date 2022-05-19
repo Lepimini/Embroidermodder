@@ -17,8 +17,8 @@ r"""
     The sort of things that would normally be covered by a Makefile are
     here, like running the build, testing and linting.
 """
+from icons import icons
 
-from embroidermodder.config.icons import icons
 
 def tidy_config(chunk_size=75):
     r"""
@@ -46,18 +46,18 @@ r\"\"\"
 icons = {
 """
     for i in icons:
-        output += f"    \"{i}\": \"\"\"\n"
+        output += f"    \"{i}\": [\n"
         icon = icons[i].replace("\n", "")
         length = len(icon)
         for j in range(1+length//chunk_size):
             bottom = j*chunk_size
             top = min((j+1)*chunk_size, length)
-            output += icon[bottom:top] + "\n"
-        output += "\"\"\",\n"
+            output += "        \"" + icon[bottom:top] + "\",\n"
+        output = output[:-2] + "\n    ],\n"
 
     output = output[:-2] + "}\n"
 
-    with open("icons.py", "w", encoding="utf-8") as f:
+    with open("new_icons.py", "w", encoding="utf-8") as f:
         f.write(output)
 
 
