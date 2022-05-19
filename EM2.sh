@@ -61,7 +61,7 @@ function testing () {
 }
 
 function clean_embroidermodder () {
-    rm -fr dist src/embroidermodder.egg-info rating.txt triage.json
+    rm -fr dist src/embroidermodder.egg-info rating.txt triage.json build
 }
 
 function help_embroidermodder () {
