@@ -15,8 +15,9 @@ r"""
 
 import tkinter as tk
 
-from embroidermodder.geometry import Rect
+from libembroidery import Rect
 from embroidermodder.utility import debug_message, translate
+
 
 class DetailsDialog():
     """

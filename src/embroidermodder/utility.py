@@ -20,11 +20,12 @@ import importlib.resources as res
 from pathlib import Path
 import binascii
 import tkinter as tk
-from embroidermodder.config import settings
+from embroidermodder.config.config import settings
 
 # This is different for each user, so we're leaving it out of
 # the settings dict.
 APPLICATION_FOLDER = str(Path.home()) + os.sep + ".embroidermodder2"
+
 
 def load_data(path):
     r"""

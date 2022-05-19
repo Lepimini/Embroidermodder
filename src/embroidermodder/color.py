@@ -16,7 +16,11 @@ r"""
 
 import math
 
-from embroidermodder.utility import alert, translate, settings, set_prompt_prefix
+from embroidermodder.config.config import settings
+from embroidermodder.utility import (
+    alert, translate, set_prompt_prefix
+)
+
 
 def valid_rgb(red, green, blue):
     " . "

@@ -15,6 +15,7 @@ r"""
 
 import tkinter as tk
 
+
 class LayerManager():
     r" . "
     def __init__(self, tab, mw, parent):

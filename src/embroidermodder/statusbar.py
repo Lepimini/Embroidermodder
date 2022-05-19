@@ -20,6 +20,7 @@ r"""
 
 import tkinter as tk
 
+
 class StatusBarButton():
     r"""
     StatusBarButton(buttonText, mw, statbar, parent = 0)

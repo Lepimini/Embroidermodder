@@ -15,7 +15,8 @@ r"""
     keeping all the action information together.
 """
 
-from embroidermodder.main_window import debug_message
+from embroidermodder.utility import debug_message
+
 
 class ImageWidget():
     """

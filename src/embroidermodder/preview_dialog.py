@@ -16,6 +16,7 @@ r"""
 from embroidermodder.image_widget import ImageWidget
 from embroidermodder.utility import debug_message
 
+
 class PreviewDialog():
     """
     .

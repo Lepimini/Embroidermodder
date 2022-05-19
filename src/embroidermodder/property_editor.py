@@ -23,6 +23,7 @@ import tkinter as tk
 #
 from embroidermodder.utility import debug_message, translate
 
+
 class PropertyEditor():
     r"""
     PropertyEditor(iconDirectory = "", int pickAddMode = true, QWidget* widgetToFocus = 0, QWidget* parent = 0, Qt_WindowFlags flags = Qt_Widget)

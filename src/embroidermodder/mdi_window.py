@@ -13,9 +13,10 @@ r"""
 
 """
 
-from embroidermodder.actions import debug_message, translate
-from embroidermodder.geometry import Vector, Line, Polyline
-from embroidermodder.config import APPLICATION_FOLDER, layout, settings
+from libembroidery import Vector, Line, Polyline
+from embroidermodder.utility import debug_message, translate
+from embroidermodder.config.config import APPLICATION_FOLDER, layout, settings
+
 
 class MdiArea():
     r"""

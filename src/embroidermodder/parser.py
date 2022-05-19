@@ -17,6 +17,7 @@ r"""
 
 import math
 
+
 def sgn(x):
     r"""
     The sign function.

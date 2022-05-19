@@ -18,10 +18,11 @@ r"""
 
 import tkinter as tk
 
+from libembroidery import Line, Path, Rect, Vector
 from embroidermodder.pattern import Pattern
-from embroidermodder.geometry import Line, Path, Rect, Vector
 from embroidermodder.color import Color
 from embroidermodder.utility import settings, translate, debug_message, critical
+
 
 def round_to_multiple(round_up, input_number, multiple):
     " . "

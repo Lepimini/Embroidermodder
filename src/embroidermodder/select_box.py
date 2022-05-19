@@ -14,7 +14,9 @@ r"""
     The color selection docker class definition file.
 """
 
-from embroidermodder.utility import Pen, Brush, debug_message
+from libembroidery import Pen
+from embroidermodder.utility import Brush, debug_message
+
 
 class SelectBox():
     """

@@ -22,8 +22,10 @@ import tkinter as tk
 
 from embroidermodder.utility import translate, settings
 
+
 def loadIcon(fname):
     return 0
+
 
 class SettingsDialog():
     """
