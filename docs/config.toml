@@ -1,0 +1,4 @@
+baseURL = 'http://embroidermodder.org/'
+languageCode = 'en-us'
+title = 'The Embroidermodder Project'
+theme = 'hugo-book'

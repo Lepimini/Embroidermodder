@@ -1,6 +1,6 @@
-[submodule "src/libembroidery"]
-	path = src/libembroidery
+[submodule "docs/themes/hugo-book"]
+	path = docs/themes/hugo-book
+	url = https://github.com/alex-shpak/hugo-book
+[submodule "libembroidery"]
+	path = extern/libembroidery
 	url = https://github.com/Embroidermodder/libembroidery
-[submodule "src/embroiderbot"]
-	path = src/embroiderbot
-	url = https://github.com/Embroidermodder/embroiderbot
