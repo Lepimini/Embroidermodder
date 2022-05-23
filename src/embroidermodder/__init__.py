@@ -15,6 +15,6 @@ r"""
 
 from embroidermodder.main_window import MainWindow as main
 
-if __name__=="__main__":
+if __name__ == "__main__":
     window = main()
     window.root.mainloop()

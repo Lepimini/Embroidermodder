@@ -22,7 +22,8 @@ import tkinter as tk
 import time
 
 from embroidermodder.color import Color
-from libembroidery import Vector, Line
+from libembroidery import Vector, Line, Pattern
+from embroidermodder.image_widget import ImageWidget
 from embroidermodder.details_dialog import DetailsDialog
 from embroidermodder.settings_dialog import SettingsDialog
 from embroidermodder.utility import (settings, translate, debug_message,
@@ -41,25 +42,31 @@ def tip_of_the_day():
     button2 = tk.Button(wizard_tip_of_the_day)
     button3 = tk.Button(wizard_tip_of_the_day)
 
-    img_banner = ImageWidget(appDir + "/images/did-you-know.png", wizard_tip_of_the_day)
+    img_banner = ImageWidget(
+        appDir + "/images/did-you-know.png", wizard_tip_of_the_day
+    )
 
     checkBoxTipOfTheDay = tk.CheckBox(translate("&Show tips on startup"), wizard_tip_of_the_day)
     checkBoxTipOfTheDay.set_checked(settings["general_tip_of_the_day"])
-    #connect(checkBoxTipOfTheDay, SIGNAL(stateChanged(int)), self, SLOT(checkBoxTipOfTheDayStateChanged(int)))
+    # connect(checkBoxTipOfTheDay, SIGNAL(stateChanged(int)), self, SLOT(checkBoxTipOfTheDayStateChanged(int)))
 
+    tips = settings["tips"]
     if tips[settings["general_current_tip"]] == "":
         settings["general_current_tip"] = 0
-    label_tip_of_the_day = QLabel(tips[settings["general_current_tip"]], wizard_tip_of_the_day)
+    label_tip_of_the_day = tk.Label(tips[settings["general_current_tip"]], wizard_tip_of_the_day)
     label_tip_of_the_day.setWordWrap(1)
 
     button1.setText("&Previous")
     button2.setText("&Next")
     button3.setText("&Close")
-    #connect(button1, SIGNAL(triggered()), wizard_tip_of_the_day, SLOT(wizard_tip_of_the_day.close()))
-    #connect(button2, SIGNAL(triggered()), wizard_tip_of_the_day, SLOT(wizard_tip_of_the_day.close()))
-    #connect(button3, SIGNAL(triggered()), wizard_tip_of_the_day, SLOT(wizard_tip_of_the_day.close()))
+    # connect(button1, SIGNAL(triggered()), wizard_tip_of_the_day,
+    #     SLOT(wizard_tip_of_the_day.close()))
+    # connect(button2, SIGNAL(triggered()), wizard_tip_of_the_day,
+    #     SLOT(wizard_tip_of_the_day.close()))
+    # connect(button3, SIGNAL(triggered()), wizard_tip_of_the_day,
+    #     SLOT(wizard_tip_of_the_day.close()))
 
-    layout = QVBoxLayout(wizard_tip_of_the_day)
+    layout = tk.VBoxLayout(wizard_tip_of_the_day)
     layout.add_widget(img_banner)
     layout.add_strut(1)
     layout.add_widget(label_tip_of_the_day)
@@ -93,13 +100,13 @@ def old_main(self, argv):
             usage()
         elif argv[i] == "-v" or argv[i] == "--version":
             version()
-        elif exists(argv[i]) and MainWindow_validFileFormat(argv[i]):
+        elif exists(argv[i]) and valid_file_format(argv[i]):
             filesToOpen += [argv[i]]
 
     main_win = MainWindow()
     app.set_main_win(main_win)
 
-    main_win.set_window_title(app.applicationName() + " " + app.applicationVersion())
+    main_win.set_window_title(settings["title"] + " " + settings["version"])
     main_win.show()
 
     #NOTE: If open_files_selected() is called from within the mainWin constructor, slot commands wont work and the window menu will be screwed
@@ -244,7 +251,7 @@ class MainWindow():
             ACTION.set_status_tip(action_list[i].description)
             ACTION.set_object_name(action_list[i].abbreviation)
             ACTION.setWhatsself(action_list[i].description)
-            #connect(ACTION, SIGNAL(triggered()), self, SLOT(actions()))
+            # connect(ACTION, SIGNAL(triggered()), self, SLOT(actions()))
             self.action_hash.insert(i, ACTION)
 
         self.action_hash.value("window_close").set_enabled(num_of_docs > 0)
@@ -256,7 +263,7 @@ class MainWindow():
 
         debug_message("MainWindow createWindowMenu()")
         menu_bar().add_menu(menu["WINDOW"])
-        #connect(menu["WINDOW"], SIGNAL(aboutToShow()), self, SLOT(window_menu_about_to_show()))
+        # connect(menu["WINDOW"], SIGNAL(aboutToShow()), self, SLOT(window_menu_about_to_show()))
         #Do not allow the Window Menu to be torn off. It's a pain in the ass to maintain.
         menu["WINDOW"].set_tear_off_enabled(0)
 
@@ -272,7 +279,7 @@ class MainWindow():
                 else:
                     toolbar[i].add_separator()
 
-            #connect(toolbar[i], SIGNAL(topLevelChanged(int)), self, SLOT(floating_changed_toolbar(int)))
+            # connect(toolbar[i], SIGNAL(topLevelChanged(int)), self, SLOT(floating_changed_toolbar(int)))
 
         debug_message("MainWindow createLayerToolbar()")
 
@@ -315,7 +322,7 @@ class MainWindow():
         color_selector.add_item("colorwhite.png", translate("White"), (255,255,255))
         color_selector.add_item("colorother.png", translate("Other..."))
         toolbar["PROPERTIES"].add_widget(color_selector)
-        #connect(color_selector, SIGNAL(currentIndexChanged(int)), self, SLOT(color_selectorIndexChanged(int)))
+        # connect(color_selector, SIGNAL(currentIndexChanged(int)), self, SLOT(color_selectorIndexChanged(int)))
 
         toolbar["PROPERTIES"].add_separator()
         linetype_selector.set_focusProxy(menu["FILE"])
@@ -326,7 +333,7 @@ class MainWindow():
         linetype_selector.add_item("linetypecenter.png", "Center")
         linetype_selector.add_item("linetypeother.png", "Other...")
         toolbar["PROPERTIES"].add_widget(linetype_selector)
-        #connect(linetype_selector, SIGNAL(currentIndexChanged(int)), self, SLOT(linetype_selectorIndexChanged(int)))
+        # connect(linetype_selector, SIGNAL(currentIndexChanged(int)), self, SLOT(linetype_selectorIndexChanged(int)))
 
         toolbar["PROPERTIES"].add_separator()
         lineweightSelector.set_focusProxy(menu["FILE"])
@@ -337,15 +344,15 @@ class MainWindow():
         lineweightSelector.setMinimumContentsLength(8)
         # Prevent dropdown text readability being squish...d.
         toolbar["PROPERTIES"].add_widget(lineweightSelector)
-        #connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), self, SLOT(lineweightSelectorIndexChanged(int)))
+        # connect(lineweightSelector, SIGNAL(currentIndexChanged(int)), self, SLOT(lineweightSelectorIndexChanged(int)))
 
-        #connect(toolbar["PROPERTIES"], SIGNAL(topLevelChanged()), self, SLOT(floating_changed_toolbar()))
+        # connect(toolbar["PROPERTIES"], SIGNAL(topLevelChanged()), self, SLOT(floating_changed_toolbar()))
 
         debug_message("MainWindow createTextToolbar()")
         toolbar["TEXT"].set_object_name("toolbarText")
         toolbar["TEXT"].add_widget(textFontSelector)
         textFontSelector.setCurrentFont(Font(settings["text_font"]))
-        #connect(textFontSelector, SIGNAL(currentFontChanged()), self, SLOT(textFontSelectorCurrentFontChanged()))
+        # connect(textFontSelector, SIGNAL(currentFontChanged()), self, SLOT(textFontSelectorCurrentFontChanged()))
 
         # TODO: SEGFAULTING FOR SOME REASON
         toolbar["TEXT"].add_action(action_hash.value("text_bold"))
@@ -365,9 +372,9 @@ class MainWindow():
             text_size_selector.add_item(str(size)+" pt", size)
         setTextSize(settings["text_size"])
         toolbar["TEXT"].add_widget(text_size_selector)
-        #connect(text_size_selector, SIGNAL(currentIndexChanged(int)), self, SLOT(text_size_selectorIndexChanged(int)))
+        # connect(text_size_selector, SIGNAL(currentIndexChanged(int)), self, SLOT(text_size_selectorIndexChanged(int)))
 
-        #connect(toolbar["TEXT"], SIGNAL(topLevelChanged(int)), self, SLOT(floating_changed_toolbar(int)))
+        # connect(toolbar["TEXT"], SIGNAL(topLevelChanged(int)), self, SLOT(floating_changed_toolbar(int)))
 
         # Horizontal
         toolbar["VIEW"].set_orientation("Horizontal")
@@ -1114,7 +1121,7 @@ class MainWindow():
             #If less than the max amount of entries add to menu
             if i < settings["opensave_recent_max_files"]:
                 recent_file_info = FileInfo(opensave_recent_list_of_files.at(i))
-                if recent_file_info.exists() and validFileFormat(recent_file_info.fileName()):
+                if recent_file_info.exists() and valid_file_format(recent_file_info.fileName()):
                     recent_value.set_num(i+1)
                     rAction = 0
                     if recent_value.toInt() >= 1 and recent_value.toInt() <= 9:
@@ -1126,9 +1133,9 @@ class MainWindow():
                     rAction.set_checkable(0)
                     rAction.set_data(opensave_recent_list_of_files.at(i))
                     menu[RECENT_MENU].add_action(rAction)
-                    #connect(rAction, SIGNAL(triggered()), self, SLOT(openrecentfile()))
+                    # connect(rAction, SIGNAL(triggered()), self, SLOT(openrecentfile()))
 
-        #Ensure the list only has max amount of entries
+        # Ensure the list only has max amount of entries
         while opensave_recent_list_of_files.size() > settings["opensave_recent_max_files"]:
             opensave_recent_list_of_files.removeLast()
 
@@ -1152,7 +1159,7 @@ class MainWindow():
             an_action.set_checkable(1)
             an_action.set_data(i)
             menu["WINDOW"].add_action(an_action)
-            #connect(an_action, SIGNAL(toggled(int)), self, SLOT(windowMenuActivated(int)))
+            # connect(an_action, SIGNAL(toggled(int)), self, SLOT(windowMenuActivated(int)))
             an_action.set_checked(mdi_area.active_sub_window() == windows[i])
 
     def window_menu_activated(checked):
@@ -1171,8 +1178,8 @@ class MainWindow():
         self.doc_index += 1
         self.num_of_docs += 1
         mdi_win = mdi_window(self.doc_index, self, mdi_area, "SubWindow")
-        #connect(mdi_win, SIGNAL(sendClosemdi_win()), self, SLOT(on_close_mdi_win()))
-        #connect(mdi_area, SIGNAL(subWindowActivated()), self, SLOT(on_window_activated()))
+        # connect(mdi_win, SIGNAL(sendClosemdi_win()), self, SLOT(on_close_mdi_win()))
+        # connect(mdi_area, SIGNAL(subWindowActivated()), self, SLOT(on_window_activated()))
 
         self.update_menu_toolbar_statusbar()
         self.window_menu_about_to_show()
@@ -1202,7 +1209,7 @@ class MainWindow():
         elif preview:
             openDialog = PreviewDialog(self, translate("Open w/Preview"), openFilesPath, format_filter_open)
             #TODO: set openDialog.selectNameFilter(const String& filter) from settings["opensave_open_format"]
-            #connect(openDialog, SIGNAL(filesSelected()), self, SLOT(open_files_selected()))
+            # connect(openDialog, SIGNAL(filesSelected()), self, SLOT(open_files_selected()))
             openDialog.exec()
 
         Application_restoreOverrideCursor()
@@ -1213,7 +1220,7 @@ class MainWindow():
 
         if filesToOpen.count(self):
             for i in range(len(filesToOpen)):
-                if not validFileFormat(filesToOpen[i]):
+                if not valid_file_format(filesToOpen[i]):
                     continue
 
                 existing = findmdi_window(filesToOpen[i])
@@ -1224,8 +1231,8 @@ class MainWindow():
                 #The docIndex doesn't need increased as it is only used for unnamed files
                 self.num_of_docs += 1
                 mdi_win = mdi_window(self.doc_index, self, mdi_area, "SubWindow")
-                #connect(mdi_win, SIGNAL(sendClosemdi_win()), self, SLOT(onClosemdi_win()))
-                #connect(mdi_area, SIGNAL(subWindowActivated()), self, SLOT(onWindowActivated()))
+                # connect(mdi_win, SIGNAL(sendClosemdi_win()), self, SLOT(onClosemdi_win()))
+                # connect(mdi_area, SIGNAL(subWindowActivated()), self, SLOT(onWindowActivated()))
 
                 # Make sure the toolbars/etc... are shown before doing their zoomExtents
                 if doOnce:
@@ -1485,7 +1492,7 @@ class MainWindow():
                 ACTION.set_status_tip("Close the " + tb.window_title() + " Toolbar")
                 ACTION.set_object_name("toolbarclose")
                 tb.add_action(ACTION)
-                #connect(tb, SIGNAL(actionTriggered()), self, SLOT(close_toolbar()))
+                # connect(tb, SIGNAL(actionTriggered()), self, SLOT(close_toolbar()))
 
             else:
                 for action in tb.actions(self):

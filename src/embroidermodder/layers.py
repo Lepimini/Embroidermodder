@@ -20,50 +20,50 @@ class LayerManager():
     r" . "
     def __init__(self, tab, mw, parent):
         r"."
-        layer_model = QStandardItemModel(0, 8, this)
+        layer_model = tk.StandardItemModel(mw, 0, 8)
 
-        layer_model_sorted = new QSortFilterProxyModel
+        layer_model_sorted = tk.SortFilterProxyModel()
         layer_model_sorted.setDynamicSortFilter(1)
         layer_model_sorted.setSourceModel(layer_model)
 
-        treeView = new QTreeView
+        treeView = tk.TreeView(mw)
         treeView.setRootIsDecorated(0)
         treeView.setAlternatingRowColors(1)
         treeView.setModel(layer_model_sorted)
         treeView.setSortingEnabled(1)
-        treeView.sortByColumn(0, Qt_AscendingOrder)
+        treeView.sortByColumn(0, "AscendingOrder")
 
         mainLayout = tk.VBoxLayout()
         mainLayout.addWidget(treeView)
-        setLayout(mainLayout)
+        set_layout(mainLayout)
 
-        setWindowTitle(translate("Layer Manager"))
-        setMinimumSize(750, 550)
+        set_window_title(translate("Layer Manager"))
+        set_minimum_size(750, 550)
 
-        layer_model.setHeaderData(0, Qt_Horizontal, translate("Name"))
-        layer_model.setHeaderData(1, Qt_Horizontal, translate("Visible"))
-        layer_model.setHeaderData(2, Qt_Horizontal, translate("Frozen"))
-        layer_model.setHeaderData(3, Qt_Horizontal, translate("Z Value"))
-        layer_model.setHeaderData(4, Qt_Horizontal, translate("Color"))
-        layer_model.setHeaderData(5, Qt_Horizontal, translate("Linetype"))
-        layer_model.setHeaderData(6, Qt_Horizontal, translate("Lineweight"))
-        layer_model.setHeaderData(7, Qt_Horizontal, translate("Print"))
+        layer_model.set_header_data(0, "horizontal", translate("Name"))
+        layer_model.set_header_data(1, "horizontal", translate("Visible"))
+        layer_model.set_header_data(2, "horizontal", translate("Frozen"))
+        layer_model.set_header_data(3, "horizontal", translate("Z Value"))
+        layer_model.set_header_data(4, "horizontal", translate("Color"))
+        layer_model.set_header_data(5, "horizontal", translate("Linetype"))
+        layer_model.set_header_data(6, "horizontal", translate("Lineweight"))
+        layer_model.set_header_data(7, "horizontal", translate("Print"))
 
-        addLayer("0", 1, 0, 0.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("1", 1, 0, 1.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("2", 1, 0, 2.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("3", 1, 0, 3.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("4", 1, 0, 4.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("5", 1, 0, 5.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("6", 1, 0, 6.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("7", 1, 0, 7.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("8", 1, 0, 8.0, qRgb(0,0,0), "Continuous", "Default", 1)
-        addLayer("9", 1, 0, 9.0, qRgb(0,0,0), "Continuous", "Default", 1)
+        add_layer("0", 1, 0, 0.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("1", 1, 0, 1.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("2", 1, 0, 2.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("3", 1, 0, 3.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("4", 1, 0, 4.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("5", 1, 0, 5.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("6", 1, 0, 6.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("7", 1, 0, 7.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("8", 1, 0, 8.0, (0, 0, 0), "Continuous", "Default", 1)
+        add_layer("9", 1, 0, 9.0, (0, 0, 0), "Continuous", "Default", 1)
 
-        for(i = 0; i < layer_model.columnCount(); ++i)
+        for i in range(layer_model.count()):
             treeView.resizeColumnToContents(i)
 
-        QApplication_setOverrideCursor(Qt_ArrowCursor)
+        Application_setOverrideCursor(Qt_ArrowCursor)
 
         return self
 
@@ -72,19 +72,19 @@ class LayerManager():
         r"."
         # const print):
         layer_model.insertRow(0)
-        layer_model.setData(layer_model.index(0, 0), name)
-        layer_model.setData(layer_model.index(0, 1), visible)
-        layer_model.setData(layer_model.index(0, 2), frozen)
-        layer_model.setData(layer_model.index(0, 3), zValue)
+        layer_model.set_data(layer_model.index(0, 0), name)
+        layer_model.set_data(layer_model.index(0, 1), visible)
+        layer_model.set_data(layer_model.index(0, 2), frozen)
+        layer_model.set_data(layer_model.index(0, 3), zValue)
 
         colorPix = QPixmap(16, 16)
         colorPix.fill(Color(color))
         layer_model.itemFromIndex(layer_model.index(0, 4)).setIcon(QIcon(colorPix))
-        layer_model.setData(layer_model.index(0, 4), Color(color))
+        layer_model.set_data(layer_model.index(0, 4), Color(color))
 
-        layer_model.setData(layer_model.index(0, 5), lineType)
-        layer_model.setData(layer_model.index(0, 6), lineWeight)
-        #layer_model.setData(layer_model.index(0, 7), print)
+        layer_model.set_data(layer_model.index(0, 5), lineType)
+        layer_model.set_data(layer_model.index(0, 6), lineWeight)
+        #layer_model.set_data(layer_model.index(0, 7), print)
 
     def layer_model(self):
         r"."

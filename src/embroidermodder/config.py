@@ -78,22 +78,22 @@ designs = load_data("designs.json")
 
 
 settings["welcome_message"] = r"""
-     ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ 
-    | __|     | _ \| _ \ /  \| |   \| __| _ \ |     |/  \|   \|   \| __| _ \  |__ \
-    | __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/
-    |___|_|_|_|___/|_|\_\\__/|_|___/|___|_|\_\|_|_|_|\__/|___/|___/|___|_|\_\ |___|
-    _____________________________________________________________________________ 
-    |                                                                             |
-    |                         http://embroidermodder.org                          |
-    |_____________________________________________________________________________|
+ ___ _____ ___  ___   __  _ ___  ___ ___   _____  __  ___  ___  ___ ___    ___ 
+| __|     | _ \| _ \ /  \| |   \| __| _ \ |     |/  \|   \|   \| __| _ \  |__ \
+| __| | | | _ <|   /| () | | |) | __|   / | | | | () | |) | |) | __|   /  / __/
+|___|_|_|_|___/|_|\_\\__/|_|___/|___|_|\_\|_|_|_|\__/|___/|___/|___|_|\_\ |___|
+_____________________________________________________________________________ 
+|                                                                             |
+|                         http://embroidermodder.org                          |
+|_____________________________________________________________________________|
 
-    Usage: embroidermodder [options] files ...
+Usage: embroidermodder [options] files ...
 
-    Options:
-    -d, --debug      Print lots of debugging information.
-    -h, --help       Print self message and exit.
-    -v, --version    Print the version number of embroidermodder and exit.
-    """
+Options:
+-d, --debug      Print lots of debugging information.
+-h, --help       Print self message and exit.
+-v, --version    Print the version number of embroidermodder and exit.
+"""
 
 settings["to_add_to_property_editor"] = """
     

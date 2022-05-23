@@ -30,7 +30,7 @@ class DetailsDialog():
         .
         """
         self.dialog = tk.Tk()
-        self.dialog.setMinimumSize(750,550)
+        self.dialog.setMinimumSize(750, 550)
         self.dialog.title(translate("Embroidery Design Details"))
 
         self.stitches_total = 0
@@ -47,7 +47,7 @@ class DetailsDialog():
         self.main_widget = self.create_main_widget()
 
         self.button_box = tk.ButtonBox(self.dialog, text="QDialogButtonBox_Ok")
-        #connect(buttonBox, SIGNAL(accepted()), SLOT(accept()))
+        # connect(buttonBox, SIGNAL(accepted()), SLOT(accept()))
 
         vbox_layout_main = tk.VBoxLayout()
         vbox_layout_main.add_widget(self.main_widget)
@@ -72,24 +72,24 @@ class DetailsDialog():
         r"""
         .
         """
-        #TODO: generate a temporary pattern from the scene data.
+        # TODO: generate a temporary pattern from the scene data.
 
-        #TODO: grab this information from the pattern
+        # TODO: grab this information from the pattern
         self.stitches_total = 5
-        #TODO: embStitchList_count(pattern.stitchList, TOTAL);
+        # TODO: embStitchList_count(pattern.stitchList, TOTAL);
         self.stitches_real = 4
-        #TODO: embStitchList_count(pattern.stitchList, NORMAL);
+        # TODO: embStitchList_count(pattern.stitchList, NORMAL);
         self.stitches_jump = 3
-        #TODO: embStitchList_count(pattern.stitchList, JUMP);
+        # TODO: embStitchList_count(pattern.stitchList, JUMP);
         self.stitches_trim = 2
-        #TODO: embStitchList_count(pattern.stitchList, TRIM);
+        # TODO: embStitchList_count(pattern.stitchList, TRIM);
         self.color_total = 1
-        #TODO: embThreadList_count(pattern.threadList, TOTAL);
+        # TODO: embThreadList_count(pattern.threadList, TOTAL);
         self.color_changes = 0
-        #TODO: embThreadList_count(pattern.threadList, CHANGES);
+        # TODO: embThreadList_count(pattern.threadList, CHANGES);
 
         self.bounding_rect.set_rect(0, 0, 50, 100)
-        #TODO: embPattern_calcBoundingBox(pattern);
+        # TODO: embPattern_calcBoundingBox(pattern);
 
     def create_main_widget(self):
         r"""
@@ -97,7 +97,7 @@ class DetailsDialog():
         """
         widget = tk.Widget(self.dialog)
 
-        #Misc
+        # Misc
         group_box_misc = tk.GroupBox(translate("General Information"), widget)
 
         Labels = []
@@ -125,20 +125,20 @@ class DetailsDialog():
             grid_layout_misc.add_widget(tk.Labels[i], i, 0, "Qt_AlignLeft")
             grid_layout_misc.add_widget(fields[i], i, 1, "Qt_AlignLeft")
 
-        grid_layout_misc.setColumnStretch(1,1)
+        grid_layout_misc.setColumnStretch(1, 1)
         group_box_misc.set_layout(grid_layout_misc)
 
         # TODO: Color Histogram
 
-        #Stitch Distribution
-        #QGroupBox* groupBoxDist = QGroupBox(translate("Stitch Distribution"), widget);
+        # Stitch Distribution
+        # groupBoxDist = QGroupBox(translate("Stitch Distribution"), widget);
 
         # TODO: Stitch Distribution Histogram
 
-        #Widget Layout
+        # Widget Layout
         vbox_layout_main = tk.VBoxLayout(widget)
         vbox_layout_main.add_widget(group_box_misc)
-        #vbox_layout_main.add_widget(groupBoxDist);
+        # vbox_layout_main.add_widget(groupBoxDist);
         vbox_layout_main.addStretch(1)
         widget.set_layout(vbox_layout_main)
 
