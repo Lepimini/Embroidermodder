@@ -573,6 +573,12 @@ scm_create_ui_rect(scheme *sc, pointer args)
 }
 
 pointer
+scm_create_label(scheme *sc, pointer args)
+{
+    return sc->NIL;
+}
+
+pointer
 scm_create_widget(scheme *sc, pointer args)
 {
     char icon_path[2*MAX_STRING_LENGTH];
@@ -621,7 +627,7 @@ load_widgets(scheme *sc)
 {
     n_widgets = 0;
 
-    if (load_scheme_file(sc, "assets/post-boot.scm")) {
+    if (load_scheme_file(sc, "assets/ui.scm")) {
         return 3;
     }
     return 0;

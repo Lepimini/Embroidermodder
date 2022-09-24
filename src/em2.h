@@ -57,6 +57,13 @@
 #define COLOR_CROSSHAIR               1
 #define COLOR_GRID                    2
 
+#define DATA_TYPE_DOUBLE              0
+#define DATA_TYPE_INT                 1
+#define DATA_TYPE_STRING              2
+#define DATA_TYPE_META                3
+#define DATA_TYPE_TITLE               4
+#define DATA_TYPE_GROUP_BOX           5
+
 #define LINE_STYLE_DASHED             0
 #define LINE_STYLE_SOLID              1
 
@@ -763,13 +770,13 @@ typedef struct SettingsTab_ {
  * ------------------
  * Covers Comboboxes, Line edits, Dropdowns etc. */
 typedef struct Property_ {
-    char *description;
-    char *type;
-    char *permission;
+    char description[MAX_STRING_LENGTH];
+    unsigned char permissions;
+    unsigned char data_type;
 } Property;
 
 typedef struct PropertyBox_ {
-    char *title;
+    char title[MAX_STRING_LENGTH];
     int obj_type;
     char **properties;
 } PropertyBox;
@@ -897,6 +904,7 @@ pointer scm_exit_program(scheme *sc, pointer args);
 pointer scm_move(scheme *sc, pointer args);
 
 pointer scm_create_widget(scheme *sc, pointer args);
+pointer scm_create_label(scheme *sc, pointer args);
 pointer scm_create_ui_rect(scheme *sc, pointer args);
 pointer scm_export(scheme *sc, pointer args);
 
@@ -931,5 +939,9 @@ extern double zoom_in_limit;
 extern double zoom_out_limit;
 extern int debug_mode;
 extern char error_msg[MAX_STRING_LENGTH];
+
+extern char *arc_properties[MAX_STRING_LENGTH];
+extern char *details_labels[MAX_STRING_LENGTH];
+extern char *statusbar_labels[MAX_STRING_LENGTH];
 
 #endif

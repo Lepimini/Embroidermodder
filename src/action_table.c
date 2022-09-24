@@ -604,6 +604,13 @@ Action action_list[MAX_ACTIONS] = {
         "NULL"
     },
     {
+        "create-label",
+        scm_create_label,
+        PERMISSIONS_SYSTEM,
+        "NULL",
+        "NULL"
+    },
+    {
         "create-widget",
         scm_create_widget,
         PERMISSIONS_SYSTEM,
