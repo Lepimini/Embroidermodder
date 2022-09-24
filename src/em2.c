@@ -399,6 +399,9 @@ main(int argc, char *argv[])
 
     create_window();
 
+    if (load_scheme_file(sc, "assets/post-boot.scm")) {
+        return 3;
+    }
     /* Open tabs here */
     /*
     if (argc > 10) {
@@ -510,28 +513,70 @@ make_rectangle(SDL_Rect *rect, int x, int y, int w, int h)
 }
 
 pointer
+pair_cddr(pointer args)
+{
+    return pair_cdr(pair_cdr(args));
+}
+
+pointer
+pair_cdddr(pointer args)
+{
+    return pair_cdr(pair_cdr(pair_cdr(args)));
+}
+
+int
+get_int_from_closure(pointer args)
+{
+    return (int)ivalue(pair_car(args));
+}
+
+pointer
 scm_create_widget(scheme *sc, pointer args)
 {
+    char icon_path[2*MAX_STRING_LENGTH];
+    SDL_Surface *surface;
+    SDL_Rect rect;
     debug_message("Create widget.");
-    if (args != sc->NIL) {
-        SDL_Rect rect;
-        pointer arg1 = pair_car(args);
-        pointer arg2 = pair_car(arg1);
-        pointer arg3 = pair_car(arg2);
-        pointer arg4 = pair_car(arg3);
-        pointer arg5 = pair_car(arg4);
-        
-        make_rectangle(&rect, (int)ivalue(arg1), (int)ivalue(arg2),
-            (int)ivalue(arg3), (int)ivalue(arg4));
-        
-        char *action = string_value(arg5);
-        
-        printf("%d %d %d %d %s\n",
-           rect.x, rect.y, rect.w, rect.h, action);
-        fflush(stdout);
-    
-        create_widget(rect, action);
+    if (args == sc->NIL) {
+        return sc->NIL;
     }
+    
+    printf("%d\n", list_length(sc, args));
+    
+    rect.x = get_int_from_closure(args);
+    printf("x: %d\n", rect.x);
+
+    pointer arg2 = pair_cdr(args);
+    rect.y = get_int_from_closure(arg2);
+    printf("y: %d\n", rect.y);
+
+    pointer arg3 = pair_cdr(arg2);
+    rect.w = get_int_from_closure(arg3);
+    printf("w: %d\n", rect.w);
+
+    pointer arg4 = pair_cdr(arg3);
+    rect.h = get_int_from_closure(arg4);
+    printf("h: %d\n", rect.h);
+    
+    printf("n_widgets: %d\n", n_widgets);
+
+    widgets[n_widgets].rect = rect;
+    widgets[n_widgets].mode = WIDGET_MODE_BLOCK;
+
+    pointer arg5 = pair_cdr(arg4);
+    strcpy(widgets[n_widgets].command, string_value(pair_car(arg5)));
+    
+    sprintf(icon_path, "assets/icons/%s.png", widgets[n_widgets].command);
+    surface = IMG_Load(icon_path);
+    widgets[n_widgets].texture = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!widgets[n_widgets].texture) {
+        debug_message("Failed to load texture.");
+        debug_message(icon_path);
+    }
+    SDL_FreeSurface(surface);
+
+    n_widgets++;
+
     return sc->NIL;
 }
 
@@ -552,7 +597,7 @@ create_widget(SDL_Rect rect, char *action_id)
             act = i;
         }
     }
-    sprintf(icon_path, "assets/icon/%s.png", action_list[act].command);
+    sprintf(icon_path, "assets/icons/%s.png", action_list[act].command);
     surface = IMG_Load(icon_path);
     widgets[n_widgets].texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!widgets[n_widgets].texture) {
@@ -561,7 +606,6 @@ create_widget(SDL_Rect rect, char *action_id)
     }
     SDL_FreeSurface(surface);
     /* By default a widget cannot perform actions. */
-    widgets[n_widgets].command = (char*)malloc(MAX_STRING_LENGTH);
     strcpy(widgets[n_widgets].command, action_id);
     n_widgets++;
 }

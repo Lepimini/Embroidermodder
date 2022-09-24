@@ -22,3 +22,5 @@
     "END"
   )
 )
+
+(create-widget 10 100 10 100 "erase")

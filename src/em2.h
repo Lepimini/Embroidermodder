@@ -675,14 +675,14 @@ typedef struct Widget_ {
     SDL_Rect rect;
     SDL_Texture *texture;
     unsigned char background[4];
-    char *label;
-    char *svg_path;
-    char *icon;
+    char label[MAX_STRING_LENGTH];
+    char svg_path[MAX_STRING_LENGTH];
+    char icon[MAX_STRING_LENGTH];
     float width;
     float height;
     EmbVector position;
     int mode;
-    char *command;
+    char command[MAX_STRING_LENGTH];
 } widget;
 
 /* Text Properties
