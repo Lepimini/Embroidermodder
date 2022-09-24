@@ -653,42 +653,21 @@ typedef struct Emb_Toolset {
  * DESCRIPTION OF STRUCT CONTENTS
  *
  * label
- *     If the widget is a text box like a menu bar item then it needs this
- *     char array to store the string.
- * 
- * svg_path
- *     If the widget is a button, it needs a symbol. The svg_path is the path
- *     that draws the symbol using the .
- * 
- * icon
- *     If the widget is a button with a file that is loaded to display it
- *     then this stores the filename string.
- *
- * width
- *     The width as a proportion of the total width of the parent.
- *     0.1 means 10% of the width of the parent.
- *
- * height
- *     The height as a proportion of the total width of the parent.
- *     0.1 means 10% of the width of the parent.
+ * If the widget is a text box like a menu bar item
+ * then it needs this char array to store the string.
  *
  * position
- *     Relative to its parent, where should the widget go (the top left corner's
- *     offset from the top left corner).
+ * Relative to its parent, where should the widget go
+ * (the top left corner's offset from the top left corner).
  * 
  * mode
- *     Whether to use label, svg_path, icon approach.
+ * Whether to use label, svg_path, icon approach.
  */
 typedef struct Widget_ {
     SDL_Rect rect;
     SDL_Texture *texture;
     unsigned char color[4];
     char label[MAX_STRING_LENGTH];
-    char svg_path[MAX_STRING_LENGTH];
-    char icon[MAX_STRING_LENGTH];
-    float width;
-    float height;
-    EmbVector position;
     int mode;
     char command[MAX_STRING_LENGTH];
 } widget;

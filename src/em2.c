@@ -325,6 +325,35 @@ actuator(scheme *sc, char *action)
     return 0;
 }
 
+SDL_Texture *charmap;
+
+void
+render_string(SDL_Rect rect, char *str)
+{
+	int char_width = 9;
+	int char_height = 13;
+	int char_padding = 5;
+	int offset_charmap_x = 95;
+	int offset_charmap_y = 40;
+	int wrap = 16;
+    int i;
+    for (i=0; i<MAX_STRING_LENGTH && str[i]; i++) {
+        SDL_Rect from_rect;
+        SDL_Rect to_rect;
+        int x = str[i]%wrap;
+        int y = str[i]/wrap;
+        from_rect.x = offset_charmap_x + x*(char_width+char_padding);
+        from_rect.y = offset_charmap_y + y*char_height;
+        from_rect.w = char_width;
+        from_rect.h = char_height;
+        to_rect.x = rect.x + i*char_width;
+        to_rect.y = rect.y;
+        to_rect.w = char_width;
+        to_rect.h = char_height;
+        SDL_RenderCopy(renderer, charmap,
+            &from_rect, &to_rect);
+    }
+}
 
 /* Function definitions */
 int
@@ -399,6 +428,14 @@ main(int argc, char *argv[])
     */
 
     create_window();
+
+    SDL_Surface *surface = IMG_Load("assets/fonts/Cozette/img/charmap.png");
+    charmap = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!charmap) {
+        debug_message("Failed to load charmap for text rendering.");
+        return 1;
+    }
+    SDL_FreeSurface(surface);
 
     load_widgets(sc);
     /* Open tabs here */
@@ -496,6 +533,9 @@ render(void)
                 widgets[i].color[1], widgets[i].color[2], 255);
             SDL_RenderFillRect(renderer, &widgets[i].rect);
         }
+        if (widgets[i].mode == WIDGET_MODE_TEXT) {
+            render_string(widgets[i].rect, widgets[i].label);
+        }
     }
     return 0;
 }
@@ -535,31 +575,50 @@ get_args(pointer args, pointer arg[10], int n)
 }
 
 pointer
+scm_create_label(scheme *sc, pointer args)
+{
+    SDL_Rect rect;
+    pointer arg[10];
+    debug_message("Create label.");
+    if (args == sc->NIL) {
+        return sc->NIL;
+    }
+
+    get_args(args, arg, 5);
+
+    rect.x = get_int_from_closure(arg[0]);
+    rect.y = get_int_from_closure(arg[1]);
+    rect.w = get_int_from_closure(arg[2]);
+    rect.h = get_int_from_closure(arg[3]);
+    strcpy(widgets[n_widgets].label, string_value(pair_car(arg[4])));
+
+    widgets[n_widgets].rect = rect;
+    widgets[n_widgets].mode = WIDGET_MODE_TEXT;
+
+    n_widgets++;
+
+    return sc->NIL;
+}
+
+pointer
 scm_create_ui_rect(scheme *sc, pointer args)
 {
     SDL_Surface *surface;
     SDL_Rect rect;
     pointer arg[10];
-    debug_message("Create widget.");
     if (args == sc->NIL) {
         return sc->NIL;
     }
 
     get_args(args, arg, 7);
-
-    printf("%d\n", list_length(sc, args));
+    if (list_length(sc, args) < 7) {
+        return sc->NIL;
+    }
     
     rect.x = get_int_from_closure(arg[0]);
     rect.y = get_int_from_closure(arg[1]);
     rect.w = get_int_from_closure(arg[2]);
     rect.h = get_int_from_closure(arg[3]);
-
-    printf("x: %d\n", rect.x);
-    printf("y: %d\n", rect.y);
-    printf("w: %d\n", rect.w);
-    printf("h: %d\n", rect.h);
-    
-    printf("n_widgets: %d\n", n_widgets);
 
     widgets[n_widgets].rect = rect;
     widgets[n_widgets].mode = WIDGET_MODE_BACKGROUND;
@@ -573,35 +632,25 @@ scm_create_ui_rect(scheme *sc, pointer args)
 }
 
 pointer
-scm_create_label(scheme *sc, pointer args)
-{
-    return sc->NIL;
-}
-
-pointer
 scm_create_widget(scheme *sc, pointer args)
 {
     char icon_path[2*MAX_STRING_LENGTH];
     SDL_Surface *surface;
     SDL_Rect rect;
     pointer arg[10];
-    debug_message("Create widget.");
     if (args == sc->NIL) {
         return sc->NIL;
     }
     
     get_args(args, arg, 5);
-    printf("%d\n", list_length(sc, args));
+    if (list_length(sc, args) < 5) {
+        return sc->NIL;
+    }
     
     rect.x = get_int_from_closure(arg[0]);
     rect.y = get_int_from_closure(arg[1]);
     rect.w = get_int_from_closure(arg[2]);
     rect.h = get_int_from_closure(arg[3]);
-
-    printf("x: %d\n", rect.x);
-    printf("y: %d\n", rect.y);
-    printf("w: %d\n", rect.w);
-    printf("h: %d\n", rect.h);
 
     widgets[n_widgets].rect = rect;
     widgets[n_widgets].mode = WIDGET_MODE_BLOCK;

@@ -9,37 +9,33 @@
 ;
 ; ------------------------------------------------------------
 ;
-; Things that run after foreign functions have been
-; initialised.
+; Generate the user interface.
 ;
-;    Menubar
-;    debug_message("menubar");
-;    make_rectangle(&rect, 0, 0, 640, 40);
+; Menubar
+; make_rectangle(&rect, 0, 0, 640, 40);
 ;    NULL, "interface_color",
-;    create_widget(rect, "do_nothing");
+; create_widget(rect, "do_nothing");
 ;
-;    File Toolbar
-;    debug_message("file");
-;    make_rectangle(&rect, 0, 45, padding*6+button_size*5, padding*2+button_size);
-;    
-;    make_toolbar(rect, (char**)toolbar_entries[0]);
- ;   
+; File Toolbar
+; make_rectangle(&rect, 0, 45, padding*6+button_size*5, padding*2+button_size);
+; make_toolbar(rect, (char**)toolbar_entries[0]);
 ;
-;    Edit Toolbar
-;    debug_message("edit");
-;    make_rectangle(&rect, padding*7+button_size*5, 45, padding*6+button_size*5, padding*2+button_size);
-;    make_toolbar(rect, (char**)toolbar_entries[1]);
+; Edit Toolbar
+; make_rectangle(&rect, padding*7+button_size*5, 45, padding*6+button_size*5, padding*2+button_size);
+; make_toolbar(rect, (char**)toolbar_entries[1]);
 ;
-;    Window Toolbar
+; Window Toolbar
 ;    make_rectangle(&rect, padding*14+button_size*10, 45, padding*7+button_size*6, padding*2+button_size);
 ;    make_toolbar(rect, (char**)toolbar_entries[3]);
 ;
-;    Statusbar
+; Statusbar
 ;    make_rectangle(&rect, 0, 455, 640, 25);;
 ;     NULL, "interface_color",
 ;    create_widget(rect, "do_nothing");
 
 (define (icon-size) 24)
+(define (window-width) 640)
+(define (window-height) 480)
 (define (menubar-height) 24)
 (define (menubar-padding) 2)
 (define (toolbar-offset) (+ (menubar-height) (menubar-padding)))
@@ -51,12 +47,19 @@
 (define (background-rect x y w h)
   (create-ui-rect x y w h 100 150 210))
 
-(create-ui-rect 0 0 640 480 50 50 50)
+(create-ui-rect 0 0 (window-width) (window-height) 50 50 50)
+
+; Toolbar background
+(create-ui-rect
+  0 0
+  640 (+ (* 3 (+ (toolbar-padding) (toolbar-height)))
+    (toolbar-offset))
+  240 240 250)
 
 ; Menubar
 (create-ui-rect
   0 0
-  640 (menubar-height)
+  (window-width) (menubar-height)
   200 200 250)
 
 ; Toolbars
@@ -86,18 +89,17 @@
 (define (vertical-rule x y h)
   (create-ui-rect x y 2 h 0 0 0))
 
-(horizontal-rule 4 170 300)
-(horizontal-rule 4 200 300)
-(horizontal-rule 4 230 300)
-(horizontal-rule 4 260 300)
-(vertical-rule 170 170 300)
-(vertical-rule 200 170 300)
-(vertical-rule 230 170 300)
-(vertical-rule 260 170 300)
-
-; For menubars:
-(create-label 0 0 100 10 "File")
-(create-label 0 100 100 10 "Edit")
+(horizontal-rule 10 170 350)
+(horizontal-rule 10 240 350)
+(horizontal-rule 10 310 350)
+(horizontal-rule 10 380 350)
+(horizontal-rule 10 450 350)
+(vertical-rule 10 150 300)
+(vertical-rule 80 150 300)
+(vertical-rule 150 150 300)
+(vertical-rule 220 150 300)
+(vertical-rule 290 150 300)
+(vertical-rule 360 150 300)
 
 (define (icon-offset n)
   (+ (* n (icon-padding))
@@ -127,37 +129,37 @@
 (create-icon 15 1 "print-pattern")
 (create-icon 16 1 "exit-program")
 
-(create-icon 1 2 "window-close")
-(create-icon 2 2 "window-close-all")
-(create-icon 3 2 "window-cascade")
-(create-icon 4 2 "window-tile")
-(create-icon 5 2 "window-next")
-(create-icon 6 2 "window-previous")
+(create-icon 17 1 "window-close")
+(create-icon 18 1 "window-close-all")
+(create-icon 19 1 "window-cascade")
+(create-icon 20 1 "window-tile")
+(create-icon 21 1 "window-next")
+(create-icon 22 1 "window-previous")
 
-(create-icon 7 2 "help")
-(create-icon 8 2 "changelog-dialog")
-(create-icon 9 2 "tip-of-the-day-dialog")
-(create-icon 10 2 "about-dialog")
+(create-icon 1 2 "help")
+(create-icon 2 2 "changelog-dialog")
+(create-icon 3 2 "tip-of-the-day-dialog")
+(create-icon 4 2 "about-dialog")
 
-(create-icon 11 2 "icon-16")
-(create-icon 12 2 "icon-24")
-(create-icon 13 2 "icon-32")
-(create-icon 14 2 "icon-48")
-(create-icon 15 2 "icon-64")
-(create-icon 16 2 "icon-128")
+(create-icon 5 2 "icon-16")
+(create-icon 6 2 "icon-24")
+(create-icon 7 2 "icon-32")
+(create-icon 8 2 "icon-48")
+(create-icon 9 2 "icon-64")
+(create-icon 10 2 "icon-128")
 
-(create-icon 17 2 "settings-dialog")
-(create-icon 18 2 "make-layer-current")
+(create-icon 11 2 "settings-dialog")
+(create-icon 12 2 "make-layer-current")
 
-(create-icon 19 2 "pan-real-time")
-(create-icon 20 2 "pan-point")
-(create-icon 21 2 "pan-left")
-(create-icon 22 2 "pan-right")
-(create-icon 23 2 "pan-up")
-(create-icon 24 2 "pan-down")
+(create-icon 13 2 "pan-real-time")
+(create-icon 14 2 "pan-point")
+(create-icon 15 2 "pan-left")
+(create-icon 16 2 "pan-right")
+(create-icon 17 2 "pan-up")
+(create-icon 18 2 "pan-down")
 
-(create-icon 25 2 "day")
-(create-icon 26 2 "night")
+(create-icon 19 2 "day")
+(create-icon 20 2 "night")
 
 (create-icon 1 3 "layers")
 (create-icon 2 3 "layer-selector")
@@ -190,42 +192,46 @@
 (create-icon 27 3 "zoom-all")
 (create-icon 28 3 "zoom-extents")
 
-(create-icon 9 4 "treble-clef")
-(create-icon 10 4 "path")
-(create-icon 11 4 "circle")
-(create-icon 12 4 "line")
-(create-icon 13 4 "distance")
-(create-icon 14 4 "dolphin")
-(create-icon 15 4 "ellipse")
+(create-icon 1 4 "treble-clef")
+(create-icon 2 4 "path")
+(create-icon 3 4 "circle")
+(create-icon 4 4 "line")
+(create-icon 5 4 "distance")
+(create-icon 6 4 "dolphin")
+(create-icon 7 4 "ellipse")
 
-(create-icon 16 4 "heart")
-(create-icon 17 4 "locate-point")
-(create-icon 18 4 "move")
-(create-icon 19 4 "export")
-(create-icon 20 4 "heart4")
-(create-icon 21 4 "heart5")
-(create-icon 22 4 "single-line-text")
-(create-icon 23 4 "spell-check"
-(create-icon 24 4 "quick-select")
-(create-icon 25 4 "rectangle")
-(create-icon 26 4 "rgb")
-(create-icon 27 4 "rotate")
-(create-icon 28 4 "sandbox")
-(create-icon 29 4 "quickleader")
-(create-icon 1 4 "snowflake")
-(create-icon 1 4 "star")
-(create-icon 1 4 "platform")
-(create-icon 1 4 "point")
-(create-icon 1 4 "polygon")
-(create-icon 1 4 "polyline")
-(create-icon 1 4 "settings-dialog")
-(create-icon 1 4 "quickleader")
-(create-icon 1 4 "locate-point")
-(create-icon 1 4 "point")
+(create-icon 8 4 "heart")
+(create-icon 9 4 "locate-point")
+(create-icon 10 4 "move")
+;(create-icon 11 4 "export")
+;(create-icon 12 4 "heart4")
+;(create-icon 13 4 "heart5")
+;(create-icon 14 4 "single-line-text")
+;(create-icon 15 4 "spell-check"
+;(create-icon 16 4 "quick-select")
+;(create-icon 17 4 "rectangle")
+;(create-icon 18 4 "rgb")
+;(create-icon 19 4 "rotate")
+;(create-icon 20 4 "sandbox")
+;(create-icon 21 4 "quickleader")
+;(create-icon 22 4 "snowflake")
+;(create-icon 23 4 "star")
+;(create-icon 24 4 "platform")
+;(create-icon 25 4 "point")
+;(create-icon 26 4 "polygon")
+;(create-icon 27 4 "polyline")
+;(create-icon 28 4 "settings-dialog")
+;(create-icon 29 4 "quickleader")
+;(create-icon 30 4 "locate-point")
+;(create-icon 31 4 "point")
+
+; For menubars:
+(create-label 10 5 100 100 "File")
+(create-label 60 5 100 100 "Edit")
 
 ; Statusbar
 (create-ui-rect
-  0 454
-  640 (menubar-height)
+  0 (- (window-height) (menubar-height))
+  (window-width) (menubar-height)
   100 100 100)
 
