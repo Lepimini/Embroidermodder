@@ -597,6 +597,13 @@ Action action_list[MAX_ACTIONS] = {
         "Export the current tab as a non-stitch format that will lose more data."
     },
     {
+        "create-ui-rect",
+        scm_create_ui_rect,
+        PERMISSIONS_SYSTEM,
+        "NULL",
+        "NULL"
+    },
+    {
         "create-widget",
         scm_create_widget,
         PERMISSIONS_SYSTEM,

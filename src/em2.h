@@ -431,6 +431,7 @@
 #define WIDGET_MODE_TEXT              1
 #define WIDGET_MODE_IMAGE             2
 #define WIDGET_MODE_SVG               3
+#define WIDGET_MODE_BACKGROUND        4
 
 #define ARCHITECTURAL                 0
 #define DECIMAL                       1
@@ -674,7 +675,7 @@ typedef struct Emb_Toolset {
 typedef struct Widget_ {
     SDL_Rect rect;
     SDL_Texture *texture;
-    unsigned char background[4];
+    unsigned char color[4];
     char label[MAX_STRING_LENGTH];
     char svg_path[MAX_STRING_LENGTH];
     char icon[MAX_STRING_LENGTH];
@@ -896,6 +897,7 @@ pointer scm_exit_program(scheme *sc, pointer args);
 pointer scm_move(scheme *sc, pointer args);
 
 pointer scm_create_widget(scheme *sc, pointer args);
+pointer scm_create_ui_rect(scheme *sc, pointer args);
 pointer scm_export(scheme *sc, pointer args);
 
 /*

@@ -162,6 +162,7 @@ void process_input(scheme *sc);
 void main_loop(scheme *sc);
 void create_widget(SDL_Rect rect, char *action_id);
 int click_detection(widget *w, int x, int y);
+int load_widgets(scheme *sc);
 
 /* Settings
  * --------
@@ -399,9 +400,7 @@ main(int argc, char *argv[])
 
     create_window();
 
-    if (load_scheme_file(sc, "assets/post-boot.scm")) {
-        return 3;
-    }
+    load_widgets(sc);
     /* Open tabs here */
     /*
     if (argc > 10) {
@@ -457,10 +456,12 @@ process_input(scheme *sc)
             continue;
         }
         if (event.type == SDL_KEYDOWN) {
+            load_widgets(sc);
             continue;
         }
         if (event.type == SDL_MOUSEBUTTONDOWN) {
             for (i=0; i<n_widgets; i++) {
+                if (widgets[i].mode != WIDGET_MODE_BACKGROUND)
                 if (click_detection(&(widgets[i]),
                     event.button.x, event.button.y)) {
                     actuator(sc, widgets[i].command);
@@ -490,6 +491,11 @@ render(void)
                 NULL,
                 &widgets[i].rect);
         }
+        if (widgets[i].mode == WIDGET_MODE_BACKGROUND) {
+            SDL_SetRenderDrawColor(renderer, widgets[i].color[0],
+                widgets[i].color[1], widgets[i].color[2], 255);
+            SDL_RenderFillRect(renderer, &widgets[i].rect);
+        }
     }
     return 0;
 }
@@ -512,22 +518,58 @@ make_rectangle(SDL_Rect *rect, int x, int y, int w, int h)
     rect->h = h;
 }
 
-pointer
-pair_cddr(pointer args)
-{
-    return pair_cdr(pair_cdr(args));
-}
-
-pointer
-pair_cdddr(pointer args)
-{
-    return pair_cdr(pair_cdr(pair_cdr(args)));
-}
-
 int
 get_int_from_closure(pointer args)
 {
     return (int)ivalue(pair_car(args));
+}
+
+void
+get_args(pointer args, pointer arg[10], int n)
+{
+    int i;
+    arg[0] = args;
+    for (i=1; i<n; i++) {
+        arg[i] = pair_cdr(arg[i-1]);
+    }
+}
+
+pointer
+scm_create_ui_rect(scheme *sc, pointer args)
+{
+    SDL_Surface *surface;
+    SDL_Rect rect;
+    pointer arg[10];
+    debug_message("Create widget.");
+    if (args == sc->NIL) {
+        return sc->NIL;
+    }
+
+    get_args(args, arg, 7);
+
+    printf("%d\n", list_length(sc, args));
+    
+    rect.x = get_int_from_closure(arg[0]);
+    rect.y = get_int_from_closure(arg[1]);
+    rect.w = get_int_from_closure(arg[2]);
+    rect.h = get_int_from_closure(arg[3]);
+
+    printf("x: %d\n", rect.x);
+    printf("y: %d\n", rect.y);
+    printf("w: %d\n", rect.w);
+    printf("h: %d\n", rect.h);
+    
+    printf("n_widgets: %d\n", n_widgets);
+
+    widgets[n_widgets].rect = rect;
+    widgets[n_widgets].mode = WIDGET_MODE_BACKGROUND;
+    widgets[n_widgets].color[0] = (unsigned char) get_int_from_closure(arg[4]);
+    widgets[n_widgets].color[1] = (unsigned char) get_int_from_closure(arg[5]);
+    widgets[n_widgets].color[2] = (unsigned char) get_int_from_closure(arg[6]);
+
+    n_widgets++;
+
+    return sc->NIL;
 }
 
 pointer
@@ -536,35 +578,29 @@ scm_create_widget(scheme *sc, pointer args)
     char icon_path[2*MAX_STRING_LENGTH];
     SDL_Surface *surface;
     SDL_Rect rect;
+    pointer arg[10];
     debug_message("Create widget.");
     if (args == sc->NIL) {
         return sc->NIL;
     }
     
+    get_args(args, arg, 5);
     printf("%d\n", list_length(sc, args));
     
-    rect.x = get_int_from_closure(args);
+    rect.x = get_int_from_closure(arg[0]);
+    rect.y = get_int_from_closure(arg[1]);
+    rect.w = get_int_from_closure(arg[2]);
+    rect.h = get_int_from_closure(arg[3]);
+
     printf("x: %d\n", rect.x);
-
-    pointer arg2 = pair_cdr(args);
-    rect.y = get_int_from_closure(arg2);
     printf("y: %d\n", rect.y);
-
-    pointer arg3 = pair_cdr(arg2);
-    rect.w = get_int_from_closure(arg3);
     printf("w: %d\n", rect.w);
-
-    pointer arg4 = pair_cdr(arg3);
-    rect.h = get_int_from_closure(arg4);
     printf("h: %d\n", rect.h);
-    
-    printf("n_widgets: %d\n", n_widgets);
 
     widgets[n_widgets].rect = rect;
     widgets[n_widgets].mode = WIDGET_MODE_BLOCK;
 
-    pointer arg5 = pair_cdr(arg4);
-    strcpy(widgets[n_widgets].command, string_value(pair_car(arg5)));
+    strcpy(widgets[n_widgets].command, string_value(pair_car(arg[4])));
     
     sprintf(icon_path, "assets/icons/%s.png", widgets[n_widgets].command);
     surface = IMG_Load(icon_path);
@@ -580,51 +616,15 @@ scm_create_widget(scheme *sc, pointer args)
     return sc->NIL;
 }
 
-/* A negative action_id means it is not an actor.
- */
-void
-create_widget(SDL_Rect rect, char *action_id)
+int
+load_widgets(scheme *sc)
 {
-    char icon_path[2*MAX_STRING_LENGTH];
-    int i;
-    SDL_Surface *surface;
-    int act = 0;
-    widgets[n_widgets].rect = rect;
-    widgets[n_widgets].mode = WIDGET_MODE_BLOCK;
-    debug_message(action_id);
-    for (i=0; action_list[i].command[0] != 'E'; i++) {
-        if (!strcmp(action_id, action_list[i].command)) {
-            act = i;
-        }
-    }
-    sprintf(icon_path, "assets/icons/%s.png", action_list[act].command);
-    surface = IMG_Load(icon_path);
-    widgets[n_widgets].texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!widgets[n_widgets].texture) {
-        debug_message("Failed to load texture.");
-        debug_message(action_list[act].command);
-    }
-    SDL_FreeSurface(surface);
-    /* By default a widget cannot perform actions. */
-    strcpy(widgets[n_widgets].command, action_id);
-    n_widgets++;
-}
+    n_widgets = 0;
 
-void
-make_toolbar(SDL_Rect rect, char **actions)
-{
-    int i;
-    create_widget(rect, "do_nothing");
-    rect.x += padding;
-    rect.y += padding;
-    rect.w = button_size;
-    rect.h = button_size;
-    for (i=0; actions[i][0]!='E'; i++) {
-        /* char *icon = action_list[index].icon; */
-        /*  icon, "button_background_color", */
-        create_widget(rect, actions[i]);
-        rect.x += padding+button_size;
+    if (load_scheme_file(sc, "assets/post-boot.scm")) {
+        return 3;
     }
+    return 0;
 }
 
 /* Create the window: the window and renderer variables
@@ -647,40 +647,6 @@ create_window(void)
     n_widgets = 0;
     widgets = (widget*)malloc(sizeof(widget)*1000);
     debug_message("background");
-    /* Background */
-    make_rectangle(&rect, 0, 0, 640, 480);
-    /*  NULL, "background_color",  */
-    create_widget(rect, "do_nothing");
-    /* Menubar */
-    debug_message("menubar");
-    make_rectangle(&rect, 0, 0, 640, 40);
-    /*  NULL, "interface_color",  */
-    create_widget(rect, "do_nothing");
-
-    /* File Toolbar */
-    debug_message("file");
-    make_rectangle(&rect, 0, 45, padding*6+button_size*5, padding*2+button_size);
-    /*
-    make_toolbar(rect, (char**)toolbar_entries[0]);
-    */
-
-    /* Edit Toolbar */
-    debug_message("edit");
-    make_rectangle(&rect, padding*7+button_size*5, 45, padding*6+button_size*5, padding*2+button_size);
-    /*
-    make_toolbar(rect, (char**)toolbar_entries[1]);
-    */
-
-    /* Window Toolbar */
-    make_rectangle(&rect, padding*14+button_size*10, 45, padding*7+button_size*6, padding*2+button_size);
-    /*
-    make_toolbar(rect, (char**)toolbar_entries[3]);
-    */
-
-    /* Statusbar */
-    make_rectangle(&rect, 0, 455, 640, 25);
-    /*  NULL, "interface_color", */
-    create_widget(rect, "do_nothing");
 }
 
 /*
