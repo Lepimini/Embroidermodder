@@ -1019,70 +1019,147 @@ scm_select_all(scheme *sc, pointer args)
     return sc->NIL;
 }
 
-#define SCM_STUB(FUNC) \
-	pointer \
-	FUNC(scheme *sc, pointer args) \
-	{ \
-		debug_message("settings_dialog()"); \
-		return sc->NIL; \
-	}
-
-SCM_STUB(scm_layers)
-SCM_STUB(scm_layer_selector)
-SCM_STUB(scm_layer_previous)
-SCM_STUB(scm_color_selector)
-SCM_STUB(scm_line_type_selector)
-SCM_STUB(scm_line_weight_selector)
-SCM_STUB(scm_hide_all_layers)
-SCM_STUB(scm_lock_all_layers)
-SCM_STUB(scm_unlock_all_layers)
-SCM_STUB(scm_day_vision)
-SCM_STUB(scm_night_vision)
-SCM_STUB(scm_treble_clef)
-SCM_STUB(scm_path)
-SCM_STUB(scm_circle)
-SCM_STUB(scm_line)
-SCM_STUB(scm_distance)
-SCM_STUB(scm_dolphin)
-SCM_STUB(scm_ellipse)
-SCM_STUB(scm_delete_object)
-SCM_STUB(scm_heart)
-SCM_STUB(scm_locate_point)
-
-/*
- * OLD ACTUATOR
- *
- * In order to have a complex version of saving work, with backups,
- * undo history and forks we need a good recording of what has happened.
- *
- * An action has been taken, we are at the current head of the stack.
- *
- * Arguments are decided by ...?
-
+/* .
+ */
 pointer
-actuator(char *action)
+scm_color_selector(scheme *sc, pointer args)
 {
-    int i;
-    undo_history_position++;
-    if (undo_history_max <= undo_history_position) {
-        int i;
-        for (i=0; i<undo_history_max-undo_history_chunk_size; i++) {
-            strcpy(undo_history[i], undo_history[i+undo_history_chunk_size]);
-        }
-        undo_history_position -= undo_history_chunk_size;
-    }
-    strcpy(undo_history[undo_history_position], action);
-
-    printf("action: %s\n", action);
-
-    for (i=0; i<80; i++) {
-        if (!strcmp(action, action_list[i].command)) {
-            action_list[i]();
-            return;
-        }
-    }
-
-    stub_testing();
+    debug_message("scm_color_selector()");
+    return sc->NIL;
 }
-*/
+
+/* .
+ */
+pointer
+scm_line_type_selector(scheme *sc, pointer args)
+{
+    debug_message("scm_line_type_selector()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_line_weight_selector(scheme *sc, pointer args)
+{
+    debug_message("scm_line_weight_selector()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_day_vision(scheme *sc, pointer args)
+{
+    debug_message("scm_day_vision()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_night_vision(scheme *sc, pointer args)
+{
+    debug_message("scm_night_vision()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_treble_clef(scheme *sc, pointer args)
+{
+    debug_message("scm_treble_clef()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_path(scheme *sc, pointer args)
+{
+    debug_message("scm_path()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_circle(scheme *sc, pointer args)
+{
+    debug_message("scm_circle()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_line(scheme *sc, pointer args)
+{
+    debug_message("scm_line()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_distance(scheme *sc, pointer args)
+{
+    debug_message("scm_distance()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_dolphin(scheme *sc, pointer args)
+{
+    debug_message("scm_dolphin()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_ellipse(scheme *sc, pointer args)
+{
+    debug_message("scm_ellipse()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_delete_object(scheme *sc, pointer args)
+{
+    debug_message("scm_delete_object()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_heart(scheme *sc, pointer args)
+{
+    debug_message("scm_heart()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_locate_point(scheme *sc, pointer args)
+{
+    debug_message("scm_locate_point()");
+    return sc->NIL;
+}
+
+/* .
+ */
+pointer
+scm_move(scheme *sc, pointer args)
+{
+    debug_message("scm_locate_point()");
+    return sc->NIL;
+}
 

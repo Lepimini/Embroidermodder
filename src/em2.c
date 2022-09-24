@@ -294,6 +294,37 @@ create_actions(scheme *sc)
     }
 }
 
+/*
+ * ACTUATOR
+ *
+ * In order to have a complex version of saving work, with backups,
+ * undo history and forks we need a good recording of what has happened.
+ *
+ * An action has been taken, we are at the current head of the stack.
+ *
+ * The action string is a (hopefully valid) lisp expression
+ * that is sent to the scheme state.
+ */
+int
+actuator(scheme *sc, char *action)
+{
+    undo_history_position++;
+    if (undo_history_max <= undo_history_position) {
+        int i;
+        for (i=0; i<undo_history_max-undo_history_chunk_size; i++) {
+            strcpy(undo_history[i], undo_history[i+undo_history_chunk_size]);
+        }
+        undo_history_position -= undo_history_chunk_size;
+    }
+    strcpy(undo_history[undo_history_position], action);
+
+    printf("action: %s\n", action);
+    scheme_apply0(sc, action);
+
+    return 0;
+}
+
+
 /* Function definitions */
 int
 main(int argc, char *argv[])
@@ -429,7 +460,7 @@ process_input(scheme *sc)
             for (i=0; i<n_widgets; i++) {
                 if (click_detection(&(widgets[i]),
                     event.button.x, event.button.y)) {
-                    scheme_apply0(sc, widgets[i].command);
+                    actuator(sc, widgets[i].command);
                 }
             }
         }
@@ -483,6 +514,7 @@ make_rectangle(SDL_Rect *rect, int x, int y, int w, int h)
 void
 create_widget(SDL_Rect rect, char *action_id)
 {
+    char icon_path[2*MAX_STRING_LENGTH];
     int i;
     SDL_Surface *surface;
     int act = 0;
@@ -494,7 +526,8 @@ create_widget(SDL_Rect rect, char *action_id)
             act = i;
         }
     }
-    surface = IMG_Load(action_list[act].icon);
+    sprintf(icon_path, "assets/icon/%s.png", action_list[act].icon);
+    surface = IMG_Load(icon_path);
     widgets[n_widgets].texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!widgets[n_widgets].texture) {
         debug_message("Failed to load texture.");
@@ -596,170 +629,6 @@ set_prompt_prefix(char *msg)
     /* strcpy(prompt, msg); */
 }
 
-/* 
- *  Testing.
- *  Mostly tests for actions not causing crashes that shut the program.
- *
- *  Testing actual correct application of the action would be harder.
- */
-
-/* stores what the current error would be, should one occur */
-
-/* Check that the translate call can return an entry from the table.
- */
-int
-test_translate(void)
-{
-    char *translated = translate("?");
-    strcpy(error_msg, "Failed to use translate.");
-    return translated == "?";
-}
-
-/*
- * To support other languages we use a simple nested dictionary,
- * the first layer for what the message is and the second for
- * the list of translations.
- *
- * In order to deal with incomplete translations calling the
- * table falls back to returning the string supplied in English.
- */
-char *
-translate(char *message)
-{
-    /* lang = settings["general_language"]
-    translation = settings["translation_table"]
-    if message in translation.keys()
-        if lang in translation[message].keys()
-            return translation[message][lang] */
-    return message;
-}
-
-/* .
- */
-double
-emb_min(double x, double y)
-{
-    return x < y ? x : y;
-}
-
-/* .
- */
-double
-emb_max(double x, double y)
-{
-    return x > y ? x : y;
-}
-
-/* .
- */
-double
-emb_clamp(double lower, double x, double upper)
-{
-    return emb_max(emb_min(upper, x), lower);
-}
-
-/* .
- */
-char *
-get_str(char *label)
-{
-    debug_message("Failed to find the requested variable.");
-    return "";
-}
-
-/* .
- */
-int
-get_int(char *label)
-{
-    int i;
-    char *value = get_str(label);
-    if (value[0]) {
-        return atoi(value);
-    }
-    debug_message("Failed to find the requested variable.");
-    return 0;
-}
-
-/* .
- */
-int
-round_to_multiple(int round_up, int x, int multiple)
-{
-    int remainder;
-    if (multiple == 0) {
-        return x;
-    }
-    remainder = x % multiple;
-    if (remainder == 0) {
-        return x;
-    }
-
-    if (x < 0 && round_up) {
-        return x - remainder;
-    }
-    if (round_up) {
-        return x + multiple - remainder;
-    }
-    /* else round down */
-    if (x < 0 && !round_up) {
-        return x - multiple - remainder;
-    }
-    return x - remainder;
-}
-
-/* .
- */
-int
-valid_rgb(int red, int green, int blue)
-{
-    if (red < 0 || red > 255) {
-        return 0;
-    }
-    if (green < 0 || green > 255) {
-        return 0;
-    }
-    if (blue < 0 || blue > 255) {
-        return 0;
-    }
-    return 1;
-}
-
-/* Check the use of strtok here.
- */
-int
-parse_three_ints(char *cmd, int output[3])
-{
-    char *ptr = strtok(cmd, ",");
-    output[0] = atoi(ptr);
-    output[1] = atoi(strtok(ptr, ","));
-    output[2] = atoi(strtok(ptr, ","));
-    return valid_rgb(output[0], output[1], output[2]);
-}
-
-
-/*
- * These are loaded from the Python package first, then
- * any that contradict them in the users system override.
- */
-void
-load_data(char *path)
-{
-    /* file_data = res.read_text("embroidermodder", path)
-    json_data = json.loads(file_data)
-    if not os.path.isdir(APPLICATION_FOLDER)
-        os.mkdir(APPLICATION_FOLDER)
-
-    fname = APPLICATION_FOLDER + os.sep + path
-
-    if os.path.isfile(fname)
-        with open(fname, "r", encoding="utf-8") as settings_file:
-            user_data = json.loads(settings_file.read())
-            for k in user_data.keys()
-                json_data[k] = user_data[k]
-
-    return json_data; */
-}
 
 /* Write the current settings to the standard file as ini. */
 void
@@ -781,45 +650,6 @@ write_settings(void)
     settings["window_width"] = size().width();
     settings["window_height"] = size().height();
     */
-}
-
-/*
- * Guards against debug messages coming up during normal operation.
- *
- * Just change debug_mode to 1 to activate it. We could have a toggle
- * in the program to turn it on during operation for when something starts
- * acting weird.
- */
-void
-debug_message(char *msg)
-{
-    if (debug_mode) {
-        printf("%s\n", msg);
-    }
-}
-
-/* .
- */
-void
-stub_testing(void)
-{
-    debug_message("stub_testing called");
-    printf("%s\n", get_str("caller"));
-    /* warning(translate("Testing Feature"), translate("<b>self feature is in testing.</b>")); */
-}
-
-/* .
- */
-int
-valid_file_format(char *fname)
-{
-    if (fname[0] == 0) {
-        return 0;
-    }
-    if (emb_identify_format(fname) >= 0) {
-        return 1;
-    }
-    return 0;
 }
 
 /* .

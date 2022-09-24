@@ -123,6 +123,26 @@
 #define STATUS_LWT                    7
 #define N_STATUS                      8
 
+/* Permissions System (Not implemented)
+ * ------------------------------------
+ *
+ * The permissions flag determines whether the user or
+ * the system can run this action.
+ */
+#define PERMISSIONS_USER              0
+#define PERMISSIONS_SYSTEM            1
+
+/*
+ * The mode argument determines what locations in
+ * the interface the action will appear in,
+ * for example in mode MODE_TOOLBAR,
+ * the action appears in the toolbars,
+ * in MODE_TOOLBAR | MODE_"double"
+ * it also appears as a lineEdit in
+ * the property editor expecting a double as input.
+ */
+
+
 /* LineEdits
  * TODO: make sure the lineedits array matches
  * this ordering.
@@ -149,13 +169,13 @@
 #define CIRCLE_CENTER_X      18
 #define CIRCLE_CENTER_Y      19
 #define CIRCLE_RADIUS      20
-#define CIRCLE_DIAMETER      21
-#define CIRCLE_AREA      22
-#define CIRCLE_CIRCUMFERENCE      23
-#define ELLIPSE_CENTER_X      24
-#define ELLIPSE_CENTER_Y      25
-#define ELLIPSE_RADIUS_MAJOR      26
-#define ELLIPSE_RADIUS_MINOR      27
+#define CIRCLE_DIAMETER             21
+#define CIRCLE_AREA                 22
+#define CIRCLE_CIRCUMFERENCE        23
+#define ELLIPSE_CENTER_X            24
+#define ELLIPSE_CENTER_Y            25
+#define ELLIPSE_RADIUS_MAJOR        26
+#define ELLIPSE_RADIUS_MINOR        27
 #define ELLIPSE_DIAMETER_MAJOR      28
 #define ELLIPSE_DIAMETER_MINOR      29
 #define IMAGE_X      30
@@ -236,41 +256,44 @@
 #define OBJ_LWT         5
 #define OBJ_RUBBER      6
 
-/* _values
- * ------
- * NOTE: _allow this enum to evaluate false.
+/* object values
+ * -------------
+ *  
+ * The object flag describing which object
+ * the action is intended for or "Null" for global effects 
+ * like duplicating a pattern.
  */
-#define OBJ_TYPE_NULL      0
-#define OBJ_TYPE_ARC      1
-#define OBJ_TYPE_BLOCK      2
-#define OBJ_TYPE_CIRCLE      3
+#define OBJ_TYPE_NULL            0
+#define OBJ_TYPE_ARC             1
+#define OBJ_TYPE_BLOCK           2
+#define OBJ_TYPE_CIRCLE          3
 #define OBJ_TYPE_DIMALIGNED      4
 #define OBJ_TYPE_DIMANGULAR      5
-#define OBJ_TYPE_DIMARCLENGTH      6
-#define OBJ_TYPE_DIMDIAMETER      7
-#define OBJ_TYPE_DIMLEADER      8
-#define OBJ_TYPE_DIMLINEAR      9
-#define OBJ_TYPE_DIMORDINATE      10
+#define OBJ_TYPE_DIMARCLENGTH    6
+#define OBJ_TYPE_DIMDIAMETER     7
+#define OBJ_TYPE_DIMLEADER       8
+#define OBJ_TYPE_DIMLINEAR       9
+#define OBJ_TYPE_DIMORDINATE    10
 #define OBJ_TYPE_DIMRADIUS      11
-#define OBJ_TYPE_ELLIPSE      12
-#define OBJ_TYPE_ELLIPSEARC      13
-#define OBJ_TYPE_RUBBER      14
-#define OBJ_TYPE_GRID      15
-#define OBJ_TYPE_HATCH      16
-#define OBJ_TYPE_IMAGE      17
-#define OBJ_TYPE_INFINITELINE      18
-#define OBJ_TYPE_LINE      19
-#define OBJ_TYPE_PATH      20
-#define OBJ_TYPE_POINT      21
-#define OBJ_TYPE_POLYGON      22
-#define OBJ_TYPE_POLYLINE      23
-#define OBJ_TYPE_RAY      24
+#define OBJ_TYPE_ELLIPSE        12
+#define OBJ_TYPE_ELLIPSEARC     13
+#define OBJ_TYPE_RUBBER         14
+#define OBJ_TYPE_GRID           15
+#define OBJ_TYPE_HATCH          16
+#define OBJ_TYPE_IMAGE          17
+#define OBJ_TYPE_INFINITELINE   18
+#define OBJ_TYPE_LINE           19
+#define OBJ_TYPE_PATH           20
+#define OBJ_TYPE_POINT          21
+#define OBJ_TYPE_POLYGON        22
+#define OBJ_TYPE_POLYLINE       23
+#define OBJ_TYPE_RAY            24
 #define OBJ_TYPE_RECTANGLE      25
-#define OBJ_TYPE_SLOT      26
-#define OBJ_TYPE_SPLINE      27
+#define OBJ_TYPE_SLOT           26
+#define OBJ_TYPE_SPLINE         27
 #define OBJ_TYPE_TEXTMULTI      28
-#define OBJ_TYPE_TEXTSINGLE      29
-#define OBJ_TYPE_UNKNOWN      30
+#define OBJ_TYPE_TEXTSINGLE     29
+#define OBJ_TYPE_UNKNOWN        30
 
 /* CAD Linetypes
  * (CONT, CENTER, DOT, HIDDEN, PHANTOM, ZIGZAG)
@@ -395,20 +418,20 @@
 #define PREVIEW_MODE_ROTATE           2
 #define PREVIEW_MODE_SCALE            3
 
-#define LANGUAGE_ENGLISH      0
-#define LANGUAGE_GERMAN      1
-#define LANGUAGE_FRENCH      2
-#define LANGUAGE_SPANISH      3
-#define LANGUAGE_CHINESE_SIMPLIFIED      4
-#define LANGUAGE_CHINESE_TRADITIONAL      5
-#define LANGUAGE_ARABIC      6
-#define LANGUAGE_RUSSIAN      7
+#define LANGUAGE_ENGLISH              0
+#define LANGUAGE_GERMAN               1
+#define LANGUAGE_FRENCH               2
+#define LANGUAGE_SPANISH              3
+#define LANGUAGE_CHINESE_SIMPLIFIED   4
+#define LANGUAGE_CHINESE_TRADITIONAL  5
+#define LANGUAGE_ARABIC               6
+#define LANGUAGE_RUSSIAN              7
 #define LANGUAGE_DEFAULT      LANGUAGE_ENGLISH
 
-#define WIDGET_MODE_BLOCK      0
-#define WIDGET_MODE_TEXT      1
-#define WIDGET_MODE_IMAGE      2
-#define WIDGET_MODE_SVG      3
+#define WIDGET_MODE_BLOCK             0
+#define WIDGET_MODE_TEXT              1
+#define WIDGET_MODE_IMAGE             2
+#define WIDGET_MODE_SVG               3
 
 #define ARCHITECTURAL                 0
 #define DECIMAL                       1
@@ -486,9 +509,9 @@
 #define DBL_SELECTION_GRIP_SIZE      14
 #define DBL_SELECTION_PICKBOX_SIZE      15
 
-#define ALIGN_LEFT      0
-#define ALIGN_RIGHT      1
-#define ALIGN_CENTER      2
+#define ALIGN_LEFT                    0
+#define ALIGN_RIGHT                   1
+#define ALIGN_CENTER                  2
 
 #define PATH_TYPE_MOVETO              0
 #define PATH_TYPE_LINETO              1
@@ -501,9 +524,9 @@
 #define DOLPHIN_MODES_XSCALE          1
 #define DOLPHIN_MODES_YSCALE          2
 
-#define ELLIPSE_MODES_MAJORDIAMETER_MINORRADIUS      0
+#define ELLIPSE_MODES_MAJORDIAMETER_MINORRADIUS    0
 #define ELLIPSE_MODES_MAJORRADIUS_MINORRADIUS      1
-#define ELLIPSE_MODES_ROTATION        2
+#define ELLIPSE_MODES_ROTATION                     2
 
 #define TREBLE_CLEF_MODES_NUM_POINTS  0
 #define TREBLE_CLEF_MODES_XSCALE      1
@@ -511,22 +534,20 @@
 
 /* Polygon modes.
  */
-#define POLYGON_MODE_NUM_SIDES      0
-#define POLYGON_MODE_CENTER_PT      1
-#define POLYGON_MODE_POLYTYPE      2
-#define POLYGON_MODE_INSCRIBE      3
-#define POLYGON_MODE_CIRCUMSCRIBE      4
-#define POLYGON_MODE_DISTANCE      5
-#define POLYGON_MODE_SIDE_LEN      6
+#define POLYGON_MODE_NUM_SIDES        0
+#define POLYGON_MODE_CENTER_PT        1
+#define POLYGON_MODE_POLYTYPE         2
+#define POLYGON_MODE_INSCRIBE         3
+#define POLYGON_MODE_CIRCUMSCRIBE     4
+#define POLYGON_MODE_DISTANCE         5
+#define POLYGON_MODE_SIDE_LEN         6
 
 /*
  * TYPEDEFS
- *
- * Non-struct typedefs
- * -------------------
- *
- *
- * Action: the basic system to encode all user input.
+ * -----------------------------------------------------------------------------
+ */
+
+/* Action: the basic system to encode all user input.
  *
  * This typedef gives structure to the data associated with each action
  * which, in the code, is referred to by the action id (an int from
@@ -536,53 +557,50 @@
  * DESCRIPTION OF STRUCT CONTENTS
  *
  * label
- *     What is called from Scheme to run the function. It is always
- *     in US English, lowercase, seperated with hyphens.
+ * -----
  *
- *     For example: new-file.
+ * What is called from Scheme to run the function.
+ * It is always in US English, lowercase,
+ * seperated with hyphens.
+ *
+ * For example: new-file.
  *
  * function
- *     The function pointer, always starts with the prefix scm,
- *     in US English, lowercase, seperated with underscores.
+ * --------
  *
- *     The words should match those of the label otherwise.
+ * The function pointer, always starts with the prefix scm,
+ * in US English, lowercase, seperated with underscores.
  *
- *     For example: scm_new_file.
+ * The words should match those of the label otherwise.
  *
- * object 
- *     The object flag describing which object the action is intended
- *     for or "Null" for global effects like duplicating a pattern.
+ * For example: scm_new_file.
  *
- * icon
- *     The icon's filename, relative path from the installation folder
- *     to the file, stored as a png.
+ * flags
+ * -----
  *
- * permissions (Not implemented)
- *     The permissions flag determines whether the user or the system can
- *     run this action.
+ * The bit based flags all collected into a 32-bit integer.
  *
- *     The mode argument determines what locations in the interface
- *     the action will appear in, for example in mode MODE_TOOLBAR,
- *     the action appears in the toolbars, in MODE_TOOLBAR | MODE_"double"
- *     it also appears as a lineEdit in the property editor expecting a
- *     double as input.
- *
- * menu_name
- *     .
+ * | bit(s) | description                                |
+ * |--------|--------------------------------------------|
+ * | 0      | User (0) or system (1) permissions.        |
+ * | 1-3    | The mode of input.                         |
+ * | 4-8    | The object classes that this action        |
+ * |        | can be applied to.                         |
+ * | 9-10   | What menu (if any) should it be present in.|
+ * | 11-12  | What                                       |
  *
  * description
- *     .
+ * -----------
+ *
+ * The string placed in the tooltip describing the action.
  * -----------------------------------------------------------------------------
  */
 typedef struct Action_ {
-    char command[100];
+    char command[MAX_STRING_LENGTH];
     pointer (*function)(scheme *sc, pointer args);
-    char *object;
-    char *permissions;
-    int mode;
-    char *icon;
-    char *menu_name;
-    char *description;
+    int flags;
+    char menu_name[MAX_STRING_LENGTH];
+    char description[MAX_STRING_LENGTH];
 } Action;
 
 typedef struct MdiArea_ {
@@ -876,15 +894,14 @@ pointer scm_select_all(scheme *sc, pointer args);
 pointer scm_check_for_updates(scheme *sc, pointer args);
 pointer scm_print_pattern(scheme *sc, pointer args);
 pointer scm_exit_program(scheme *sc, pointer args);
+pointer scm_move(scheme *sc, pointer args);
 
 /*
- *  Function prototypes.
+ *  Function prototypes which aren't scheme objects.
  */
 int valid_file_format(char *fname);
-int get_action_index(char *action);
 
 void debug_message(char *msg);
-void set_prompt_prefix(char *msg);
 char *translate(char *msg);
 
 double emb_min(double x, double y);
@@ -895,20 +912,20 @@ char *load_str(scheme *sc, char *label);
 int load_int(scheme *sc, char *label);
 int load_config(char *fname);
 int render(void);
-int draw_user_interface(void);
 
 int find_mdi_window(char *file_name);
 
 /* Global data */
-
 extern EmbPattern* pattern[10];
 extern int n_patterns;
-extern Action action_list[];
+extern Action action_list[MAX_ACTIONS];
 extern int n_docs;
 extern int tab_index;
 extern int running;
 extern char current_file_name[MAX_STRING_LENGTH];
 extern double zoom_in_limit;
 extern double zoom_out_limit;
+extern int debug_mode;
+extern char error_msg[MAX_STRING_LENGTH];
 
 #endif

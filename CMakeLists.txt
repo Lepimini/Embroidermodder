@@ -27,6 +27,7 @@ add_executable(embroidermodder
 	src/text.c
 	src/pan.c
 	src/layer.c
+	src/utilities.c
 )
 
 if (WIN32)
