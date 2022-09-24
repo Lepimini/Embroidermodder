@@ -18,6 +18,13 @@
 #include "em2.h"
 
 pointer
+scm_export(scheme *sc, pointer args)
+{
+    debug_message("Export.");
+    return sc->NIL;
+}
+
+pointer
 scm_do_nothing(scheme *sc, pointer args)
 {
     debug_message("Do nothing.");

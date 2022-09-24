@@ -509,6 +509,32 @@ make_rectangle(SDL_Rect *rect, int x, int y, int w, int h)
     rect->h = h;
 }
 
+pointer
+scm_create_widget(scheme *sc, pointer args)
+{
+    debug_message("Create widget.");
+    if (args != sc->NIL) {
+        SDL_Rect rect;
+        pointer arg1 = pair_car(args);
+        pointer arg2 = pair_car(arg1);
+        pointer arg3 = pair_car(arg2);
+        pointer arg4 = pair_car(arg3);
+        pointer arg5 = pair_car(arg4);
+        
+        make_rectangle(&rect, (int)ivalue(arg1), (int)ivalue(arg2),
+            (int)ivalue(arg3), (int)ivalue(arg4));
+        
+        char *action = string_value(arg5);
+        
+        printf("%d %d %d %d %s\n",
+           rect.x, rect.y, rect.w, rect.h, action);
+        fflush(stdout);
+    
+        create_widget(rect, action);
+    }
+    return sc->NIL;
+}
+
 /* A negative action_id means it is not an actor.
  */
 void
@@ -526,12 +552,12 @@ create_widget(SDL_Rect rect, char *action_id)
             act = i;
         }
     }
-    sprintf(icon_path, "assets/icon/%s.png", action_list[act].icon);
+    sprintf(icon_path, "assets/icon/%s.png", action_list[act].command);
     surface = IMG_Load(icon_path);
     widgets[n_widgets].texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (!widgets[n_widgets].texture) {
         debug_message("Failed to load texture.");
-        debug_message(action_list[act].icon);
+        debug_message(action_list[act].command);
     }
     SDL_FreeSurface(surface);
     /* By default a widget cannot perform actions. */

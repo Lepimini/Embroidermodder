@@ -26,7 +26,6 @@
 #include "../extern/SDL/include/SDL.h"
 /* #include "../extern/SDL_ttf/SDL_ttf.h" */
 #include "../extern/SDL_image/SDL_image.h"
-#include "../extern/TinyScheme/src/scheme.h"
 #include "../extern/TinyScheme/src/scheme-private.h"
 #include "../extern/libembroidery/src/embroidery.h"
 
@@ -895,6 +894,9 @@ pointer scm_check_for_updates(scheme *sc, pointer args);
 pointer scm_print_pattern(scheme *sc, pointer args);
 pointer scm_exit_program(scheme *sc, pointer args);
 pointer scm_move(scheme *sc, pointer args);
+
+pointer scm_create_widget(scheme *sc, pointer args);
+pointer scm_export(scheme *sc, pointer args);
 
 /*
  *  Function prototypes which aren't scheme objects.
