@@ -11,38 +11,55 @@
 ;
 ; Generate the user interface.
 ;
-; Menubar
-; make_rectangle(&rect, 0, 0, 640, 40);
-;    NULL, "interface_color",
-; create_widget(rect, "do_nothing");
-;
-; File Toolbar
-; make_rectangle(&rect, 0, 45, padding*6+button_size*5, padding*2+button_size);
-; make_toolbar(rect, (char**)toolbar_entries[0]);
-;
-; Edit Toolbar
-; make_rectangle(&rect, padding*7+button_size*5, 45, padding*6+button_size*5, padding*2+button_size);
-; make_toolbar(rect, (char**)toolbar_entries[1]);
-;
-; Window Toolbar
-;    make_rectangle(&rect, padding*14+button_size*10, 45, padding*7+button_size*6, padding*2+button_size);
-;    make_toolbar(rect, (char**)toolbar_entries[3]);
-;
 ; Statusbar
 ;    make_rectangle(&rect, 0, 455, 640, 25);;
 ;     NULL, "interface_color",
 ;    create_widget(rect, "do_nothing");
+;
+; visibility groups
+; "always"
+; "file-toolbar"
+; "edit-toolbar"
+; "window-toolbar"
+; 
+; "never" (use only for debugging)
+;
+; ui palette
+; interface-background
+; button-hover
+; 
 
+; UI CONSTANTS
+; ------------
+(define (file-menu) 0)
+(define (edit-menu) 1)
+(define (view-menu) 2)
+(define (settings-menu) 3)
+
+; UI SETTINGS
+; -----------
+; These may change causing us to need to reload the
+; file.
 (define (icon-size) 24)
 (define (window-width) 640)
 (define (window-height) 480)
 (define (menubar-height) 24)
 (define (menubar-padding) 2)
-(define (toolbar-offset) (+ (menubar-height) (menubar-padding)))
 (define (toolbar-padding) 4)
 (define (toolbar-width) 632)
-(define (toolbar-height) (+ (icon-size) (toolbar-padding)))
 (define (icon-padding) 4)
+(define (statusbar-message) "Embroidermodder 2.0.0-alpha")
+
+(define (file-toolbar-visible) 1)
+(define (edit-toolbar-visible) 1)
+(define (view-toolbar-visible) 1)
+(define (window-toolbar-visible) 1)
+
+(define (menu-state) (edit-menu))
+
+
+(define (toolbar-offset) (+ (menubar-height) (menubar-padding)))
+(define (toolbar-height) (+ (icon-size) (toolbar-padding)))
 
 (define (background-rect x y w h)
   (create-ui-rect x y w h 100 150 210))
@@ -225,13 +242,49 @@
 ;(create-icon 30 4 "locate-point")
 ;(create-icon 31 4 "point")
 
+; Does not currently work.
+(define (create-button x y n s)
+  (create-label
+    (x) (+ (y) (* (n) 15))
+    100 15 (s)))
+
 ; For menubars:
+; FILE MENU
+; ---------
 (create-label 10 5 100 100 "File")
+(if (= (menu-state) (file-menu)) 
+  (create-button 10 5 1 "New"))
+
+; EDIT MENU
+; ---------
+(if (= (menu-state) (edit-menu))
+  (begin
+    (create-ui-rect 60 5 50 100 255 255 255)))
 (create-label 60 5 100 100 "Edit")
+(if (= (menu-state) (edit-menu))
+  (begin
+    (create-label 60 20 100 15 "Cut")
+    (create-label 60 35 100 15 "Copy")
+    (create-label 60 50 100 15 "Paste")
+    ; (horizontal-rule )
+    (create-label 60 65 100 15 "Undo")
+    (create-label 60 80 100 15 "Redo")
+    (vertical-rule 60 5 200)
+    (vertical-rule 110 5 200)))
+
+; VIEW MENU
+; ---------
+(create-label 110 5 100 100 "View")
 
 ; Statusbar
 (create-ui-rect
   0 (- (window-height) (menubar-height))
   (window-width) (menubar-height)
   100 100 100)
+(create-label
+  10 (- (window-height) (menubar-height))
+  100 100
+  (statusbar-message))
+
+(load "toolbars.scm")
 

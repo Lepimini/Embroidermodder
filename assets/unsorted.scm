@@ -302,10 +302,11 @@
 ;    }
 )
 
-(define ()
-;horizontal-ruler-ticks(position, ruler-vert,
-;            feet=False, little=0.20, medium=0.40, fraction=1.0)
-;    " Returns an array of lines for the ticks part of the horizontal ruler. "
+; Returns an array of lines for the
+; ticks part of the horizontal ruler.
+;
+(define (horizontal-ruler-ticks position ruler-vert
+    feet=False little=0.20 medium=0.40 fraction=1.0)
 ;    ticks = []
 ;    ruler-size = ruler-vert.subtract(position)
 ;    if settings["ruler-metric"]:
@@ -5859,14 +5860,12 @@
 ;            updateAllViewGridColors(dialog-grid-color)
 ;        }
 ;    }
-)*/
- /*
-(define ()
-;currentGridColorChanged(color)
-;    preview.grid-color = color.rgb()
-;    updateAllViewGridColors(preview.grid-color)
-)*/
- /*
+)
+
+(define (current-grid-color-changed color)
+  (define preview-grid-color color)
+  (update-all-view-grid-colors "preview"))
+
 (define ()
 ;check-box-grid-load-from-file-state-changed(int checked)
 ;    dialog-grid-load-from-file = checked
@@ -6570,12 +6569,11 @@
 ; */
 
 
-;/* Creates a dialog showing key information about the pattern,
-; * ideally this will update as the pattern changes without any key presses
-; * or clicks.
-; */
-(define ()
-;details-dialog-init(void)
+; Creates a dialog showing key information about the pattern,
+; ideally this will update as the pattern changes without
+; any key presses or clicks.
+;
+(define (details-dialog-init)
 ;    /* kiss-window dialog = kiss-window()
 ;    dialog-setMinimumSize(750, 550)
 ;    dialog-title(translate("Embroidery Design Details"))
@@ -6605,26 +6603,16 @@
 ;    mw.setOverrideCursor("ArrowCursor"); */
 )
 
-;/*
-; */
-(define ()
-;details-dialog-free(void)
+(define (details-dialog-free)
 ;    /* mw.restoreOverrideCursor(); */
 )
 
-;/*
-; */
-(define ()
-;create-histogram(void)
-;    (debug-message "TODO: createHistogram")
-)
+; Probably needs to be in C.
+(define (create-histogram)
+  (debug-message "TODO: createHistogram"))
 
-;/*
-; */
-(define ()
-;get-info(EmbPattern *pattern)
-;    /* TODO: generate a temporary pattern from the scene data. */
-
+; Uses the pattern index.
+(define (get-info pattern)
 ;    /* TODO: grab this information from the pattern */
 ;    stitches-total = 5
 ;    /* TODO: embStitchList-count(pattern->stitchList, TOTAL); */
@@ -6642,14 +6630,10 @@
 ;    /* # TODO: embPattern-calcBoundingBox(pattern); */
 )
 
-;/*
-; * .
-; */
-(define ()
-;create-main-widget(void)
+(define (create-main-widget)
 ;    /* widget = tk.Widget(dialog)
-
-;    /* # Misc */
+;
+; Misc
 ;    /* group-box-misc = tk.GroupBox(translate("General Information"), widget)
 
 ;    Labels = []
