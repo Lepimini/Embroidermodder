@@ -2,3 +2,24 @@ baseURL = 'http://embroidermodder.org/'
 languageCode = 'en-us'
 title = 'The Embroidermodder Project'
 theme = 'hugo-book'
+
+[markup]
+[markup.goldmark.renderer]
+  unsafe = true
+
+[menu]
+[menu.after]
+  name = "News"
+  url = 'http://embroidermodder.org/posts/'
+  weight = 10
+
+[menu.after]
+  name = "Github"
+  url = "https://github.com/Embroidermodder/Embroidermodder"
+  weight = 20
+
+[params]
+  BookTheme = 'auto'
+  BookToC = true
+  BookDateFormat = 'January 2, 2006'
+  BookComments = false
