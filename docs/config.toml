@@ -18,6 +18,11 @@ theme = 'hugo-book'
   url = "https://github.com/Embroidermodder/Embroidermodder"
   weight = 20
 
+[[menu.after]]
+  name = "Donate"
+  url = "https://opencollective.com/embroidermodder"
+  weight = 30
+
 [params]
   BookTheme = 'auto'
   BookToC = true
