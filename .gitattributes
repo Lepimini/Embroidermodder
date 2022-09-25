@@ -2,3 +2,4 @@
 *.sss linguist-language=data
 *.plt linguist-language=data
 *.pat linguist-language=data
+*.cmd linguist-language=data
