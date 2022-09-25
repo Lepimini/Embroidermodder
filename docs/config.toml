@@ -8,12 +8,12 @@ theme = 'hugo-book'
   unsafe = true
 
 [menu]
-[menu.after]
+[[menu.after]]
   name = "News"
   url = 'http://embroidermodder.org/posts/'
   weight = 10
 
-[menu.after]
+[[menu.after]]
   name = "Github"
   url = "https://github.com/Embroidermodder/Embroidermodder"
   weight = 20
