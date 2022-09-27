@@ -147,9 +147,6 @@ char welcome_message_em2[20*MAX_STRING_LENGTH];
 char obj_names[MAX_OBJECTS][MAX_STRING_LENGTH];
 char details_label_text[12][MAX_STRING_LENGTH];
 
-int padding = 5;
-int button_size = 25;
-
 int dialog_setting_int[100];
 double dialog_setting_double[100];
 
@@ -366,15 +363,9 @@ main(int argc, char *argv[])
         return 2;
     }
 
+    puts("Booting...");
     if (load_scheme_file(sc, "assets/boot.scm")) {
         return 3;
-    }
-
-    puts("Booting...");
-    for (i=0; strcmp("END", load_str_from_table(sc, "files-to-load", i)); i++) {
-        printf("%s\n", load_str_from_table(sc, "files-to-load", i));
-        char *ptr = load_str_from_table(sc, "files-to-load", i);
-        load_scheme_file(sc, ptr);
     }
 
     create_actions(sc);
@@ -692,7 +683,6 @@ void
 create_window(void)
 {
     SDL_Rect rect;
-    int button_size = 25;
     running = 1;
     window = SDL_CreateWindow(
         title_string, window_x, window_y, window_width, window_height,
@@ -701,7 +691,6 @@ create_window(void)
         window, -1, SDL_RENDERER_ACCELERATED);
     n_widgets = 0;
     widgets = (widget*)malloc(sizeof(widget)*1000);
-    debug_message("background");
 }
 
 /*
@@ -721,7 +710,13 @@ set_prompt_prefix(char *msg)
 }
 
 
-/* Write the current settings to the standard file as ini. */
+/* Write the current settings to the standard file as scheme.
+ *
+ * The idea is that these override the settings in config.scm
+ * so only what has changed needs to be written.
+ *
+ * 
+ */
 void
 write_settings(void)
 {

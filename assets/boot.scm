@@ -10,17 +10,11 @@
 ; ------------------------------------------------------------
 ;
 ; Chaining all our configuration and ui data and functions.
+;
+; Since ui.scm is reloaded periodically,
+; we don't want anything to be downstream of it if it
+; doesn't have some reason to be.
 
-(define (files-to-load)
-  (vector
-    "assets/init.scm"
-    "assets/config.scm"
-    "assets/objects.scm"
-    "assets/menus.scm"
-    "assets/toolbars.scm"
-    "assets/experimental.scm"
-    "END"
-  )
-)
+(load "assets/init.scm")
+(load "assets/config.scm")
 
-(create-widget 10 100 10 100 "erase")

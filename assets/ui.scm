@@ -35,6 +35,11 @@
 (define (edit-menu) 1)
 (define (view-menu) 2)
 (define (settings-menu) 3)
+(define (window-menu) 4)
+(define (zoom-menu) 5)
+(define (pan-menu) 6)
+(define (recent-menu) 7)
+(define (help-menu) 8)
 
 ; UI SETTINGS
 ; -----------
@@ -102,9 +107,9 @@
   (toolbar-width) (toolbar-height))
 
 (define (horizontal-rule x y w)
-  (create-ui-rect x y w 2 0 0 0))
+  (create-ui-rect x y w 1 0 0 0))
 (define (vertical-rule x y h)
-  (create-ui-rect x y 2 h 0 0 0))
+  (create-ui-rect x y 1 h 0 0 0))
 
 (horizontal-rule 10 170 350)
 (horizontal-rule 10 240 350)
@@ -242,39 +247,8 @@
 ;(create-icon 30 4 "locate-point")
 ;(create-icon 31 4 "point")
 
-; Does not currently work.
-(define (create-button x y n s)
-  (create-label
-    (x) (+ (y) (* (n) 15))
-    100 15 (s)))
-
-; For menubars:
-; FILE MENU
-; ---------
-(create-label 10 5 100 100 "File")
-(if (= (menu-state) (file-menu)) 
-  (create-button 10 5 1 "New"))
-
-; EDIT MENU
-; ---------
-(if (= (menu-state) (edit-menu))
-  (begin
-    (create-ui-rect 60 5 50 100 255 255 255)))
-(create-label 60 5 100 100 "Edit")
-(if (= (menu-state) (edit-menu))
-  (begin
-    (create-label 60 20 100 15 "Cut")
-    (create-label 60 35 100 15 "Copy")
-    (create-label 60 50 100 15 "Paste")
-    ; (horizontal-rule )
-    (create-label 60 65 100 15 "Undo")
-    (create-label 60 80 100 15 "Redo")
-    (vertical-rule 60 5 200)
-    (vertical-rule 110 5 200)))
-
-; VIEW MENU
-; ---------
-(create-label 110 5 100 100 "View")
+(load "assets/toolbars.scm")
+(load "assets/menus.scm")
 
 ; Statusbar
 (create-ui-rect
@@ -285,6 +259,4 @@
   10 (- (window-height) (menubar-height))
   100 100
   (statusbar-message))
-
-(load "toolbars.scm")
 

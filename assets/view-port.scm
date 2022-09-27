@@ -10,5 +10,8 @@
 ; ------------------------------------------------------------
 ;
 ; View port for pattern.
+;
+; Contains reasoning for rulers, crosshair, grid and pattern
+; drawing.
 
 
